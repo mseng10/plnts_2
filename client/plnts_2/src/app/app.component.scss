@@ -1,0 +1,23 @@
+div {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+
+  h1 {
+    color: #333;
+  }
+
+  nav {
+    margin-top: 20px;
+
+    a {
+      margin-right: 10px;
+      text-decoration: none;
+      color: #007bff;
+      font-weight: bold;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
