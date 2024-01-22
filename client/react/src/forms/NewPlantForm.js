@@ -6,12 +6,13 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [wateringFrequency, setWateringFrequency] = useState('');
+  const [lastWatered, setLastWatered] = useState('');
 
   const handleSubmit = () => {
     // Validate form fields if needed
 
     // Save the new plant
-    onSave({ name, type, wateringFrequency });
+    onSave({ name, type, wateringFrequency, lastWatered });
 
     // Clear form fields
     clearForm();
@@ -32,6 +33,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
     setName('');
     setType('');
     setWateringFrequency('');
+    setLastWatered('');
   };
 
   return (
@@ -43,7 +45,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
       overlayClassName="modal-overlay"
     >
       <div className="modal-content">
-        <h2>New Bubbie Form</h2>
+        <h2>New Plant Form</h2>
         <form onSubmit={handleSubmit}>
           <label>
             Name:
@@ -62,9 +64,22 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               required
             />
           </label>
+          <label>
+            Last Watered:
+            <input
+              type="date"
+              value={lastWatered}
+              onChange={(event) => setLastWatered(event.target.value)}
+              required
+            />
+          </label>
           <div className="button-container">
-            <button type="submit" className="save-button">Save Plant</button>
-            <button type="button" onClick={handleCancel} className="cancel-button">Cancel</button>
+            <button type="submit" className="save-button">
+              Save Plant
+            </button>
+            <button type="button" onClick={handleCancel} className="cancel-button">
+              Cancel
+            </button>
           </div>
         </form>
       </div>

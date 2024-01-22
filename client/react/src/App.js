@@ -1,8 +1,8 @@
 // App.js
 import React, { useState, useEffect } from 'react';
 import Plant from './Plant';
-import NewPlantForm from './NewPlantForm';
-import UpdatePlantForm from './UpdatePlantForm';
+import NewPlantForm from './forms/NewPlantForm';
+import UpdatePlantForm from './forms/UpdatePlantForm';
 
 const App = () => {
   const [plants, setPlants] = useState([]);
@@ -48,6 +48,17 @@ const App = () => {
     setIsUpdatePlantFormOpen(false);
   };
 
+  const handleWaterPlant = (plantId) => {
+    // Find the plant by id and update its lastWatered field to the current date and time
+    setPlants((prevPlants) =>
+      prevPlants.map((plant) =>
+        plant.id === plantId ? { ...plant, lastWatered: new Date().toLocaleString() } : plant
+      )
+    );
+  };
+
+  
+
   return (
     <div className="App">
       <h1>Plant Grid App</h1>
@@ -61,6 +72,7 @@ const App = () => {
             {...plant}
             onClick={() => handlePlantClick(plant)}
             onKill={handleKillPlant}
+            onWater={handleWaterPlant}
           />
         ))}
       </div>

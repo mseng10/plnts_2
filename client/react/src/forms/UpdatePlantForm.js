@@ -6,19 +6,21 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
   const [updatedName, setUpdatedName] = useState(plant.name);
   const [updatedType, setUpdatedType] = useState(plant.type);
   const [updatedWateringFrequency, setUpdatedWateringFrequency] = useState(plant.wateringFrequency);
+  const [updatedLastWatered, setUpdatedLastWatered] = useState(plant.lastWatered);
 
   useEffect(() => {
     // Update form fields when the plant prop changes
     setUpdatedName(plant.name);
     setUpdatedType(plant.type);
     setUpdatedWateringFrequency(plant.wateringFrequency);
+    setUpdatedLastWatered(plant.lastWatered);
   }, [plant]);
 
   const handleSubmit = () => {
     // Validate form fields if needed
 
     // Update the plant
-    onUpdate({ ...plant, name: updatedName, type: updatedType, wateringFrequency: updatedWateringFrequency });
+    onUpdate({ ...plant, name: updatedName, type: updatedType, wateringFrequency: updatedWateringFrequency, lastWatered: updatedLastWatered });
 
     // Close the modal
     onRequestClose();
@@ -57,9 +59,22 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
               required
             />
           </label>
+          <label>
+            Last Watered:
+            <input
+              type="date"
+              value={updatedLastWatered}
+              onChange={(event) => setUpdatedLastWatered(event.target.value)}
+              required
+            />
+          </label>
           <div className="button-container">
-            <button type="submit" className="update-button">Update Plant</button>
-            <button type="button" onClick={handleCancel} className="cancel-button">Cancel</button>
+            <button type="submit" className="update-button">
+              Update Plant
+            </button>
+            <button type="button" onClick={handleCancel} className="cancel-button">
+              Cancel
+            </button>
           </div>
         </form>
       </div>
