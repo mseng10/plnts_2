@@ -1,0 +1,48 @@
+{
+  "name": "react-starter",
+  "version": "18.2.0",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "6.2.0",
+    "@testing-library/react": "14.1.2",
+    "@testing-library/user-event": "14.5.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-modal": "3.16.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "3.5.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "coverage": "react-scripts test --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "lint": "eslint \"src/**/*.{js,jsx}\"",
+    "serve": "node server"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "8.56.0",
+    "eslint-plugin-import": "2.29.1",
+    "eslint-plugin-jsx-a11y": "6.8.0",
+    "eslint-plugin-react": "7.33.2"
+  }
+}
