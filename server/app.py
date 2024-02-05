@@ -7,7 +7,7 @@ CORS(app)  # Enable CORS for all routes
 plants = [
     {"id": 1, "name": "Snake Plant", "type": "Indoor", "wateringFrequency": "Once a week"},
     {"id": 2, "name": "Rose", "type": "Outdoor", "wateringFrequency": "Twice a week"}
-    # Add more plant data as needed
+    # Add more plant data as needed!
 ]
 @app.route('/plants', methods=['GET'])
 def get_plants():
