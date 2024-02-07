@@ -36,7 +36,6 @@ const App = () => {
 
   const handlePlantClick = (plant) => {
     // Open the update plant form when a plant is clicked
-    console.log("mathew");
     setSelectedPlant(plant);
     setIsUpdatePlantFormOpen(true);
   };
@@ -89,6 +88,7 @@ const App = () => {
         />
       )}
     </div>
+    
   );
 };
 
