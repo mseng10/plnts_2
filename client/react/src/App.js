@@ -70,9 +70,9 @@ const App = () => {
           <Plant
             key={plant.id}
             {...plant}
-            onClick={() => handlePlantClick(plant)}
-            onKill={handleKillPlant}
-            onWater={handleWaterPlant}
+            onClick={() => handlePlantClick(plant.id)}
+            onKill={() => handleKillPlant(plant.id)}
+            onWater={() => handleWaterPlant(plant)}
           />
         ))}
       </div>
@@ -85,7 +85,7 @@ const App = () => {
         <UpdatePlantForm
           isOpen={isUpdatePlantFormOpen}
           onRequestClose={() => setIsUpdatePlantFormOpen(false)}
-          onUpdate={handleUpdatePlant}
+          onUpdate={() => handleUpdatePlant(selectedPlant)}
           plant={selectedPlant}
         />
       )}
