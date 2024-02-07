@@ -2,10 +2,6 @@
 import React from 'react';
 
 const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWater, onUpdate }) => {
-  const handleWaterClick = () => {
-    // Call the onWater function
-    onWater();
-  };
 
   const handleUpdateClick = () => {
     // Call the onUpdate function
@@ -21,7 +17,7 @@ const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWa
           <p>Watering Frequency: {wateringFrequency}</p>
           {lastWatered && <p>Last Watered: {lastWatered}</p>}
           <div>
-            <button onClick={handleWaterClick}>Water</button>
+            <button onClick={onWater}>Water</button>
             <button onClick={onKill}>Kill</button>
             <button onClick={handleUpdateClick}>Update</button>
           </div>

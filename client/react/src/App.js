@@ -72,7 +72,7 @@ const App = () => {
             {...plant}
             onClick={() => handlePlantClick(plant.id)}
             onKill={() => handleKillPlant(plant.id)}
-            onWater={() => handleWaterPlant(plant)}
+            onWater={() => handleWaterPlant(plant.id)}
           />
         ))}
       </div>
