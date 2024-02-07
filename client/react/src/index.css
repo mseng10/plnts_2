@@ -12,13 +12,14 @@ code {
     monospace;
 }
 
+
 .App {
   text-align: center;
   font-family: 'Arial', sans-serif;
 }
 
 h1 {
-  color: #4CAF50;
+  color: #618685;
 }
 
 .plant-grid {
@@ -137,4 +138,9 @@ h1 {
 
 .plant:hover {
   background-color: #f0f0f0; /* Change the background color to your desired highlight color */
+}
+
+button { 
+  background-color: #d5f4e6 !important;
+  
 }
