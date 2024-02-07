@@ -59,7 +59,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1>Plant Grid App</h1>
+      <h1>Bubbies!</h1>
       <button className="add-plant-button" onClick={() => setIsNewPlantFormOpen(true)}>
         ➕
       </button>
