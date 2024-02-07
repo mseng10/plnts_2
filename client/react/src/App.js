@@ -12,7 +12,7 @@ const App = () => {
 
   useEffect(() => {
     // Fetch plant data from the server
-    fetch('https://example.com/api/plants')
+    fetch('https://localhost')
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
@@ -56,8 +56,6 @@ const App = () => {
       )
     );
   };
-
-  
 
   return (
     <div className="App">

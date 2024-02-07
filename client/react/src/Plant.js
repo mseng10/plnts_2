@@ -2,12 +2,6 @@
 import React from 'react';
 
 const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWater, onUpdate }) => {
-
-  const handleUpdateClick = () => {
-    // Call the onUpdate function
-    onUpdate();
-  };
-
   return (
     <div className={`plant ${alive ? 'alive' : 'not-alive'}`}>
       <h3>{name}</h3>
@@ -19,7 +13,7 @@ const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWa
           <div>
             <button onClick={onWater}>Water</button>
             <button onClick={onKill}>Kill</button>
-            <button onClick={handleUpdateClick}>Update</button>
+            <button onClick={onUpdate}>Update</button>
           </div>
         </>
       )}
