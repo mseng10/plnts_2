@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 
 const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
+  console.log(plant);
   const [updatedName, setUpdatedName] = useState(plant.name);
   const [updatedType, setUpdatedType] = useState(plant.type);
   const [updatedWateringFrequency, setUpdatedWateringFrequency] = useState(plant.wateringFrequency);
@@ -20,7 +21,7 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
     // Validate form fields if needed
 
     // Update the plant
-    onUpdate({ ...plant, name: updatedName, type: updatedType, wateringFrequency: updatedWateringFrequency, lastWatered: updatedLastWatered });
+    onUpdate({...plant, name: updatedName, type: updatedType, wateringFrequency: updatedWateringFrequency, lastWatered: updatedLastWatered });
 
     // Close the modal
     onRequestClose();

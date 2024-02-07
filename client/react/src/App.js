@@ -36,6 +36,7 @@ const App = () => {
 
   const handlePlantClick = (plant) => {
     // Open the update plant form when a plant is clicked
+    console.log("mathew");
     setSelectedPlant(plant);
     setIsUpdatePlantFormOpen(true);
   };
@@ -68,7 +69,7 @@ const App = () => {
           <Plant
             key={plant.id}
             {...plant}
-            onClick={() => handlePlantClick(plant.id)}
+            onUpdate={() => handlePlantClick(plant)}
             onKill={() => handleKillPlant(plant.id)}
             onWater={() => handleWaterPlant(plant.id)}
           />
@@ -83,7 +84,7 @@ const App = () => {
         <UpdatePlantForm
           isOpen={isUpdatePlantFormOpen}
           onRequestClose={() => setIsUpdatePlantFormOpen(false)}
-          onUpdate={() => handleUpdatePlant(selectedPlant)}
+          onUpdate={handleUpdatePlant}
           plant={selectedPlant}
         />
       )}
