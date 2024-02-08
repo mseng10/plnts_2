@@ -1,6 +1,11 @@
 // NewPlantForm.js
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import TextField from '@mui/material/TextField';
+// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Button from '@mui/material/Button';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
@@ -47,39 +52,44 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
       <div className="modal-content">
         <h2>New Plant Form</h2>
         <form onSubmit={handleSubmit}>
-          <label>
-            Name:
-            <input type="text" value={name} onChange={(event) => setName(event.target.value)} required />
-          </label>
-          <label>
-            Type:
-            <input type="text" value={type} onChange={(event) => setType(event.target.value)} required />
-          </label>
-          <label>
-            Watering Frequency:
-            <input
-              type="text"
-              value={wateringFrequency}
-              onChange={(event) => setWateringFrequency(event.target.value)}
-              required
-            />
-          </label>
-          <label>
-            Last Watered:
-            <input
-              type="date"
-              value={lastWatered}
-              onChange={(event) => setLastWatered(event.target.value)}
-              required
-            />
-          </label>
+          <TextField
+            margin="normal"
+            fullWidth
+            required
+            id="outlined-required"
+            label="Name"
+            onChange={(event) => setName(event.target.value)}
+            value={name}
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            required
+            id="outlined-required"
+            label="Type"
+            onChange={(event) => setType(event.target.value)}
+            value={type}
+          />
+          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker 
+              margin="normal" 
+              label="Last Watered" 
+              onChange={(event) => setLastWatered(event)} 
+              value={lastWatered}/>
+          </LocalizationProvider> */}
           <div className="button-container">
-            <button type="submit" className="save-button">
-              Save Plant
-            </button>
-            <button type="button" onClick={handleCancel} className="cancel-button">
-              Cancel
-            </button>
+            <Button 
+              type="submit" 
+              primary={true} 
+              variant="contained">
+                Create
+            </Button>
+            <Button 
+              variant="contained" 
+              secondary={true} 
+              onClick={() => handleCancel()}>
+                Cancel
+            </Button>
           </div>
         </form>
       </div>

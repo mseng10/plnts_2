@@ -16,10 +16,6 @@ h1 {
   margin-top: 20px;
 }
 
-button:hover {
-  background-color: #f0f0f0 !important;/* Change the background color to your desired highlight color */
-}
-
 .plant-card {
   border: 1px solid #ddd;
   border-radius: 8px;
