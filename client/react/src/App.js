@@ -5,9 +5,11 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import React, { useState, useEffect } from 'react';
+import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Plant from './Plant';
 import NewPlantForm from './forms/NewPlantForm';
 import UpdatePlantForm from './forms/UpdatePlantForm';
+import Button from '@mui/material/Button';
 
 const App = () => {
   const [plants, setPlants] = useState([]);
@@ -65,9 +67,7 @@ const App = () => {
   return (
     <div className="App">
       <h1>Bubbies!</h1>
-      <button className="add-plant-button" onClick={() => setIsNewPlantFormOpen(true)}>
-        ➕
-      </button>
+      <Button variant="contained" onClick={() => setIsNewPlantFormOpen(true)}><AddSharpIcon color="primary" /></Button>
       <div className="plant-grid">
         {plants.map((plant) => (
           <Plant
