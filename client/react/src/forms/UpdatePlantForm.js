@@ -1,6 +1,8 @@
 // UpdatePlantForm.js
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
   console.log(plant);
@@ -43,14 +45,24 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
       <div className="modal-content">
         <h2>Update Plant Form</h2>
         <form onSubmit={handleSubmit}>
-          <label>
-            Name:
-            <input type="text" value={updatedName} onChange={(event) => setUpdatedName(event.target.value)} required />
-          </label>
-          <label>
-            Type:
-            <input type="text" value={updatedType} onChange={(event) => setUpdatedType(event.target.value)} required />
-          </label>
+        <TextField
+            margin="normal"
+            fullWidth
+            required
+            id="outlined-required"
+            label="Name"
+            onChange={(event) => setName(event.target.value)}
+            value={name}
+          />
+          <TextField
+            margin="normal"
+            fullWidth
+            required
+            id="outlined-required"
+            label="Type"
+            onChange={(event) => setType(event.target.value)}
+            value={type}
+          />
           <label>
             Watering Frequency:
             <input
@@ -70,12 +82,18 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
             />
           </label>
           <div className="button-container">
-            <button type="submit" className="update-button">
-              Update Plant
-            </button>
-            <button type="button" onClick={handleCancel} className="cancel-button">
-              Cancel
-            </button>
+          <Button 
+              type="submit" 
+              primary={true} 
+              variant="contained">
+                Update
+            </Button>
+            <Button 
+              variant="contained" 
+              secondary={true} 
+              onClick={() => handleCancel()}>
+                Cancel
+            </Button>
           </div>
         </form>
       </div>
