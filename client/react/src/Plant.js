@@ -1,5 +1,6 @@
 // Plant.js
 import React from 'react';
+import Button from '@mui/material/Button';
 
 const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWater, onUpdate }) => {
   return (
@@ -11,9 +12,24 @@ const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWa
           <p>Watering Frequency: {wateringFrequency}</p>
           {lastWatered && <p>Last Watered: {lastWatered}</p>}
           <div>
-            <button onClick={onWater}>Water</button>
-            <button onClick={onKill}>Kill</button>
-            <button onClick={onUpdate}>Update</button>
+            <Button 
+              variant="contained" 
+              secondary={true} 
+              onClick={onWater}>
+                Water
+            </Button>
+            <Button 
+              variant="contained" 
+              secondary={true} 
+              onClick={onKill}>
+                Kill
+            </Button>
+            <Button 
+              variant="contained" 
+              secondary={true} 
+              onClick={onUpdate}>
+                Update
+            </Button>
           </div>
         </>
       )}
