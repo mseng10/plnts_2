@@ -1,6 +1,9 @@
 // Plant.js
 import React from 'react';
 import Button from '@mui/material/Button';
+import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined'
 
 const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWater, onUpdate }) => {
   return (
@@ -16,19 +19,19 @@ const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWa
               variant="contained" 
               secondary={true} 
               onClick={onWater}>
-                Water
+              <WaterDropOutlinedIcon color="primary" />
             </Button>
             <Button 
               variant="contained" 
               secondary={true} 
               onClick={onKill}>
-                Kill
+              <DeleteOutlineOutlinedIcon color="primary" />
             </Button>
             <Button 
               variant="contained" 
               secondary={true} 
               onClick={onUpdate}>
-                Update
+              <EditOutlinedIcon color="primary" />
             </Button>
           </div>
         </>
