@@ -45,14 +45,14 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
       <div className="modal-content">
         <h2>Update Plant Form</h2>
         <form onSubmit={handleSubmit}>
-        <TextField
+          <TextField
             margin="normal"
             fullWidth
             required
             id="outlined-required"
             label="Name"
-            onChange={(event) => setName(event.target.value)}
-            value={name}
+            onChange={(event) => setUpdatedName(event.target.value)}
+            value={plant.name}
           />
           <TextField
             margin="normal"
@@ -60,8 +60,8 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
             required
             id="outlined-required"
             label="Type"
-            onChange={(event) => setType(event.target.value)}
-            value={type}
+            onChange={(event) => setUpdatedType(event.target.value)}
+            value={plant.type}
           />
           <label>
             Watering Frequency:
@@ -82,7 +82,7 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
             />
           </label>
           <div className="button-container">
-          <Button 
+            <Button 
               type="submit" 
               primary={true} 
               variant="contained">
