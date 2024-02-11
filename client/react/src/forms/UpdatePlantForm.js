@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 
 const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
   console.log(plant);
@@ -62,6 +63,12 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
             label="Type"
             onChange={(event) => setUpdatedType(event.target.value)}
             value={plant.type}
+          />
+          <NumberInput
+            aria-label="Watering Frequency:"
+            placeholder="Watering Frequency…"
+            value={plant.updatedWateringFrequency}
+            onChange={(event, val) => setUpdatedWateringFrequency(val)}
           />
           <label>
             Watering Frequency:

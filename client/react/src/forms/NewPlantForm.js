@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
+import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
@@ -69,6 +70,12 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             label="Type"
             onChange={(event) => setType(event.target.value)}
             value={type}
+          />
+          <NumberInput
+            aria-label="Watering Frequency:"
+            placeholder="Watering Frequency…"
+            value={wateringFrequency}
+            onChange={(event, val) => setWateringFrequency(val)}
           />
           {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker 
