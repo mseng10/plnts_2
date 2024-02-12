@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
+import Box from '@mui/material/Box';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
@@ -43,7 +44,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
       onClose={onRequestClose}
       aria-labelledby="new-plant-form"
     >
-      <div className="modal-content">
+      <Box sx={{ width: 400, bgcolor: 'background.paper', borderRadius: 2 }}>
         <h2 id="new-plant-form">New Plant Form</h2>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -72,16 +73,16 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             value={wateringFrequency}
             onChange={(event) => setWateringFrequency(event.target.value)}
           />
-          <div className="button-container">
+          <Box sx={{ mt: 2 }}>
             <Button type="submit" variant="contained" color="primary">
               Create
             </Button>
-            <Button onClick={handleCancel} variant="outlined" color="secondary">
+            <Button onClick={handleCancel} variant="outlined" color="secondary" sx={{ ml: 2 }}>
               Cancel
             </Button>
-          </div>
+          </Box>
         </form>
-      </div>
+      </Box>
     </Modal>
   );
 };
