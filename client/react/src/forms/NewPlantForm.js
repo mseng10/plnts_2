@@ -88,11 +88,11 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             <Button 
               type="submit" 
               primary={true} 
-              variant="contained">
+              variant="outlined">
                 Create
             </Button>
             <Button 
-              variant="contained" 
+              variant="outlined"
               secondary={true} 
               onClick={() => handleCancel()}>
                 Cancel

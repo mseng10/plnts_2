@@ -16,19 +16,19 @@ const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onKill, onWa
           {lastWatered && <p>Last Watered: {lastWatered}</p>}
           <div>
             <Button 
-              variant="contained" 
+              variant="outlined"
               secondary={true} 
               onClick={onWater}>
               <WaterDropOutlinedIcon color="primary" />
             </Button>
             <Button 
-              variant="contained" 
-              secondary={true} 
+              variant="outlined"
+              color="error"              
               onClick={onKill}>
-              <DeleteOutlineOutlinedIcon color="primary" />
+              <DeleteOutlineOutlinedIcon color="error" />
             </Button>
             <Button 
-              variant="contained" 
+              variant="outlined"
               secondary={true} 
               onClick={onUpdate}>
               <EditOutlinedIcon color="primary" />

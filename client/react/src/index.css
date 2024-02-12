@@ -18,10 +18,6 @@ code {
   font-family: 'Arial', sans-serif;
 }
 
-h1 {
-  color: #618685;
-}
-
 .plant-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -134,13 +130,4 @@ h1 {
   margin: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.plant:hover {
-  background-color: #f0f0f0; /* Change the background color to your desired highlight color */
-}
-
-button { 
-  background-color: #d5f4e6 !important;
-  
 }

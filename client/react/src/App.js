@@ -10,6 +10,24 @@ import Plant from './Plant';
 import NewPlantForm from './forms/NewPlantForm';
 import UpdatePlantForm from './forms/UpdatePlantForm';
 import Button from '@mui/material/Button';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { teal, pink } from '@mui/material/colors';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: teal[400],
+    },
+    secondary: {
+      main: teal[500],
+    },
+    error: {
+      main: pink[500],
+    }
+  },
+});
 
 const App = () => {
   const [plants, setPlants] = useState([]);
@@ -65,35 +83,37 @@ const App = () => {
   };
 
   return (
-    <div className="App">
-      <h1>Bubbies!</h1>
-      <Button variant="contained" onClick={() => setIsNewPlantFormOpen(true)}><AddSharpIcon color="primary" /></Button>
-      <div className="plant-grid">
-        {plants.map((plant) => (
-          <Plant
-            key={plant.id}
-            {...plant}
-            onUpdate={() => handlePlantClick(plant)}
-            onKill={() => handleKillPlant(plant.id)}
-            onWater={() => handleWaterPlant(plant.id)}
-          />
-        ))}
-      </div>
-      <NewPlantForm
-        isOpen={isNewPlantFormOpen}
-        onRequestClose={() => setIsNewPlantFormOpen(false)}
-        onSave={handleSavePlant}
-      />
-      {selectedPlant && (
-        <UpdatePlantForm
-          isOpen={isUpdatePlantFormOpen}
-          onRequestClose={() => setIsUpdatePlantFormOpen(false)}
-          onUpdate={handleUpdatePlant}
-          plant={selectedPlant}
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <div className="App">
+        <h1>Bubbies!</h1>
+        <Button variant="outlined" onClick={() => setIsNewPlantFormOpen(true)}><AddSharpIcon color="primary" /></Button>
+        <div className="plant-grid">
+          {plants.map((plant) => (
+            <Plant
+              key={plant.id}
+              {...plant}
+              onUpdate={() => handlePlantClick(plant)}
+              onKill={() => handleKillPlant(plant.id)}
+              onWater={() => handleWaterPlant(plant.id)}
+            />
+          ))}
+        </div>
+        <NewPlantForm
+          isOpen={isNewPlantFormOpen}
+          onRequestClose={() => setIsNewPlantFormOpen(false)}
+          onSave={handleSavePlant}
         />
-      )}
-    </div>
-    
+        {selectedPlant && (
+          <UpdatePlantForm
+            isOpen={isUpdatePlantFormOpen}
+            onRequestClose={() => setIsUpdatePlantFormOpen(false)}
+            onUpdate={handleUpdatePlant}
+            plant={selectedPlant}
+          />
+        )}
+      </div>
+    </ThemeProvider>
   );
 };
 

@@ -92,11 +92,11 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
             <Button 
               type="submit" 
               primary={true} 
-              variant="contained">
+              variant="outlined">
                 Update
             </Button>
             <Button 
-              variant="contained" 
+              variant="outlined"
               secondary={true} 
               onClick={() => handleCancel()}>
                 Cancel
