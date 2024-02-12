@@ -2,11 +2,6 @@
 .App {
   text-align: center;
   font-family: 'Arial', sans-serif;
-  background-image: linear-gradient( 95.2deg, rgba(173,252,234,1) 26.8%, rgba(192,229,246,1) 64% );
-}
-
-h1 {
-  color: #4CAF50;
 }
 
 .plant-grid {
@@ -87,7 +82,6 @@ h1 {
 
   p {
     margin: 5px 0;
-    color: #666;
   }
 }
 
@@ -117,8 +111,4 @@ h1 {
   margin: 10px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-}
-
-.plant:hover {
-  background-color: #f0f0f0; /* Change the background color to your desired highlight color */
 }
