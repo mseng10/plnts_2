@@ -1,10 +1,6 @@
-// NewPlantForm.js
 import React, { useState } from 'react';
-import Modal from 'react-modal';
+import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Button from '@mui/material/Button';
 import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 
@@ -12,13 +8,13 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [wateringFrequency, setWateringFrequency] = useState('');
-  const [lastWatered, setLastWatered] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = (event) => {
+    event.preventDefault();
     // Validate form fields if needed
 
     // Save the new plant
-    onSave({ name, type, wateringFrequency, lastWatered });
+    onSave({ name, type, wateringFrequency });
 
     // Clear form fields
     clearForm();
@@ -39,19 +35,16 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
     setName('');
     setType('');
     setWateringFrequency('');
-    setLastWatered('');
   };
 
   return (
     <Modal
-      isOpen={isOpen}
-      onRequestClose={onRequestClose}
-      contentLabel="New Plant Form"
-      className="modal"
-      overlayClassName="modal-overlay"
+      open={isOpen}
+      onClose={onRequestClose}
+      aria-labelledby="new-plant-form"
     >
       <div className="modal-content">
-        <h2>New Plant Form</h2>
+        <h2 id="new-plant-form">New Plant Form</h2>
         <form onSubmit={handleSubmit}>
           <TextField
             margin="normal"
@@ -59,8 +52,8 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             required
             id="outlined-required"
             label="Name"
-            onChange={(event) => setName(event.target.value)}
             value={name}
+            onChange={(event) => setName(event.target.value)}
           />
           <TextField
             margin="normal"
@@ -68,34 +61,23 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             required
             id="outlined-required"
             label="Type"
-            onChange={(event) => setType(event.target.value)}
             value={type}
+            onChange={(event) => setType(event.target.value)}
           />
           <NumberInput
-            aria-label="Watering Frequency:"
-            placeholder="Watering Frequency…"
+            margin="normal"
+            fullWidth
+            required
+            label="Watering Frequency"
             value={wateringFrequency}
-            onChange={(event, val) => setWateringFrequency(val)}
+            onChange={(event) => setWateringFrequency(event.target.value)}
           />
-          {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker 
-              margin="normal" 
-              label="Last Watered" 
-              onChange={(event) => setLastWatered(event)} 
-              value={lastWatered}/>
-          </LocalizationProvider> */}
           <div className="button-container">
-            <Button 
-              type="submit" 
-              primary={true} 
-              variant="outlined">
-                Create
+            <Button type="submit" variant="contained" color="primary">
+              Create
             </Button>
-            <Button 
-              variant="outlined"
-              secondary={true} 
-              onClick={() => handleCancel()}>
-                Cancel
+            <Button onClick={handleCancel} variant="outlined" color="secondary">
+              Cancel
             </Button>
           </div>
         </form>
