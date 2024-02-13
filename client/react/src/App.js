@@ -87,7 +87,9 @@ const App = () => {
       <CssBaseline />
       <div className="App">
         <h1>Bubbies!</h1>
-        <Button variant="outlined" onClick={() => setIsNewPlantFormOpen(true)}><AddSharpIcon color="primary" /></Button>
+        <IconButton color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
+            <AddSharpIcon />
+        </IconButton>
         <div className="plant-grid">
           {plants.map((plant) => (
             <Plant
