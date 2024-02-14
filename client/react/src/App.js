@@ -9,8 +9,9 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Plant from './Plant';
 import NewPlantForm from './forms/NewPlantForm';
 import UpdatePlantForm from './forms/UpdatePlantForm';
-import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
 import { teal, pink } from '@mui/material/colors';
 
@@ -86,9 +87,9 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div className="App">
-        <h1>Bubbies!</h1>
-        <IconButton color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
-            <AddSharpIcon />
+        <h1 className="goat"><GrassOutlinedIcon /></h1>
+        <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
+          <AddSharpIcon />
         </IconButton>
         <div className="plant-grid">
           {plants.map((plant) => (
