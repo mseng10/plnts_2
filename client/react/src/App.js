@@ -13,7 +13,10 @@ import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
-import { teal, pink } from '@mui/material/colors';
+import { teal, pink, lightBlue } from '@mui/material/colors';
+import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+
+
 
 const darkTheme = createTheme({
   palette: {
@@ -22,7 +25,7 @@ const darkTheme = createTheme({
       main: teal[400],
     },
     secondary: {
-      main: teal[500],
+      main: lightBlue[500],
     },
     error: {
       main: pink[500],
@@ -90,6 +93,9 @@ const App = () => {
         <h1 className="goat"><GrassOutlinedIcon /></h1>
         <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
           <AddSharpIcon />
+        </IconButton>
+        <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
+          <WaterDropOutlinedIcon />
         </IconButton>
         <div className="plant-grid">
           {plants.map((plant) => (
