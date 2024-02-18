@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 import Box from '@mui/material/Box';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
@@ -65,10 +64,11 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             value={type}
             onChange={(event) => setType(event.target.value)}
           />
-          <NumberInput
+          <TextField
             margin="normal"
             fullWidth
             required
+            type="number"
             label="Watering Frequency"
             value={wateringFrequency}
             onChange={(event) => setWateringFrequency(event.target.value)}
