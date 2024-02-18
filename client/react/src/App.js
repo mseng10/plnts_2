@@ -19,8 +19,8 @@ import { green, pink, lightBlue, blueGrey } from '@mui/material/colors';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import { Grid } from '@mui/material';
-
-
+import ButtonGroup from '@mui/material/ButtonGroup';
+import HomeSharpIcon from '@mui/icons-material/HomeSharp';
 
 const darkTheme = createTheme({
   palette: {
@@ -100,15 +100,20 @@ const App = () => {
         <div>
           <GrassOutlinedIcon className='home_icon'/>
         </div>
-        <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
-          <AddSharpIcon className='home_button'/>
-        </IconButton>
-        <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-          <WaterDropOutlinedIcon className='home_button'/>
-        </IconButton>
-        <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
-          <SettingsSharpIcon className='home_button'/>
-        </IconButton>
+        <ButtonGroup size="lg">
+          <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
+            <AddSharpIcon className='home_button'/>
+          </IconButton>
+          <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
+            <HomeSharpIcon className='home_button'/>
+          </IconButton>
+          <IconButton size="large" color="error" onClick={() => setIsNewPlantFormOpen(true)}>
+            <WaterDropOutlinedIcon className='home_button'/>
+          </IconButton>
+          <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
+            <SettingsSharpIcon className='home_button'/>
+          </IconButton>
+        </ButtonGroup>
         <div className="plant-grid">
           {plants.map((plant) => (
             <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
