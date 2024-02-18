@@ -101,13 +101,13 @@ const App = () => {
           <GrassOutlinedIcon className='home_icon'/>
         </div>
         <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
-          <AddSharpIcon />
+          <AddSharpIcon className='home_button'/>
         </IconButton>
         <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-          <WaterDropOutlinedIcon />
+          <WaterDropOutlinedIcon className='home_button'/>
         </IconButton>
         <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
-          <SettingsSharpIcon />
+          <SettingsSharpIcon className='home_button'/>
         </IconButton>
         <div className="plant-grid">
           {plants.map((plant) => (
