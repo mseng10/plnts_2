@@ -97,7 +97,9 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div className="App">
-        <h1 className="home_icon"><GrassOutlinedIcon /></h1>
+        <div>
+          <GrassOutlinedIcon className='home_icon'/>
+        </div>
         <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
           <AddSharpIcon />
         </IconButton>

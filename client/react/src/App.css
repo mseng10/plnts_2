@@ -119,5 +119,6 @@ h1 {
 }
 
 .home_icon {
-  transform: scale(5.0);
+  font-size: 512px !important;
+  color: #4caf50;
 }
