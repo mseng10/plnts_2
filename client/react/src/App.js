@@ -15,7 +15,7 @@ import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
-import { teal, pink, lightBlue } from '@mui/material/colors';
+import { green, pink, lightBlue } from '@mui/material/colors';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 
 
@@ -24,7 +24,7 @@ const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: teal[400],
+      main: green[500],
     },
     secondary: {
       main: lightBlue[500],
