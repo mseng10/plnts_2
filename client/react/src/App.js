@@ -58,7 +58,7 @@ const App = () => {
     const plantWithAliveField = { ...newPlant, alive: true };
 
     // Save the new plant data to the server or perform other actions
-    setPlants((prevPlants) => [...prevPlants, { id: Date.now(), ...plantWithAliveField }]);
+    setPlants((prevPlants) => [...prevPlants, { id: Date.now(), lastWatered: Date.now(), ...plantWithAliveField }]);
     setIsNewPlantFormOpen(false);
   };
 
