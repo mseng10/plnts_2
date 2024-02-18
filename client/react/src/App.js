@@ -18,6 +18,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey } from '@mui/material/colors';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
+import { Grid } from '@mui/material';
 
 
 
@@ -108,13 +109,14 @@ const App = () => {
         </IconButton>
         <div className="plant-grid">
           {plants.map((plant) => (
-            <Plant
-              key={plant.id}
-              {...plant}
-              onUpdate={() => handlePlantClick(plant)}
-              onKill={() => handleKillPlant(plant.id)}
-              onWater={() => handleWaterPlant(plant.id)}
-            />
+            <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <Plant
+                {...plant}
+                onUpdate={() => handlePlantClick(plant)}
+                onKill={() => handleKillPlant(plant.id)}
+                onWater={() => handleWaterPlant(plant.id)}
+              />
+            </Grid>
           ))}
         </div>
         <NewPlantForm
