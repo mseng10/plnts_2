@@ -90,7 +90,7 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div className="App">
-        <h1 className="goat"><GrassOutlinedIcon /></h1>
+        <h1 className="home_icon"><GrassOutlinedIcon /></h1>
         <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
           <AddSharpIcon />
         </IconButton>
