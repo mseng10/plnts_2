@@ -3,6 +3,7 @@ import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import MenuItem from '@mui/material/MenuItem';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
@@ -41,10 +42,15 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
     <Modal
       open={isOpen}
       onClose={onRequestClose}
-      aria-labelledby="new-plant-form"
+      aria-labelledby="new-bobby-form"
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
     >
       <Box sx={{ width: 400, bgcolor: 'background.paper', borderRadius: 2 }}>
-        <h2 id="new-plant-form">New Plant Form</h2>
+        <h2 id="new-bobby-form">New Bubby</h2>
         <form onSubmit={handleSubmit}>
           <TextField
             margin="normal"
@@ -59,11 +65,16 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             margin="normal"
             fullWidth
             required
-            id="outlined-required"
+            select
             label="Type"
             value={type}
             onChange={(event) => setType(event.target.value)}
-          />
+          >
+            <MenuItem value="Succulent">Succulent</MenuItem>
+            <MenuItem value="Cactus">Cactus</MenuItem>
+            <MenuItem value="Philodendron">Philodendron</MenuItem>
+            <MenuItem value="Monstera">Monstera</MenuItem>
+          </TextField>
           <TextField
             margin="normal"
             fullWidth
@@ -77,7 +88,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             <Button type="submit" variant="contained" color="primary">
               Create
             </Button>
-            <Button onClick={handleCancel} variant="outlined" color="secondary" sx={{ ml: 2 }}>
+            <Button onClick={handleCancel} variant="outlined" color="info" sx={{ ml: 2 }}>
               Cancel
             </Button>
           </Box>
