@@ -1,10 +1,4 @@
-// App.js
 import './App.css';
-
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 
 import React, { useState, useEffect } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
@@ -45,6 +39,7 @@ const App = () => {
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [selectedPlant, setSelectedPlant] = useState(null);
+  const [showPlantGrid, setShowPlantGrid] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -98,34 +93,42 @@ const App = () => {
       <CssBaseline />
       <div className="App">
         <div>
-          <GrassOutlinedIcon className='home_icon'/>
+          {!showPlantGrid && (
+            <div>
+              <GrassOutlinedIcon className='home_icon'/>
+            </div>
+          )}
         </div>
-        <ButtonGroup size="lg">
-          <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
-            <AddSharpIcon className='home_button'/>
-          </IconButton>
-          <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-            <HomeSharpIcon className='home_button'/>
-          </IconButton>
-          <IconButton size="large" color="error" onClick={() => setIsNewPlantFormOpen(true)}>
-            <WaterDropOutlinedIcon className='home_button'/>
-          </IconButton>
-          <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
-            <SettingsSharpIcon className='home_button'/>
-          </IconButton>
-        </ButtonGroup>
-        <div className="plant-grid">
-          {plants.map((plant) => (
-            <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
-              <Plant
-                {...plant}
-                onUpdate={() => handlePlantClick(plant)}
-                onKill={() => handleKillPlant(plant.id)}
-                onWater={() => handleWaterPlant(plant.id)}
-              />
-            </Grid>
-          ))}
-        </div>
+        {!showPlantGrid && (
+          <ButtonGroup size="lg">
+            <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
+              <AddSharpIcon className='home_button'/>
+            </IconButton>
+            <IconButton size="large" color="secondary" onClick={() => setShowPlantGrid(true)}>
+              <HomeSharpIcon className='home_button'/>
+            </IconButton>
+            <IconButton size="large" color="error" onClick={() => setIsNewPlantFormOpen(true)}>
+              <WaterDropOutlinedIcon className='home_button'/>
+            </IconButton>
+            <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
+              <SettingsSharpIcon className='home_button'/>
+            </IconButton>
+          </ButtonGroup>
+        )}
+        {showPlantGrid && (
+          <div className="plant-grid">
+            {plants.map((plant) => (
+              <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+                <Plant
+                  {...plant}
+                  onUpdate={() => handlePlantClick(plant)}
+                  onKill={() => handleKillPlant(plant.id)}
+                  onWater={() => handleWaterPlant(plant.id)}
+                />
+              </Grid>
+            ))}
+          </div>
+        )}
         <NewPlantForm
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
