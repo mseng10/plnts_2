@@ -16,17 +16,6 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NewPlantForm from './forms/NewPlantForm';
-import { makeStyles } from '@mui/material/styles';
-
-// Define custom styles to turn off hover effects
-const useStyles = makeStyles({
-  noHover: {
-    '&:hover': {
-      backgroundColor: 'inherit',
-      color: 'inherit',
-    },
-  },
-});
 
 const darkTheme = createTheme({
   palette: {
@@ -51,7 +40,6 @@ const App = () => {
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [showNeedWater, setNeedWater] = useState(false);
-  const classes = useStyles(); // Apply custom styles
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -97,7 +85,7 @@ const App = () => {
       <div className="App">
         {!showHome && (
           <div>
-            <IconButton size="large" className={`${classes.noHover} home_icon`} color="primary" onClick={() => openHome(false)}>
+            <IconButton size="large" className={`home_icon`} color="primary" onClick={() => openHome(false)}>
               <GrassOutlinedIcon className='home_icon'/>
             </IconButton>
           </div>
@@ -105,13 +93,13 @@ const App = () => {
         {!showHome && (
           <ButtonGroup size="lg">
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-              <AddSharpIcon className={`home_button ${classes.noHover}`} />
+              <AddSharpIcon className={`home_button `} />
             </IconButton>
             <IconButton size="large" color="error" onClick={() => openHome(true)}>
-              <WaterDropOutlinedIcon className={`home_button ${classes.noHover}`} />
+              <WaterDropOutlinedIcon className={`home_button `} />
             </IconButton>
             <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
-              <SettingsSharpIcon className={`home_button ${classes.noHover}`} />
+              <SettingsSharpIcon className={`home_button`} />
             </IconButton>
           </ButtonGroup>
         )}
