@@ -1,11 +1,8 @@
-// App.js
 import './App.css';
-
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
 
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
@@ -19,6 +16,17 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NewPlantForm from './forms/NewPlantForm';
+import { makeStyles } from '@mui/material/styles';
+
+// Define custom styles to turn off hover effects
+const useStyles = makeStyles({
+  noHover: {
+    '&:hover': {
+      backgroundColor: 'inherit',
+      color: 'inherit',
+    },
+  },
+});
 
 const darkTheme = createTheme({
   palette: {
@@ -43,6 +51,7 @@ const App = () => {
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [showNeedWater, setNeedWater] = useState(false);
+  const classes = useStyles(); // Apply custom styles
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -50,8 +59,6 @@ const App = () => {
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
-
-    
   }, []);
 
   const openHome = (filtered_plants) => {
@@ -90,7 +97,7 @@ const App = () => {
       <div className="App">
         {!showHome && (
           <div>
-            <IconButton size="large" className="home_icon" color="primary" onClick={() => openHome(false)}>
+            <IconButton size="large" className={`${classes.noHover} home_icon`} color="primary" onClick={() => openHome(false)}>
               <GrassOutlinedIcon className='home_icon'/>
             </IconButton>
           </div>
@@ -98,13 +105,13 @@ const App = () => {
         {!showHome && (
           <ButtonGroup size="lg">
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-              <AddSharpIcon className="home_button" />
+              <AddSharpIcon className={`home_button ${classes.noHover}`} />
             </IconButton>
             <IconButton size="large" color="error" onClick={() => openHome(true)}>
-              <WaterDropOutlinedIcon className="home_button" />
+              <WaterDropOutlinedIcon className={`home_button ${classes.noHover}`} />
             </IconButton>
             <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
-              <SettingsSharpIcon className="home_button" />
+              <SettingsSharpIcon className={`home_button ${classes.noHover}`} />
             </IconButton>
           </ButtonGroup>
         )}
