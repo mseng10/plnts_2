@@ -1,26 +1,29 @@
+// App.js
 import './App.css';
 
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+
 import React, { useState, useEffect } from 'react';
-import AddSharpIcon from '@mui/icons-material/AddSharp';
-import Plant from './Plant';
-import NewPlantForm from './forms/NewPlantForm';
-import UpdatePlantForm from './forms/UpdatePlantForm';
 import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey } from '@mui/material/colors';
+import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
+import Home from './Home';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
-import { Grid } from '@mui/material';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import HomeSharpIcon from '@mui/icons-material/HomeSharp';
 
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: green[500], //'#1de9b6';
+      main: green[500],
     },
     secondary: {
       main: lightBlue[500],
@@ -30,7 +33,7 @@ const darkTheme = createTheme({
     },
     error: {
       main: pink[500],
-    }
+    },
   },
 });
 
@@ -38,8 +41,7 @@ const App = () => {
   const [plants, setPlants] = useState([]);
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
-  const [selectedPlant, setSelectedPlant] = useState(null);
-  const [showPlantGrid, setShowPlantGrid] = useState(false);
+  const [showHome, setShowHome] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -67,7 +69,7 @@ const App = () => {
 
   const handlePlantClick = (plant) => {
     // Open the update plant form when a plant is clicked
-    setSelectedPlant(plant);
+    console.log(plant);
     setIsUpdatePlantFormOpen(true);
   };
 
@@ -92,54 +94,38 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div className="App">
-        <div>
-          {!showPlantGrid && (
-            <div>
+        {!showHome && (
+          <div>
+            <IconButton size="large" className="home_icon" color="primary" onClick={() => setShowHome(true)}>
               <GrassOutlinedIcon className='home_icon'/>
-            </div>
-          )}
-        </div>
-        {!showPlantGrid && (
-          <ButtonGroup size="lg">
-            <IconButton size="large" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
-              <AddSharpIcon className='home_button'/>
             </IconButton>
-            <IconButton size="large" color="secondary" onClick={() => setShowPlantGrid(true)}>
-              <HomeSharpIcon className='home_button'/>
+          </div>
+        )}
+        {!showHome && (
+          <ButtonGroup size="lg">
+            <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
+              <AddSharpIcon className="home_button" />
             </IconButton>
             <IconButton size="large" color="error" onClick={() => setIsNewPlantFormOpen(true)}>
-              <WaterDropOutlinedIcon className='home_button'/>
+              <WaterDropOutlinedIcon className="home_button" />
             </IconButton>
             <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
-              <SettingsSharpIcon className='home_button'/>
+              <SettingsSharpIcon className="home_button" />
             </IconButton>
           </ButtonGroup>
         )}
-        {showPlantGrid && (
-          <div className="plant-grid">
-            {plants.map((plant) => (
-              <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
-                <Plant
-                  {...plant}
-                  onUpdate={() => handlePlantClick(plant)}
-                  onKill={() => handleKillPlant(plant.id)}
-                  onWater={() => handleWaterPlant(plant.id)}
-                />
-              </Grid>
-            ))}
-          </div>
-        )}
-        <NewPlantForm
-          isOpen={isNewPlantFormOpen}
-          onRequestClose={() => setIsNewPlantFormOpen(false)}
-          onSave={handleSavePlant}
-        />
-        {selectedPlant && (
-          <UpdatePlantForm
-            isOpen={isUpdatePlantFormOpen}
-            onRequestClose={() => setIsUpdatePlantFormOpen(false)}
-            onUpdate={handleUpdatePlant}
-            plant={selectedPlant}
+        {showHome && (
+          <Home
+            plants={plants}
+            isNewPlantFormOpen={isNewPlantFormOpen}
+            isUpdatePlantFormOpen={isUpdatePlantFormOpen}
+            setIsNewPlantFormOpen={setIsNewPlantFormOpen}
+            setIsUpdatePlantFormOpen={setIsUpdatePlantFormOpen}
+            handleSavePlant={handleSavePlant}
+            handleKillPlant={handleKillPlant}
+            handlePlantClick={handlePlantClick}
+            handleUpdatePlant={handleUpdatePlant}
+            handleWaterPlant={handleWaterPlant}
           />
         )}
       </div>
