@@ -19,7 +19,6 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NewPlantForm from './forms/NewPlantForm';
-import UpdatePlantForm from './forms/UpdatePlantForm';
 
 const darkTheme = createTheme({
   palette: {
@@ -42,8 +41,8 @@ const darkTheme = createTheme({
 const App = () => {
   const [plants, setPlants] = useState([]);
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
-  const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
+  const [showNeedWater, setNeedWater] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -52,6 +51,11 @@ const App = () => {
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
   }, []);
+
+  const openHome = (filtered_plants) => {
+    setNeedWater(filtered_plants);
+    setShowHome(true);
+  };
 
   const handleSavePlant = (newPlant) => {
     // Add the "alive" field with a default value of true
@@ -69,20 +73,6 @@ const App = () => {
     );
   };
 
-  const handlePlantClick = (plant) => {
-    // Open the update plant form when a plant is clicked
-    console.log(plant);
-    setIsUpdatePlantFormOpen(true);
-  };
-
-  const handleUpdatePlant = (updatedPlant) => {
-    // Update the plant data on the server or perform other actions
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) => (plant.id === updatedPlant.id ? updatedPlant : plant))
-    );
-    setIsUpdatePlantFormOpen(false);
-  };
-
   const handleWaterPlant = (plantId) => {
     // Find the plant by id and update its lastWatered field to the current date and time
     setPlants((prevPlants) =>
@@ -98,7 +88,7 @@ const App = () => {
       <div className="App">
         {!showHome && (
           <div>
-            <IconButton size="large" className="home_icon" color="primary" onClick={() => setShowHome(true)}>
+            <IconButton size="large" className="home_icon" color="primary" onClick={() => openHome(false)}>
               <GrassOutlinedIcon className='home_icon'/>
             </IconButton>
           </div>
@@ -108,7 +98,7 @@ const App = () => {
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
               <AddSharpIcon className="home_button" />
             </IconButton>
-            <IconButton size="large" color="error" onClick={() => setIsNewPlantFormOpen(true)}>
+            <IconButton size="large" color="error" onClick={() => openHome(true)}>
               <WaterDropOutlinedIcon className="home_button" />
             </IconButton>
             <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
@@ -119,14 +109,8 @@ const App = () => {
         {showHome && (
           <Home
             plants={plants}
-            // isNewPlantFormOpen={isNewPlantFormOpen}
-            // isUpdatePlantFormOpen={isUpdatePlantFormOpen}
-            // setIsNewPlantFormOpen={setIsNewPlantFormOpen}
-            // setIsUpdatePlantFormOpen={setIsUpdatePlantFormOpen}
-            // handleSavePlant={handleSavePlant}
+            onlyNeedWater={showNeedWater}
             handleKillPlant={handleKillPlant}
-            handlePlantClick={handlePlantClick}
-            // handleUpdatePlant={handleUpdatePlant}
             handleWaterPlant={handleWaterPlant}
           />
         )}
@@ -135,14 +119,6 @@ const App = () => {
           onRequestClose={() => setIsNewPlantFormOpen(false)}
           onSave={handleSavePlant}
         />
-        {isUpdatePlantFormOpen && (
-          <UpdatePlantForm
-            isOpen={isUpdatePlantFormOpen}
-            onRequestClose={() => setIsUpdatePlantFormOpen(false)}
-            onUpdate={handleUpdatePlant}
-            plant={null} // TODO: SET TO PLANT
-          />
-        )}
       </div>
     </ThemeProvider>
   );
