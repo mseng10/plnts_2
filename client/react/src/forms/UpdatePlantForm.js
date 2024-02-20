@@ -6,7 +6,6 @@ import Button from '@mui/material/Button';
 import { Unstable_NumberInput as NumberInput } from '@mui/base/Unstable_NumberInput';
 
 const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
-  console.log(plant);
   const [updatedName, setUpdatedName] = useState(plant.name);
   const [updatedType, setUpdatedType] = useState(plant.type);
   const [updatedWateringFrequency, setUpdatedWateringFrequency] = useState(plant.wateringFrequency);
