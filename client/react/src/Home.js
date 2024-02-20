@@ -3,19 +3,13 @@
 import React from 'react';
 import { Grid } from '@mui/material';
 import Plant from './Plant';
-import NewPlantForm from './forms/NewPlantForm';
-import UpdatePlantForm from './forms/UpdatePlantForm';
+// import NewPlantForm from './forms/NewPlantForm';
+// import UpdatePlantForm from './forms/UpdatePlantForm';
 
 const Home = ({
   plants,
-  isNewPlantFormOpen,
-  isUpdatePlantFormOpen,
-  setIsNewPlantFormOpen,
-  setIsUpdatePlantFormOpen,
-  handleSavePlant,
   handleKillPlant,
   handlePlantClick,
-  handleUpdatePlant,
   handleWaterPlant,
 }) => {
   return (
@@ -32,19 +26,19 @@ const Home = ({
           </Grid>
         ))}
       </div>
-      <NewPlantForm
+      {/* <NewPlantForm
         isOpen={isNewPlantFormOpen}
         onRequestClose={() => setIsNewPlantFormOpen(false)}
         onSave={handleSavePlant}
-      />
-      {isUpdatePlantFormOpen && (
+      /> */}
+      {/* {isUpdatePlantFormOpen && (
         <UpdatePlantForm
           isOpen={isUpdatePlantFormOpen}
           onRequestClose={() => setIsUpdatePlantFormOpen(false)}
           onUpdate={handleUpdatePlant}
           plant={null} // TODO: SET TO PLANT
         />
-      )}
+      )} */}
     </>
   );
 };

@@ -18,6 +18,8 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
+import NewPlantForm from './forms/NewPlantForm';
+import UpdatePlantForm from './forms/UpdatePlantForm';
 
 const darkTheme = createTheme({
   palette: {
@@ -117,15 +119,28 @@ const App = () => {
         {showHome && (
           <Home
             plants={plants}
-            isNewPlantFormOpen={isNewPlantFormOpen}
-            isUpdatePlantFormOpen={isUpdatePlantFormOpen}
-            setIsNewPlantFormOpen={setIsNewPlantFormOpen}
-            setIsUpdatePlantFormOpen={setIsUpdatePlantFormOpen}
-            handleSavePlant={handleSavePlant}
+            // isNewPlantFormOpen={isNewPlantFormOpen}
+            // isUpdatePlantFormOpen={isUpdatePlantFormOpen}
+            // setIsNewPlantFormOpen={setIsNewPlantFormOpen}
+            // setIsUpdatePlantFormOpen={setIsUpdatePlantFormOpen}
+            // handleSavePlant={handleSavePlant}
             handleKillPlant={handleKillPlant}
             handlePlantClick={handlePlantClick}
-            handleUpdatePlant={handleUpdatePlant}
+            // handleUpdatePlant={handleUpdatePlant}
             handleWaterPlant={handleWaterPlant}
+          />
+        )}
+        <NewPlantForm
+          isOpen={isNewPlantFormOpen}
+          onRequestClose={() => setIsNewPlantFormOpen(false)}
+          onSave={handleSavePlant}
+        />
+        {isUpdatePlantFormOpen && (
+          <UpdatePlantForm
+            isOpen={isUpdatePlantFormOpen}
+            onRequestClose={() => setIsUpdatePlantFormOpen(false)}
+            onUpdate={handleUpdatePlant}
+            plant={null} // TODO: SET TO PLANT
           />
         )}
       </div>
