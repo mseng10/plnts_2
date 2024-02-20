@@ -50,6 +50,8 @@ const App = () => {
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
+
+    
   }, []);
 
   const openHome = (filtered_plants) => {
