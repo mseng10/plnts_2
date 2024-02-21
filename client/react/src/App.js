@@ -11,6 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey } from '@mui/material/colors';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import Home from './Home';
+import System from './System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
@@ -37,6 +38,7 @@ const darkTheme = createTheme({
 
 const App = () => {
   const [plants, setPlants] = useState([]);
+  const [system, setSystem] = useState({temperature: 20, humidity: 80});
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [showNeedWater, setNeedWater] = useState(false);
@@ -47,6 +49,12 @@ const App = () => {
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
+
+    // Fetch plant data from the server
+    fetch('https://localhost')
+      .then((response) => response.json())
+      .then((data) => setSystem(data ? {temperature: 20, humidity: 80} : {temperature: 20, humidity: 80}))
+      .catch(() => setSystem({temperature: 20, humidity: 80}));
   }, []);
 
   const openHome = (filtered_plants) => {
@@ -85,6 +93,11 @@ const App = () => {
       <div className="App">
         {!showHome && (
           <div>
+            {system != null && (
+              <System
+                {...system}
+              />
+            )}
             <IconButton size="large" className={`home_icon`} color="primary" onClick={() => openHome(false)}>
               <GrassOutlinedIcon className='home_icon'/>
             </IconButton>
@@ -101,6 +114,9 @@ const App = () => {
             <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
               <SettingsSharpIcon className={`home_button`} />
             </IconButton>
+            <System
+              system={system}
+            />
           </ButtonGroup>
         )}
         {showHome && (
