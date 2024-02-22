@@ -2,22 +2,19 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 
-const System = ({ temperature, humidity }) => {
-  console.log(temperature);
+const System = ({ system }) => {
+  if (!system) {
+    // Handle case when system data is not available
+    return <div>No system data available</div>;
+  }
+  
+
   return (
     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-      {/* <CircularProgress color="warning">
-        <WarningIcon color="warning" />
-      </CircularProgress> */}
-      <CircularProgress size="lg" determinate value={temperature}>
-        2 / 3
-      </CircularProgress>
-      <CircularProgress size="lg" determinate value={humidity}>
-        2 / 3
-      </CircularProgress>
-      {/* <CircularProgress color="danger" sx={{ '--CircularProgress-size': '80px' }}>
-        <ReportIcon color="danger" />
-      </CircularProgress> */}
+      {/* <CircularProgress color='primary' size="lg" determinate value={system.temperature} />
+      <CircularProgress color='primary' size="lg" determinate value={system.humidity} /> */}
+      <CircularProgress variant="determinate" value={system.temperature} />
+      <CircularProgress variant="determinate" value={system.humidity} />
     </Box>
   );
 };
