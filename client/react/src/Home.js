@@ -4,6 +4,10 @@ import { Grid } from '@mui/material';
 import Plant from './Plant';
 // import NewPlantForm from './forms/NewPlantForm';
 import UpdatePlantForm from './forms/UpdatePlantForm';
+import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import IconButton from '@mui/material/IconButton';
+import GridViewSharpIcon from '@mui/icons-material/GridViewSharp';
 
 const Home = ({
   plants,
@@ -29,20 +33,37 @@ const Home = ({
     setIsUpdatePlantFormOpen(true);
   };
 
+  const handleSelectPlant = (plant) => {
+    // Open the update plant form when a plant is clicked
+    console.log(plant);
+    setIsUpdatePlantFormOpen(true);
+  };
+
 
   return (
     <>
-      <div className="plant-grid">
-        {plants.filter((word) => onlyNeedWater ? word.wateringFrequency > Date.now() : true).map((plant) => (
-          <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
-            <Plant
-              {...plant}
-              onUpdate={() => handlePlantClick(plant)}
-              onKill={() => handleKillPlant(plant.id)}
-              onWater={() => handleWaterPlant(plant.id)}
-            />
-          </Grid>
-        ))}
+      <div>
+        <ButtonGroup size="lg">
+          <IconButton size="small" color="info" onClick={() => handleSelectPlant(true)}>
+            <TableRowsSharpIcon />
+          </IconButton>
+          <IconButton size="small" color="info" onClick={() => handleSelectPlant(true)}>
+            <GridViewSharpIcon />
+          </IconButton>
+        </ButtonGroup>
+        <div className="plant-grid">
+          {plants.filter((word) => onlyNeedWater ? word.wateringFrequency > Date.now() : true).map((plant) => (
+            <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
+              <Plant
+                {...plant}
+                onSelect={() => handleSelectPlant(plant)}
+                onUpdate={() => handlePlantClick(plant)}
+                onKill={() => handleKillPlant(plant.id)}
+                onWater={() => handleWaterPlant(plant.id)}
+              />
+            </Grid>
+          ))}
+        </div>
       </div>
       {/* <NewPlantForm
         isOpen={isNewPlantFormOpen}
