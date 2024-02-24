@@ -105,7 +105,15 @@ h1, h2 {
 }
 
 .home_icon_form {
-  font-size: 200px !important;
+  font-size: 256px !important;
+}
+
+.home_icon_form_submit {
+  font-size: 256px !important;
+  color: #4caf50 !important;
+  -webkit-transition: color 1000ms linear;
+  -ms-transition: color 1000ms linear;
+  transition: color 1000ms linear;
 }
 
 .home_button {

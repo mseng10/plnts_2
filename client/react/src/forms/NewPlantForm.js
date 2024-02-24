@@ -13,19 +13,24 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('Succulent');
   const [wateringFrequency, setWateringFrequency] = useState('');
+  const [submitted, setSubmit] = useState(false);
+
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+
+    setSubmit(true);
+    console.log(event)
+    // event.preventDefault();
     // Validate form fields if needed
 
     // Save the new plant
     onSave({ name, type, wateringFrequency });
 
     // Clear form fields
-    clearForm();
+    // clearForm();
 
-    // Close the modal
-    onRequestClose();
+    // // Close the modal
+    // onRequestClose();
   };
 
   const handleCancel = () => {
@@ -59,7 +64,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit} >
           <div className='left'>
-            <GrassOutlinedIcon color='info' className='home_icon_form'/>
+            <GrassOutlinedIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>
