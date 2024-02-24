@@ -1,6 +1,8 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
+import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
+import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
 
 const System = ({ system }) => {
   if (!system) {
@@ -11,10 +13,24 @@ const System = ({ system }) => {
 
   return (
     <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexWrap: 'wrap' }}>
-      {/* <CircularProgress color='primary' size="lg" determinate value={system.temperature} />
-      <CircularProgress color='primary' size="lg" determinate value={system.humidity} /> */}
-      <CircularProgress variant="determinate" value={system.temperature} />
-      <CircularProgress variant="determinate" value={system.humidity} />
+      <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+        <CircularProgress
+          variant="determinate"
+          value={system.humidity}
+          size={80}
+          sx={{ color: '#3f51b5' }}
+        />
+        <InvertColorsSharpIcon sx={{color: '#3f51b5', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '48px' }} />
+      </Box>      
+      <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+        <CircularProgress
+          variant="determinate"
+          value={system.temperature}
+          size={80}
+          sx={{ color: '#ffc107' }}
+        />
+        <DeviceThermostatSharpIcon sx={{ color: '#ffc107', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '48px' }} />
+      </Box>
     </Box>
   );
 };
