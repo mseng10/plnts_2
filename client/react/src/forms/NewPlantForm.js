@@ -12,6 +12,7 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('Succulent');
+  const [genus, setGenus] = useState('Succulent');
   const [wateringFrequency, setWateringFrequency] = useState('');
   const [submitted, setSubmit] = useState(false);
 
@@ -19,18 +20,18 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const handleSubmit = (event) => {
 
     setSubmit(true);
-    console.log(event)
-    // event.preventDefault();
+
+    event.preventDefault();
     // Validate form fields if needed
 
     // Save the new plant
-    onSave({ name, type, wateringFrequency });
+    onSave({ name, type, wateringFrequency, genus });
 
     // Clear form fields
-    // clearForm();
+    clearForm();
 
     // // Close the modal
-    // onRequestClose();
+    onRequestClose();
   };
 
   const handleCancel = () => {
@@ -92,6 +93,21 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               label="Type"
               value={type}
               onChange={(event) => setType(event.target.value)}
+              variant="standard"
+            >
+              <MenuItem value="Succulent">Succulent</MenuItem>
+              <MenuItem value="Cactus">Cactus</MenuItem>
+              <MenuItem value="Philodendron">Philodendron</MenuItem>
+              <MenuItem value="Monstera">Monstera</MenuItem>
+            </TextField>
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              select
+              label="Genus"
+              value={genus}
+              onChange={(event) => setGenus(event.target.value)}
               variant="standard"
             >
               <MenuItem value="Succulent">Succulent</MenuItem>
