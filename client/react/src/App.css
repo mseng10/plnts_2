@@ -104,6 +104,26 @@ h1, h2 {
   font-size: 512px !important;
 }
 
+.home_icon_form {
+  font-size: 200px !important;
+}
+
 .home_button {
   font-size: 80px !important;
+}
+
+.left {
+  width: 128px;
+  display:inline;
+  float:left;
+}
+
+.left_button {
+  font-size: 112px !important;
+}
+
+.right {
+  width: 256px;
+  display:inline;
+  float:right;
 }

@@ -7,9 +7,16 @@ import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
+
 const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onSelect, onKill, onWater, onUpdate }) => {
+  
+  const handleSelect = (plant) => {
+
+    onSelect(plant);
+  };
+
   return (
-    <Card className={`plant ${alive ? 'alive' : 'not-alive'}`} border={1} borderColor="primary" onClick= {() => onSelect(null)}>
+    <Card className={`plant ${alive ? 'alive' : 'not-alive'}`} border={1} borderColor="primary" onClick= {() => handleSelect(null)}>
       <CardContent>
         <Typography variant="h5" component="h2">
           {name}
