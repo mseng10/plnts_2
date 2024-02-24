@@ -8,7 +8,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 
-const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onSelect, onKill, onWater, onUpdate }) => {
+const Plant = ({ name, type, genus, wateringFrequency, lastWatered, alive, onSelect, onKill, onWater, onUpdate }) => {
   
   const handleSelect = (plant) => {
 
@@ -25,6 +25,9 @@ const Plant = ({ name, type, wateringFrequency, lastWatered, alive, onSelect, on
           <>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               Type: {type}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Genus: {genus}
             </Typography>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               Watering Frequency: {wateringFrequency}
