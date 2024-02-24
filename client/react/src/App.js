@@ -10,7 +10,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey } from '@mui/material/colors';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
-import Home from './Home';
+import Home from './pages/Home';
 import System from './System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';

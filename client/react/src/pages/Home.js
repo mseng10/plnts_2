@@ -1,9 +1,9 @@
 // Home.js
 import React, { useState } from 'react';
 import { Grid } from '@mui/material';
-import Plant from './Plant';
+import Plant from '../Plant';
 // import NewPlantForm from './forms/NewPlantForm';
-import UpdatePlantForm from './forms/UpdatePlantForm';
+import UpdatePlantForm from '../forms/UpdatePlantForm';
 import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
