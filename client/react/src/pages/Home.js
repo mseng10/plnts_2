@@ -10,6 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import GridViewSharpIcon from '@mui/icons-material/GridViewSharp';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import EditSharpIcon from '@mui/icons-material/EditSharp';
 
 const Home = ({
   plants,
@@ -49,7 +50,7 @@ const Home = ({
   return (
     <>
       <div>
-        <ButtonGroup size="lg">
+        <ButtonGroup size="lg" sx={{float: 'left'}}>
           <IconButton size="large" color="info" onClick={() => changeGridView(true)}>
             <TableRowsSharpIcon />
           </IconButton>
@@ -58,6 +59,9 @@ const Home = ({
           </IconButton>
         </ButtonGroup>
         <ButtonGroup size="lg" sx={{float: 'right'}}>
+          <IconButton size="large" color="primary" onClick={() => changeGridView(true)}>
+            <EditSharpIcon />
+          </IconButton>
           <IconButton size="large" color="secondary" onClick={() => changeGridView(true)}>
             <WaterDropOutlinedIcon />
           </IconButton>
