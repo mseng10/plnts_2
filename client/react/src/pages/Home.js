@@ -11,6 +11,7 @@ import GridViewSharpIcon from '@mui/icons-material/GridViewSharp';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
+import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 
 const Home = ({
   plants,
@@ -67,6 +68,9 @@ const Home = ({
           </IconButton>
           <IconButton size="large" color="error" onClick={() => changeGridView(true)}>
             <DeleteOutlineSharpIcon />
+          </IconButton>
+          <IconButton size="large" color="info" onClick={() => changeGridView(true)}>
+            <ClearSharpIcon />
           </IconButton>
         </ButtonGroup>
         <div className="plant-grid">
