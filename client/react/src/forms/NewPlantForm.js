@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -17,11 +17,22 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
     ["Monstera", ["Albo", "Thai Constelation"]]
   ])
 
+
+  useEffect(() => {
+    // Fetch plant data from the server
+    fetch('https://localhost/types')
+      .then((response) => response.json())
+      .then((data) => setTypes(data? Array.from(typesToGenus.keys()) : Array.from(typesToGenus.keys())))
+      .catch((error) => console.error('Error fetching plant data:', error));
+  }, []);
+
   const [name, setName] = useState('');
   const [type, setType] = useState('Succulent');
   const [genus, setGenus] = useState('Echeveria');
   const [wateringFrequency, setWateringFrequency] = useState(14);
   const [submitted, setSubmit] = useState(false);
+
+  const [types, setTypes] = useState(Array.from(typesToGenus.keys()))
 
   const handleSubmit = (event) => {
     setSubmit(true);
@@ -90,7 +101,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               onChange={(event) => setType(event.target.value)}
               variant="standard"
             >
-              {Array.from(typesToGenus.keys()).map((ty) => (
+              {types.map((ty) => (
                 <MenuItem key={ty} value={ty}>{ty}</MenuItem>
               ))}
             </TextField>
