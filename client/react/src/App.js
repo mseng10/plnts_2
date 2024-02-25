@@ -17,6 +17,7 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NewPlantForm from './forms/NewPlantForm';
+import ArrowBackIosNewSharpIcon from '@mui/icons-material/ArrowBackIosNewSharp';
 
 const darkTheme = createTheme({
   palette: {
@@ -42,6 +43,7 @@ const App = () => {
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [showNeedWater, setNeedWater] = useState(false);
+  const [showSystem, setShowSystem] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -57,9 +59,18 @@ const App = () => {
       .catch(() => setSystem(system));
   }, []);
 
+  const openApp = () => {
+    setShowHome(false);
+    setShowSystem(false);
+  };
+
   const openHome = (filtered_plants) => {
     setNeedWater(filtered_plants);
     setShowHome(true);
+  };
+
+  const openSystem = () => {
+    setShowSystem(true);
   };
 
   const handleSavePlant = (newPlant) => {
@@ -91,17 +102,26 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div className="App">
-        {!showHome && (
+        {showHome || showSystem && ( // yuck
           <div>
-            <System
-              system = {system}
-            />
+            <IconButton id="back" size="large"  color="primary" onClick={() => openApp()}>
+              <ArrowBackIosNewSharpIcon />
+            </IconButton>
+          </div>
+        )}
+        {!showHome && !showSystem && ( // yuck
+          <div>
+            <div className='system_min'>
+              <System
+                system = {system}
+              />
+            </div>
             <IconButton size="large" className={`home_icon`} color="primary" onClick={() => openHome(false)}>
               <GrassOutlinedIcon className='home_icon'/>
             </IconButton>
           </div>
         )}
-        {!showHome && (
+        {!showHome && !showSystem && ( // yuck
           <ButtonGroup size="lg">
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
               <AddSharpIcon className={`home_button `} />
@@ -109,7 +129,7 @@ const App = () => {
             <IconButton size="large" color="error" onClick={() => openHome(true)}>
               <WaterDropOutlinedIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="info" onClick={() => setIsNewPlantFormOpen(true)}>
+            <IconButton size="large" color="info" onClick={() => openSystem()}>
               <SettingsSharpIcon className={`home_button`} />
             </IconButton>
           </ButtonGroup>
@@ -120,6 +140,12 @@ const App = () => {
             onlyNeedWater={showNeedWater}
             handleKillPlant={handleKillPlant}
             handleWaterPlant={handleWaterPlant}
+          />
+        )}
+        {showSystem && (
+          <System
+            system={system}
+            full={showSystem}
           />
         )}
         <NewPlantForm

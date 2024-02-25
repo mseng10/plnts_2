@@ -139,3 +139,9 @@ h1, h2 {
 .modal {
   outline: 0!important;
 }
+
+#back {
+  position: fixed;
+  left: 0;
+  top:0;
+}
