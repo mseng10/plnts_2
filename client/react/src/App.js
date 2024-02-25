@@ -47,13 +47,13 @@ const App = () => {
 
   useEffect(() => {
     // Fetch plant data from the server
-    fetch('https://localhost')
+    fetch('https://localhost/plants')
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
     const system = {temperature: 20, humidity: 80};
     // Fetch plant data from the server
-    fetch('https://localhost')
+    fetch('https://localhost/system')
       .then((response) => response.json())
       .then(() => setSystem(system))
       .catch(() => setSystem(system));
@@ -102,7 +102,7 @@ const App = () => {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <div className="App">
-        {showHome || showSystem && ( // yuck
+        {(showHome || showSystem) && ( // yuck
           <div>
             <IconButton id="back" size="large"  color="primary" onClick={() => openApp()}>
               <ArrowBackIosNewSharpIcon />
