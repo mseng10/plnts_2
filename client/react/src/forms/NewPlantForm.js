@@ -10,6 +10,7 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
+  // TODO: Turn to server side
   const typesToGenus = new Map([
     ["Succulent", ["Echeveria"]],
     ["Cactus", ["Old Man"]],
