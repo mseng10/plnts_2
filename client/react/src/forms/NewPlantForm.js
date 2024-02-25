@@ -10,41 +10,36 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
+  const typesToGenus = new Map([
+    ["Succulent", ["Echeveria"]],
+    ["Cactus", ["Old Man"]],
+    ["Philodendron", ["Pink Princess", "White Princess"]],
+    ["Monstera", ["Albo", "Thai Constelation"]]
+  ])
+
   const [name, setName] = useState('');
   const [type, setType] = useState('Succulent');
-  const [genus, setGenus] = useState('Succulent');
-  const [wateringFrequency, setWateringFrequency] = useState('');
+  const [genus, setGenus] = useState('Echeveria');
+  const [wateringFrequency, setWateringFrequency] = useState(14);
   const [submitted, setSubmit] = useState(false);
 
-
   const handleSubmit = (event) => {
-
     setSubmit(true);
-
     event.preventDefault();
-    // Validate form fields if needed
-
-    // Save the new plant
     onSave({ name, type, wateringFrequency, genus });
-
-    // Clear form fields
     clearForm();
-
-    // // Close the modal
     onRequestClose();
   };
 
   const handleCancel = () => {
-    // Clear form fields
     clearForm();
-
-    // Close the modal
     onRequestClose();
   };
 
   const clearForm = () => {
     setName('');
-    setType('');
+    setType('Succulent');
+    setGenus('Echeveria');
     setWateringFrequency('');
   };
 
@@ -53,17 +48,17 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
       open={isOpen}
       onClose={onRequestClose}
       aria-labelledby="new-bobby-form"
+      disableAutoFocus={true}
       style={{
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'inherit',
         border: 'none',
-        outline: 'none'
       }}
     >
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
-        <form onSubmit={handleSubmit} >
+        <form onSubmit={handleSubmit}>
           <div className='left'>
             <GrassOutlinedIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
             <ButtonGroup>
@@ -95,10 +90,9 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               onChange={(event) => setType(event.target.value)}
               variant="standard"
             >
-              <MenuItem value="Succulent">Succulent</MenuItem>
-              <MenuItem value="Cactus">Cactus</MenuItem>
-              <MenuItem value="Philodendron">Philodendron</MenuItem>
-              <MenuItem value="Monstera">Monstera</MenuItem>
+              {Array.from(typesToGenus.keys()).map((ty) => (
+                <MenuItem key={ty} value={ty}>{ty}</MenuItem>
+              ))}
             </TextField>
             <TextField
               margin="normal"
@@ -110,10 +104,9 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               onChange={(event) => setGenus(event.target.value)}
               variant="standard"
             >
-              <MenuItem value="Succulent">Succulent</MenuItem>
-              <MenuItem value="Cactus">Cactus</MenuItem>
-              <MenuItem value="Philodendron">Philodendron</MenuItem>
-              <MenuItem value="Monstera">Monstera</MenuItem>
+              {typesToGenus.get(type).map((gen) => (
+                <MenuItem key={gen} value={gen}>{gen}</MenuItem>
+              ))}
             </TextField>
             <TextField
               margin="normal"

@@ -39,8 +39,7 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, onUpdate, plant }) => {
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="Update Plant Form"
-      className="modal"
-      overlayClassName="modal-overlay"
+      disableAutoFocus={true}
     >
       <div className="modal-content">
         <h2>Update Plant Form</h2>
