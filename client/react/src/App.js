@@ -11,7 +11,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey } from '@mui/material/colors';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import Home from './pages/Home';
-import System from './System'
+import System from './pages/System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';

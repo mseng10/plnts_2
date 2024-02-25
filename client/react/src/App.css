@@ -135,3 +135,7 @@ h1, h2 {
   display:inline;
   float:right;
 }
+
+.modal {
+  outline: 0!important;
+}

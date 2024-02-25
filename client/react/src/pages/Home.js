@@ -39,15 +39,19 @@ const Home = ({
     setIsUpdatePlantFormOpen(true);
   };
 
+  const changeGridView = (gridView) => {
+    console.log(gridView);
+  }
+
 
   return (
     <>
       <div>
         <ButtonGroup size="lg">
-          <IconButton size="small" color="info" onClick={() => handleSelectPlant(true)}>
+          <IconButton size="small" color="info" onClick={() => changeGridView(true)}>
             <TableRowsSharpIcon />
           </IconButton>
-          <IconButton size="small" color="info" onClick={() => handleSelectPlant(true)}>
+          <IconButton size="small" color="info" onClick={() => changeGridView(true)}>
             <GridViewSharpIcon />
           </IconButton>
         </ButtonGroup>
