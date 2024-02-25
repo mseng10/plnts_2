@@ -20,7 +20,7 @@ const System = ({ system, full }) => {
             size={256}
             sx={{ color: '#3f51b5' }}
           />
-          <InvertColorsSharpIcon sx={{color: '#3f51b5', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '40px' }} />
+          <InvertColorsSharpIcon sx={{color: '#3f51b5', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '128px' }} />
         </Box>      
         <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
           <CircularProgress
@@ -29,7 +29,7 @@ const System = ({ system, full }) => {
             size={256}
             sx={{ color: '#ff9800' }}
           />
-          <DeviceThermostatSharpIcon sx={{ color: '#ff9800', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '40px' }} />
+          <DeviceThermostatSharpIcon sx={{ color: '#ff9800', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '128px' }} />
         </Box>
         <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
           <CircularProgress
@@ -38,7 +38,7 @@ const System = ({ system, full }) => {
             size={256}
             sx={{ color: '#ffeb3b' }}
           />
-          <TungstenSharpIcon sx={{ color: '#ffeb3b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '40px' }} />
+          <TungstenSharpIcon sx={{ color: '#ffeb3b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '128px' }} />
         </Box>
       </Box>
     );
