@@ -25,10 +25,10 @@ const Home = ({
 
   const handleUpdatePlant = (updatedPlant) => {
     // Update the plant data on the server or perform other actions
-    // setPlants((prevPlants) =>
-    //   prevPlants.map((plant) => (plant.id === updatedPlant.id ? updatedPlant : plant))
-    // );
-    console.log(updatedPlant);
+    setPlants((prevPlants) =>
+      prevPlants.map((plant) => (plant.id === updatedPlant.id ? updatedPlant : plant))
+    );
+    setEditedPlant(null);
     setIsUpdatePlantFormOpen(false);
   };
 
@@ -36,6 +36,14 @@ const Home = ({
     setPlants((prevPlants) =>
       prevPlants.map((plant) =>
         plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
+      )
+    );
+  };
+
+  const clearSelections = () => {
+    setPlants((prevPlants) =>
+      prevPlants.map((plant) =>
+        plant.selected ? { ...plant, selected: false } : plant
       )
     );
   };
@@ -52,18 +60,26 @@ const Home = ({
     <>
       <div>
         <ButtonGroup size="lg" sx={{float: 'right'}}>
-          <IconButton size="large" color="primary" onClick={() => handleSelectPlant(true)}>
-            <EditSharpIcon />
-          </IconButton>
-          <IconButton size="large" color="secondary" onClick={() => handleSelectPlant(true)}>
-            <WaterDropOutlinedIcon />
-          </IconButton>
-          <IconButton size="large" color="error" onClick={() => handleSelectPlant(true)}>
-            <DeleteOutlineSharpIcon />
-          </IconButton>
-          <IconButton size="large" color="info" onClick={() => editPlant(null)}>
-            <ClearSharpIcon />
-          </IconButton>
+          {plants.filter(pl => pl.selected).length === 1 && (
+            <IconButton size="large" color="primary" onClick={() => editPlant()}>
+              <EditSharpIcon />
+            </IconButton>
+          )}
+          {plants.filter(pl => pl.selected).length > 0 && (
+            <IconButton size="large" color="secondary" onClick={() => handleSelectPlant(true)}>
+              <WaterDropOutlinedIcon />
+            </IconButton>
+          )}
+          {plants.filter(pl => pl.selected).length > 0 && (
+            <IconButton size="large" color="error" onClick={() => handleSelectPlant(true)}>
+              <DeleteOutlineSharpIcon />
+            </IconButton>
+          )}
+          {plants.filter(pl => pl.selected).length === 1 && (
+            <IconButton size="large" color="info" onClick={() => clearSelections()}>
+              <ClearSharpIcon />
+            </IconButton>
+          )}
         </ButtonGroup>
         <div className="plant-grid">
           {plants.filter((word) => onlyNeedWater ? word.wateringFrequency > Date.now() : true).map((plant) => (
