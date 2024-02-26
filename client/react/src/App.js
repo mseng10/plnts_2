@@ -140,6 +140,7 @@ const App = () => {
             onlyNeedWater={showNeedWater}
             handleKillPlant={handleKillPlant}
             handleWaterPlant={handleWaterPlant}
+            setPlants={setPlants}
           />
         )}
         {showSystem && (

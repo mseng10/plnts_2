@@ -2,21 +2,12 @@ import React from 'react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 
-const Plant = ({ name, type, genus, wateringFrequency, lastWatered, alive, onSelect, onKill, onWater, onUpdate }) => {
-  
-  const handleSelect = (plant) => {
-
-    onSelect(plant);
-  };
+const Plant = ({ name, type, genus, wateringFrequency, lastWatered, alive }) => {
 
   return (
-    <Card className={`plant ${alive ? 'alive' : 'not-alive'}`} border={1} borderColor="primary" onClick= {() => handleSelect(null)}>
+    <Card className={`plant ${alive ? 'alive' : 'not-alive'}`} border={1} borderColor="primary" >
       <CardContent>
         <Typography variant="h5" component="h2">
           {name}
@@ -37,17 +28,6 @@ const Plant = ({ name, type, genus, wateringFrequency, lastWatered, alive, onSel
                 Last Watered: {lastWatered}
               </Typography>
             )}
-            <div>
-              <IconButton color="secondary" onClick={onWater}>
-                <WaterDropOutlinedIcon />
-              </IconButton>
-              <IconButton color="error" onClick={onKill}>
-                <DeleteOutlineOutlinedIcon />
-              </IconButton>
-              <IconButton color="secondary" onClick={onUpdate}>
-                <EditOutlinedIcon />
-              </IconButton>
-            </div>
           </>
         )}
       </CardContent>
