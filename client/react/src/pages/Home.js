@@ -93,7 +93,6 @@ const Home = ({
               }}>
                 <Plant
                   {...plant}
-                  onSelect={() => handleSelectPlant(plant)}
                   onKill={() => handleKillPlant(plant.id)}
                   onWater={() => handleWaterPlant(plant.id)}
                 />
@@ -107,7 +106,7 @@ const Home = ({
           isOpen={isUpdatePlantFormOpen}
           onRequestClose={() => setIsUpdatePlantFormOpen(false)}
           onUpdate={handleUpdatePlant}
-          plant={editedPlant} // TODO: SET TO PLANT
+          plant={editedPlant}
         />
       )}
     </>
