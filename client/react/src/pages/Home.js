@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Grid, Button } from '@mui/material';
 import Plant from '../Plant';
-// import NewPlantForm from './forms/NewPlantForm';
 import UpdatePlantForm from '../forms/UpdatePlantForm';
 // import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -87,11 +86,6 @@ const Home = ({
           ))}
         </div>
       </div>
-      {/* <NewPlantForm
-        isOpen={isNewPlantFormOpen}
-        onRequestClose={() => setIsNewPlantFormOpen(false)}
-        onSave={handleSavePlant}
-      /> */}
       {isUpdatePlantFormOpen && (
         <UpdatePlantForm
           isOpen={isUpdatePlantFormOpen}
