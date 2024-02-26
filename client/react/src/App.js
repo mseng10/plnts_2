@@ -89,15 +89,6 @@ const App = () => {
     );
   };
 
-  const handleWaterPlant = (plantId) => {
-    // Find the plant by id and update its lastWatered field to the current date and time
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plant.id === plantId ? { ...plant, lastWatered: new Date().toLocaleString() } : plant
-      )
-    );
-  };
-
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
@@ -139,7 +130,6 @@ const App = () => {
             plants={plants}
             onlyNeedWater={showNeedWater}
             handleKillPlant={handleKillPlant}
-            handleWaterPlant={handleWaterPlant}
             setPlants={setPlants}
           />
         )}

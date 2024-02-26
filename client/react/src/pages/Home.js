@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Grid, Button } from '@mui/material';
 import Plant from '../Plant';
 import UpdatePlantForm from '../forms/UpdatePlantForm';
+import WaterPlantsForm from '../forms/WaterPlantsForm';
 // import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -17,18 +18,18 @@ const Home = ({
   setPlants,
   onlyNeedWater,
   handleKillPlant,
-  handleWaterPlant,
 }) => {
 
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
-  const [editedPlant, setEditedPlant] = useState(null);
+  const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
+  const [selectedPlants, setSelectedPlants] = useState([]);
 
   const handleUpdatePlant = (updatedPlant) => {
     // Update the plant data on the server or perform other actions
     setPlants((prevPlants) =>
       prevPlants.map((plant) => (plant.id === updatedPlant.id ? updatedPlant : plant))
     );
-    setEditedPlant(null);
+    setSelectedPlants([]);
     setIsUpdatePlantFormOpen(false);
   };
 
@@ -38,6 +39,10 @@ const Home = ({
         plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
       )
     );
+    console.log(selectedPlant);
+    const plantss = [selectedPlant];
+    setSelectedPlants(plantss);
+    console.log(selectedPlants);
   };
 
   const clearSelections = () => {
@@ -46,10 +51,11 @@ const Home = ({
         plant.selected ? { ...plant, selected: false } : plant
       )
     );
+    setSelectedPlants([]);
   };
 
   const editPlant = (plant) => {
-    setEditedPlant(plant ? plant : plants.filter(pl => pl.selected));
+    setSelectedPlants([plant ? plant : plants.filter(pl => pl.selected)]);
 
     // Open the update plant form when a plant is clicked
     setIsUpdatePlantFormOpen(true);
@@ -66,7 +72,7 @@ const Home = ({
             </IconButton>
           )}
           {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color="secondary" onClick={() => handleSelectPlant(true)}>
+            <IconButton size="large" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
               <WaterDropOutlinedIcon />
             </IconButton>
           )}
@@ -94,7 +100,6 @@ const Home = ({
                 <Plant
                   {...plant}
                   onKill={() => handleKillPlant(plant.id)}
-                  onWater={() => handleWaterPlant(plant.id)}
                 />
               </Button>
             </Grid>
@@ -106,7 +111,15 @@ const Home = ({
           isOpen={isUpdatePlantFormOpen}
           onRequestClose={() => setIsUpdatePlantFormOpen(false)}
           onUpdate={handleUpdatePlant}
-          plant={editedPlant}
+          plant={selectedPlants[0]}
+        />
+      )}
+      {isWaterPlantsFormOpen && (
+        <WaterPlantsForm
+          isOpen={isWaterPlantsFormOpen}
+          onRequestClose={() => setIsWaterPlantsFormOpen(false)}
+          setPlants={setPlants}
+          plants={selectedPlants}
         />
       )}
     </>
