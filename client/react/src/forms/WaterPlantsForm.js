@@ -96,6 +96,7 @@ const WaterPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
                         edge="end"
                         onChange={handleToggle(plant)}
                         checked={checked.indexOf(plant) !== -1}
+                        color='secondary'
                       />
                     }
                   >
