@@ -12,6 +12,7 @@ import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ClearSharpIcon from '@mui/icons-material/ClearSharp';
+import KillPlantsForm from '../forms/KillPlantsForm';
 
 const Home = ({
   plants,
@@ -22,6 +23,7 @@ const Home = ({
 
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
+  const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
   const [selectedPlants, setSelectedPlants] = useState([]);
 
   const handleUpdatePlant = (updatedPlant) => {
@@ -77,7 +79,7 @@ const Home = ({
             </IconButton>
           )}
           {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color="error" onClick={() => handleSelectPlant(true)}>
+            <IconButton size="large" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
               <DeleteOutlineSharpIcon />
             </IconButton>
           )}
@@ -118,6 +120,14 @@ const Home = ({
         <WaterPlantsForm
           isOpen={isWaterPlantsFormOpen}
           onRequestClose={() => setIsWaterPlantsFormOpen(false)}
+          setPlants={setPlants}
+          plants={selectedPlants}
+        />
+      )}
+      {isKillPlantsFormOpen && (
+        <KillPlantsForm
+          isOpen={isKillPlantsFormOpen}
+          onRequestClose={() => setIsKillPlantsFormOpen(false)}
           setPlants={setPlants}
           plants={selectedPlants}
         />
