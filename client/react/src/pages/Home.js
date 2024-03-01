@@ -35,7 +35,7 @@ const Home = ({
     );
     const plantss = [selectedPlant];
     setSelectedPlants(plantss);
-    setSelectedPlant(plants[0]);
+    setSelectedPlant(selectedPlant);
   };
 
   const clearSelections = () => {
@@ -48,19 +48,12 @@ const Home = ({
     setSelectedPlant(null);
   };
 
-  const editPlant = (plant) => {
-    setSelectedPlants([plant ? plant : plants.filter(pl => pl.selected)]);
-
-    // Open the update plant form when a plant is clicked
-    setIsUpdatePlantFormOpen(true);
-  };
-
   return (
     <>
       <div>
         <ButtonGroup size="lg" sx={{float: 'right'}}>
           {plants.filter(pl => pl.selected).length === 1 && (
-            <IconButton size="large" color="primary" onClick={() => editPlant()}>
+            <IconButton size="large" color="primary" onClick={() => setIsUpdatePlantFormOpen(true)}>
               <EditSharpIcon />
             </IconButton>
           )}
