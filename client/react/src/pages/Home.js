@@ -25,15 +25,7 @@ const Home = ({
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
   const [selectedPlants, setSelectedPlants] = useState([]);
-
-  const handleUpdatePlant = (updatedPlant) => {
-    // Update the plant data on the server or perform other actions
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) => (plant.id === updatedPlant.id ? updatedPlant : plant))
-    );
-    setSelectedPlants([]);
-    setIsUpdatePlantFormOpen(false);
-  };
+  const [selectedPlant, setSelectedPlant] = useState([]);
 
   const handleSelectPlant = (selectedPlant) => {
     setPlants((prevPlants) =>
@@ -41,10 +33,9 @@ const Home = ({
         plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
       )
     );
-    console.log(selectedPlant);
     const plantss = [selectedPlant];
     setSelectedPlants(plantss);
-    console.log(selectedPlants);
+    setSelectedPlant(plants[0]);
   };
 
   const clearSelections = () => {
@@ -54,6 +45,7 @@ const Home = ({
       )
     );
     setSelectedPlants([]);
+    setSelectedPlant(null);
   };
 
   const editPlant = (plant) => {
@@ -62,7 +54,6 @@ const Home = ({
     // Open the update plant form when a plant is clicked
     setIsUpdatePlantFormOpen(true);
   };
-
 
   return (
     <>
@@ -112,8 +103,8 @@ const Home = ({
         <UpdatePlantForm
           isOpen={isUpdatePlantFormOpen}
           onRequestClose={() => setIsUpdatePlantFormOpen(false)}
-          onUpdate={handleUpdatePlant}
-          plant={selectedPlants[0]}
+          setPlants={setPlants}
+          plant={selectedPlant}
         />
       )}
       {isWaterPlantsFormOpen && (

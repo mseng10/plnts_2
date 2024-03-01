@@ -75,9 +75,9 @@ const WaterPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <WaterDropOutlinedIcon color='secondary' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+            <WaterDropOutlinedIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
             <ButtonGroup>
-              <IconButton className="left_button" type="submit" color="primary">
+              <IconButton className="left_button" type="submit" color="secondary">
                 <CheckSharpIcon className="left_button"/>
               </IconButton>
               <IconButton className="left_button" color="error" onClick={handleCancel}>
