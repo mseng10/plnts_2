@@ -12,9 +12,6 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 const UpdatePlantForm = ({ isOpen, onRequestClose, setPlants, plant }) => {
 
-  console.log(plant.type);
-
-
   // TODO: Turn to server side
   const typesToGenus = new Map([
     [null, []],

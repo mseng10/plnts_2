@@ -9,7 +9,7 @@ const Plant = ({ name, type, genus, wateringFrequency, lastWatered, alive }) => 
   return (
     <Card className={`plant ${alive ? 'alive' : 'not-alive'}`} border={1} borderColor="primary" >
       <CardContent>
-        <Typography variant="h5" component="h2">
+        <Typography variant="h5" >
           {name}
         </Typography>
         {alive && (
