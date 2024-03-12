@@ -14,28 +14,20 @@ import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 
-const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {  
-  // TODO: Turn to server side
-  const typesToGenus = new Map([
-    ["Succulent", ["Echeveria"]],
-    ["Cactus", ["Old Man"]],
-    ["Philodendron", ["Pink Princess", "White Princess"]],
-    ["Monstera", ["Albo", "Thai Constelation"]]
-  ])
-    
+const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
     
   useEffect(() => {
     // Fetch plant data from the server
     fetch('https://localhost/types')
       .then((response) => response.json())
-      .then((data) => setCauses(data? Array.from(typesToGenus.keys()) : Array.from(typesToGenus.keys())))
+      .then(() => setCauses(["too much water", "too list water"]))
       .catch((error) => console.error('Error fetching plant data:', error));
   }, []);
 
   const [checked, setChecked] = useState(plants);
   const [submitted, setSubmit] = useState(false);
   const [cause, setCause] = useState(null);
-  const [causes, setCauses] = useState(Array.from(typesToGenus.keys()));
+  const [causes, setCauses] = useState(["too much water", "too list water"]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -118,7 +110,7 @@ const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
               variant="standard"
               color="error"
             >
-              {Array.from(causes.keys()).map((ty) => (
+              {Array.from(causes).map((ty) => (
                 <MenuItem key={ty} value={ty}>{ty}</MenuItem>
               ))}
             </TextField>
