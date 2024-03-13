@@ -10,9 +10,11 @@ import IconButton from '@mui/material/IconButton';
 // import GridViewSharpIcon from '@mui/icons-material/GridViewSharp';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 import KillPlantsForm from '../forms/KillPlantsForm';
+
 
 const Home = ({
   plants,
@@ -65,6 +67,11 @@ const Home = ({
           {plants.filter(pl => pl.selected).length > 0 && (
             <IconButton size="large" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
               <DeleteOutlineSharpIcon />
+            </IconButton>
+          )}
+          {plants.filter(pl => pl.selected).length > 0 && (
+            <IconButton size="large" sx={{color: '#009688'}} onClick={() => setIsKillPlantsFormOpen(true)}>
+              <LunchDiningIcon />
             </IconButton>
           )}
           {plants.filter(pl => pl.selected).length === 1 && (
