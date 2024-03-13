@@ -18,6 +18,7 @@ import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NewPlantForm from './forms/NewPlantForm';
 import ArrowBackIosNewSharpIcon from '@mui/icons-material/ArrowBackIosNewSharp';
+import FitnessCenterSharpIcon from '@mui/icons-material/FitnessCenterSharp';
 
 const darkTheme = createTheme({
   palette: {
@@ -119,6 +120,9 @@ const App = () => {
             </IconButton>
             <IconButton size="large" color="error" onClick={() => openHome(true)}>
               <WaterDropOutlinedIcon className={`home_button `} />
+            </IconButton>
+            <IconButton size="large" sx={{color: '#9c27b0'}} color="info" onClick={() => openSystem()}>
+              <FitnessCenterSharpIcon className={`home_button`} />
             </IconButton>
             <IconButton size="large" color="info" onClick={() => openSystem()}>
               <SettingsSharpIcon className={`home_button`} />
