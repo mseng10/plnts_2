@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List';
@@ -11,32 +11,11 @@ import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Checkbox from '@mui/material/Checkbox';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import ParkSharpIcon from '@mui/icons-material/ParkSharp';
 
-const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
+const RepotPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
   const [checked, setChecked] = useState(plants);
-  const [method, setMethod] = useState('');
-  const [composition, setComposition] = useState([-1,-1,-1]);
-
-  const setN = (val) => {
-    composition[0] = val;
-  };
-
-  const setP = (val) => {
-    composition[1] = val;
-  };
-
-  const setK = (val) => {
-    composition[2] = val;
-  };
-
-  useEffect(() => {
-    // Fetch plant data from the server
-    fetch('https://localhost/types')
-      .then((response) => response.json())
-      .then(() => setMethod('slow release'))
-      .catch((error) => console.error('Error fetching plant data:', error));
-  }, []);
+  const [soilSomposition, setSoilSomposition] = useState(null);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -51,24 +30,17 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
     setChecked(newChecked);
   };
 
-  const handleFertilizePlants = () => {
+  const handleRepotPlants = () => {
     const updatedPlants = plants.map((plant) => ({
       ...plant,
-      last_fertilized_at: Date.now(),
-      fertilizations: [
-        ...(plant.fertilizations || []),
-        {
-          method,
-          composition
-        },
-      ],
+      soilSomposition: soilSomposition,
     }));
 
     setPlants(updatedPlants);
   };
 
   const handleSubmit = (event) => {
-    handleFertilizePlants();
+    handleRepotPlants();
     event.preventDefault();
     clearForm();
     onRequestClose();
@@ -84,8 +56,7 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
   };
 
   const clearForm = () => {
-    setMethod('');
-    setComposition({})
+    setSoilSomposition([])
   };
 
   return (
@@ -105,7 +76,7 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <LunchDiningIcon className='home_icon_form_submit' color='fertilize'/>
+            <ParkSharpIcon className='home_icon_form_submit' color='repot'/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color='primary'>
                 <CheckSharpIcon className="left_button"/>
@@ -122,10 +93,10 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
               required
               select
               label="Method"
-              value={method}
-              onChange={(event) => setMethod(event.target.value)}
+              value={soilSomposition}
+              onChange={(event) => setSoilSomposition(event.target.value)}
               variant="standard"
-              color='fertilize'
+              color='repot'
             >
               {['slow release', 'liquid'].map((option) => (
                 <MenuItem key={option} value={option}>
@@ -133,39 +104,6 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
                 </MenuItem>
               ))}
             </TextField>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="N"
-              value={composition[0]}
-              onChange={(event) => setN(event.target.value)}
-              variant="standard"
-              color='fertilize'
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="P"
-              value={composition[1]}
-              onChange={(event) => setP(event.target.value)}
-              variant="standard"
-              color='fertilize'
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="K"
-              value={composition[2]}
-              onChange={(event) => setK(event.target.value)}
-              variant="standard"
-              color='fertilize'
-            />
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
               {plants.map((plant) => (
                 <div key={plant.id}>
@@ -175,7 +113,7 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
                       <Checkbox
                         edge="end"
                         onChange={handleToggle(plant)}
-                        checked={checked.indexOf(plant) !== -1}color='fertilize'
+                        checked={checked.indexOf(plant) !== -1}color='repot'
                       />
                     }
                   >
@@ -191,4 +129,4 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
   );
 };
 
-export default FertilizePlantsForm;
+export default RepotPlantsForm;

@@ -5,6 +5,7 @@ import Plant from '../Plant';
 import UpdatePlantForm from '../forms/UpdatePlantForm';
 import WaterPlantsForm from '../forms/WaterPlantsForm';
 import FertilizePlantsForm from '../forms/FertilizePlantsForm';
+import RepotPlantsForm from '../forms/RepotPlantsForm';
 // import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -26,18 +27,11 @@ const Home = ({
   handleKillPlant,
 }) => {
 
-  // useEffect(() => {
-  //   // Update form fields when the plant prop changes
-  //   setUpdatedName(plant.name);
-  //   setUpdatedType(plant.type);
-  //   setUpdatedWateringFrequency(plant.wateringFrequency);
-  //   setUpdatedLastWatered(plant.lastWatered);
-  // }, [plant]);
-
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
   const [isFertilizePlantsFormOpen, setIsFertilizePlantsFormOpen] = useState(false);
+  const [isRepotPlantsFormOpen, setIsRepotPlantsFormOpen] = useState(false);
   const [selectedPlants, setSelectedPlants] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState([]);
 
@@ -87,7 +81,7 @@ const Home = ({
             </IconButton>
           )}          
           {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" sx={{color: '#795548'}} onClick={() => setIsKillPlantsFormOpen(true)}>
+            <IconButton size="large" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
               <ParkSharpIcon />
             </IconButton>
           )}
@@ -144,6 +138,14 @@ const Home = ({
         <FertilizePlantsForm
           isOpen={isFertilizePlantsFormOpen}
           onRequestClose={() => setIsFertilizePlantsFormOpen(false)}
+          setPlants={setPlants}
+          plants={selectedPlants}
+        />
+      )}
+      {isRepotPlantsFormOpen && (
+        <RepotPlantsForm
+          isOpen={isRepotPlantsFormOpen}
+          onRequestClose={() => setIsRepotPlantsFormOpen(false)}
           setPlants={setPlants}
           plants={selectedPlants}
         />
