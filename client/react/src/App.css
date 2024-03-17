@@ -110,7 +110,6 @@ h1, h2 {
 
 .home_icon_form_submit {
   font-size: 256px !important;
-  color: #4caf50 !important;
   -webkit-transition: color 1000ms linear;
   -ms-transition: color 1000ms linear;
   transition: color 1000ms linear;
@@ -148,4 +147,8 @@ h1, h2 {
 
 .selected {
   border: 2px solid #4caf50 !important;
+}
+
+.fertlize_icon {
+  color: '#009688';
 }

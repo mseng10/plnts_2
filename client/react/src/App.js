@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { green, pink, lightBlue, blueGrey } from '@mui/material/colors';
+import { green, pink, lightBlue, blueGrey, teal } from '@mui/material/colors';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import Home from './pages/Home';
 import System from './pages/System'
@@ -19,7 +19,7 @@ import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NewPlantForm from './forms/NewPlantForm';
 import ArrowBackIosNewSharpIcon from '@mui/icons-material/ArrowBackIosNewSharp';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
-import OpenInFullSharpIcon from '@mui/icons-material/OpenInFullSharp';
+import ParkSharpIcon from '@mui/icons-material/ParkSharp';
 
 const darkTheme = createTheme({
   palette: {
@@ -35,6 +35,9 @@ const darkTheme = createTheme({
     },
     error: {
       main: pink[500],
+    },
+    fertilize: {
+      main: teal[500],
     },
   },
 });
@@ -122,11 +125,11 @@ const App = () => {
             <IconButton size="large" color="error" onClick={() => openHome(true)}>
               <WaterDropOutlinedIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" sx={{color: '#009688'}} color="info" onClick={() => openSystem()}>
+            <IconButton size="large" color="fertlize" onClick={() => openSystem()}>
               <LunchDiningIcon className={`home_button`} />
             </IconButton>
-            <IconButton size="large" sx={{color: '#795548'}}color="info" onClick={() => openSystem()}>
-              <OpenInFullSharpIcon className={`home_button`} />
+            <IconButton size="large" sx={{color: '#795548'}} color="info" onClick={() => openSystem()}>
+              <ParkSharpIcon className={`home_button`} />
             </IconButton>
             <IconButton size="large" color="info" onClick={() => openSystem()}>
               <SettingsSharpIcon className={`home_button`} />

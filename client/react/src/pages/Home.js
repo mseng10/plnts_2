@@ -4,6 +4,7 @@ import { Grid, Button } from '@mui/material';
 import Plant from '../Plant';
 import UpdatePlantForm from '../forms/UpdatePlantForm';
 import WaterPlantsForm from '../forms/WaterPlantsForm';
+import FertilizePlantsForm from '../forms/FertilizePlantsForm';
 // import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
@@ -14,6 +15,8 @@ import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 import KillPlantsForm from '../forms/KillPlantsForm';
+import ParkSharpIcon from '@mui/icons-material/ParkSharp';
+
 
 
 const Home = ({
@@ -23,9 +26,18 @@ const Home = ({
   handleKillPlant,
 }) => {
 
+  // useEffect(() => {
+  //   // Update form fields when the plant prop changes
+  //   setUpdatedName(plant.name);
+  //   setUpdatedType(plant.type);
+  //   setUpdatedWateringFrequency(plant.wateringFrequency);
+  //   setUpdatedLastWatered(plant.lastWatered);
+  // }, [plant]);
+
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
+  const [isFertilizePlantsFormOpen, setIsFertilizePlantsFormOpen] = useState(false);
   const [selectedPlants, setSelectedPlants] = useState([]);
   const [selectedPlant, setSelectedPlant] = useState([]);
 
@@ -70,8 +82,13 @@ const Home = ({
             </IconButton>
           )}
           {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" sx={{color: '#009688'}} onClick={() => setIsKillPlantsFormOpen(true)}>
+            <IconButton size="large" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
               <LunchDiningIcon />
+            </IconButton>
+          )}          
+          {plants.filter(pl => pl.selected).length > 0 && (
+            <IconButton size="large" sx={{color: '#795548'}} onClick={() => setIsKillPlantsFormOpen(true)}>
+              <ParkSharpIcon />
             </IconButton>
           )}
           {plants.filter(pl => pl.selected).length === 1 && (
@@ -119,6 +136,14 @@ const Home = ({
         <KillPlantsForm
           isOpen={isKillPlantsFormOpen}
           onRequestClose={() => setIsKillPlantsFormOpen(false)}
+          setPlants={setPlants}
+          plants={selectedPlants}
+        />
+      )}
+      {isFertilizePlantsFormOpen && (
+        <FertilizePlantsForm
+          isOpen={isFertilizePlantsFormOpen}
+          onRequestClose={() => setIsFertilizePlantsFormOpen(false)}
           setPlants={setPlants}
           plants={selectedPlants}
         />
