@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import LunchDiningIcon from '@mui/icons-material/LunchDining';
+import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import CheckSharpIcon from '@mui/icons-material/CheckSharp';
@@ -75,7 +75,7 @@ const WaterPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <LunchDiningIcon color='secondary' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+            <WaterDropOutlinedIcon color='secondary' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>
