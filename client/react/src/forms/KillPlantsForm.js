@@ -20,14 +20,14 @@ const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
     // Fetch plant data from the server
     fetch('https://localhost/types')
       .then((response) => response.json())
-      .then(() => setCauses(["too much water", "too list water"]))
+      .then(() => setCauses(["Too much water", "Too little water", "Unknown", "Propogation"]))
       .catch((error) => console.error('Error fetching plant data:', error));
   }, []);
 
   const [checked, setChecked] = useState(plants);
   const [submitted, setSubmit] = useState(false);
   const [cause, setCause] = useState(null);
-  const [causes, setCauses] = useState(["too much water", "too list water"]);
+  const [causes, setCauses] = useState(["Too much water", "Too little water", "Unknown", "Propogation"]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
