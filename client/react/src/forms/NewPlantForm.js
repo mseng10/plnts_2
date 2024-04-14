@@ -18,6 +18,13 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
     ["Monstera", ["Albo", "Thai Constelation"]]
   ])
 
+  const stages = [
+    "Leaf",
+    "Cutting",
+    "Junior",
+    "Senior"
+  ];
+
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -30,6 +37,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const [name, setName] = useState('');
   const [type, setType] = useState('Succulent');
   const [genus, setGenus] = useState('Echeveria');
+  const [stage, setStage] = useState('Senior')
   const [wateringFrequency, setWateringFrequency] = useState(14);
   const [submitted, setSubmit] = useState(false);
 
@@ -38,7 +46,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   const handleSubmit = (event) => {
     setSubmit(true);
     event.preventDefault();
-    onSave({ name, type, wateringFrequency, genus });
+    onSave({ name, type, wateringFrequency, genus, stage });
     clearForm();
     onRequestClose();
   };
@@ -118,6 +126,20 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             >
               {typesToGenus.get(type).map((gen) => (
                 <MenuItem key={gen} value={gen}>{gen}</MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              select
+              label="Stage"
+              value={stage}
+              onChange={(event) => setStage(event.target.value)}
+              variant="standard"
+            >
+              {stages.map((stg) => (
+                <MenuItem key={stg} value={stg}>{stg}</MenuItem>
               ))}
             </TextField>
             <TextField

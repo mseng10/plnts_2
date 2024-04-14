@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 
 
-const Plant = ({ name, type, genus, wateringFrequency, lastWatered, alive }) => {
+const Plant = ({ name, type, genus, stage, wateringFrequency, lastWatered, alive }) => {
 
   return (
     <Card className={`plant ${alive ? 'alive' : 'not-alive'}`} border={1} borderColor="primary" >
@@ -19,6 +19,9 @@ const Plant = ({ name, type, genus, wateringFrequency, lastWatered, alive }) => 
             </Typography>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               Genus: {genus}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" gutterBottom>
+              Stage: {stage}
             </Typography>
             <Typography variant="body2" color="textSecondary" gutterBottom>
               Watering Frequency: {wateringFrequency}

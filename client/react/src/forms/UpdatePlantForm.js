@@ -21,6 +21,13 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, setPlants, plant }) => {
     ["Monstera", ["Albo", "Thai Constelation"]]
   ])
 
+  const stages = [
+    "Leaf",
+    "Cutting",
+    "Junior",
+    "Senior"
+  ];
+
   const [updatedName, setUpdatedName] = useState(plant.name);
   const [updatedType, setUpdatedType] = useState(plant.type);
   const [updatedWateringFrequency, setUpdatedWateringFrequency] = useState(plant.wateringFrequency);
@@ -28,6 +35,7 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, setPlants, plant }) => {
   const [submitted, setSubmit] = useState(false);
   const [types, setTypes] = useState(Array.from(typesToGenus.keys()))
   const [genus, setUpdatedGenus] = useState('Echeveria');
+  const [stage, setStage] = useState('Grown');
 
   useEffect(() => {
     // Update form fields when the plant prop changes
@@ -48,7 +56,13 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, setPlants, plant }) => {
   const handleSubmit = (event) => {
     setSubmit(true);
     event.preventDefault();
-    handleUpdatePlant({...plant, name: updatedName, type: updatedType,genus: genus, wateringFrequency: updatedWateringFrequency, lastWatered: updatedLastWatered });
+    handleUpdatePlant({...plant, 
+      name: updatedName, 
+      type: updatedType,
+      genus: genus, 
+      wateringFrequency: updatedWateringFrequency, 
+      lastWatered: updatedLastWatered,
+      stage: stage });
     clearForm();
     onRequestClose();
   };
@@ -63,6 +77,7 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, setPlants, plant }) => {
     setUpdatedType('');
     setUpdatedGenus('');
     setUpdatedWateringFrequency('');
+    setStage('');
   };
 
 
@@ -136,6 +151,20 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, setPlants, plant }) => {
             >
               {typesToGenus.get(updatedType).map((gen) => (
                 <MenuItem key={gen} value={gen}>{gen}</MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              select
+              label="Stage"
+              value={stage}
+              onChange={(event) => setStage(event.target.value)}
+              variant="standard"
+            >
+              {stages.map((stg) => (
+                <MenuItem key={stg} value={stg}>{stg}</MenuItem>
               ))}
             </TextField>
             <TextField
