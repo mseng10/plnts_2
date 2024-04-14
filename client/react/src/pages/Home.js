@@ -33,7 +33,6 @@ const Home = ({
   const [isFertilizePlantsFormOpen, setIsFertilizePlantsFormOpen] = useState(false);
   const [isRepotPlantsFormOpen, setIsRepotPlantsFormOpen] = useState(false);
   const [selectedPlants, setSelectedPlants] = useState([]);
-  const [selectedPlant, setSelectedPlant] = useState([]);
 
   const handleSelectPlant = (selectedPlant) => {
     setPlants((prevPlants) =>
@@ -41,9 +40,8 @@ const Home = ({
         plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
       )
     );
-    const plantss = [selectedPlant];
-    setSelectedPlants(plantss);
-    setSelectedPlant(selectedPlant);
+    const newSelectedPlants = selectedPlants.concat(selectedPlant);
+    setSelectedPlants(newSelectedPlants);
   };
 
   const clearSelections = () => {
@@ -53,7 +51,6 @@ const Home = ({
       )
     );
     setSelectedPlants([]);
-    setSelectedPlant(null);
   };
 
   return (
@@ -115,7 +112,7 @@ const Home = ({
           isOpen={isUpdatePlantFormOpen}
           onRequestClose={() => setIsUpdatePlantFormOpen(false)}
           setPlants={setPlants}
-          plant={selectedPlant}
+          plant={selectedPlants[0]}
         />
       )}
       {isWaterPlantsFormOpen && (
