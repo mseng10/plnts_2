@@ -15,7 +15,6 @@ import System from './pages/System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
-import SettingsSharpIcon from '@mui/icons-material/SettingsSharp';
 import NewPlantForm from './forms/NewPlantForm';
 import ArrowBackIosNewSharpIcon from '@mui/icons-material/ArrowBackIosNewSharp';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
@@ -110,7 +109,7 @@ const App = () => {
         )}
         {!showHome && !showSystem && ( // yuck
           <div>
-            <div className='system_min'>
+            <div className='system_min' onClick={() => openSystem()}>
               <System
                 system = {system}
               />
@@ -133,9 +132,6 @@ const App = () => {
             </IconButton>
             <IconButton size="large" color='repot' onClick={() => openSystem()}>
               <ParkSharpIcon className={`home_button`} />
-            </IconButton>
-            <IconButton size="large" color="info" onClick={() => openSystem()}>
-              <SettingsSharpIcon className={`home_button`} />
             </IconButton>
           </ButtonGroup>
         )}
