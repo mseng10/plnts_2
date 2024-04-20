@@ -44,9 +44,9 @@ class Plant(Base):
 
     # Death Info
     dead_on = Column(DateTime(), default=None, nullable=True)
+    dead = Column(Boolean, default=False, nullable=False)
     cause = Column(String(100), nullable=False)
     value = Column(Enum(MyEnum))
-    alive = Column(Boolean, default=True, nullable=False)
 
     def __repr__(self) -> str:
         return f"{self.name} ({self.type}/{self.genus})"
