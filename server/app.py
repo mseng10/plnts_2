@@ -1,25 +1,28 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS  # For handling cross-origin requests
+from colorama import init, Fore
+from flask import Flask, request, abort
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.engine import URL
+import json
 
+with open("db.json") as json_data_file:
+    db_config = json.load(json_data_file)
+
+url = URL.create(
+    drivername=db_config["drivername"],
+    username=db_config["username"],
+    password=db_config["password"],
+    host=db_config["host"],
+    database=db_config["database"],
+    port=db_config["port"],
+)
+
+engine = create_engine(url)
+connection = engine.connect()
+Session = sessionmaker(bind=engine)
+
+init(autoreset=True)
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-
-plants = [
-    {
-        "id": 1,
-        "name": "Snake Plant",
-        "type": "Indoor",
-        "wateringFrequency": "Once a week",
-    },
-    {"id": 2, "name": "Rose", "type": "Outdoor", "wateringFrequency": "Twice a week"}
-    # Add more plant data as needed!
-]
-
-
-@app.route("/plants", methods=["GET"])
-def get_plants():
-    return jsonify(plants)
-
 
 @app.route("/plants", methods=["POST"])
 def add_plant():
@@ -28,6 +31,4 @@ def add_plant():
     plants.append(new_plant)
     return jsonify(new_plant), 201
 
-
-if __name__ == "__main__":
-    app.run(debug=True)
+from cli import create, stats, update, water, archive
