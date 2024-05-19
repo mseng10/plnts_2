@@ -6,7 +6,8 @@ from typing import List
 
 
 class Mix(Base):
-    """ Soil model."""
+    """Soil model."""
+
     __tablename__ = "mix"
 
     # TODO: Base Merge
@@ -14,14 +15,16 @@ class Mix(Base):
     name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
 
-    components: Mapped[List["Soil"]] = relationship() # 1 way
+    components: Mapped[List["Soil"]] = relationship()  # 1 way
     details = Column(String(100), nullable=False)
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
+
 class Soil(Base):
     """Soil."""
+
     __tablename__ = "soil"
 
     # TODO: Base Merge
@@ -30,7 +33,7 @@ class Soil(Base):
     name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer())
-    size = Column(Integer()) # kgs?
+    size = Column(Integer())  # kgs?
 
     parent_id: Mapped[int] = mapped_column(ForeignKey("mix.id"))
 

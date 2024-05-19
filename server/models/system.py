@@ -6,7 +6,7 @@ from typing import List
 
 
 class System(Base):
-    """ Batch model."""
+    """Batch model."""
 
     __tablename__ = "batch"
 
@@ -19,19 +19,21 @@ class System(Base):
     batches: Mapped[List["Batch"]] = relationship(back_populates="system_id")
 
     # Specs
-    humidity = Column(Integer(), primary_key=True) # %
-    temperature = Column(Integer(), primary_key=True) # F
+    humidity = Column(Integer(), primary_key=True)  # %
+    temperature = Column(Integer(), primary_key=True)  # F
 
     # Lighting
-    duration = Column(Integer(), primary_key=True) # hours
-    distance = Column(Integer(), primary_key=True) # inches
+    duration = Column(Integer(), primary_key=True)  # hours
+    distance = Column(Integer(), primary_key=True)  # inches
     light: Mapped["Light"] = relationship(back_populates="plants")
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
+
 class Batch(Base):
-    """ Batch model."""
+    """Batch model."""
+
     __tablename__ = "batch"
 
     # TODO: Base Merge
@@ -50,8 +52,10 @@ class Batch(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
+
 class Light(Base):
-    """ Light model."""
+    """Light model."""
+
     __tablename__ = "light"
 
     # TODO: Base Merge

@@ -7,21 +7,22 @@ from enum import Enum
 
 
 class DeathCause(Enum, str):
-    TOO_LITTLE_WATER = 'too little water'
-    TOO_MUCH_WATER = 'too much water'
-    TOO_LITTLE_HUMIDITY = 'too little humidity'
-    TOO_MUCH_HUMIDITY = 'too much humidity'
-    TOO_LITTLE_SUN = 'too little sun'
-    TOO_MUCH_SUN = 'too much sun'
-    PROPAGATION = 'propagation'
-    PESTS = 'pests'
-    MOLD = 'mold'
-    NEGLECT = 'neglect'
-    UNKNOWN = 'unknown'
+    TOO_LITTLE_WATER = "too little water"
+    TOO_MUCH_WATER = "too much water"
+    TOO_LITTLE_HUMIDITY = "too little humidity"
+    TOO_MUCH_HUMIDITY = "too much humidity"
+    TOO_LITTLE_SUN = "too little sun"
+    TOO_MUCH_SUN = "too much sun"
+    PROPAGATION = "propagation"
+    PESTS = "pests"
+    MOLD = "mold"
+    NEGLECT = "neglect"
+    UNKNOWN = "unknown"
 
 
 class Plant(Base):
     """Plant model."""
+
     __tablename__ = "plant"
 
     # Created at specs
@@ -29,7 +30,7 @@ class Plant(Base):
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer())
     size = Column(Integer())  # inches
-    type_id: Mapped[int] = mapped_column(ForeignKey("type.id")) # Type of Plant
+    type_id: Mapped[int] = mapped_column(ForeignKey("type.id"))  # Type of Plant
 
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
@@ -49,8 +50,10 @@ class Plant(Base):
     def __repr__(self) -> str:
         return f"{self.name} ({self.type}/{self.genus})"
 
+
 class Type(Base):
     """Type of genus."""
+
     __tablename__ = "type"
 
     id = Column(Integer(), primary_key=True)
@@ -64,8 +67,10 @@ class Type(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
+
 class Genus(Base):
     """Genus of species."""
+
     __tablename__ = "genus"
 
     id = Column(Integer(), primary_key=True)
@@ -78,6 +83,7 @@ class Genus(Base):
 
 class Species(Base):
     """Species of plants."""
+
     __tablename__ = "species"
 
     id = Column(Integer(), primary_key=True)
