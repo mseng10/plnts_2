@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 import json
 import logging
+from models.plant import Plant, Base  # Importing the Plant model
 
 # Initialize Colorama
 # init(autoreset=True)
@@ -24,6 +25,10 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
+#TODO: Temp, remove when all is working
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
+
 Session = sessionmaker(bind=engine)
 
 # Create Flask app
@@ -37,34 +42,33 @@ logger = logging.getLogger(__name__)
 @app.route("/plants", methods=["POST"])
 def add_plant():
     # Get JSON data from request
-    new_plant = request.get_json()
-    # Log the request
-    logger.info("Received request to add a new plant: %s", new_plant)
-    # Perform database operations here
-    # Example: Add new plant to the database
-    # session = Session()
-    # session.add(new_plant)
-    # session.commit()
-    # session.close()
+    new_plant_data = request.get_json()
+    # Create a new Plant object
+    new_plant = Plant(
+        cost=new_plant_data["cost"],
+        size=new_plant_data["size"],
+        watering=new_plant_data["watering"],
+    )
+    # Add the new plant object to the session
+    session = Session()
+    session.add(new_plant)
+    session.commit()
+    session.close()
     # Return response
-    return jsonify(new_plant), 201
+    return jsonify({"message": "Plant added successfully"}), 201
 
 # Example route to get all plants
 @app.route("/plants", methods=["GET"])
 def get_plants():
     # Log the request
     logger.info("Received request to retrieve all plants")
-    print("HELLO")
-    # Perform database query to retrieve all plants
-    # Example: Query all plants from the database
-    # session = Session()
-    # plants = session.query(Plant).all()
-    # session.close()
+    session = Session()
+    plants = session.query(Plant).all()
+    session.close()
     # Transform plants to JSON format
-    # Example: Convert plants to JSON format
-    # plants_json = [plant.to_json() for plant in plants]
+    plants_json = [{"id": plant.id, "cost": plant.cost, "size": plant.size, "watering": plant.watering} for plant in plants]
     # Return JSON response
-    return jsonify([{"gangser": "asdfasdf"}])  # Placeholder response
+    return jsonify(plants_json)
 
 if __name__ == "__main__":
     # Run the Flask app
