@@ -119,6 +119,18 @@ def get_species():
     # Return JSON response
     return jsonify(species_json)
 
+@app.route("/genus", methods=["GET"])
+def get_genuses():
+    logger.info("Received request to retrieve all plant genuses")
+
+    session = Session()
+    genuses = session.query(Genus).all()
+    session.close()
+    # Transform genuses to JSON format
+    genuses_json = [{"id": genus.id, "name": genus.name, "watering": genus.watering} for genus in genuses]
+    # Return JSON response
+    return jsonify(genuses_json)
+
 if __name__ == "__main__":
     # Run the Flask app
     app.run(debug=True)
