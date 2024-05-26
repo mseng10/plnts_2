@@ -10,13 +10,6 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
-  // TODO: Turn to server side
-  const typesToGenus = new Map([
-    ["Succulent", ["Echeveria"]],
-    ["Cactus", ["Old Man"]],
-    ["Philodendron", ["Pink Princess", "White Princess"]],
-    ["Monstera", ["Albo", "Thai Constelation"]]
-  ])
 
   const stages = [
     "Leaf",
@@ -25,28 +18,28 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
     "Senior"
   ];
 
-
   useEffect(() => {
     // Fetch plant data from the server
-    fetch('https://localhost/types')
+    fetch('http://127.0.0.1:5000/species')
       .then((response) => response.json())
-      .then((data) => setTypes(data? Array.from(typesToGenus.keys()) : Array.from(typesToGenus.keys())))
+      .then((data) => setAllSpecies(data))
       .catch((error) => console.error('Error fetching plant data:', error));
   }, []);
 
   const [name, setName] = useState('');
-  const [type, setType] = useState('Succulent');
-  const [genus, setGenus] = useState('Echeveria');
-  const [stage, setStage] = useState('Senior')
-  const [wateringFrequency, setWateringFrequency] = useState(14);
-  const [submitted, setSubmit] = useState(false);
+  const [stage, setStage] = useState('Senior'); 
+  const [size, setSize] = useState(0);
+  const [cost, setCost] = useState(0);
 
-  const [types, setTypes] = useState(Array.from(typesToGenus.keys()))
+  const [allSpecies, setAllSpecies] = useState([]);
+
+  const [submitted, setSubmit] = useState(false);
 
   const handleSubmit = (event) => {
     setSubmit(true);
     event.preventDefault();
-    onSave({ name, type, wateringFrequency, genus, stage });
+    console.log(allSpecies);
+    onSave({ name, stage });
     clearForm();
     onRequestClose();
   };
@@ -58,9 +51,6 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
 
   const clearForm = () => {
     setName('');
-    setType('Succulent');
-    setGenus('Echeveria');
-    setWateringFrequency('');
   };
 
   return (
@@ -105,34 +95,6 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               fullWidth
               required
               select
-              label="Type"
-              value={type}
-              onChange={(event) => setType(event.target.value)}
-              variant="standard"
-            >
-              {types.map((ty) => (
-                <MenuItem key={ty} value={ty}>{ty}</MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              select
-              label="Genus"
-              value={genus}
-              onChange={(event) => setGenus(event.target.value)}
-              variant="standard"
-            >
-              {typesToGenus.get(type).map((gen) => (
-                <MenuItem key={gen} value={gen}>{gen}</MenuItem>
-              ))}
-            </TextField>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              select
               label="Stage"
               value={stage}
               onChange={(event) => setStage(event.target.value)}
@@ -147,9 +109,19 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               fullWidth
               required
               type="number"
-              label="Watering Frequency"
-              value={wateringFrequency}
-              onChange={(event) => setWateringFrequency(event.target.value)}
+              label="Size (inches)"
+              value={size}
+              onChange={(event) => setSize(event.target.value)}
+              variant="standard"
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              type="number"
+              label="Cost"
+              value={cost}
+              onChange={(event) => setCost(event.target.value)}
               variant="standard"
             />
           </div>
