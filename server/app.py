@@ -1,5 +1,6 @@
-from colorama import init, Fore
+# from colorama import init, Fore
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
@@ -7,7 +8,7 @@ import json
 import logging
 
 # Initialize Colorama
-init(autoreset=True)
+# init(autoreset=True)
 
 # Load database configuration from JSON file
 with open("db.json") as json_data_file:
@@ -27,6 +28,7 @@ Session = sessionmaker(bind=engine)
 
 # Create Flask app
 app = Flask(__name__)
+CORS(app)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -62,7 +64,7 @@ def get_plants():
     # Example: Convert plants to JSON format
     # plants_json = [plant.to_json() for plant in plants]
     # Return JSON response
-    return jsonify([])  # Placeholder response
+    return jsonify([{"gangser": "asdfasdf"}])  # Placeholder response
 
 if __name__ == "__main__":
     # Run the Flask app
