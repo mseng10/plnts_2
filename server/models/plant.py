@@ -1,23 +1,25 @@
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from datetime import datetime
-from models import Base
 from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.ext.declarative import declarative_base
+from typing import List
 
 from enum import Enum
 
+Base = declarative_base()
 
-class DeathCause(Enum, str):
-    TOO_LITTLE_WATER = "too little water"
-    TOO_MUCH_WATER = "too much water"
-    TOO_LITTLE_HUMIDITY = "too little humidity"
-    TOO_MUCH_HUMIDITY = "too much humidity"
-    TOO_LITTLE_SUN = "too little sun"
-    TOO_MUCH_SUN = "too much sun"
-    PROPAGATION = "propagation"
-    PESTS = "pests"
-    MOLD = "mold"
-    NEGLECT = "neglect"
-    UNKNOWN = "unknown"
+# class DeathCause(Enum, str):
+    # TOO_LITTLE_WATER = "too little water"
+    # TOO_MUCH_WATER = "too much water"
+    # TOO_LITTLE_HUMIDITY = "too little humidity"
+    # TOO_MUCH_HUMIDITY = "too much humidity"
+    # TOO_LITTLE_SUN = "too little sun"
+    # TOO_MUCH_SUN = "too much sun"
+    # PROPAGATION = "propagation"
+    # PESTS = "pests"
+    # MOLD = "mold"
+    # NEGLECT = "neglect"
+    # UNKNOWN = "unknown"
 
 
 class Plant(Base):
@@ -44,7 +46,7 @@ class Plant(Base):
 
     # Death Info
     dead = Column(Boolean, default=False, nullable=False)
-    dead_cause = Column(Enum(DeathCause), nullable=True)
+    # dead_cause = Column(Enum(DeathCause), nullable=True)
     dead_on = Column(DateTime(), default=None, nullable=True)
 
     def __repr__(self) -> str:
