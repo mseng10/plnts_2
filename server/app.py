@@ -76,31 +76,14 @@ def add_species():
 
     new_species_data = request.get_json()
 
-    genus_id = new_species_data["genus_id"]
-
-    # I'm electing not to have a dedicated endpoint to creating genuses... sue me
-    # We can just embed it on the species object for now
-    new_genus = None
-    if not genus_id:
-        if not new_species_data["genus"]:
-            return jsonify({"message": "Did not specify genus when creating species"}), 400
-        
-        new_genus_data = new_species_data["genus"]
-        new_genus = Genus(
-            name=new_genus_data["name"],
-            watering=new_genus_data["watering"]
-        )
-    
     # Create a new Type object
     new_species = Species(
         name=new_species_data["name"],
-        genus_id=genus_id
+        genus_id=new_species_data["genus_id"]
     )
 
     # Add the new species (and genus if applicable) object to the session
     session = Session()
-    if new_genus:
-        session.add(new_genus)
     session.add(new_type)
     session.commit()
     session.close()
@@ -130,6 +113,26 @@ def get_genuses():
     genuses_json = [{"id": genus.id, "name": genus.name, "watering": genus.watering} for genus in genuses]
     # Return JSON response
     return jsonify(genuses_json)
+
+@app.route("/genus", methods=["POST"])
+def create_genus():
+    logger.info("Attempting create genus")
+
+    new_species_data = request.get_json()
+    
+    # Create a new Type object
+    new_genus = Genus(
+        name=new_species_data["name"],
+        watering=new_species_data["watering"]
+    )
+
+    # Add the new species (and genus if applicable) object to the session
+    db = Session()
+    db.add(new_genus)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "Genus added successfully"}), 201
 
 if __name__ == "__main__":
     # Run the Flask app
