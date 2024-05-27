@@ -26,8 +26,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 #TODO: Temp, remove when all is working
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+# Base.metadata.drop_all(engine)
+# Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -71,7 +71,7 @@ def get_plants():
     return jsonify(plants_json)
 
 @app.route("/species", methods=["POST"])
-def add_species():
+def create_species():
     logger.info("Attempting create species")
 
     new_species_data = request.get_json()
@@ -84,11 +84,11 @@ def add_species():
 
     # Add the new species (and genus if applicable) object to the session
     session = Session()
-    session.add(new_type)
+    session.add(new_species)
     session.commit()
     session.close()
 
-    return jsonify({"message": "Species added successfully", "id": new_species.id}), 201
+    return jsonify({"message": "Species added successfully"}), 201
 
 @app.route("/species", methods=["GET"])
 def get_species():

@@ -21,6 +21,8 @@ import ArrowBackIosNewSharpIcon from '@mui/icons-material/ArrowBackIosNewSharp';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
+import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
+import NewSpeciesForm from './forms/NewSpeciesForm';
 
 const darkTheme = createTheme({
   palette: {
@@ -50,6 +52,7 @@ const App = () => {
   const [plants, setPlants] = useState([]);
   const [system, setSystem] = useState({ temperature: 20, humidity: 50 });
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
+  const [isNewSpeciesFormOpen, setIsNewSpeciesFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [showNeedWater, setNeedWater] = useState(false);
@@ -127,6 +130,9 @@ const App = () => {
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
               <AddSharpIcon className={`home_button `} />
             </IconButton>
+            <IconButton size="large" color="secondary" onClick={() => setIsNewSpeciesFormOpen(true)}>
+              <CallSplitSharpIcon className={`home_button `} />
+            </IconButton>
             <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
               <FingerprintSharpIcon className={`home_button `} />
             </IconButton>
@@ -159,6 +165,10 @@ const App = () => {
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
           onSave={handleSavePlant}
+        />
+        <NewSpeciesForm
+          isOpen={isNewSpeciesFormOpen}
+          onRequestClose={() => setIsNewSpeciesFormOpen(false)}
         />
         <NewGenusForm
           isOpen={isNewGenusFormOpen}

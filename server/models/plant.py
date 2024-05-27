@@ -52,6 +52,7 @@ class Species(Base):
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
     name = Column(String(100), nullable=False, unique=True)
+    updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
     # Available plants of this species
     plants: Mapped[List["Plant"]] = relationship('Plant', backref='plant', passive_deletes=True)
@@ -70,7 +71,8 @@ class Genus(Base):
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
     name = Column(String(100), nullable=False, unique=True)
-    watering = Column(Integer())  # days
+    watering = Column(Integer(), nullable=False)  # days
+    updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
     # Available species of this genus
     species: Mapped[List["Species"]] = relationship('Species', backref='species', passive_deletes=True)

@@ -6,13 +6,15 @@ import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
+import Autocomplete from '@mui/material/Autocomplete';
+import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
 
 
-const NewGenusForm = ({ isOpen, onRequestClose }) => {
+const NewSpeciesForm = ({ isOpen, onRequestClose }) => {
   const [name, setName] = useState('');
-  const [watering, setWatering] = useState(0);
+  const [genus, setGenus] = useState(null);
   const [allGenus, setAllGenus] = useState([]);
+  const [allSpecies, setAllSpecies] = useState([]);
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
 
   useEffect(() => {
@@ -20,6 +22,10 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
       .then((response) => response.json())
       .then((data) => setAllGenus(data))
       .catch((error) => console.error('Error fetching genus data:', error));
+    fetch('http://127.0.0.1:5000/species')
+      .then((response) => response.json())
+      .then((data) => setAllSpecies(data))
+      .catch((error) => console.error('Error fetching species data:', error));
   }, []);
 
   useEffect(() => {
@@ -27,24 +33,24 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, watering: watering })
+        body: JSON.stringify({ name: name, genus_id: genus.id })
       };
-      fetch('http://127.0.0.1:5000/genus', requestOptions)
+      fetch('http://127.0.0.1:5000/species', requestOptions)
         .then(response => response.json())
         .then(data => {
           // handle the response data if needed
           // maybe update some state based on the response
           console.log(data);
         })
-        .catch(error => console.error('Error posting genus data:', error));
+        .catch(error => console.error('Error posting species data:', error));
       clearForm();
       onRequestClose();
     }
-  }, [submitted, name, watering, onRequestClose]);
+  }, [submitted, name, genus, onRequestClose]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (allGenus.find(genus => genus.name === name)) {
+    if (allSpecies.find(species => species.name === name && species.genus.id === genus.id)) {
       return;
     }
     setSubmitted(true); // Update submitted state
@@ -57,7 +63,7 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
 
   const clearForm = () => {
     setName('');
-    setWatering(0);
+    setGenus(null);
     setSubmitted(false);
   };
 
@@ -65,7 +71,6 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
     <Modal
       open={isOpen}
       onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
       disableAutoFocus={true}
       style={{
         display: 'flex',
@@ -78,7 +83,7 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <FingerprintSharpIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+            <CallSplitSharpIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>
@@ -93,20 +98,28 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
               margin="normal"
               fullWidth
               required
-              label="Genus Name"
+              label="Name"
               value={name}
               variant="standard"
               onChange={(event) => setName(event.target.value)}
             />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="Watering (days)"
-              value={watering}
-              onChange={(event) => setWatering(event.target.value)}
-              variant="standard"
+            <Autocomplete
+              freeSolo
+              disableClearable
+              value={genus}
+              options={allGenus.map((option) => option.name)}
+              onChange={(event) => setGenus(allGenus[event.target.value])}
+              renderInput={(params) => (
+                <TextField
+                  variant="standard"
+                  {...params}
+                  label="Genus"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                  }}
+                />
+              )}
             />
           </div>
         </form>
@@ -115,6 +128,6 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
   );
 };
 
-export default NewGenusForm;
+export default NewSpeciesForm;
 
 
