@@ -54,13 +54,13 @@ const App = () => {
 
   useEffect(() => {
     // Fetch plant data from the server
-    fetch('https://localhost/plants')
+    fetch('http://127.0.0.1:5000/plants')
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
     const system = {temperature: 20, humidity: 80};
     // Fetch plant data from the server
-    fetch('https://localhost/system')
+    fetch('http://localhost:5000/system')
       .then((response) => response.json())
       .then(() => setSystem(system))
       .catch(() => setSystem(system));
