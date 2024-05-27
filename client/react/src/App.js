@@ -86,15 +86,6 @@ const App = () => {
     setShowSystem(true);
   };
 
-  const handleSavePlant = (newPlant, species) => {
-    // Add the "alive" field with a default value of true
-    const plantWithAliveField = { ...newPlant, species_id: species.id };
-
-    // Save the new plant data to the server or perform other actions
-    setPlants((prevPlants) => [...prevPlants, { id: Date.now(), lastWatered: Date.now(), ...plantWithAliveField }]);
-    setIsNewPlantFormOpen(false);
-  };
-
   const handleKillPlant = (plantId) => {
     // Mark the plant as no longer active (alive: false)
     setPlants((prevPlants) =>
@@ -164,7 +155,6 @@ const App = () => {
         <NewPlantForm
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
-          onSave={handleSavePlant}
         />
         <NewSpeciesForm
           isOpen={isNewSpeciesFormOpen}

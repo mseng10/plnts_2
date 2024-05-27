@@ -2,46 +2,63 @@ import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
+// import MenuItem from '@mui/material/MenuItem';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+import Autocomplete from '@mui/material/Autocomplete';
 
-const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
 
-  const stages = [
-    "Leaf",
-    "Cutting",
-    "Junior",
-    "Senior"
-  ];
+const NewPlantForm = ({ isOpen, onRequestClose }) => {
+  // const stages = [
+  //   "Leaf",
+  //   "Cutting",
+  //   "Junior",
+  //   "Senior"
+  // ];
+
+  const [species, setSpecies] = useState('');
+  // const [stage, setStage] = useState('Senior'); 
+  const [size, setSize] = useState(0);
+  const [cost, setCost] = useState(0);
+
+  const [allSpecies, setAllSpecies] = useState([]);
+
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
     fetch('http://127.0.0.1:5000/species')
       .then((response) => response.json())
       .then((data) => setAllSpecies(data))
-      .catch((error) => console.error('Error fetching plant data:', error));
+      .catch((error) => console.error('Error fetching species data:', error));
   }, []);
 
-  const [name, setName] = useState('');
-  const [stage, setStage] = useState('Senior'); 
-  const [size, setSize] = useState(0);
-  const [cost, setCost] = useState(0);
-
-  const [allSpecies, setAllSpecies] = useState([]);
-
-  const [submitted, setSubmit] = useState(false);
+  useEffect(() => {
+    if (submitted) {
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({size: size, cost: cost, species_id: species.id })
+      };
+      fetch('http://127.0.0.1:5000/plants', requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          // handle the response data if needed
+          // maybe update some state based on the response
+          console.log(data);
+        })
+        .catch(error => console.error('Error posting species data:', error));
+      clearForm();
+      onRequestClose();
+    }
+  }, [submitted, size, cost, species, onRequestClose]);
 
   const handleSubmit = (event) => {
-    setSubmit(true);
     event.preventDefault();
-    console.log(allSpecies);
-    onSave({ name, stage });
-    clearForm();
-    onRequestClose();
+    setSubmitted(true); // Update submitted state
   };
 
   const handleCancel = () => {
@@ -50,7 +67,11 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
   };
 
   const clearForm = () => {
-    setName('');
+    // setStage(null);
+    setCost(0);
+    setSize(0);
+    setSpecies(null);
+    setSubmitted(false);
   };
 
   return (
@@ -67,7 +88,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
         border: 'none',
       }}
     >
-      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
+      <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
             <GrassOutlinedIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
@@ -81,16 +102,25 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
             </ButtonGroup>
           </div>
           <div className='right'>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              label="Name"
-              value={name}
-              variant="standard"
-              onChange={(event) => setName(event.target.value)}
+            <Autocomplete
+              freeSolo
+              disableClearable
+              value={species}
+              options={allSpecies.map((option) => option.name)}
+              onChange={(event) => setSpecies(allSpecies[event.target.value])}
+              renderInput={(params) => (
+                <TextField
+                  variant="standard"
+                  {...params}
+                  label="Species"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                  }}
+                />
+              )}
             />
-            <TextField
+            {/* <TextField
               margin="normal"
               fullWidth
               required
@@ -103,7 +133,7 @@ const NewPlantForm = ({ isOpen, onRequestClose, onSave }) => {
               {stages.map((stg) => (
                 <MenuItem key={stg} value={stg}>{stg}</MenuItem>
               ))}
-            </TextField>
+            </TextField> */}
             <TextField
               margin="normal"
               fullWidth
