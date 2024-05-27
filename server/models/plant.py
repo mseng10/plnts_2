@@ -32,7 +32,9 @@ class Plant(Base):
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer(), default=0, nullable=False)
     size = Column(Integer(), default=0, nullable=False)  # inches
-    species_id: Mapped[int] = mapped_column(ForeignKey("species.id", ondelete='CASCADE'))  # Species of Plant
+    species_id: Mapped[int] = mapped_column(
+        ForeignKey("species.id", ondelete="CASCADE")
+    )  # Species of Plant
 
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
 
@@ -43,6 +45,7 @@ class Plant(Base):
     dead = Column(Boolean, default=False, nullable=False)
     # dead_cause = Column(Enum(DeathCause), nullable=True)
     dead_on = Column(DateTime(), default=None, nullable=True)
+
 
 class Species(Base):
     """Species of genus."""
@@ -55,13 +58,16 @@ class Species(Base):
     updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
     # Available plants of this species
-    plants: Mapped[List["Plant"]] = relationship('Plant', backref='plant', passive_deletes=True)
+    plants: Mapped[List["Plant"]] = relationship(
+        "Plant", backref="plant", passive_deletes=True
+    )
 
     # Genus of this species of plant
-    genus_id: Mapped[int] = mapped_column(ForeignKey("genus.id", ondelete='CASCADE'))
+    genus_id: Mapped[int] = mapped_column(ForeignKey("genus.id", ondelete="CASCADE"))
 
     def __repr__(self) -> str:
         return f"{self.name}"
+
 
 class Genus(Base):
     """Genus of plant."""
@@ -75,7 +81,9 @@ class Genus(Base):
     updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
     # Available species of this genus
-    species: Mapped[List["Species"]] = relationship('Species', backref='species', passive_deletes=True)
+    species: Mapped[List["Species"]] = relationship(
+        "Species", backref="species", passive_deletes=True
+    )
 
     def __repr__(self) -> str:
         return f"{self.name}"
