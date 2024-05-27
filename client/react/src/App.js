@@ -16,9 +16,13 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import NewPlantForm from './forms/NewPlantForm';
+import NewGenusForm from './forms/NewGenusForm';
 import ArrowBackIosNewSharpIcon from '@mui/icons-material/ArrowBackIosNewSharp';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
+import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
+import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
+import NewSpeciesForm from './forms/NewSpeciesForm';
 
 const darkTheme = createTheme({
   palette: {
@@ -48,6 +52,8 @@ const App = () => {
   const [plants, setPlants] = useState([]);
   const [system, setSystem] = useState({ temperature: 20, humidity: 50 });
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
+  const [isNewSpeciesFormOpen, setIsNewSpeciesFormOpen] = useState(false);
+  const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [showNeedWater, setNeedWater] = useState(false);
   const [showSystem, setShowSystem] = useState(false);
@@ -80,9 +86,9 @@ const App = () => {
     setShowSystem(true);
   };
 
-  const handleSavePlant = (newPlant) => {
+  const handleSavePlant = (newPlant, species) => {
     // Add the "alive" field with a default value of true
-    const plantWithAliveField = { ...newPlant, alive: true };
+    const plantWithAliveField = { ...newPlant, species_id: species.id };
 
     // Save the new plant data to the server or perform other actions
     setPlants((prevPlants) => [...prevPlants, { id: Date.now(), lastWatered: Date.now(), ...plantWithAliveField }]);
@@ -124,6 +130,12 @@ const App = () => {
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
               <AddSharpIcon className={`home_button `} />
             </IconButton>
+            <IconButton size="large" color="secondary" onClick={() => setIsNewSpeciesFormOpen(true)}>
+              <CallSplitSharpIcon className={`home_button `} />
+            </IconButton>
+            <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
+              <FingerprintSharpIcon className={`home_button `} />
+            </IconButton>
             <IconButton size="large" color="error" onClick={() => openHome(true)}>
               <WaterDropOutlinedIcon className={`home_button `} />
             </IconButton>
@@ -153,6 +165,14 @@ const App = () => {
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
           onSave={handleSavePlant}
+        />
+        <NewSpeciesForm
+          isOpen={isNewSpeciesFormOpen}
+          onRequestClose={() => setIsNewSpeciesFormOpen(false)}
+        />
+        <NewGenusForm
+          isOpen={isNewGenusFormOpen}
+          onRequestClose={() => setIsNewGenusFormOpen(false)}
         />
       </div>
     </ThemeProvider>
