@@ -29,6 +29,18 @@ class Plant(Base):
     dead = Column(Boolean, default=False, nullable=False)  # Death Info
     dead_on = Column(DateTime(), default=None, nullable=True)
 
+    def __repr__(self) -> str:
+        return f"{self.id}"
+
+    def to_json(self):
+        """Convert to json for front end."""
+        return {
+            "id": self.id,
+            "cost": self.cost,
+            "size": self.size,
+            "watering": self.watering,
+            "created_on": self.created_on
+        }
 
 class Species(Base):
     """Species of genus."""
@@ -49,6 +61,14 @@ class Species(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
+    def to_json(self):
+        """Convert to json for front end."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "genus_id": self.genus_id
+        }
+
 
 class Genus(Base):
     """Genus of plant."""
@@ -67,3 +87,11 @@ class Genus(Base):
 
     def __repr__(self) -> str:
         return f"{self.name}"
+
+    def to_json(self):
+        """Convert to json for front end."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "watering": self.watering
+        }

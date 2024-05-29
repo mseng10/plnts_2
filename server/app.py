@@ -77,7 +77,7 @@ def get_plants():
     plants = session.query(Plant).all()
     session.close()
     # Transform plants to JSON format
-    plants_json = [{"id": plant.id, "cost": plant.cost, "size": plant.size, "watering": plant.watering} for plant in plants]
+    plants_json = [plant.to_json for plant in plants]
     # Return JSON response
     return jsonify(plants_json)
 
@@ -115,7 +115,7 @@ def get_species():
     species = session.query(Species).all()
     session.close()
     # Transform species to JSON format
-    species_json = [{"id": _species.id, "name": _species.name} for _species in species]
+    species_json = [_species.to_json for _species in species]
     # Return JSON response
     return jsonify(species_json)
 
@@ -130,7 +130,7 @@ def get_genuses():
     genuses = session.query(Genus).all()
     session.close()
     # Transform genuses to JSON format
-    genuses_json = [{"id": genus.id, "name": genus.name, "watering": genus.watering} for genus in genuses]
+    genuses_json = [genus.to_json for genus in genuses]
     # Return JSON response
     return jsonify(genuses_json)
 

@@ -10,7 +10,6 @@
 
 #     __tablename__ = "mix"
 
-#     # TODO: Base Merge
 #     id = Column(Integer(), primary_key=True)
 #     name = Column(String(100), nullable=False)
 #     created_on = Column(DateTime(), default=datetime.now)
@@ -27,7 +26,6 @@
 
 #     __tablename__ = "soil"
 
-#     # TODO: Base Merge
 #     # Created at stuff
 #     id = Column(Integer(), primary_key=True)
 #     name = Column(String(100), nullable=False)

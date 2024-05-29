@@ -10,7 +10,6 @@
 
 #     __tablename__ = "batch"
 
-#     # TODO: Base Merge
 #     id = Column(Integer(), primary_key=True)
 #     name = Column(String(100), nullable=False)
 #     created_on = Column(DateTime(), default=datetime.now)
@@ -36,7 +35,6 @@
 
 #     __tablename__ = "batch"
 
-#     # TODO: Base Merge
 #     # Creation Info
 #     id = Column(Integer(), primary_key=True)
 #     name = Column(String(100), nullable=False)
@@ -58,7 +56,6 @@
 
 #     __tablename__ = "light"
 
-#     # TODO: Base Merge
 #     id = Column(Integer(), primary_key=True)
 #     name = Column(String(100), nullable=False)
 #     created_on = Column(DateTime(), default=datetime.now)
