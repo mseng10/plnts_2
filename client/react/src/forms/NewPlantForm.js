@@ -105,7 +105,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
             <Autocomplete
               freeSolo
               disableClearable
-              value={species}
+              value={species ? species.name : ''}
               options={allSpecies.map((option) => option.name)}
               onChange={(event) => setSpecies(allSpecies[event.target.value])}
               renderInput={(params) => (
