@@ -17,7 +17,7 @@ from sqlalchemy.engine import URL
 from models.plant import Plant, Species, Genus
 
 # Load database configuration from JSON file
-with open("db.json") as json_data_file:
+with open("db.json", encoding="utf-8") as json_data_file:
     db_config = json.load(json_data_file)
 
 # Create SQLAlchemy engine
