@@ -1,51 +1,46 @@
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+"""
+Module defining models for plants.
+"""
+
+# Standard library imports
 from datetime import datetime
-from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy.ext.declarative import declarative_base
 from typing import List
 
-from enum import Enum
+# Third-party imports
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
-
-# class DeathCause(Enum, str):
-#     TOO_LITTLE_WATER = "too little water"
-#     TOO_MUCH_WATER = "too much water"
-#     TOO_LITTLE_HUMIDITY = "too little humidity"
-#     TOO_MUCH_HUMIDITY = "too much humidity"
-#     TOO_LITTLE_SUN = "too little sun"
-#     TOO_MUCH_SUN = "too much sun"
-#     PROPAGATION = "propagation"
-#     PESTS = "pests"
-#     MOLD = "mold"
-#     NEGLECT = "neglect"
-#     UNKNOWN = "unknown"
-
 
 class Plant(Base):
     """Plant model."""
 
     __tablename__ = "plant"
 
-    # Created at specs
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer(), default=0, nullable=False)
     size = Column(Integer(), default=0, nullable=False)  # inches
     species_id: Mapped[int] = mapped_column(
-        ForeignKey("species.id", ondelete="CASCADE")
-    )  # Species of Plant
-
+        ForeignKey("species.id", ondelete="CASCADE"))  # Species of Plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-
-    # Water Info
-    watered_on = Column(DateTime(), default=datetime.now)
-
-    # Death Info
-    dead = Column(Boolean, default=False, nullable=False)
-    # dead_cause = Column(Enum(DeathCause), nullable=True)
+    watered_on = Column(DateTime(), default=datetime.now)  # Water Info
+    dead = Column(Boolean, default=False, nullable=False)  # Death Info
     dead_on = Column(DateTime(), default=None, nullable=True)
 
+    def __repr__(self) -> str:
+        return f"{self.id}"
+
+    def to_json(self):
+        """Convert to json for front end."""
+        return {
+            "id": self.id,
+            "cost": self.cost,
+            "size": self.size,
+            "watering": self.watering,
+            "created_on": self.created_on
+        }
 
 class Species(Base):
     """Species of genus."""
@@ -56,17 +51,23 @@ class Species(Base):
     created_on = Column(DateTime(), default=datetime.now)
     name = Column(String(100), nullable=False, unique=True)
     updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
+    genus_id: Mapped[int] = mapped_column(
+        ForeignKey("genus.id", ondelete="CASCADE"))  # Genus of this species of plant
 
-    # Available plants of this species
-    plants: Mapped[List["Plant"]] = relationship(
-        "Plant", backref="plant", passive_deletes=True
-    )
-
-    # Genus of this species of plant
-    genus_id: Mapped[int] = mapped_column(ForeignKey("genus.id", ondelete="CASCADE"))
+    plants: Mapped[List["Plant"]] = relationship("Plant",
+        backref="species",
+        passive_deletes=True)  # Available plants of this species
 
     def __repr__(self) -> str:
         return f"{self.name}"
+
+    def to_json(self):
+        """Convert to json for front end."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "genus_id": self.genus_id
+        }
 
 
 class Genus(Base):
@@ -80,10 +81,17 @@ class Genus(Base):
     watering = Column(Integer(), nullable=False)  # days
     updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
-    # Available species of this genus
-    species: Mapped[List["Species"]] = relationship(
-        "Species", backref="species", passive_deletes=True
-    )
+    species: Mapped[List["Species"]] = relationship("Species",
+        backref="genus",
+        passive_deletes=True)  # Available species of this genus
 
     def __repr__(self) -> str:
         return f"{self.name}"
+
+    def to_json(self):
+        """Convert to json for front end."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "watering": self.watering
+        }
