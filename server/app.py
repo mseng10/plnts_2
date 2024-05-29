@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Base, Species, Genus
+from models.plant import Plant, Species, Genus
 
 # Load database configuration from JSON file
 with open("db.json") as json_data_file:
@@ -30,7 +30,6 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
-# TODO: Temp, remove when all is working
 # Base.metadata.drop_all(engine)
 # Base.metadata.create_all(engine)
 
@@ -142,7 +141,7 @@ def create_genus():
     logger.info("Attempting to create genus")
 
     new_species_data = request.get_json()
-    
+
     # Create a new Genus object
     new_genus = Genus(
         name=new_species_data["name"],
