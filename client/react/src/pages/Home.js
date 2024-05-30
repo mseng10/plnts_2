@@ -1,7 +1,5 @@
 // Home.js
 import React, { useState } from 'react';
-import { Grid, Button } from '@mui/material';
-import Plant from '../Plant';
 import UpdatePlantForm from '../forms/UpdatePlantForm';
 import WaterPlantsForm from '../forms/WaterPlantsForm';
 import FertilizePlantsForm from '../forms/FertilizePlantsForm';
@@ -17,15 +15,48 @@ import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 import KillPlantsForm from '../forms/KillPlantsForm';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
+import { DataGrid } from '@mui/x-data-grid';
+import Box from '@mui/material/Box';
 
 
 
 const Home = ({
   plants,
   setPlants,
-  onlyNeedWater,
-  handleKillPlant,
+  // onlyNeedWater,
+  // handleKillPlant,
 }) => {
+
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    // {
+    //   field: 'name',
+    //   headerName: 'First name',
+    //   width: 150,
+    //   editable: false,
+    // },
+    {
+      field: 'size',
+      headerName: 'Size',
+      width: 110,
+      editable: false,
+    },
+    {
+      field: 'cost',
+      headerName: 'Cost',
+      type: 'number',
+      width: 110,
+      editable: false,
+    },
+    // {
+    //   field: 'fullName',
+    //   headerName: 'Full name',
+    //   description: 'This column has a value getter and is not sortable.',
+    //   sortable: false,
+    //   width: 160,
+    //   valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+    // },
+  ];
 
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
@@ -34,15 +65,15 @@ const Home = ({
   const [isRepotPlantsFormOpen, setIsRepotPlantsFormOpen] = useState(false);
   const [selectedPlants, setSelectedPlants] = useState([]);
 
-  const handleSelectPlant = (selectedPlant) => {
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
-      )
-    );
-    const newSelectedPlants = selectedPlants.concat(selectedPlant);
-    setSelectedPlants(newSelectedPlants);
-  };
+  // const handleSelectPlant = (selectedPlant) => {
+  //   setPlants((prevPlants) =>
+  //     prevPlants.map((plant) =>
+  //       plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
+  //     )
+  //   );
+  //   const newSelectedPlants = selectedPlants.concat(selectedPlant);
+  //   setSelectedPlants(newSelectedPlants);
+  // };
 
   const clearSelections = () => {
     setPlants((prevPlants) =>
@@ -88,24 +119,22 @@ const Home = ({
             </IconButton>
           )}
         </ButtonGroup>
-        <div className="plant-grid">
-          {plants.filter((word) => onlyNeedWater ? word.wateringFrequency > Date.now() : true).map((plant) => (
-            <Grid key={plant.id} item xs={12} sm={6} md={4} lg={3} xl={2}>
-              <Button className={plant.selected ? 'selected' : ''} onClick= {() => handleSelectPlant(plant) } sx={{
-                textTransform: "none",
-                ml: 1,
-                "&.MuiButtonBase-root:hover": {
-                  bgcolor: "transparent"
+        <Box sx={{ height: 400, width: '100%' }}>
+          <DataGrid
+            rows={plants}
+            columns={columns}
+            initialState={{
+              pagination: {
+                paginationModel: {
+                  pageSize: 5,
                 },
-              }}>
-                <Plant
-                  {...plant}
-                  onKill={() => handleKillPlant(plant.id)}
-                />
-              </Button>
-            </Grid>
-          ))}
-        </div>
+              },
+            }}
+            pageSizeOptions={[5]}
+            checkboxSelection
+            disableRowSelectionOnClick
+          />
+        </Box>
       </div>
       {isUpdatePlantFormOpen && (
         <UpdatePlantForm
