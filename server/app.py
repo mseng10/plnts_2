@@ -43,6 +43,7 @@ CORS(app)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 @app.route("/plants", methods=["POST"])
 def add_plant():
     """
@@ -55,7 +56,7 @@ def add_plant():
     new_plant = Plant(
         cost=new_plant_data["cost"],
         size=new_plant_data["size"],
-        species_id=new_plant_data["species_id"]
+        species_id=new_plant_data["species_id"],
     )
     # Add the new plant object to the session
     session = Session()
@@ -64,6 +65,7 @@ def add_plant():
     session.close()
     # Return response
     return jsonify({"message": "Plant added successfully"}), 201
+
 
 # Example route to get all plants
 @app.route("/plants", methods=["GET"])
@@ -81,6 +83,7 @@ def get_plants():
     # Return JSON response
     return jsonify(plants_json)
 
+
 @app.route("/species", methods=["POST"])
 def create_species():
     """
@@ -92,8 +95,7 @@ def create_species():
 
     # Create a new Species object
     new_species = Species(
-        name=new_species_data["name"],
-        genus_id=new_species_data["genus_id"]
+        name=new_species_data["name"], genus_id=new_species_data["genus_id"]
     )
 
     # Add the new species object to the session
@@ -103,6 +105,7 @@ def create_species():
     session.close()
 
     return jsonify({"message": "Species added successfully"}), 201
+
 
 @app.route("/species", methods=["GET"])
 def get_species():
@@ -119,6 +122,7 @@ def get_species():
     # Return JSON response
     return jsonify(species_json)
 
+
 @app.route("/genus", methods=["GET"])
 def get_genuses():
     """
@@ -134,6 +138,7 @@ def get_genuses():
     # Return JSON response
     return jsonify(genuses_json)
 
+
 @app.route("/genus", methods=["POST"])
 def create_genus():
     """
@@ -145,8 +150,7 @@ def create_genus():
 
     # Create a new Genus object
     new_genus = Genus(
-        name=new_species_data["name"],
-        watering=new_species_data["watering"]
+        name=new_species_data["name"], watering=new_species_data["watering"]
     )
 
     # Add the new genus object to the session
@@ -156,6 +160,7 @@ def create_genus():
     db.close()
 
     return jsonify({"message": "Genus added successfully"}), 201
+
 
 if __name__ == "__main__":
     # Run the Flask app
