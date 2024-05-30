@@ -38,7 +38,6 @@ class Plant(Base):
             "id": self.id,
             "cost": self.cost,
             "size": self.size,
-            "watering": self.watering,
             "created_on": self.created_on
         }
 
