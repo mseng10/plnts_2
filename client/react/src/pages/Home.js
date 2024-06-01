@@ -1,181 +1,126 @@
 // Home.js
-import React, { useState } from 'react';
-import UpdatePlantForm from '../forms/UpdatePlantForm';
-import WaterPlantsForm from '../forms/WaterPlantsForm';
-import FertilizePlantsForm from '../forms/FertilizePlantsForm';
-import RepotPlantsForm from '../forms/RepotPlantsForm';
-// import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
+import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
+import Plants from './Plants';
+import System from './System'
 import ButtonGroup from '@mui/material/ButtonGroup';
-import IconButton from '@mui/material/IconButton';
-// import GridViewSharpIcon from '@mui/icons-material/GridViewSharp';
-import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
+import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import NewPlantForm from '../forms/NewPlantForm';
+import NewGenusForm from '../forms/NewGenusForm';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
-import EditSharpIcon from '@mui/icons-material/EditSharp';
-import ClearSharpIcon from '@mui/icons-material/ClearSharp';
-import KillPlantsForm from '../forms/KillPlantsForm';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
-import { DataGrid } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
+import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
+import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
+import NewSpeciesForm from '../forms/NewSpeciesForm';
+import React, { useState, useEffect } from 'react';
+import IconButton from '@mui/material/IconButton';
 
 
 
-const Home = ({
-  plants,
-  setPlants,
-  // onlyNeedWater,
-  // handleKillPlant,
-}) => {
+const Home = () => {
+  const [plants, setPlants] = useState([]);
+  const [system, setSystem] = useState({ temperature: 20, humidity: 50 });
+  const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
+  const [isNewSpeciesFormOpen, setIsNewSpeciesFormOpen] = useState(false);
+  const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
+  const [showHome, setShowHome] = useState(false);
+  const [showNeedWater, setNeedWater] = useState(false);
+  const [showSystem, setShowSystem] = useState(false);
 
-  const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    // {
-    //   field: 'name',
-    //   headerName: 'First name',
-    //   width: 150,
-    //   editable: false,
-    // },
-    {
-      field: 'size',
-      headerName: 'Size',
-      width: 110,
-      editable: false,
-    },
-    {
-      field: 'cost',
-      headerName: 'Cost',
-      type: 'number',
-      width: 110,
-      editable: false,
-    },
-    // {
-    //   field: 'fullName',
-    //   headerName: 'Full name',
-    //   description: 'This column has a value getter and is not sortable.',
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-    // },
-  ];
+  useEffect(() => {
+    // Fetch plant data from the server
+    fetch('http://127.0.0.1:5000/plants')
+      .then((response) => response.json())
+      .then((data) => setPlants(data))
+      .catch((error) => console.error('Error fetching plant data:', error));
+    const system = {temperature: 20, humidity: 80};
+    // Fetch plant data from the server
+    fetch('http://localhost:5000/system')
+      .then((response) => response.json())
+      .then(() => setSystem(system))
+      .catch(() => setSystem(system));
+  }, []);
 
-  const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
-  const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
-  const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
-  const [isFertilizePlantsFormOpen, setIsFertilizePlantsFormOpen] = useState(false);
-  const [isRepotPlantsFormOpen, setIsRepotPlantsFormOpen] = useState(false);
-  const [selectedPlants, setSelectedPlants] = useState([]);
+  const openHome = (filtered_plants) => {
+    setNeedWater(filtered_plants);
+    setShowHome(true);
+  };
 
-  // const handleSelectPlant = (selectedPlant) => {
-  //   setPlants((prevPlants) =>
-  //     prevPlants.map((plant) =>
-  //       plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
-  //     )
-  //   );
-  //   const newSelectedPlants = selectedPlants.concat(selectedPlant);
-  //   setSelectedPlants(newSelectedPlants);
-  // };
+  const openSystem = () => {
+    setShowSystem(true);
+  };
 
-  const clearSelections = () => {
+  const handleKillPlant = (plantId) => {
+    // Mark the plant as no longer active (alive: false)
     setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plant.selected ? { ...plant, selected: false } : plant
-      )
+      prevPlants.map((plant) => (plant.id === plantId ? { ...plant, alive: false } : plant))
     );
-    setSelectedPlants([]);
   };
 
   return (
     <>
-      <div>
-        <ButtonGroup size="lg" sx={{float: 'right'}}>
-          {plants.filter(pl => pl.selected).length === 1 && (
-            <IconButton size="large" color="primary" onClick={() => setIsUpdatePlantFormOpen(true)}>
-              <EditSharpIcon />
+      <div className="App">
+        {!showHome && !showSystem && ( // yuck
+          <div>
+            <div className='system_min' onClick={() => openSystem()}>
+              <System
+                system = {system}
+              />
+            </div>
+            <IconButton size="large" className={`home_icon`} color="primary" onClick={() => openHome(false)}>
+              <GrassOutlinedIcon className='home_icon'/>
             </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
-              <WaterDropOutlinedIcon />
+          </div>
+        )}
+        {!showHome && !showSystem && ( // yuck
+          <ButtonGroup size="lg">
+            <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
+              <AddSharpIcon className={`home_button `} />
             </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
-              <DeleteOutlineSharpIcon />
+            <IconButton size="large" color="secondary" onClick={() => setIsNewSpeciesFormOpen(true)}>
+              <CallSplitSharpIcon className={`home_button `} />
             </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
-              <LunchDiningIcon />
+            <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
+              <FingerprintSharpIcon className={`home_button `} />
             </IconButton>
-          )}          
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
-              <ParkSharpIcon />
+            <IconButton size="large" color="error" onClick={() => openHome(true)}>
+              <WaterDropOutlinedIcon className={`home_button `} />
             </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length === 1 && (
-            <IconButton size="large" color="info" onClick={() => clearSelections()}>
-              <ClearSharpIcon />
+            <IconButton size="large" color="fertilize" onClick={() => openSystem()}>
+              <LunchDiningIcon className={`home_button`} />
             </IconButton>
-          )}
-        </ButtonGroup>
-        <Box sx={{ height: 400, width: '100%' }}>
-          <DataGrid
-            rows={plants}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: {
-                  pageSize: 5,
-                },
-              },
-            }}
-            pageSizeOptions={[5]}
-            checkboxSelection
-            disableRowSelectionOnClick
+            <IconButton size="large" color='repot' onClick={() => openSystem()}>
+              <ParkSharpIcon className={`home_button`} />
+            </IconButton>
+          </ButtonGroup>
+        )}
+        {showHome && (
+          <Plants
+            plants={plants}
+            onlyNeedWater={showNeedWater}
+            handleKillPlant={handleKillPlant}
+            setPlants={setPlants}
           />
-        </Box>
+        )}
+        {showSystem && (
+          <System
+            system={system}
+            full={showSystem}
+          />
+        )}
+        <NewPlantForm
+          isOpen={isNewPlantFormOpen}
+          onRequestClose={() => setIsNewPlantFormOpen(false)}
+        />
+        <NewSpeciesForm
+          isOpen={isNewSpeciesFormOpen}
+          onRequestClose={() => setIsNewSpeciesFormOpen(false)}
+        />
+        <NewGenusForm
+          isOpen={isNewGenusFormOpen}
+          onRequestClose={() => setIsNewGenusFormOpen(false)}
+        />
       </div>
-      {isUpdatePlantFormOpen && (
-        <UpdatePlantForm
-          isOpen={isUpdatePlantFormOpen}
-          onRequestClose={() => setIsUpdatePlantFormOpen(false)}
-          setPlants={setPlants}
-          plant={selectedPlants[0]}
-        />
-      )}
-      {isWaterPlantsFormOpen && (
-        <WaterPlantsForm
-          isOpen={isWaterPlantsFormOpen}
-          onRequestClose={() => setIsWaterPlantsFormOpen(false)}
-          setPlants={setPlants}
-          plants={selectedPlants}
-        />
-      )}
-      {isKillPlantsFormOpen && (
-        <KillPlantsForm
-          isOpen={isKillPlantsFormOpen}
-          onRequestClose={() => setIsKillPlantsFormOpen(false)}
-          setPlants={setPlants}
-          plants={selectedPlants}
-        />
-      )}
-      {isFertilizePlantsFormOpen && (
-        <FertilizePlantsForm
-          isOpen={isFertilizePlantsFormOpen}
-          onRequestClose={() => setIsFertilizePlantsFormOpen(false)}
-          setPlants={setPlants}
-          plants={selectedPlants}
-        />
-      )}
-      {isRepotPlantsFormOpen && (
-        <RepotPlantsForm
-          isOpen={isRepotPlantsFormOpen}
-          onRequestClose={() => setIsRepotPlantsFormOpen(false)}
-          setPlants={setPlants}
-          plants={selectedPlants}
-        />
-      )}
     </>
   );
 };
