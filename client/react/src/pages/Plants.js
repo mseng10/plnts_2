@@ -91,27 +91,27 @@ const Plants = () => {
         />
         <Box sx={{ flexGrow: 1 }} />
         {selectedPlants.length === 1 && (
-          <IconButton size="large" color="primary" onClick={() => setIsUpdatePlantFormOpen(true)}>
+          <IconButton size="small" color="primary" onClick={() => setIsUpdatePlantFormOpen(true)}>
             <EditSharpIcon />
           </IconButton>
         )}
         {selectedPlants.length > 0 && (
-          <IconButton size="large" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
+          <IconButton size="small" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
             <WaterDropOutlinedIcon />
           </IconButton>
         )}
         {selectedPlants.length > 0 && (
-          <IconButton size="large" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
+          <IconButton size="small" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
             <DeleteOutlineSharpIcon />
           </IconButton>
         )}
         {selectedPlants.length > 0 && (
-          <IconButton size="large" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
+          <IconButton size="small" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
             <LunchDiningIcon />
           </IconButton>
         )}          
         {selectedPlants.length > 0 && (
-          <IconButton size="large" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
+          <IconButton size="small" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
             <ParkSharpIcon />
           </IconButton>
         )}
