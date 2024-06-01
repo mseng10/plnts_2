@@ -5,6 +5,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import IconButton from '@mui/material/IconButton';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -96,75 +97,11 @@ const App = () => {
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
-      <div className="App">
-        {(showHome || showSystem) && ( // yuck
-          <div>
-            <IconButton id="back" size="large"  color="primary" onClick={() => openApp()}>
-              <ArrowBackIosNewSharpIcon />
-            </IconButton>
-          </div>
-        )}
-        {!showHome && !showSystem && ( // yuck
-          <div>
-            <div className='system_min' onClick={() => openSystem()}>
-              <System
-                system = {system}
-              />
-            </div>
-            <IconButton size="large" className={`home_icon`} color="primary" onClick={() => openHome(false)}>
-              <GrassOutlinedIcon className='home_icon'/>
-            </IconButton>
-          </div>
-        )}
-        {!showHome && !showSystem && ( // yuck
-          <ButtonGroup size="lg">
-            <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-              <AddSharpIcon className={`home_button `} />
-            </IconButton>
-            <IconButton size="large" color="secondary" onClick={() => setIsNewSpeciesFormOpen(true)}>
-              <CallSplitSharpIcon className={`home_button `} />
-            </IconButton>
-            <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
-              <FingerprintSharpIcon className={`home_button `} />
-            </IconButton>
-            <IconButton size="large" color="error" onClick={() => openHome(true)}>
-              <WaterDropOutlinedIcon className={`home_button `} />
-            </IconButton>
-            <IconButton size="large" color="fertilize" onClick={() => openSystem()}>
-              <LunchDiningIcon className={`home_button`} />
-            </IconButton>
-            <IconButton size="large" color='repot' onClick={() => openSystem()}>
-              <ParkSharpIcon className={`home_button`} />
-            </IconButton>
-          </ButtonGroup>
-        )}
-        {showHome && (
-          <Plants
-            plants={plants}
-            onlyNeedWater={showNeedWater}
-            handleKillPlant={handleKillPlant}
-            setPlants={setPlants}
-          />
-        )}
-        {showSystem && (
-          <System
-            system={system}
-            full={showSystem}
-          />
-        )}
-        <NewPlantForm
-          isOpen={isNewPlantFormOpen}
-          onRequestClose={() => setIsNewPlantFormOpen(false)}
-        />
-        <NewSpeciesForm
-          isOpen={isNewSpeciesFormOpen}
-          onRequestClose={() => setIsNewSpeciesFormOpen(false)}
-        />
-        <NewGenusForm
-          isOpen={isNewGenusFormOpen}
-          onRequestClose={() => setIsNewGenusFormOpen(false)}
-        />
-      </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/plants" element={<Plants />} />
+        <Route path="/system" element={<System />} />
+      </Routes>
     </ThemeProvider>
   );
 };
