@@ -23,37 +23,52 @@ import Box from '@mui/material/Box';
 const Plants = () => {
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
-    // {
-    //   field: 'name',
-    //   headerName: 'First name',
-    //   width: 150,
-    //   editable: false,
-    // },
+    { field: 'id', headerName: 'ID', width: 20 },
     {
       field: 'size',
       headerName: 'Size',
-      width: 110,
+      width: 20,
       editable: false,
     },
     {
       field: 'cost',
       headerName: 'Cost',
       type: 'number',
-      width: 110,
+      width: 20,
       editable: false,
     },
-    // {
-    //   field: 'fullName',
-    //   headerName: 'Full name',
-    //   description: 'This column has a value getter and is not sortable.',
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
-    // },
+    {
+      field: 'created_on',
+      headerName: 'Created On',
+      type: 'string',
+      width: 150,
+      editable: false
+    },
+    {
+      field: 'watered_on',
+      headerName: 'Watered On',
+      type: 'string',
+      width: 150,
+      editable: false
+    },
+    {
+      field: 'species_id',
+      headerName: 'Species',
+      width: 150,
+      editable: false,
+      valueGetter: (value) => {
+        if (!value) {
+          return "Nan";
+        }
+        const speciesObj = species.find(_s => _s.id == value.value)
+        
+        return speciesObj ? speciesObj.name : "Nan";
+      },
+    }
   ];
 
   const [plants, setPlants] = useState([]);
+  const [species, setSpecies] = useState([]);
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
@@ -76,6 +91,10 @@ const Plants = () => {
     fetch('http://127.0.0.1:5000/plants')
       .then((response) => response.json())
       .then((data) => setPlants(data))
+      .catch((error) => console.error('Error fetching plant data:', error));
+    fetch('http://127.0.0.1:5000/species')
+      .then((response) => response.json())
+      .then((data) => setSpecies(data))
       .catch((error) => console.error('Error fetching plant data:', error));
   }, []);
 
