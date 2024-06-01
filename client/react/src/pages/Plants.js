@@ -111,32 +111,32 @@ const Plants = () => {
     <>
       <div>
         <ButtonGroup size="lg" sx={{float: 'right'}}>
-          {plants.filter(pl => pl.selected).length === 1 && (
+          {selectedPlants.length === 1 && (
             <IconButton size="large" color="primary" onClick={() => setIsUpdatePlantFormOpen(true)}>
               <EditSharpIcon />
             </IconButton>
           )}
-          {plants.filter(pl => pl.selected).length > 0 && (
+          {selectedPlants.length > 0 && (
             <IconButton size="large" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
               <WaterDropOutlinedIcon />
             </IconButton>
           )}
-          {plants.filter(pl => pl.selected).length > 0 && (
+          {selectedPlants.length > 0 && (
             <IconButton size="large" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
               <DeleteOutlineSharpIcon />
             </IconButton>
           )}
-          {plants.filter(pl => pl.selected).length > 0 && (
+          {selectedPlants.length > 0 && (
             <IconButton size="large" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
               <LunchDiningIcon />
             </IconButton>
           )}          
-          {plants.filter(pl => pl.selected).length > 0 && (
+          {selectedPlants.length > 0 && (
             <IconButton size="large" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
               <ParkSharpIcon />
             </IconButton>
           )}
-          {plants.filter(pl => pl.selected).length === 1 && (
+          {selectedPlants.length === 1 && (
             <IconButton size="large" color="info" onClick={() => clearSelections()}>
               <ClearSharpIcon />
             </IconButton>
@@ -156,6 +156,13 @@ const Plants = () => {
             pageSizeOptions={[5]}
             checkboxSelection
             disableRowSelectionOnClick
+            onRowSelectionModelChange={(newSelectionModel) => {
+              const selections = [];
+              newSelectionModel.forEach((index) => selections.push(plants[index]));
+              console.log(selections);
+
+              setSelectedPlants(selections);
+            }}
           />
         </Box>
       </div>
