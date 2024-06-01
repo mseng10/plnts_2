@@ -20,7 +20,7 @@ import Box from '@mui/material/Box';
 
 
 
-const Home = ({
+const Plants = ({
   plants,
   setPlants,
   // onlyNeedWater,
@@ -180,4 +180,4 @@ const Home = ({
   );
 };
 
-export default Home;
+export default Plants;

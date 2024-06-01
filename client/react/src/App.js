@@ -10,7 +10,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey, teal, brown } from '@mui/material/colors';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
-import Home from './pages/Home';
+import Plants from './pages/Plants';
 import System from './pages/System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
@@ -139,7 +139,7 @@ const App = () => {
           </ButtonGroup>
         )}
         {showHome && (
-          <Home
+          <Plants
             plants={plants}
             onlyNeedWater={showNeedWater}
             handleKillPlant={handleKillPlant}
