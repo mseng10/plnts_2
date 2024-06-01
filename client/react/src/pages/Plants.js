@@ -1,5 +1,5 @@
 // Home.js
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UpdatePlantForm from '../forms/UpdatePlantForm';
 import WaterPlantsForm from '../forms/WaterPlantsForm';
 import FertilizePlantsForm from '../forms/FertilizePlantsForm';
@@ -20,12 +20,7 @@ import Box from '@mui/material/Box';
 
 
 
-const Plants = ({
-  plants,
-  setPlants,
-  // onlyNeedWater,
-  // handleKillPlant,
-}) => {
+const Plants = () => {
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
@@ -58,6 +53,7 @@ const Plants = ({
     // },
   ];
 
+  const [plants, setPlants] = useState([]);
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
@@ -74,6 +70,14 @@ const Plants = ({
   //   const newSelectedPlants = selectedPlants.concat(selectedPlant);
   //   setSelectedPlants(newSelectedPlants);
   // };
+
+  useEffect(() => {
+    // Fetch plant data from the server
+    fetch('http://127.0.0.1:5000/plants')
+      .then((response) => response.json())
+      .then((data) => setPlants(data))
+      .catch((error) => console.error('Error fetching plant data:', error));
+  }, []);
 
   const clearSelections = () => {
     setPlants((prevPlants) =>
