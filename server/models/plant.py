@@ -41,6 +41,9 @@ class Plant(Base):
             "cost": self.cost,
             "size": self.size,
             "created_on": self.created_on,
+            "watered_on": self.watered_on,
+            "updated_on": self.updated_on,
+            "species_id": self.species_id
         }
 
 
