@@ -162,6 +162,45 @@ def create_genus():
     return jsonify({"message": "Genus added successfully"}), 201
 
 
+@app.route("/system", methods=["GET"])
+def get_systems():
+    """
+    Retrieve all systems from the database.
+    """
+    logger.info("Received request to retrieve all systems")
+
+    session = Session()
+    systems = session.query(System).all()
+    session.close()
+    # Transform systems to JSON format
+    systems_json = [system.to_json() for system in systems]
+    # Return JSON response
+    return jsonify(systems_json)
+
+@app.route("/system", methods=["POST"])
+def create_system():
+    """
+    Create a new system and add it to the database.
+    """
+    logger.info("Attempting to create system")
+
+    new_system_json = request.get_json()
+
+    # Create a new System object
+    new_system = System(
+        name=new_system_json["name"], 
+        temperature=new_system_json["temperature"]
+        humidity=new_system_json["humidity"]
+    )
+
+    # Add the new system object to the session
+    db = Session()
+    db.add(new_system)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "System added successfully"}), 201
+
 if __name__ == "__main__":
     # Run the Flask app
     app.run(debug=True)
