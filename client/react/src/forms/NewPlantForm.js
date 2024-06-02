@@ -19,21 +19,21 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   //   "Senior"
   // ];
 
-  const [species, setSpecies] = useState('');
+  const [genus, setGenus] = useState('');
   // const [stage, setStage] = useState('Senior'); 
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
 
-  const [allSpecies, setAllSpecies] = useState([]);
+  const [allGenuses, setAllGenuses] = useState([]);
 
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
-    fetch('http://127.0.0.1:5000/species')
+    fetch('http://127.0.0.1:5000/genus')
       .then((response) => response.json())
-      .then((data) => setAllSpecies(data))
-      .catch((error) => console.error('Error fetching species data:', error));
+      .then((data) => setAllGenuses(data))
+      .catch((error) => console.error('Error fetching all genuses data:', error));
   }, []);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({size: size, cost: cost, species_id: species.id })
+        body: JSON.stringify({size: size, cost: cost, genus_id: genus.id })
       };
       fetch('http://127.0.0.1:5000/plants', requestOptions)
         .then(response => response.json())
@@ -50,11 +50,11 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
           // maybe update some state based on the response
           console.log(data);
         })
-        .catch(error => console.error('Error posting species data:', error));
+        .catch(error => console.error('Error posting plants data:', error));
       clearForm();
       onRequestClose();
     }
-  }, [submitted, size, cost, species, onRequestClose]);
+  }, [submitted, size, cost, genus, onRequestClose]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -70,7 +70,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
     // setStage(null);
     setCost(0);
     setSize(0);
-    setSpecies(null);
+    setGenus(null);
     setSubmitted(false);
   };
 
@@ -105,14 +105,14 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
             <Autocomplete
               freeSolo
               disableClearable
-              value={species ? species.name : ''}
-              options={allSpecies.map((option) => option.name)}
-              onChange={(event) => setSpecies(allSpecies[event.target.value])}
+              value={genus ? genus.name : ''}
+              options={allGenuses.map((option) => option.name)}
+              onChange={(event) => setGenus(allGenuses[event.target.value])}
               renderInput={(params) => (
                 <TextField
                   variant="standard"
                   {...params}
-                  label="Species"
+                  label="Genus"
                   InputProps={{
                     ...params.InputProps,
                     type: 'search',

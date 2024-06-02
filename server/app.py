@@ -56,7 +56,7 @@ def add_plant():
     new_plant = Plant(
         cost=new_plant_data["cost"],
         size=new_plant_data["size"],
-        species_id=new_plant_data["species_id"],
+        genus_id=new_plant_data["genus_id"],
     )
     # Add the new plant object to the session
     session = Session()
@@ -82,45 +82,6 @@ def get_plants():
     plants_json = [plant.to_json() for plant in plants]
     # Return JSON response
     return jsonify(plants_json)
-
-
-@app.route("/species", methods=["POST"])
-def create_species():
-    """
-    Create a new species and add it to the database.
-    """
-    logger.info("Attempting to create species")
-
-    new_species_data = request.get_json()
-
-    # Create a new Species object
-    new_species = Species(
-        name=new_species_data["name"], genus_id=new_species_data["genus_id"]
-    )
-
-    # Add the new species object to the session
-    session = Session()
-    session.add(new_species)
-    session.commit()
-    session.close()
-
-    return jsonify({"message": "Species added successfully"}), 201
-
-
-@app.route("/species", methods=["GET"])
-def get_species():
-    """
-    Retrieve all species from the database.
-    """
-    logger.info("Received request to retrieve all plant species")
-
-    session = Session()
-    species = session.query(Species).all()
-    session.close()
-    # Transform species to JSON format
-    species_json = [_species.to_json() for _species in species]
-    # Return JSON response
-    return jsonify(species_json)
 
 
 @app.route("/genus", methods=["GET"])

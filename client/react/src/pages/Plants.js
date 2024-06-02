@@ -50,23 +50,23 @@ const Plants = () => {
       editable: false
     },
     {
-      field: 'species_id',
-      headerName: 'Species',
+      field: 'genus_id',
+      headerName: 'Genus',
       width: 150,
       editable: false,
       valueGetter: (value) => {
         if (!value) {
           return "Nan";
         }
-        const speciesObj = species.find(_s => _s.id == value.value)
+        const genusObj = genuses.find(_g => _g.id == value.value)
         
-        return speciesObj ? speciesObj.name : "Nan";
+        return genusObj ? genusObj.name : "Nan";
       },
     }
   ];
 
   const [plants, setPlants] = useState([]);
-  const [species, setSpecies] = useState([]);
+  const [genuses, setGensuses] = useState([]);
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
@@ -125,9 +125,9 @@ const Plants = () => {
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
-    fetch('http://127.0.0.1:5000/species')
+    fetch('http://127.0.0.1:5000/genus')
       .then((response) => response.json())
-      .then((data) => setSpecies(data))
+      .then((data) => setGensuses(data))
       .catch((error) => console.error('Error fetching plant data:', error));
   }, []);
 
