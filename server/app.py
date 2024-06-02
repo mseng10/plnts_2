@@ -14,7 +14,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Species, Genus
+from models.plant import Plant, Genus, Base
+from models.system import System
 
 # Load database configuration from JSON file
 with open("db.json", encoding="utf-8") as json_data_file:
@@ -30,8 +31,8 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -56,7 +57,9 @@ def add_plant():
     new_plant = Plant(
         cost=new_plant_data["cost"],
         size=new_plant_data["size"],
-        species_id=new_plant_data["species_id"],
+        genus_id=new_plant_data["genus_id"],
+        system_id=new_plant_data["system_id"],
+        name=new_plant_data["name"],
     )
     # Add the new plant object to the session
     session = Session()
@@ -84,45 +87,6 @@ def get_plants():
     return jsonify(plants_json)
 
 
-@app.route("/species", methods=["POST"])
-def create_species():
-    """
-    Create a new species and add it to the database.
-    """
-    logger.info("Attempting to create species")
-
-    new_species_data = request.get_json()
-
-    # Create a new Species object
-    new_species = Species(
-        name=new_species_data["name"], genus_id=new_species_data["genus_id"]
-    )
-
-    # Add the new species object to the session
-    session = Session()
-    session.add(new_species)
-    session.commit()
-    session.close()
-
-    return jsonify({"message": "Species added successfully"}), 201
-
-
-@app.route("/species", methods=["GET"])
-def get_species():
-    """
-    Retrieve all species from the database.
-    """
-    logger.info("Received request to retrieve all plant species")
-
-    session = Session()
-    species = session.query(Species).all()
-    session.close()
-    # Transform species to JSON format
-    species_json = [_species.to_json() for _species in species]
-    # Return JSON response
-    return jsonify(species_json)
-
-
 @app.route("/genus", methods=["GET"])
 def get_genuses():
     """
@@ -146,12 +110,10 @@ def create_genus():
     """
     logger.info("Attempting to create genus")
 
-    new_species_data = request.get_json()
+    new_genus_data = request.get_json()
 
     # Create a new Genus object
-    new_genus = Genus(
-        name=new_species_data["name"], watering=new_species_data["watering"]
-    )
+    new_genus = Genus(name=new_genus_data["name"], watering=new_genus_data["watering"])
 
     # Add the new genus object to the session
     db = Session()
@@ -160,6 +122,47 @@ def create_genus():
     db.close()
 
     return jsonify({"message": "Genus added successfully"}), 201
+
+
+@app.route("/system", methods=["GET"])
+def get_systems():
+    """
+    Retrieve all systems from the database.
+    """
+    logger.info("Received request to retrieve all systems")
+
+    session = Session()
+    systems = session.query(System).all()
+    session.close()
+    # Transform systems to JSON format
+    systems_json = [system.to_json() for system in systems]
+    # Return JSON response
+    return jsonify(systems_json)
+
+
+@app.route("/system", methods=["POST"])
+def create_system():
+    """
+    Create a new system and add it to the database.
+    """
+    logger.info("Attempting to create system")
+
+    new_system_json = request.get_json()
+
+    # Create a new System object
+    new_system = System(
+        name=new_system_json["name"],
+        temperature=new_system_json["temperature"],
+        humidity=new_system_json["humidity"],
+    )
+
+    # Add the new system object to the session
+    db = Session()
+    db.add(new_system)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "System added successfully"}), 201
 
 
 if __name__ == "__main__":

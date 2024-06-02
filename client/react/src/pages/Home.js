@@ -7,11 +7,11 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import NewPlantForm from '../forms/NewPlantForm';
 import NewGenusForm from '../forms/NewGenusForm';
+import NewSystemForm from '../forms/NewSystemForm';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
-import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
-import NewSpeciesForm from '../forms/NewSpeciesForm';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 
@@ -21,7 +21,7 @@ const Home = () => {
   const [plants, setPlants] = useState([]);
   const [system, setSystem] = useState({ temperature: 20, humidity: 50 });
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
-  const [isNewSpeciesFormOpen, setIsNewSpeciesFormOpen] = useState(false);
+  const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
   const [showHome, setShowHome] = useState(false);
   const [showNeedWater, setNeedWater] = useState(false);
@@ -77,8 +77,8 @@ const Home = () => {
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
               <AddSharpIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="secondary" onClick={() => setIsNewSpeciesFormOpen(true)}>
-              <CallSplitSharpIcon className={`home_button `} />
+            <IconButton size="large" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
+              <PointOfSaleIcon className={`home_button `} />
             </IconButton>
             <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
               <FingerprintSharpIcon className={`home_button `} />
@@ -112,9 +112,9 @@ const Home = () => {
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
         />
-        <NewSpeciesForm
-          isOpen={isNewSpeciesFormOpen}
-          onRequestClose={() => setIsNewSpeciesFormOpen(false)}
+        <NewSystemForm
+          isOpen={isNewSystemFormOpen}
+          onRequestClose={() => setIsNewSystemFormOpen(false)}
         />
         <NewGenusForm
           isOpen={isNewGenusFormOpen}

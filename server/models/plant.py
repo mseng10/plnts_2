@@ -20,12 +20,16 @@ class Plant(Base):
     __tablename__ = "plant"
 
     id = Column(Integer(), primary_key=True)
+    name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer(), default=0, nullable=False)
     size = Column(Integer(), default=0, nullable=False)  # inches
-    species_id: Mapped[int] = mapped_column(
-        ForeignKey("species.id", ondelete="CASCADE")
-    )  # Species of Plant
+    genus_id: Mapped[int] = mapped_column(
+        ForeignKey("genus.id", ondelete="CASCADE")
+    )  # Genus of Plant
+    system_id: Mapped[int] = mapped_column(
+        ForeignKey("system.id", ondelete="CASCADE")
+    )  # System for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
     dead = Column(Boolean, default=False, nullable=False)  # Death Info
@@ -38,38 +42,15 @@ class Plant(Base):
         """Convert to json for front end."""
         return {
             "id": self.id,
+            "name": self.name,
             "cost": self.cost,
             "size": self.size,
             "created_on": self.created_on,
             "watered_on": self.watered_on,
             "updated_on": self.updated_on,
-            "species_id": self.species_id
+            "genus_id": self.genus_id,
+            "system_id": self.system_id,
         }
-
-
-class Species(Base):
-    """Species of genus."""
-
-    __tablename__ = "species"
-
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    name = Column(String(100), nullable=False, unique=True)
-    updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
-    genus_id: Mapped[int] = mapped_column(
-        ForeignKey("genus.id", ondelete="CASCADE")
-    )  # Genus of this species of plant
-
-    plants: Mapped[List["Plant"]] = relationship(
-        "Plant", backref="species", passive_deletes=True
-    )  # Available plants of this species
-
-    def __repr__(self) -> str:
-        return f"{self.name}"
-
-    def to_json(self):
-        """Convert to json for front end."""
-        return {"id": self.id, "name": self.name, "genus_id": self.genus_id}
 
 
 class Genus(Base):
@@ -83,9 +64,9 @@ class Genus(Base):
     watering = Column(Integer(), nullable=False)  # days
     updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
-    species: Mapped[List["Species"]] = relationship(
-        "Species", backref="genus", passive_deletes=True
-    )  # Available species of this genus
+    plants: Mapped[List["Plant"]] = relationship(
+        "Plant", backref="genus", passive_deletes=True
+    )  # Available plants of this genus
 
     def __repr__(self) -> str:
         return f"{self.name}"
