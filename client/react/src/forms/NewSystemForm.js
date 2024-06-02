@@ -102,6 +102,7 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
               margin="normal"
               fullWidth
               required
+              type="number"
               label="Temperature"
               value={temperature}
               variant="standard"

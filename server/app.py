@@ -14,7 +14,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Species, Genus
+from models.plant import Plant, Genus, Base
+from models.system import System
 
 # Load database configuration from JSON file
 with open("db.json", encoding="utf-8") as json_data_file:
@@ -30,8 +31,8 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -57,6 +58,7 @@ def add_plant():
         cost=new_plant_data["cost"],
         size=new_plant_data["size"],
         genus_id=new_plant_data["genus_id"],
+        system_id=new_plant_data["system_id"]
     )
     # Add the new plant object to the session
     session = Session()
@@ -107,11 +109,11 @@ def create_genus():
     """
     logger.info("Attempting to create genus")
 
-    new_species_data = request.get_json()
+    new_genus_data = request.get_json()
 
     # Create a new Genus object
     new_genus = Genus(
-        name=new_species_data["name"], watering=new_species_data["watering"]
+        name=new_genus_data["name"], watering=new_genus_data["watering"]
     )
 
     # Add the new genus object to the session
@@ -150,7 +152,7 @@ def create_system():
     # Create a new System object
     new_system = System(
         name=new_system_json["name"], 
-        temperature=new_system_json["temperature"]
+        temperature=new_system_json["temperature"],
         humidity=new_system_json["humidity"]
     )
 

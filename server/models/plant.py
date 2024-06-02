@@ -26,6 +26,9 @@ class Plant(Base):
     genus_id: Mapped[int] = mapped_column(
         ForeignKey("genus.id", ondelete="CASCADE")
     )  # Genus of Plant
+    system_id: Mapped[int] = mapped_column(
+        ForeignKey("system.id", ondelete="CASCADE")
+    )  # System for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
     dead = Column(Boolean, default=False, nullable=False)  # Death Info
@@ -43,7 +46,8 @@ class Plant(Base):
             "created_on": self.created_on,
             "watered_on": self.watered_on,
             "updated_on": self.updated_on,
-            "species_id": self.species_id
+            "genus_id": self.genus_id,
+            "system_id": self.system_id
         }
 
 
@@ -60,7 +64,7 @@ class Genus(Base):
 
     plants: Mapped[List["Plant"]] = relationship(
         "Plant", backref="genus", passive_deletes=True
-    )  # Available species of this genus
+    )  # Available plants of this genus
 
     def __repr__(self) -> str:
         return f"{self.name}"

@@ -19,12 +19,14 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   //   "Senior"
   // ];
 
-  const [genus, setGenus] = useState('');
+  const [genus, setGenus] = useState(null);
+  const [system, setSystem] = useState(null);
   // const [stage, setStage] = useState('Senior'); 
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
 
   const [allGenuses, setAllGenuses] = useState([]);
+  const [allSystems, setAllSystems] = useState([]);
 
   const [submitted, setSubmitted] = useState(false);
 
@@ -34,6 +36,10 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       .then((response) => response.json())
       .then((data) => setAllGenuses(data))
       .catch((error) => console.error('Error fetching all genuses data:', error));
+    fetch('http://127.0.0.1:5000/system')
+      .then((response) => response.json())
+      .then((data) => setAllSystems(data))
+      .catch((error) => console.error('Error fetching all genuses data:', error));
   }, []);
 
   useEffect(() => {
@@ -41,7 +47,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({size: size, cost: cost, genus_id: genus.id })
+        body: JSON.stringify({size: size, cost: cost, genus_id: genus.id, system_id: system.id })
       };
       fetch('http://127.0.0.1:5000/plants', requestOptions)
         .then(response => response.json())
@@ -113,6 +119,24 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
                   variant="standard"
                   {...params}
                   label="Genus"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                  }}
+                />
+              )}
+            />
+            <Autocomplete
+              freeSolo
+              disableClearable
+              value={system ? system.name : ''}
+              options={allSystems.map((option) => option.name)}
+              onChange={(event) => setSystem(allSystems[event.target.value])}
+              renderInput={(params) => (
+                <TextField
+                  variant="standard"
+                  {...params}
+                  label="System"
                   InputProps={{
                     ...params.InputProps,
                     type: 'search',

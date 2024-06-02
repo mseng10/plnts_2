@@ -1,45 +1,49 @@
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship, Mapped
 from datetime import datetime
-from models import Base
+from models.plant import Base
 from typing import List
 
 
 class System(Base):
-    """Batch model."""
+    """System model."""
 
-    __tablename__ = "batch"
+    __tablename__ = "system"
 
     id = Column(Integer(), primary_key=True)
     name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), null=True)
+    updated_on = Column(DateTime(), default=datetime.now)
 
-    # Specs
-    humidity = Column(Integer(), primary_key=True)  # %
-    temperature = Column(Integer(), primary_key=True)  # F
+    # Controlled Factors
+    humidity = Column(Integer(), default=0, nullable=False)  # %
+    temperature = Column(Integer(), default=0, nullable=False)  # F
+
+    # Plants belonging to this system
+    plants: Mapped[List["Plant"]] = relationship(
+        "Plant", backref="system", passive_deletes=True
+    )  # Available plants of this system
 
     # Lighting
-    duration = Column(Integer(), primary_key=True)  # hours
-    distance = Column(Integer(), primary_key=True)  # inches
+    # duration = Column(Integer())  # hours
+    # distance = Column(Integer())  # inches
     # light: Mapped["Light"] = relationship(back_populates="plants")
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
     def to_json(self):
-    """Convert to json for front end."""
-    return {
-        "id": self.id,
-        "name": self.name,
-        "size": self.size,
-        "created_on": self.created_on,
-        "humidity": self.humidity,
-        "temperature": self.temperature,
-        "updated_on": self.updated_on,
-        "duration": self.duration,
-        "distance": self.distance
-    }
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "created_on": self.created_on,
+            "updated_on": self.updated_on,
+            "humidity": self.humidity,
+            "temperature": self.temperature,
+            # "duration": self.duration,
+            # "distance": self.distance
+        }
 
 
 # class Light(Base):
