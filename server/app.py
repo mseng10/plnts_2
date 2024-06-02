@@ -14,7 +14,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Genus, Base
+from models.plant import Plant, Genus
 from models.system import System
 
 # Load database configuration from JSON file
@@ -31,8 +31,8 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+# Base.metadata.drop_all(engine)
+# Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
