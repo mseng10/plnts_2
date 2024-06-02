@@ -20,6 +20,7 @@ class Plant(Base):
     __tablename__ = "plant"
 
     id = Column(Integer(), primary_key=True)
+    name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer(), default=0, nullable=False)
     size = Column(Integer(), default=0, nullable=False)  # inches
@@ -41,6 +42,7 @@ class Plant(Base):
         """Convert to json for front end."""
         return {
             "id": self.id,
+            "name": self.name,
             "cost": self.cost,
             "size": self.size,
             "created_on": self.created_on,

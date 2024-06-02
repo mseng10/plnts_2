@@ -19,6 +19,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   //   "Senior"
   // ];
 
+  const [name, setName] = useState('');
   const [genus, setGenus] = useState(null);
   const [system, setSystem] = useState(null);
   // const [stage, setStage] = useState('Senior'); 
@@ -47,7 +48,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({size: size, cost: cost, genus_id: genus.id, system_id: system.id })
+        body: JSON.stringify({name: name, size: size, cost: cost, genus_id: genus.id, system_id: system.id })
       };
       fetch('http://127.0.0.1:5000/plants', requestOptions)
         .then(response => response.json())
@@ -60,7 +61,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       clearForm();
       onRequestClose();
     }
-  }, [submitted, size, cost, genus, onRequestClose]);
+  }, [submitted, name, size, cost, genus, system, onRequestClose]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -74,9 +75,11 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
 
   const clearForm = () => {
     // setStage(null);
+    setName('');
     setCost(0);
     setSize(0);
     setGenus(null);
+    setSystem(null);
     setSubmitted(false);
   };
 
@@ -108,6 +111,15 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
             </ButtonGroup>
           </div>
           <div className='right'>
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              label="Name"
+              value={name}
+              variant="standard"
+              onChange={(event) => setName(event.target.value)}
+            />
             <Autocomplete
               freeSolo
               disableClearable

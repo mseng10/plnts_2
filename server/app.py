@@ -58,7 +58,8 @@ def add_plant():
         cost=new_plant_data["cost"],
         size=new_plant_data["size"],
         genus_id=new_plant_data["genus_id"],
-        system_id=new_plant_data["system_id"]
+        system_id=new_plant_data["system_id"],
+        name=new_plant_data["name"]
     )
     # Add the new plant object to the session
     session = Session()
