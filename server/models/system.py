@@ -1,8 +1,14 @@
+"""
+Module defining models for system.
+"""
+# Standard library imports
+from datetime import datetime
+from typing import List
+
+# Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import relationship, Mapped
-from datetime import datetime
 from models.plant import Base
-from typing import List
 
 
 class System(Base):

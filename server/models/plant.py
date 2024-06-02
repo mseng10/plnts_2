@@ -49,7 +49,7 @@ class Plant(Base):
             "watered_on": self.watered_on,
             "updated_on": self.updated_on,
             "genus_id": self.genus_id,
-            "system_id": self.system_id
+            "system_id": self.system_id,
         }
 
 

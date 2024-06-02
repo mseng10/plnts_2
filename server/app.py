@@ -59,7 +59,7 @@ def add_plant():
         size=new_plant_data["size"],
         genus_id=new_plant_data["genus_id"],
         system_id=new_plant_data["system_id"],
-        name=new_plant_data["name"]
+        name=new_plant_data["name"],
     )
     # Add the new plant object to the session
     session = Session()
@@ -113,9 +113,7 @@ def create_genus():
     new_genus_data = request.get_json()
 
     # Create a new Genus object
-    new_genus = Genus(
-        name=new_genus_data["name"], watering=new_genus_data["watering"]
-    )
+    new_genus = Genus(name=new_genus_data["name"], watering=new_genus_data["watering"])
 
     # Add the new genus object to the session
     db = Session()
@@ -141,6 +139,7 @@ def get_systems():
     # Return JSON response
     return jsonify(systems_json)
 
+
 @app.route("/system", methods=["POST"])
 def create_system():
     """
@@ -152,9 +151,9 @@ def create_system():
 
     # Create a new System object
     new_system = System(
-        name=new_system_json["name"], 
+        name=new_system_json["name"],
         temperature=new_system_json["temperature"],
-        humidity=new_system_json["humidity"]
+        humidity=new_system_json["humidity"],
     )
 
     # Add the new system object to the session
@@ -164,6 +163,7 @@ def create_system():
     db.close()
 
     return jsonify({"message": "System added successfully"}), 201
+
 
 if __name__ == "__main__":
     # Run the Flask app
