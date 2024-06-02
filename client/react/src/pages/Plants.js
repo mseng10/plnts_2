@@ -1,24 +1,22 @@
-// Home.js
+// Plants.js
 import React, { useState, useEffect } from 'react';
 import UpdatePlantForm from '../forms/UpdatePlantForm';
 import WaterPlantsForm from '../forms/WaterPlantsForm';
 import FertilizePlantsForm from '../forms/FertilizePlantsForm';
 import RepotPlantsForm from '../forms/RepotPlantsForm';
-// import TableRowsSharpIcon from '@mui/icons-material/TableRowsSharp';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import IconButton from '@mui/material/IconButton';
-// import GridViewSharpIcon from '@mui/icons-material/GridViewSharp';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
-import ClearSharpIcon from '@mui/icons-material/ClearSharp';
 import KillPlantsForm from '../forms/KillPlantsForm';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
-import { DataGrid } from '@mui/x-data-grid';
+import { DataGrid,GridToolbarContainer,
+  GridToolbarColumnsButton,
+  GridToolbarFilterButton,
+  GridToolbarExport,
+  GridToolbarDensitySelector, } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
-
-
 
 const Plants = () => {
 
@@ -76,15 +74,50 @@ const Plants = () => {
   const [isRepotPlantsFormOpen, setIsRepotPlantsFormOpen] = useState(false);
   const [selectedPlants, setSelectedPlants] = useState([]);
 
-  // const handleSelectPlant = (selectedPlant) => {
-  //   setPlants((prevPlants) =>
-  //     prevPlants.map((plant) =>
-  //       plant.id === selectedPlant.id ? { ...plant, selected: !plant.selected } : plant
-  //     )
-  //   );
-  //   const newSelectedPlants = selectedPlants.concat(selectedPlant);
-  //   setSelectedPlants(newSelectedPlants);
-  // };
+
+  function CustomToolbar() {
+    return (
+      <GridToolbarContainer>
+        <GridToolbarColumnsButton />
+        <GridToolbarFilterButton />
+        <GridToolbarDensitySelector
+          slotProps={{ tooltip: { title: 'Change density' } }}
+        />
+        <GridToolbarExport
+          slotProps={{
+            tooltip: { title: 'Export data' },
+            button: { variant: 'outlined' },
+          }}
+        />
+        <Box sx={{ flexGrow: 1 }} />
+        {selectedPlants.length === 1 && (
+          <IconButton size="small" color="primary" onClick={() => setIsUpdatePlantFormOpen(true)}>
+            <EditSharpIcon />
+          </IconButton>
+        )}
+        {selectedPlants.length > 0 && (
+          <IconButton size="small" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
+            <WaterDropOutlinedIcon />
+          </IconButton>
+        )}
+        {selectedPlants.length > 0 && (
+          <IconButton size="small" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
+            <DeleteOutlineSharpIcon />
+          </IconButton>
+        )}
+        {selectedPlants.length > 0 && (
+          <IconButton size="small" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
+            <LunchDiningIcon />
+          </IconButton>
+        )}          
+        {selectedPlants.length > 0 && (
+          <IconButton size="small" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
+            <ParkSharpIcon />
+          </IconButton>
+        )}
+      </GridToolbarContainer>
+    );
+  }
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -98,50 +131,9 @@ const Plants = () => {
       .catch((error) => console.error('Error fetching plant data:', error));
   }, []);
 
-  const clearSelections = () => {
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plant.selected ? { ...plant, selected: false } : plant
-      )
-    );
-    setSelectedPlants([]);
-  };
-
   return (
     <>
       <div>
-        <ButtonGroup size="lg" sx={{float: 'right'}}>
-          {plants.filter(pl => pl.selected).length === 1 && (
-            <IconButton size="large" color="primary" onClick={() => setIsUpdatePlantFormOpen(true)}>
-              <EditSharpIcon />
-            </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
-              <WaterDropOutlinedIcon />
-            </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color="error" onClick={() => setIsKillPlantsFormOpen(true)}>
-              <DeleteOutlineSharpIcon />
-            </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
-              <LunchDiningIcon />
-            </IconButton>
-          )}          
-          {plants.filter(pl => pl.selected).length > 0 && (
-            <IconButton size="large" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
-              <ParkSharpIcon />
-            </IconButton>
-          )}
-          {plants.filter(pl => pl.selected).length === 1 && (
-            <IconButton size="large" color="info" onClick={() => clearSelections()}>
-              <ClearSharpIcon />
-            </IconButton>
-          )}
-        </ButtonGroup>
         <Box sx={{ height: 400, width: '100%' }}>
           <DataGrid
             rows={plants}
@@ -156,6 +148,16 @@ const Plants = () => {
             pageSizeOptions={[5]}
             checkboxSelection
             disableRowSelectionOnClick
+            onRowSelectionModelChange={(newSelectionModel) => {
+              const selections = [];
+              newSelectionModel.forEach((index) => selections.push(plants[index]));
+              console.log(selections);
+
+              setSelectedPlants(selections);
+            }}
+            slots={{
+              toolbar: CustomToolbar,
+            }}
           />
         </Box>
       </div>
