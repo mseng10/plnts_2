@@ -12,12 +12,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 
 const NewPlantForm = ({ isOpen, onRequestClose }) => {
-  // const stages = [
-  //   "Leaf",
-  //   "Cutting",
-  //   "Junior",
-  //   "Senior"
-  // ];
 
   const [name, setName] = useState('');
   const [genus, setGenus] = useState(null);
@@ -74,7 +68,6 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   };
 
   const clearForm = () => {
-    // setStage(null);
     setName('');
     setCost(0);
     setSize(0);
@@ -156,20 +149,6 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
                 />
               )}
             />
-            {/* <TextField
-              margin="normal"
-              fullWidth
-              required
-              select
-              label="Stage"
-              value={stage}
-              onChange={(event) => setStage(event.target.value)}
-              variant="standard"
-            >
-              {stages.map((stg) => (
-                <MenuItem key={stg} value={stg}>{stg}</MenuItem>
-              ))}
-            </TextField> */}
             <TextField
               margin="normal"
               fullWidth
