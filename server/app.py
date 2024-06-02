@@ -31,8 +31,8 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+# Base.metadata.drop_all(engine)
+# Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
