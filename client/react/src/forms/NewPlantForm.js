@@ -16,7 +16,6 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   const [name, setName] = useState('');
   const [genus, setGenus] = useState(null);
   const [system, setSystem] = useState(null);
-  // const [stage, setStage] = useState('Senior'); 
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
 
