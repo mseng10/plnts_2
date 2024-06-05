@@ -1,6 +1,5 @@
 // Home.js
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
-import Plants from './Plants';
 import System from './System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
@@ -14,25 +13,21 @@ import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
+import {useNavigate} from "react-router-dom" 
 
 
 
 const Home = () => {
-  const [plants, setPlants] = useState([]);
+  // Navigation
+  const navigate = useNavigate();
+
   const [system, setSystem] = useState({ temperature: 20, humidity: 50 });
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
-  const [showHome, setShowHome] = useState(false);
-  const [showNeedWater, setNeedWater] = useState(false);
   const [showSystem, setShowSystem] = useState(false);
 
   useEffect(() => {
-    // Fetch plant data from the server
-    fetch('http://127.0.0.1:5000/plants')
-      .then((response) => response.json())
-      .then((data) => setPlants(data))
-      .catch((error) => console.error('Error fetching plant data:', error));
     const system = {temperature: 20, humidity: 80};
     // Fetch plant data from the server
     fetch('http://localhost:5000/system')
@@ -41,38 +36,26 @@ const Home = () => {
       .catch(() => setSystem(system));
   }, []);
 
-  const openHome = (filtered_plants) => {
-    setNeedWater(filtered_plants);
-    setShowHome(true);
-  };
-
   const openSystem = () => {
     setShowSystem(true);
-  };
-
-  const handleKillPlant = (plantId) => {
-    // Mark the plant as no longer active (alive: false)
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) => (plant.id === plantId ? { ...plant, alive: false } : plant))
-    );
   };
 
   return (
     <>
       <div className="App">
-        {!showHome && !showSystem && ( // yuck
+        {!showSystem && ( // yuck
           <div>
             <div className='system_min' onClick={() => openSystem()}>
               <System
                 system = {system}
               />
             </div>
-            <IconButton size="large" className={`home_icon`} color="primary" onClick={() => openHome(false)}>
+            <IconButton size="large" className={`home_icon`} color="primary" onClick ={()=>{ navigate("/plants")}}>
               <GrassOutlinedIcon className='home_icon'/>
             </IconButton>
           </div>
         )}
-        {!showHome && !showSystem && ( // yuck
+        {!showSystem && ( // yuck
           <ButtonGroup size="lg">
             <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
               <AddSharpIcon className={`home_button `} />
@@ -83,7 +66,7 @@ const Home = () => {
             <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
               <FingerprintSharpIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="error" onClick={() => openHome(true)}>
+            <IconButton size="large" color="error" onClick={() => openSystem(true)}>
               <WaterDropOutlinedIcon className={`home_button `} />
             </IconButton>
             <IconButton size="large" color="fertilize" onClick={() => openSystem()}>
@@ -93,14 +76,6 @@ const Home = () => {
               <ParkSharpIcon className={`home_button`} />
             </IconButton>
           </ButtonGroup>
-        )}
-        {showHome && (
-          <Plants
-            plants={plants}
-            onlyNeedWater={showNeedWater}
-            handleKillPlant={handleKillPlant}
-            setPlants={setPlants}
-          />
         )}
         {showSystem && (
           <System

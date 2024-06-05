@@ -32,7 +32,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
     fetch('http://127.0.0.1:5000/system')
       .then((response) => response.json())
       .then((data) => setAllSystems(data))
-      .catch((error) => console.error('Error fetching all genuses data:', error));
+      .catch((error) => console.error('Error fetching all system data:', error));
   }, []);
 
   useEffect(() => {
