@@ -110,6 +110,16 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
               onChange={(event) => setHumidity(event.target.value)}
               variant="standard"
             />
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              type="number"
+              label="Temperature"
+              value={temperature}
+              onChange={(event) => setTempurature(event.target.value)}
+              variant="standard"
+            />
           </div>
         </form>
       </Box>
