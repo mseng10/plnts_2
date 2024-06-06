@@ -145,10 +145,12 @@ const Plants = () => {
       .then((response) => response.json())
       .then((data) => setPlants(data))
       .catch((error) => console.error('Error fetching plant data:', error));
+    // Fetch genus data from the server
     fetch('http://127.0.0.1:5000/genus')
       .then((response) => response.json())
       .then((data) => setGensuses(data))
       .catch((error) => console.error('Error fetching genus data:', error));
+    // Fetch System data from the server
     fetch('http://127.0.0.1:5000/system')
       .then((response) => response.json())
       .then((data) => setSystems(data))

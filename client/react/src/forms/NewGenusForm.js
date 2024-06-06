@@ -16,10 +16,12 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/genus')
-      .then((response) => response.json())
-      .then((data) => setAllGenus(data))
-      .catch((error) => console.error('Error fetching genus data:', error));
+    if (isOpen) {
+      fetch('http://127.0.0.1:5000/genus')
+        .then((response) => response.json())
+        .then((data) => setAllGenus(data))
+        .catch((error) => console.error('Error fetching genus data:', error));
+    }
   }, []);
 
   useEffect(() => {

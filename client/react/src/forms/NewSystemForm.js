@@ -14,13 +14,15 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
   const [humidity, setHumidity] = useState(0);
   const [temperature, setTempurature] = useState(0);
   const [allSystems, setAllSystems] = useState([]);
-  const [submitted, setSubmitted] = useState(false); // Initialize submitted state
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/system')
-      .then((response) => response.json())
-      .then((data) => setAllSystems(data))
-      .catch((error) => console.error('Error fetching genus data:', error));
+    if (isOpen) {
+      fetch('http://127.0.0.1:5000/system')
+        .then((response) => response.json())
+        .then((data) => setAllSystems(data))
+        .catch((error) => console.error('Error fetching genus data:', error));
+    }
   }, []);
 
   useEffect(() => {
@@ -97,16 +99,6 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
               value={name}
               variant="standard"
               onChange={(event) => setName(event.target.value)}
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="Temperature"
-              value={temperature}
-              variant="standard"
-              onChange={(event) => setTempurature(event.target.value)}
             />
             <TextField
               margin="normal"
