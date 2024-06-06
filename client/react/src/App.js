@@ -10,8 +10,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey, teal, brown } from '@mui/material/colors';
 import Plants from './pages/Plants';
-import System from './pages/System'
-import Home from './pages/Home'
+import System from './pages/System';
+import Home from './pages/Home';
+import Systems from './pages/Systems';
 
 const darkTheme = createTheme({
   palette: {
@@ -45,6 +46,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/plants" element={<Plants />} />
         <Route path="/system" element={<System />} />
+        <Route path="/systems" element={<Systems />} />
       </Routes>
     </ThemeProvider>
   );
