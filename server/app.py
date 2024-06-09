@@ -5,6 +5,7 @@ This is the main module of the application.
 # Standard library imports
 import json
 import logging
+from datetime import datetime
 
 # Third-party imports
 from flask import Flask, request, jsonify
@@ -85,6 +86,24 @@ def get_plants():
     plants_json = [plant.to_json() for plant in plants]
     # Return JSON response
     return jsonify(plants_json)
+
+@app.route("/plants/water", methods=["POST"])
+def water_plants():
+    """
+    """
+    logger.info("Received request to water the specified plants")
+    watering_ids = [int(id) for id in request.get_json()["ids"]]
+    session = Session()
+    plants = session.query(Plant).filter(Plant.id.in_(watering_ids)).all()
+    now = datetime.now()
+    for plant in plants:
+        plant.watered_on = now
+        plant.updated_on = now
+    session.commit()
+    session.close()
+
+    return jsonify({"message": "Genus added successfully"}), 201
+
 
 
 @app.route("/genus", methods=["GET"])
