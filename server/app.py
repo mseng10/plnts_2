@@ -32,6 +32,7 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
+
 # Base.metadata.drop_all(engine)
 # Base.metadata.create_all(engine)
 
@@ -173,6 +174,8 @@ def create_system():
         name=new_system_json["name"],
         temperature=new_system_json["temperature"],
         humidity=new_system_json["humidity"],
+        duration=new_system_json["duration"],
+        distance=new_system_json["distance"]
     )
 
     # Add the new system object to the session
@@ -182,6 +185,21 @@ def create_system():
     db.close()
 
     return jsonify({"message": "System added successfully"}), 201
+
+@app.route("/light", methods=["GET"])
+def get_light():
+    """
+    Retrieve all lights from the database.
+    """
+    logger.info("Received request to retrieve all lights")
+
+    session = Session()
+    lights = session.query(Light).all()
+    session.close()
+    # Transform lights to JSON format
+    lights_json = [light.to_json() for light in lights]
+    # Return JSON response
+    return jsonify(systems_json)
 
 @app.route("/light", methods=["POST"])
 def create_light():

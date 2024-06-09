@@ -13,7 +13,11 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
   const [name, setName] = useState('');
   const [humidity, setHumidity] = useState(0);
   const [temperature, setTempurature] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [distance, setDistance] = useState(0);
+
   const [allSystems, setAllSystems] = useState([]);
+  
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
@@ -31,7 +35,7 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, humidity: humidity, temperature: temperature })
+        body: JSON.stringify({ name: name, humidity: humidity, temperature: temperature, distance: distance, duration: duration })
       };
       fetch('http://127.0.0.1:5000/system', requestOptions)
         .then(response => response.json())
@@ -44,7 +48,7 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
       clearForm();
       onRequestClose();
     }
-  }, [submitted, name, temperature, humidity, onRequestClose]);
+  }, [submitted, name, temperature, humidity, distance, duration, onRequestClose]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -60,6 +64,8 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
     setName('');
     setTempurature(0);
     setHumidity(0);
+    setDistance(0);
+    setDuration(0);
     setSubmitted(false);
   };
 
@@ -118,6 +124,26 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
               label="Temperature"
               value={temperature}
               onChange={(event) => setTempurature(event.target.value)}
+              variant="standard"
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              type="number"
+              label="Duration (hours)"
+              value={duration}
+              onChange={(event) => setDuration(event.target.value)}
+              variant="standard"
+            />
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              type="number"
+              label="Distance (inches)"
+              value={distance}
+              onChange={(event) => setDistance(event.target.value)}
               variant="standard"
             />
           </div>

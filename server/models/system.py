@@ -49,8 +49,8 @@ class System(Base):
             "updated_on": self.updated_on,
             "humidity": self.humidity,
             "temperature": self.temperature,
-            # "duration": self.duration,
-            # "distance": self.distance
+            "duration": self.duration,
+            "distance": self.distance
         }
 
 
