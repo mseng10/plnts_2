@@ -15,6 +15,9 @@ import Box from '@mui/material/Box';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
+import NewLightForm from '../forms/NewLightForm';
+import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
+
 
 const Home = () => {
   // Navigation
@@ -30,6 +33,7 @@ const Home = () => {
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
+  const [isNewLightFormOpen, setIsNewLightFormOpen] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -76,6 +80,9 @@ const Home = () => {
             <IconButton size="small" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
               <FingerprintSharpIcon className={`small_home_button `} />
             </IconButton>
+            <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setIsNewLightFormOpen(true)}>
+              <TungstenSharpIcon className={`small_home_button `} />
+            </IconButton>
             <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
               <CloseSharpIcon className="small_home_button"/>
             </IconButton>
@@ -107,6 +114,10 @@ const Home = () => {
         <NewGenusForm
           isOpen={isNewGenusFormOpen}
           onRequestClose={() => setIsNewGenusFormOpen(false)}
+        />
+        <NewLightForm
+          isOpen={isNewLightFormOpen}
+          onRequestClose={() => setIsNewLightFormOpen(false)}
         />
       </div>
     </>
