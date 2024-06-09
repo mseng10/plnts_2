@@ -199,7 +199,7 @@ def get_light():
     # Transform lights to JSON format
     lights_json = [light.to_json() for light in lights]
     # Return JSON response
-    return jsonify(systems_json)
+    return jsonify(lights_json)
 
 @app.route("/light", methods=["POST"])
 def create_light():
