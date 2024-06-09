@@ -62,6 +62,7 @@ class Light(Base):
     id = Column(Integer(), primary_key=True)
     name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer())
     system_id: Mapped[int] = mapped_column(
         ForeignKey("system.id", ondelete="CASCADE")
@@ -73,3 +74,17 @@ class Light(Base):
 
     def __repr__(self) -> str:
         return f"{self.name}"
+
+        
+    def to_json(self):
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "cost": self.cost,
+            "created_on": self.created_on,
+            "updated_on": self.updated_on,
+            "system_id": self.system_id,
+            "dead": self.dead,
+            "dead_on": self.dead_on
+        }

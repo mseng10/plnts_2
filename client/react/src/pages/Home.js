@@ -81,7 +81,7 @@ const Home = () => {
               <FingerprintSharpIcon className={`small_home_button `} />
             </IconButton>
             <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setIsNewLightFormOpen(true)}>
-              <TungstenSharpIcon className={`small_home_button `} />
+              <TungstenSharpIcon className="small_home_button"/>
             </IconButton>
             <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
               <CloseSharpIcon className="small_home_button"/>
