@@ -11,6 +11,8 @@ import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import {useNavigate} from "react-router-dom" 
+import Box from '@mui/material/Box';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 
 
 
@@ -19,6 +21,11 @@ const Home = () => {
   const navigate = useNavigate();
 
   const [systems, setSystems] = useState({ temperature: 20, humidity: 50 });
+
+  // Button Display
+  const [isCreateButtonsOpen, setIsCreateButtonsOpen] = useState(false);
+
+  // Forms
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
@@ -44,17 +51,29 @@ const Home = () => {
             <GrassOutlinedIcon className='home_icon'/>
           </IconButton>
         </div>
-        <ButtonGroup size="lg">
-          <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-            <AddSharpIcon className={`home_button `} />
-          </IconButton>
-          <IconButton size="large" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
-            <PointOfSaleIcon className={`home_button `} />
-          </IconButton>
-          <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
-            <FingerprintSharpIcon className={`home_button `} />
-          </IconButton>
-        </ButtonGroup>
+        <Box>
+          <ButtonGroup size="lg">
+            <IconButton size="large" color="secondary" onClick={() => setIsCreateButtonsOpen(true)}>
+              <AddSharpIcon className={`home_button `} />
+            </IconButton>
+          </ButtonGroup>
+        </Box>
+        {isCreateButtonsOpen && (
+          <ButtonGroup size="lg">
+            <IconButton size="small" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
+              <GrassOutlinedIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
+              <PointOfSaleIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
+              <FingerprintSharpIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
+              <CloseSharpIcon className="small_home_button"/>
+            </IconButton>
+          </ButtonGroup>
+        )}
         
         <NewPlantForm
           isOpen={isNewPlantFormOpen}

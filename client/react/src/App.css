@@ -119,6 +119,10 @@ h1, h2 {
   font-size: 80px !important;
 }
 
+.small_home_button {
+  font-size: 50px !important;
+}
+
 .left {
   width: 128px;
   display:inline;
