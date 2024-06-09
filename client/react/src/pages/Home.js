@@ -13,8 +13,9 @@ import IconButton from '@mui/material/IconButton';
 import {useNavigate} from "react-router-dom" 
 import Box from '@mui/material/Box';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-
-
+import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
+import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
+import LeaderboardSharpIcon from '@mui/icons-material/LeaderboardSharp';
 
 const Home = () => {
   // Navigation
@@ -56,6 +57,12 @@ const Home = () => {
             <IconButton size="large" color="secondary" onClick={() => setIsCreateButtonsOpen(true)}>
               <AddSharpIcon className={`home_button `} />
             </IconButton>
+            <IconButton size="large" color="info" onClick={() => setIsCreateButtonsOpen(true)}>
+              <VisibilitySharpIcon className={`home_button `} />
+            </IconButton>
+            <IconButton size="large" color="error" onClick={() => setIsCreateButtonsOpen(true)}>
+              <ReportGmailerrorredSharpIcon className={`home_button `} />
+            </IconButton>
           </ButtonGroup>
         </Box>
         {isCreateButtonsOpen && (
@@ -74,7 +81,7 @@ const Home = () => {
             </IconButton>
           </ButtonGroup>
         )}
-        
+
         <NewPlantForm
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
