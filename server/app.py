@@ -90,6 +90,7 @@ def get_plants():
 @app.route("/plants/water", methods=["POST"])
 def water_plants():
     """
+    Water the specified plants.
     """
     logger.info("Received request to water the specified plants")
     watering_ids = [int(id) for id in request.get_json()["ids"]]
@@ -102,8 +103,7 @@ def water_plants():
     session.commit()
     session.close()
 
-    return jsonify({"message": "Genus added successfully"}), 201
-
+    return jsonify({"message": f"{len(plants)} Plants watered successfully"}), 201
 
 
 @app.route("/genus", methods=["GET"])
