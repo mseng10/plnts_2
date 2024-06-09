@@ -75,7 +75,6 @@ class Light(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-        
     def to_json(self):
         """Convert to json."""
         return {
