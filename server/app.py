@@ -16,7 +16,7 @@ from sqlalchemy.engine import URL
 
 # Local application imports
 from models.plant import Plant, Genus
-from models.system import System
+from models.system import System, Light
 
 # Load database configuration from JSON file
 with open("db.json", encoding="utf-8") as json_data_file:
@@ -32,6 +32,7 @@ url = URL.create(
     port=db_config["port"],
 )
 engine = create_engine(url)
+
 # Base.metadata.drop_all(engine)
 # Base.metadata.create_all(engine)
 
@@ -173,6 +174,8 @@ def create_system():
         name=new_system_json["name"],
         temperature=new_system_json["temperature"],
         humidity=new_system_json["humidity"],
+        duration=new_system_json["duration"],
+        distance=new_system_json["distance"]
     )
 
     # Add the new system object to the session
@@ -183,6 +186,44 @@ def create_system():
 
     return jsonify({"message": "System added successfully"}), 201
 
+@app.route("/light", methods=["GET"])
+def get_light():
+    """
+    Retrieve all lights from the database.
+    """
+    logger.info("Received request to retrieve all lights")
+
+    session = Session()
+    lights = session.query(Light).all()
+    session.close()
+    # Transform lights to JSON format
+    lights_json = [light.to_json() for light in lights]
+    # Return JSON response
+    return jsonify(lights_json)
+
+@app.route("/light", methods=["POST"])
+def create_light():
+    """
+    Create a new light and add it to the database.
+    """
+    logger.info("Attempting to create light")
+
+    new_light_json = request.get_json()
+
+    # Create a new Light object
+    new_light = Light(
+        name=new_light_json["name"],
+        cost=new_light_json["cost"],
+        system_id=new_light_json["system_id"],
+    )
+
+    # Add the new Light object to the session
+    db = Session()
+    db.add(new_light)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "Light added successfully"}), 201
 
 if __name__ == "__main__":
     # Run the Flask app

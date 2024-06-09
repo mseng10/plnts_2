@@ -6,8 +6,8 @@ from datetime import datetime
 from typing import List
 
 # Third-party imports
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from models.plant import Base
 
 
@@ -31,9 +31,11 @@ class System(Base):
     )  # Available plants of this system
 
     # Lighting
-    # duration = Column(Integer())  # hours
-    # distance = Column(Integer())  # inches
-    # light: Mapped["Light"] = relationship(back_populates="plants")
+    duration = Column(Integer(), nullable=False)  # hours
+    distance = Column(Integer(), nullable=False)  # inches
+    lights: Mapped[List["Light"]] = relationship(
+        "Light", backref="system", passive_deletes=True
+    )  # Available plants of this system
 
     def __repr__(self) -> str:
         return f"{self.name}"
@@ -47,24 +49,41 @@ class System(Base):
             "updated_on": self.updated_on,
             "humidity": self.humidity,
             "temperature": self.temperature,
-            # "duration": self.duration,
-            # "distance": self.distance
+            "duration": self.duration,
+            "distance": self.distance
         }
 
 
-# class Light(Base):
-#     """Light model."""
+class Light(Base):
+    """Light model."""
 
-#     __tablename__ = "light"
+    __tablename__ = "light"
 
-#     id = Column(Integer(), primary_key=True)
-#     name = Column(String(100), nullable=False)
-#     created_on = Column(DateTime(), default=datetime.now)
-#     cost = Column(Integer())
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(100), nullable=False)
+    created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now)
+    cost = Column(Integer())
+    system_id: Mapped[int] = mapped_column(
+        ForeignKey("system.id", ondelete="CASCADE")
+    )  # System this light belongs to
 
-#     # Death Info
-#     dead_on = Column(DateTime(), default=None, nullable=True)
-#     dead = Column(Boolean, default=False, nullable=False)
+    # Death Info
+    dead_on = Column(DateTime(), default=None, nullable=True)
+    dead = Column(Boolean, default=False, nullable=False)
 
-#     def __repr__(self) -> str:
-#         return f"{self.name}"
+    def __repr__(self) -> str:
+        return f"{self.name}"
+
+    def to_json(self):
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "cost": self.cost,
+            "created_on": self.created_on,
+            "updated_on": self.updated_on,
+            "system_id": self.system_id,
+            "dead": self.dead,
+            "dead_on": self.dead_on
+        }
