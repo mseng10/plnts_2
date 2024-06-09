@@ -101,8 +101,6 @@ const Home = () => {
             </IconButton>
           </ButtonGroup>
         )}
-
-
         <NewPlantForm
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
