@@ -176,9 +176,11 @@ const Plants = () => {
             disableRowSelectionOnClick
             onRowSelectionModelChange={(newSelectionModel) => {
               const selections = [];
-              newSelectionModel.forEach((index) => selections.push(plants[index]));
-              console.log(selections);
-
+              newSelectionModel.forEach((index) => {
+                const actualIndex = index -=1;
+                selections.push(plants[actualIndex])
+              
+              });
               setSelectedPlants(selections);
             }}
             slots={{
@@ -199,7 +201,6 @@ const Plants = () => {
         <WaterPlantsForm
           isOpen={isWaterPlantsFormOpen}
           onRequestClose={() => setIsWaterPlantsFormOpen(false)}
-          setPlants={setPlants}
           plants={selectedPlants}
         />
       )}
