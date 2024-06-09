@@ -24,17 +24,16 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
-      // Fetch plant data from the server
-      fetch('http://127.0.0.1:5000/genus')
-        .then((response) => response.json())
-        .then((data) => setAllGenuses(data))
-        .catch((error) => console.error('Error fetching all genuses data:', error));
-      fetch('http://127.0.0.1:5000/system')
-        .then((response) => response.json())
-        .then((data) => setAllSystems(data))
-        .catch((error) => console.error('Error fetching all system data:', error));
-    }
+    // Fetch plant data from the server
+    fetch('http://127.0.0.1:5000/genus')
+      .then((response) => response.json())
+      .then((data) => setAllGenuses(data))
+      .catch((error) => console.error('Error fetching all genuses data:', error));
+    fetch('http://127.0.0.1:5000/system')
+      .then((response) => response.json())
+      .then((data) => setAllSystems(data))
+      .catch((error) => console.error('Error fetching all system data:', error));
+    
   }, []);
 
   useEffect(() => {

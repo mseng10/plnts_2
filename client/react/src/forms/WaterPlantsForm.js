@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import List from '@mui/material/List'
@@ -12,7 +12,7 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 
-const WaterPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
+const WaterPlantsForm = ({ isOpen, plants, onRequestClose }) => {
   const [checked, setChecked] = useState(plants);
   const [submitted, setSubmit] = useState(false);
 
@@ -29,22 +29,29 @@ const WaterPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
     setChecked(newChecked);
   };
 
-  const handleWaterPlants = () => {
-    const plantsById = new Map(plants.map((obj) => [obj.id, obj]));
-
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plantsById.get(plant.id) ? { ...plant, lastWatered: new Date().toLocaleString() } : plant
-      )
-    );
-  };
+  useEffect(() => {
+    if (submitted) {
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ids:  checked.map((plant) => plant.id)})
+      };
+      fetch('http://127.0.0.1:5000/plants/water', requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          // handle the response data if needed
+          // maybe update some state based on the response
+          console.log(data);
+        })
+        .catch(error => console.error('Error watering plants data:', error));
+      clearForm();
+      onRequestClose();
+    }
+  }, [submitted, checked, onRequestClose]);
 
   const handleSubmit = (event) => {
     setSubmit(true);
-    handleWaterPlants();
     event.preventDefault();
-    clearForm();
-    onRequestClose();
   };
 
   const handleCancel = () => {
@@ -52,11 +59,10 @@ const WaterPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
     onRequestClose();
   };
 
-  const getDisplayName = (plant) => {
-    return plant.name;
+  const clearForm = () => {
+    setSubmit(false);
+    setChecked([]);
   };
-
-  const clearForm = () => {};
 
   return (
     <Modal
@@ -100,7 +106,7 @@ const WaterPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
                       />
                     }
                   >
-                    <ListItemText primary={getDisplayName(plant)} />
+                    <ListItemText primary={plant.name} />
                   </ListItem>
                   <Divider sx={{width: '100%' }}  component="li" />
                 </div>

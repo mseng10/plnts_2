@@ -3,86 +3,99 @@ import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import System from './System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
-import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import NewPlantForm from '../forms/NewPlantForm';
 import NewGenusForm from '../forms/NewGenusForm';
 import NewSystemForm from '../forms/NewSystemForm';
-import LunchDiningIcon from '@mui/icons-material/LunchDining';
-import ParkSharpIcon from '@mui/icons-material/ParkSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import {useNavigate} from "react-router-dom" 
-
-
+import Box from '@mui/material/Box';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
+import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 
 const Home = () => {
   // Navigation
   const navigate = useNavigate();
 
-  const [system, setSystem] = useState({ temperature: 20, humidity: 50 });
+  const [systems, setSystems] = useState({ temperature: 20, humidity: 50 });
+
+  // Button Display
+  const [isCreateButtonsOpen, setIsCreateButtonsOpen] = useState(false);
+  const [isViewButtonsOpen, setIsViewButtonsOpen] = useState(false);
+
+  // Forms
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
-  const [showSystem, setShowSystem] = useState(false);
 
   useEffect(() => {
-    const system = {temperature: 20, humidity: 80};
     // Fetch plant data from the server
-    fetch('http://localhost:5000/system')
+    fetch('http://localhost:5000/systems')
       .then((response) => response.json())
-      .then(() => setSystem(system))
-      .catch(() => setSystem(system));
+      .then((data) => setSystems(data))
+      .catch(() => console.log("Oh no"));
   }, []);
-
-  const openSystem = () => {
-    setShowSystem(true);
-  };
 
   return (
     <>
       <div className="App">
-        {!showSystem && ( // yuck
-          <div>
-            <div className='system_min' onClick={() => openSystem()}>
-              <System
-                system = {system}
-              />
-            </div>
-            <IconButton size="large" className={`home_icon`} color="primary" onClick ={()=>{ navigate("/plants")}}>
-              <GrassOutlinedIcon className='home_icon'/>
-            </IconButton>
+        <div>
+          <div className='system_min'>
+            <System
+              system = {systems[0]}
+            />
           </div>
-        )}
-        {!showSystem && ( // yuck
+          <IconButton size="large" className={`home_icon`} color="primary" onClick ={()=>{ navigate("/plants")}}>
+            <GrassOutlinedIcon className='home_icon'/>
+          </IconButton>
+        </div>
+        <Box>
           <ButtonGroup size="lg">
-            <IconButton size="large" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
+            <IconButton size="large" color="secondary" onClick={() => setIsCreateButtonsOpen(true)}>
               <AddSharpIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
-              <PointOfSaleIcon className={`home_button `} />
+            <IconButton size="large" color="info" onClick={() => setIsViewButtonsOpen(true)}>
+              <VisibilitySharpIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
-              <FingerprintSharpIcon className={`home_button `} />
+            <IconButton size="large" color="error" onClick={() => setIsCreateButtonsOpen(true)}>
+              <ReportGmailerrorredSharpIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="error" onClick={() => openSystem(true)}>
-              <WaterDropOutlinedIcon className={`home_button `} />
+          </ButtonGroup>
+        </Box>
+        {isCreateButtonsOpen && (
+          <ButtonGroup size="lg">
+            <IconButton size="small" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
+              <GrassOutlinedIcon className={`small_home_button `} />
             </IconButton>
-            <IconButton size="large" color="fertilize" onClick={() => openSystem()}>
-              <LunchDiningIcon className={`home_button`} />
+            <IconButton size="small" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
+              <PointOfSaleIcon className={`small_home_button `} />
             </IconButton>
-            <IconButton size="large" color='repot' onClick={() => openSystem()}>
-              <ParkSharpIcon className={`home_button`} />
+            <IconButton size="small" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
+              <FingerprintSharpIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
+              <CloseSharpIcon className="small_home_button"/>
             </IconButton>
           </ButtonGroup>
         )}
-        {showSystem && (
-          <System
-            system={system}
-            full={showSystem}
-          />
+        {isViewButtonsOpen && (
+          <ButtonGroup size="lg">
+            <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/plants")}}>
+              <GrassOutlinedIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/systems")}}>
+              <PointOfSaleIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="error" onClick={() => setIsViewButtonsOpen(false)}>
+              <CloseSharpIcon className="small_home_button"/>
+            </IconButton>
+          </ButtonGroup>
         )}
+
+
         <NewPlantForm
           isOpen={isNewPlantFormOpen}
           onRequestClose={() => setIsNewPlantFormOpen(false)}
