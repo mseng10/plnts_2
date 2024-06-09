@@ -15,7 +15,6 @@ import Box from '@mui/material/Box';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
-import LeaderboardSharpIcon from '@mui/icons-material/LeaderboardSharp';
 
 const Home = () => {
   // Navigation
@@ -25,6 +24,7 @@ const Home = () => {
 
   // Button Display
   const [isCreateButtonsOpen, setIsCreateButtonsOpen] = useState(false);
+  const [isViewButtonsOpen, setIsViewButtonsOpen] = useState(false);
 
   // Forms
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
@@ -57,7 +57,7 @@ const Home = () => {
             <IconButton size="large" color="secondary" onClick={() => setIsCreateButtonsOpen(true)}>
               <AddSharpIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="info" onClick={() => setIsCreateButtonsOpen(true)}>
+            <IconButton size="large" color="info" onClick={() => setIsViewButtonsOpen(true)}>
               <VisibilitySharpIcon className={`home_button `} />
             </IconButton>
             <IconButton size="large" color="error" onClick={() => setIsCreateButtonsOpen(true)}>
@@ -81,6 +81,20 @@ const Home = () => {
             </IconButton>
           </ButtonGroup>
         )}
+        {isViewButtonsOpen && (
+          <ButtonGroup size="lg">
+            <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/plants")}}>
+              <GrassOutlinedIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/systems")}}>
+              <PointOfSaleIcon className={`small_home_button `} />
+            </IconButton>
+            <IconButton size="small" color="error" onClick={() => setIsViewButtonsOpen(false)}>
+              <CloseSharpIcon className="small_home_button"/>
+            </IconButton>
+          </ButtonGroup>
+        )}
+
 
         <NewPlantForm
           isOpen={isNewPlantFormOpen}
