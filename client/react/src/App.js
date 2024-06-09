@@ -8,7 +8,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { green, pink, lightBlue, blueGrey, teal, brown } from '@mui/material/colors';
+import { green, pink, lightBlue, blueGrey, teal, brown, yellow } from '@mui/material/colors';
 import Plants from './pages/Plants';
 import System from './pages/System';
 import Home from './pages/Home';
@@ -34,6 +34,9 @@ const darkTheme = createTheme({
     },
     repot: {
       main: brown[500],
+    },
+    light: {
+      main: yellow[500]
     }
   },
 });

@@ -83,70 +83,78 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
         border: 'none',
       }}
     >
-      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
+      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }} display="flex">
         <form onSubmit={handleSubmit}>
-          <div className='left'>
-            <PointOfSaleIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
-            <ButtonGroup>
-              <IconButton className="left_button" type="submit" color="primary">
-                <CheckSharpIcon className="left_button"/>
-              </IconButton>
-              <IconButton className="left_button" color="error" onClick={handleCancel}>
-                <CloseSharpIcon className="left_button"/>
-              </IconButton>
-            </ButtonGroup>
-          </div>
-          <div className='right'>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              label="Name"
-              value={name}
-              variant="standard"
-              onChange={(event) => setName(event.target.value)}
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="Humidity"
-              value={humidity}
-              onChange={(event) => setHumidity(event.target.value)}
-              variant="standard"
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="Temperature"
-              value={temperature}
-              onChange={(event) => setTempurature(event.target.value)}
-              variant="standard"
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="Duration (hours)"
-              value={duration}
-              onChange={(event) => setDuration(event.target.value)}
-              variant="standard"
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="Distance (inches)"
-              value={distance}
-              onChange={(event) => setDistance(event.target.value)}
-              variant="standard"
-            />
-          </div>
+          <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2  }}>
+            <div className='left'>
+              <PointOfSaleIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+              <ButtonGroup>
+                <IconButton className="left_button" type="submit" color="primary">
+                  <CheckSharpIcon className="left_button"/>
+                </IconButton>
+                <IconButton className="left_button" color="error" onClick={handleCancel}>
+                  <CloseSharpIcon className="left_button"/>
+                </IconButton>
+              </ButtonGroup>
+            </div>
+            <div className='right'>
+              <TextField
+                margin="normal"
+                fullWidth
+                required
+                label="Name"
+                value={name}
+                variant="standard"
+                onChange={(event) => setName(event.target.value)}
+              />
+              <TextField
+                margin="normal"
+                fullWidth
+                required
+                type="number"
+                label="Humidity"
+                value={humidity}
+                onChange={(event) => setHumidity(event.target.value)}
+                variant="standard"
+              />
+              <TextField
+                margin="normal"
+                fullWidth
+                required
+                type="number"
+                label="Temperature"
+                value={temperature}
+                onChange={(event) => setTempurature(event.target.value)}
+                variant="standard"
+              />
+            </div>
+          </Box>
+          <Box>
+            <div>
+              <TextField
+                margin="normal"
+                fullWidth
+                required
+                type="number"
+                label="Duration (hours)"
+                value={duration}
+                onChange={(event) => setDuration(event.target.value)}
+                variant="standard"
+                color="light"
+              />
+              <TextField
+                margin="normal"
+                fullWidth
+                required
+                type="number"
+                label="Distance (inches)"
+                value={distance}
+                onChange={(event) => setDistance(event.target.value)}
+                variant="standard"
+                color="light"
+              />
+            </div>
+          </Box>
         </form>
       </Box>
     </Modal>

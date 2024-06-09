@@ -125,7 +125,6 @@ h1, h2 {
 
 .left {
   width: 128px;
-  display:inline;
   float:left;
 }
 
@@ -135,7 +134,6 @@ h1, h2 {
 
 .right {
   width: 256px;
-  display:inline;
   float:right;
 }
 
