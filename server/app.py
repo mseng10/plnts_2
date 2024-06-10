@@ -175,7 +175,8 @@ def create_system():
         temperature=new_system_json["temperature"],
         humidity=new_system_json["humidity"],
         duration=new_system_json["duration"],
-        distance=new_system_json["distance"]
+        distance=new_system_json["distance"],
+        description=new_system_json["description"]
     )
 
     # Add the new system object to the session

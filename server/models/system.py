@@ -60,7 +60,8 @@ class Light(Base):
     __tablename__ = "light"
 
     id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=True)
+    description = Column(String(400), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer())
@@ -80,6 +81,7 @@ class Light(Base):
         return {
             "id": self.id,
             "name": self.name,
+            "description": self.description
             "cost": self.cost,
             "created_on": self.created_on,
             "updated_on": self.updated_on,
