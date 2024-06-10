@@ -7,7 +7,10 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-
+import Slider from '@mui/material/Slider';
+import Stack from '@mui/material/Stack';
+import AvTimerSharpIcon from '@mui/icons-material/AvTimerSharp';
+import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
 
 const NewSystemForm = ({ isOpen, onRequestClose }) => {
   const [name, setName] = useState('');
@@ -69,6 +72,36 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
     setSubmitted(false);
   };
 
+  const durationMarks = [
+    {
+      value: 6,
+      label: '6',
+    },
+    {
+      value: 12,
+      label: '12',
+    },
+    {
+      value: 18,
+      label: '18',
+    }
+  ]
+
+  const measureMarks = [
+    {
+      value: 12,
+      label: '12"',
+    },
+    {
+      value: 24,
+      label: '24"',
+    },
+    {
+      value: 36,
+      label: '36"',
+    }
+  ];
+
   return (
     <Modal
       open={isOpen}
@@ -83,11 +116,11 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
         border: 'none',
       }}
     >
-      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }} display="flex">
+      <Box sx={{ width: 800, height: 312, borderRadius: 2 }} display="flex">
         <form onSubmit={handleSubmit}>
-          <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2  }}>
+          <Box sx={{ width: 512, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
             <div className='left'>
-              <PointOfSaleIcon color='info' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+              <PointOfSaleIcon color='info' className={'home_icon_form'}/>
               <ButtonGroup>
                 <IconButton className="left_button" type="submit" color="primary">
                   <CheckSharpIcon className="left_button"/>
@@ -129,31 +162,39 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
               />
             </div>
           </Box>
-          <Box>
-            <div>
-              <TextField
-                margin="normal"
-                fullWidth
-                required
-                type="number"
-                label="Duration (hours)"
-                value={duration}
+          <Box sx={{ width: 256, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
+            <Stack spacing={2} direction="row" alignItems="center" color="light" height={48}>
+              <AvTimerSharpIcon color="light" sx={{fontSize:40}} />
+              <Slider
+                color="info" 
+                aria-label="Duration" 
+                value={duration} 
                 onChange={(event) => setDuration(event.target.value)}
                 variant="standard"
-                color="light"
+                defaultValue={12}
+                step={1}
+                marks={durationMarks}
+                min={6}
+                max={18}
+                valueLabelDisplay="auto"
               />
-              <TextField
-                margin="normal"
-                fullWidth
-                required
-                type="number"
-                label="Distance (inches)"
-                value={distance}
+            </Stack>
+            <Stack spacing={2} direction="row" alignItems="center" color="light" height={48}>
+              <StraightenSharpIcon color="light" sx={{fontSize:40}}/>
+              <Slider 
+                color="info" 
+                aria-label="Distance (inches)" 
+                value={distance} 
                 onChange={(event) => setDistance(event.target.value)}
                 variant="standard"
-                color="light"
+                defaultValue={24}
+                step={2}
+                marks={measureMarks}
+                min={12}
+                max={36}
+                valueLabelDisplay="auto"
               />
-            </div>
+            </Stack>
           </Box>
         </form>
       </Box>

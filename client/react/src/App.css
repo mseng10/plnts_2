@@ -124,16 +124,16 @@ h1, h2 {
 }
 
 .left {
-  width: 128px;
+  width: 50%;
   float:left;
 }
 
 .left_button {
-  font-size: 112px !important;
+  font-size: 124px !important;
 }
 
 .right {
-  width: 256px;
+  width: 50%;
   float:right;
 }
 
