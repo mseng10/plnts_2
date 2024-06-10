@@ -17,6 +17,7 @@ import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import NewLightForm from '../forms/NewLightForm';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
+import Modal from '@mui/material/Modal';
 
 
 const Home = () => {
@@ -64,42 +65,80 @@ const Home = () => {
             <IconButton size="large" color="info" onClick={() => setIsViewButtonsOpen(true)}>
               <VisibilitySharpIcon className={`home_button `} />
             </IconButton>
-            <IconButton size="large" color="error" onClick={() => setIsCreateButtonsOpen(true)}>
+            <IconButton size="large" color="error" onClick={() => console.log("WIP")}>
               <ReportGmailerrorredSharpIcon className={`home_button `} />
             </IconButton>
           </ButtonGroup>
         </Box>
         {isCreateButtonsOpen && (
-          <ButtonGroup size="lg">
-            <IconButton size="small" color="secondary" onClick={() => setIsNewPlantFormOpen(true)}>
-              <GrassOutlinedIcon className={`small_home_button `} />
-            </IconButton>
-            <IconButton size="small" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
-              <PointOfSaleIcon className={`small_home_button `} />
-            </IconButton>
-            <IconButton size="small" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
-              <FingerprintSharpIcon className={`small_home_button `} />
-            </IconButton>
-            <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setIsNewLightFormOpen(true)}>
-              <TungstenSharpIcon className="small_home_button"/>
-            </IconButton>
-            <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
-              <CloseSharpIcon className="small_home_button"/>
-            </IconButton>
-          </ButtonGroup>
+          <Modal
+            open={isCreateButtonsOpen}
+            aria-labelledby="new-bobby-form"
+            disableAutoFocus={true}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'inherit',
+              border: 'none',
+            }}
+          >
+            <Box sx={{ borderRadius: 2 }}>
+              <ButtonGroup size="lg" fullWidth style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'inherit',
+                border: 'none',
+              }}>
+                <IconButton size="small" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
+                  <GrassOutlinedIcon className={`left_button `} />
+                </IconButton>
+                <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
+                  <CloseSharpIcon className="left_button"/>
+                </IconButton>
+              </ButtonGroup>
+              <ButtonGroup size="lg" fullWidth lassName='centered'>
+                <IconButton size="small" color="info" onClick={() => setIsNewSystemFormOpen(true)}>
+                  <PointOfSaleIcon className={`left_button `} />
+                </IconButton>
+                <IconButton size="small" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
+                  <FingerprintSharpIcon className={`left_button `} />
+                </IconButton>
+                <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setIsNewLightFormOpen(true)}>
+                  <TungstenSharpIcon className="left_button"/>
+                </IconButton>
+              </ButtonGroup>
+            </Box>
+          </Modal>
         )}
         {isViewButtonsOpen && (
-          <ButtonGroup size="lg">
-            <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/plants")}}>
-              <GrassOutlinedIcon className={`small_home_button `} />
-            </IconButton>
-            <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/systems")}}>
-              <PointOfSaleIcon className={`small_home_button `} />
-            </IconButton>
-            <IconButton size="small" color="error" onClick={() => setIsViewButtonsOpen(false)}>
-              <CloseSharpIcon className="small_home_button"/>
-            </IconButton>
-          </ButtonGroup>
+          <Modal
+            open={isViewButtonsOpen}
+            aria-labelledby="new-bobby-form"
+            disableAutoFocus={true}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'inherit',
+              border: 'none',
+            }}
+          >
+            <Box sx={{ borderRadius: 2 }}>
+              <ButtonGroup size="lg">
+                <IconButton size="small" color="primary" onClick ={()=>{ navigate("/plants")}}>
+                  <GrassOutlinedIcon className={`left_button `} />
+                </IconButton>
+                <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/systems")}}>
+                  <PointOfSaleIcon className={`left_button `} />
+                </IconButton>
+                <IconButton size="small" color="error" onClick={() => setIsViewButtonsOpen(false)}>
+                  <CloseSharpIcon className="left_button"/>
+                </IconButton>
+              </ButtonGroup>
+            </Box>
+          </Modal>
         )}
         <NewPlantForm
           isOpen={isNewPlantFormOpen}

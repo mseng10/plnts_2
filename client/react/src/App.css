@@ -141,6 +141,10 @@ h1, h2 {
   outline: 0!important;
 }
 
+.center { 
+  margin-left: auto;
+  margin-right: auto;}
+
 #back {
   position: fixed;
   left: 0;
