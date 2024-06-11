@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Genus
+from models.plant import Plant, Genus,Base
 from models.system import System, Light
 
 # Load database configuration from JSON file
@@ -33,8 +33,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -143,6 +143,45 @@ def create_genus():
 
     return jsonify({"message": "Genus added successfully"}), 201
 
+@app.route("/type", methods=["GET"])
+def get_types():
+    """
+    Retrieve all types from the database.
+    """
+    logger.info("Received request to retrieve all plant types")
+
+    session = Session()
+    types = session.query(Type).all()
+    session.close()
+    # Transform types to JSON format
+    types_json = [_type.to_json() for _type in types]
+    # Return JSON response
+    return jsonify(types_json)
+
+
+@app.route("/type", methods=["POST"])
+def create_type():
+    """
+    Create a new type and add it to the database.
+    """
+    logger.info("Attempting to create type")
+
+    new_type_data = request.get_json()
+
+    # Create a new Type object
+    new_type = Type(
+        name=new_type_data["name"],
+        description=new_type_data["description"],
+        genus_id=new_type_data["genus_id"]
+    )
+
+    # Add the new type object to the session
+    db = Session()
+    db.add(new_type)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "Type added successfully"}), 201
 
 @app.route("/system", methods=["GET"])
 def get_systems():

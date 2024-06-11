@@ -197,7 +197,8 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
             <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
               <InvertColorsSharpIcon color="light" sx={{fontSize:40,color: '#3f51b5'}} />
               <Slider
-                color="info" 
+                color="info"
+                required
                 aria-label="Humidity" 
                 value={humidity} 
                 onChange={(event) => setHumidity(event.target.value)}

@@ -35,7 +35,7 @@ class System(Base):
     distance = Column(Integer(), nullable=False)  # inches
     lights: Mapped[List["Light"]] = relationship(
         "Light", backref="system", passive_deletes=True
-    )  # Available plants of this system
+    )  # Available lights of this system
 
     def __repr__(self) -> str:
         return f"{self.name}"
@@ -47,6 +47,7 @@ class System(Base):
             "name": self.name,
             "created_on": self.created_on,
             "updated_on": self.updated_on,
+            "description": self.description,
             "humidity": self.humidity,
             "temperature": self.temperature,
             "duration": self.duration,
@@ -81,7 +82,6 @@ class Light(Base):
         return {
             "id": self.id,
             "name": self.name,
-            "description": self.description
             "cost": self.cost,
             "created_on": self.created_on,
             "updated_on": self.updated_on,

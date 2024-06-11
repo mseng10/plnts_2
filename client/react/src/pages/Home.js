@@ -16,9 +16,10 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import NewLightForm from '../forms/NewLightForm';
+import NewTypeForm from '../forms/NewTypeForm';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Modal from '@mui/material/Modal';
-
+import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
 
 const Home = () => {
   // Navigation
@@ -35,6 +36,7 @@ const Home = () => {
   const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
   const [isNewLightFormOpen, setIsNewLightFormOpen] = useState(false);
+  const [isNewTypeFormOpen, setIsNewTypeFormOpen] = useState(false);
 
   useEffect(() => {
     // Fetch plant data from the server
@@ -94,19 +96,36 @@ const Home = () => {
                 <IconButton size="small" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
                   <GrassOutlinedIcon className={`left_button `} />
                 </IconButton>
-                <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
-                  <CloseSharpIcon className="left_button"/>
+                <IconButton size="small" color="type" onClick={() => setIsNewTypeFormOpen(true)}>
+                  <CallSplitSharpIcon className={`left_button `} />
+                </IconButton>
+                <IconButton size="small" color="genus" onClick={() => setIsNewGenusFormOpen(true)}>
+                  <FingerprintSharpIcon className={`left_button `} />
                 </IconButton>
               </ButtonGroup>
-              <ButtonGroup size="lg" fullWidth lassName='centered'>
+              <ButtonGroup size="lg" fullWidth lassName='centered' style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'inherit',
+                border: 'none',
+              }}>
                 <IconButton size="small" color="info" onClick={() => setIsNewSystemFormOpen(true)}>
                   <PointOfSaleIcon className={`left_button `} />
                 </IconButton>
-                <IconButton size="small" color="secondary" onClick={() => setIsNewGenusFormOpen(true)}>
-                  <FingerprintSharpIcon className={`left_button `} />
-                </IconButton>
                 <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setIsNewLightFormOpen(true)}>
                   <TungstenSharpIcon className="left_button"/>
+                </IconButton>
+              </ButtonGroup>
+              <ButtonGroup size="lg" fullWidth lassName='centered' style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: 'inherit',
+                border: 'none',
+              }}>
+                <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
+                  <CloseSharpIcon className="left_button"/>
                 </IconButton>
               </ButtonGroup>
             </Box>
@@ -155,6 +174,10 @@ const Home = () => {
         <NewLightForm
           isOpen={isNewLightFormOpen}
           onRequestClose={() => setIsNewLightFormOpen(false)}
+        />
+        <NewTypeForm
+          isOpen={isNewTypeFormOpen}
+          onRequestClose={() => setIsNewTypeFormOpen(false)}
         />
       </div>
     </>
