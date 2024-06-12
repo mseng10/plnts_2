@@ -9,20 +9,10 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 
 
-const NewGenusForm = ({ isOpen, onRequestClose }) => {
+const NewGenusForm = ({ isOpen, onRequestClose, allGenus }) => {
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
-  const [allGenus, setAllGenus] = useState([]);
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
-
-  useEffect(() => {
-    if (isOpen) {
-      fetch('http://127.0.0.1:5000/genus')
-        .then((response) => response.json())
-        .then((data) => setAllGenus(data))
-        .catch((error) => console.error('Error fetching genus data:', error));
-    }
-  }, []);
 
   useEffect(() => {
     if (submitted) {
