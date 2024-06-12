@@ -13,19 +13,17 @@ import Autocomplete from '@mui/material/Autocomplete';
 const NewTypeForm = ({ isOpen, onRequestClose }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [genus, setGenus] = useState('');
+  const [genus, setGenus] = useState(null);
 
   const [allGenuses, setAllGenuses] = useState([]);
 
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
 
   useEffect(() => {
-    if (isOpen) {
-      fetch('http://127.0.0.1:5000/genus')
-        .then((response) => response.json())
-        .then((data) => setAllGenuses(data))
-        .catch((error) => console.error('Error fetching genus data:', error));
-    }
+    fetch('http://127.0.0.1:5000/genus')
+      .then((response) => response.json())
+      .then((data) => setAllGenuses(data))
+      .catch((error) => console.error('Error fetching genus data:', error));
   }, []);
 
   useEffect(() => {
@@ -50,9 +48,6 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (allGenuses.find(genus => genus.name === name)) {
-      return;
-    }
     setSubmitted(true); // Update submitted state
   };
 
@@ -106,16 +101,6 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
               color="type"
               onChange={(event) => setName(event.target.value)}
             />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              label="Description"
-              value={description}
-              variant="standard"
-              color="type"
-              onChange={(event) => setDescription(event.target.value)}
-            />
             <Autocomplete
               freeSolo
               disableClearable
@@ -133,6 +118,18 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
                   }}
                 />
               )}
+            />
+            <TextField
+              margin="normal"
+              multiline
+              rows={6}
+              fullWidth
+              required
+              label="Description"
+              value={description}
+              variant="standard"
+              color="type"
+              onChange={(event) => setDescription(event.target.value)}
             />
           </div>
         </form>

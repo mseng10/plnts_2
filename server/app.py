@@ -33,8 +33,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+# Base.metadata.drop_all(engine)
+# Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -60,8 +60,8 @@ def add_plant():
         cost=new_plant_data["cost"],
         size=new_plant_data["size"],
         genus_id=new_plant_data["genus_id"],
-        system_id=new_plant_data["system_id"],
-        name=new_plant_data["name"],
+        type_id=new_plant_data["type_id"],
+        system_id=new_plant_data["system_id"]
     )
     # Add the new plant object to the session
     session = Session()
@@ -105,7 +105,6 @@ def water_plants():
     session.close()
 
     return jsonify({"message": f"{len(plants)} Plants watered successfully"}), 201
-
 
 @app.route("/genus", methods=["GET"])
 def get_genuses():

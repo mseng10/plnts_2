@@ -44,7 +44,6 @@ class Plant(Base):
         """Convert to json."""
         return {
             "id": self.id,
-            "name": self.name,
             "cost": self.cost,
             "size": self.size,
             "created_on": self.created_on,
@@ -52,6 +51,7 @@ class Plant(Base):
             "updated_on": self.updated_on,
             "genus_id": self.genus_id,
             "system_id": self.system_id,
+            "type_id": self.type_id
         }
 
 class Type(Base):
@@ -70,7 +70,7 @@ class Type(Base):
     )  # Genus of Plant
 
     plants: Mapped[List["Plant"]] = relationship(
-        "Plant", backref="genus", passive_deletes=True
+        "Plant", backref="type", passive_deletes=True
     )  # Available plants of this type
 
     def __repr__(self) -> str:
@@ -84,8 +84,7 @@ class Type(Base):
             "description": self.description,
             "created_on": self.created_on,
             "updated_on": self.updated_on,
-            "genus_id": self.genus_id,
-            "system_id": self.system_id,
+            "genus_id": self.genus_id
         }
 
 class Genus(Base):

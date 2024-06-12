@@ -14,11 +14,14 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
 
   const [name, setName] = useState('');
   const [genus, setGenus] = useState(null);
+  const [type, setType] = useState(null);
   const [system, setSystem] = useState(null);
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
 
+  const [allTypes, setAllTypes] = useState([]);
   const [allGenuses, setAllGenuses] = useState([]);
+  const [genusChange, setGenusChanged] = useState(false);
   const [allSystems, setAllSystems] = useState([]);
 
   const [submitted, setSubmitted] = useState(false);
@@ -29,19 +32,26 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       .then((response) => response.json())
       .then((data) => setAllGenuses(data))
       .catch((error) => console.error('Error fetching all genuses data:', error));
+    if (genus && genusChange) {
+      setGenusChanged(false);
+      fetch('http://127.0.0.1:5000/type')
+        .then((response) => response.json())
+        .then((data) => setAllTypes(data))
+        .catch((error) => console.error('Error fetching all types data:', error));
+    }
     fetch('http://127.0.0.1:5000/system')
       .then((response) => response.json())
       .then((data) => setAllSystems(data))
       .catch((error) => console.error('Error fetching all system data:', error));
     
-  }, []);
+  }, [genus, genusChange]);
 
   useEffect(() => {
     if (submitted) {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({name: name, size: size, cost: cost, genus_id: genus.id, system_id: system.id })
+        body: JSON.stringify({name: name, size: size, cost: cost, genus_id: genus.id, system_id: system.id, type_id: type.id })
       };
       fetch('http://127.0.0.1:5000/plants', requestOptions)
         .then(response => response.json())
@@ -54,7 +64,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       clearForm();
       onRequestClose();
     }
-  }, [submitted, name, size, cost, genus, system, onRequestClose]);
+  }, [submitted, name, size, cost, genus, type, system, onRequestClose]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -71,6 +81,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
     setCost(0);
     setSize(0);
     setGenus(null);
+    setType(null);
     setSystem(null);
     setSubmitted(false);
   };
@@ -103,26 +114,38 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
             </ButtonGroup>
           </div>
           <div className='right'>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              label="Name"
-              value={name}
-              variant="standard"
-              onChange={(event) => setName(event.target.value)}
-            />
             <Autocomplete
               freeSolo
               disableClearable
               value={genus ? genus.name : ''}
               options={allGenuses.map((option) => option.name)}
-              onChange={(event) => setGenus(allGenuses[event.target.value])}
+              onChange={(event) => {
+                setGenusChanged(true);
+                setGenus(allGenuses[event.target.value]);
+              }}
               renderInput={(params) => (
                 <TextField
                   variant="standard"
                   {...params}
                   label="Genus"
+                  InputProps={{
+                    ...params.InputProps,
+                    type: 'search',
+                  }}
+                />
+              )}
+            />
+            <Autocomplete
+              freeSolo
+              disableClearable
+              value={type ? type.name : ''}
+              options={allTypes.map((option) => option.name)}
+              onChange={(event) => setType(allTypes[event.target.value])}
+              renderInput={(params) => (
+                <TextField
+                  variant="standard"
+                  {...params}
+                  label="Type"
                   InputProps={{
                     ...params.InputProps,
                     type: 'search',

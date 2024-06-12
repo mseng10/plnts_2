@@ -18,6 +18,7 @@ class System(Base):
 
     id = Column(Integer(), primary_key=True)
     name = Column(String(100), nullable=False)
+    description = Column(String(400), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
 
@@ -35,7 +36,7 @@ class System(Base):
     distance = Column(Integer(), nullable=False)  # inches
     lights: Mapped[List["Light"]] = relationship(
         "Light", backref="system", passive_deletes=True
-    )  # Available lights of this system
+    )  # Available plants of this system
 
     def __repr__(self) -> str:
         return f"{self.name}"
@@ -47,7 +48,6 @@ class System(Base):
             "name": self.name,
             "created_on": self.created_on,
             "updated_on": self.updated_on,
-            "description": self.description,
             "humidity": self.humidity,
             "temperature": self.temperature,
             "duration": self.duration,
@@ -61,8 +61,7 @@ class Light(Base):
     __tablename__ = "light"
 
     id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=True)
-    description = Column(String(400), nullable=False)
+    name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer())
