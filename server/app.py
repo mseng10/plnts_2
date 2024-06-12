@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Genus,Base, Type
+from models.plant import Plant, Genus, Type
 from models.system import System, Light
 
 # Load database configuration from JSON file
