@@ -110,7 +110,7 @@ const Home = () => {
                 backgroundColor: 'inherit',
                 border: 'none',
               }}>
-                <IconButton size="small" color="info" onClick={() => setIsNewSystemFormOpen(true)}>
+                <IconButton size="small" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
                   <PointOfSaleIcon className={`left_button `} />
                 </IconButton>
                 <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setIsNewLightFormOpen(true)}>
