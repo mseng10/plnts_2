@@ -42,7 +42,7 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, humidity: humidity, temperature: temperature, distance: distance, duration: duration })
+        body: JSON.stringify({ name: name, description: description, humidity: humidity, temperature: temperature, distance: distance, duration: duration })
       };
       fetch('http://127.0.0.1:5000/system', requestOptions)
         .then(response => response.json())
