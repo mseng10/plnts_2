@@ -8,11 +8,12 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 
-
+/** Create a genus. Ideally not really used. */
 const NewGenusForm = ({ isOpen, onRequestClose, allGenus }) => {
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
-  const [submitted, setSubmitted] = useState(false); // Initialize submitted state
+
+  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     if (submitted) {
@@ -29,8 +30,7 @@ const NewGenusForm = ({ isOpen, onRequestClose, allGenus }) => {
           console.log(data);
         })
         .catch(error => console.error('Error posting genus data:', error));
-      clearForm();
-      onRequestClose();
+      handleCancel();
     }
   }, [submitted, name, watering, onRequestClose]);
 
@@ -70,7 +70,7 @@ const NewGenusForm = ({ isOpen, onRequestClose, allGenus }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <FingerprintSharpIcon color='genus' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+            <FingerprintSharpIcon color='genus' className='home_icon_form_submit'/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>

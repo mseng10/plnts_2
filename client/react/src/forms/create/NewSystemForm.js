@@ -159,7 +159,7 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
         <form onSubmit={handleSubmit}>
           <Box sx={{ width: 512, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
             <div className='left'>
-              <PointOfSaleIcon color='info' className={'home_icon_form'}/>
+              <PointOfSaleIcon color='secondary' className={'home_icon_form'}/>
               <ButtonGroup>
                 <IconButton className="left_button" type="submit" color="primary">
                   <CheckSharpIcon className="left_button"/>
@@ -178,7 +178,7 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
                 value={name}
                 variant="standard"
                 onChange={(event) => setName(event.target.value)}
-                color='info'
+                color='secondary'
               />
               <TextField
                 label="Description"
@@ -189,7 +189,7 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
                 variant="standard"
                 fullWidth
                 margin="normal"
-                color='info'
+                color='secondary'
               />
             </div>
           </Box>
