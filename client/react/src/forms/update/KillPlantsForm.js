@@ -88,7 +88,7 @@ const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <DeleteOutlineSharpIcon color='error' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+            <DeleteOutlineSharpIcon color='error' className={submitted ? 'home_icon_form' : 'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>

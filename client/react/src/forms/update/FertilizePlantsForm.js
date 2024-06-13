@@ -105,7 +105,7 @@ const FertilizePlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <LunchDiningIcon className='home_icon_form_submit' color='fertilize'/>
+            <LunchDiningIcon className='home_icon_form' color='fertilize'/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color='primary'>
                 <CheckSharpIcon className="left_button"/>

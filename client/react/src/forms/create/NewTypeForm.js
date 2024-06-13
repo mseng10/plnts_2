@@ -80,7 +80,7 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <MergeTypeSharpIcon color='type' className={'home_icon_form_submit'}/>
+            <MergeTypeSharpIcon color='type' className={'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>
