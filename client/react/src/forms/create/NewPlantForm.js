@@ -60,7 +60,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
           // maybe update some state based on the response
           console.log(data);
         })
-        .catch(error => console.error('Error posting plants data:', error));
+        .catch(error => console.error('Error posting plant data:', error));
       clearForm();
       onRequestClose();
     }

@@ -22,10 +22,18 @@ const Plants = () => {
 
   const columns = [
     {
-      field: 'name',
-      headerName: 'Name',
+      field: 'type_id',
+      headerName: 'Type',
       width: 150,
       editable: false,
+      valueGetter: (value) => {
+        if (!value) {
+          return "Nan";
+        }
+        const typeObj = types.find(_t => _t.id == value.value)
+        
+        return typeObj ? typeObj.name : "Nan";
+      },
     },
     {
       field: 'genus_id',
@@ -87,6 +95,7 @@ const Plants = () => {
   const [plants, setPlants] = useState([]);
   const [genuses, setGensuses] = useState([]);
   const [systems, setSystems] = useState([]);
+  const [types, setTypes] = useState([]);
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
@@ -140,6 +149,7 @@ const Plants = () => {
   }
 
   useEffect(() => {
+    // TODO: Merge plants, genus, type to same model
     // Fetch plant data from the server
     fetch('http://127.0.0.1:5000/plants')
       .then((response) => response.json())
@@ -155,6 +165,10 @@ const Plants = () => {
       .then((response) => response.json())
       .then((data) => setSystems(data))
       .catch((error) => console.error('Error fetching system data:', error));
+    fetch('http://127.0.0.1:5000/types')
+      .then((response) => response.json())
+      .then((data) => setTypes(data))
+      .catch((error) => console.error('Error fetching type data:', error));
   }, []);
 
   return (
