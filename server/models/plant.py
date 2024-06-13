@@ -61,7 +61,7 @@ class Type(Base):
 
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
-    name = Column(String(100), nullable=False, unique=True)
+    name = Column(String(100), nullable=False)
     description = Column(String(400), nullable=True)
     updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 

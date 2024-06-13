@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
+import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 
 
@@ -80,7 +80,7 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <CallSplitSharpIcon color='type' className={submitted ? 'home_icon_form_submit' : 'home_icon_form'}/>
+            <MergeTypeSharpIcon color='type' className={'home_icon_form_submit'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>

@@ -19,19 +19,21 @@ import NewLightForm from '../forms/create/NewLightForm';
 import NewTypeForm from '../forms/create/NewTypeForm';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Modal from '@mui/material/Modal';
-import CallSplitSharpIcon from '@mui/icons-material/CallSplitSharp';
+import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 
 const Home = () => {
   // Navigation
   const navigate = useNavigate();
 
-  const [systems, setSystems] = useState({ temperature: 20, humidity: 50 });
+  // Passable Data
+  const [systems, setSystems] = useState([]);
+  const [genuses, setGensuses] = useState([]);
 
   // Button Display
   const [isCreateButtonsOpen, setIsCreateButtonsOpen] = useState(false);
   const [isViewButtonsOpen, setIsViewButtonsOpen] = useState(false);
 
-  // Forms
+  // Form Openers
   const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
   const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
   const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
@@ -39,10 +41,15 @@ const Home = () => {
   const [isNewTypeFormOpen, setIsNewTypeFormOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch plant data from the server
+    // Fetch system data from the server
     fetch('http://localhost:5000/systems')
       .then((response) => response.json())
       .then((data) => setSystems(data))
+      .catch(() => console.log("Oh no"));
+    // Fetch genus data from the server
+    fetch('http://localhost:5000/genus')
+      .then((response) => response.json())
+      .then((data) => setGensuses(data))
       .catch(() => console.log("Oh no"));
   }, []);
 
@@ -97,7 +104,7 @@ const Home = () => {
                   <GrassOutlinedIcon className={`left_button `} />
                 </IconButton>
                 <IconButton size="small" color="type" onClick={() => setIsNewTypeFormOpen(true)}>
-                  <CallSplitSharpIcon className={`left_button `} />
+                  <MergeTypeSharpIcon className={`left_button `} />
                 </IconButton>
                 <IconButton size="small" color="genus" onClick={() => setIsNewGenusFormOpen(true)}>
                   <FingerprintSharpIcon className={`left_button `} />
@@ -170,6 +177,7 @@ const Home = () => {
         <NewGenusForm
           isOpen={isNewGenusFormOpen}
           onRequestClose={() => setIsNewGenusFormOpen(false)}
+          allGenus={genuses}
         />
         <NewLightForm
           isOpen={isNewLightFormOpen}
