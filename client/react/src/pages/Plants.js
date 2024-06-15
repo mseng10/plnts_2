@@ -165,7 +165,7 @@ const Plants = () => {
       .then((response) => response.json())
       .then((data) => setSystems(data))
       .catch((error) => console.error('Error fetching system data:', error));
-    fetch('http://127.0.0.1:5000/types')
+    fetch('http://127.0.0.1:5000/type')
       .then((response) => response.json())
       .then((data) => setTypes(data))
       .catch((error) => console.error('Error fetching type data:', error));
