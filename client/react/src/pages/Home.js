@@ -3,10 +3,6 @@ import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import System from './System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
-import NewPlantForm from '../forms/create/NewPlantForm';
-import NewGenusForm from '../forms/create/NewGenusForm';
-import NewSystemForm from '../forms/create/NewSystemForm';
-import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
@@ -15,11 +11,8 @@ import Box from '@mui/material/Box';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
-import NewLightForm from '../forms/create/NewLightForm';
-import NewTypeForm from '../forms/create/NewTypeForm';
-import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Modal from '@mui/material/Modal';
-import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
+import CreateOptions from '../modals/CreateOptions';
 
 const Home = () => {
   // Navigation
@@ -27,29 +20,16 @@ const Home = () => {
 
   // Passable Data
   const [systems, setSystems] = useState([]);
-  const [genuses, setGensuses] = useState([]);
 
   // Button Display
   const [isCreateButtonsOpen, setIsCreateButtonsOpen] = useState(false);
   const [isViewButtonsOpen, setIsViewButtonsOpen] = useState(false);
-
-  // Form Openers
-  const [isNewPlantFormOpen, setIsNewPlantFormOpen] = useState(false);
-  const [isNewSystemFormOpen, setIsNewSystemFormOpen] = useState(false);
-  const [isNewGenusFormOpen, setIsNewGenusFormOpen] = useState(false);
-  const [isNewLightFormOpen, setIsNewLightFormOpen] = useState(false);
-  const [isNewTypeFormOpen, setIsNewTypeFormOpen] = useState(false);
 
   useEffect(() => {
     // Fetch system data from the server
     fetch('http://localhost:5000/systems')
       .then((response) => response.json())
       .then((data) => setSystems(data))
-      .catch(() => console.log("Oh no"));
-    // Fetch genus data from the server
-    fetch('http://localhost:5000/genus')
-      .then((response) => response.json())
-      .then((data) => setGensuses(data))
       .catch(() => console.log("Oh no"));
   }, []);
 
@@ -80,63 +60,10 @@ const Home = () => {
           </ButtonGroup>
         </Box>
         {isCreateButtonsOpen && (
-          <Modal
-            open={isCreateButtonsOpen}
-            aria-labelledby="new-bobby-form"
-            disableAutoFocus={true}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'inherit',
-              border: 'none',
-            }}
-          >
-            <Box sx={{ borderRadius: 2 }}>
-              <ButtonGroup size="lg" fullWidth style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'inherit',
-                border: 'none',
-              }}>
-                <IconButton size="small" color="primary" onClick={() => setIsNewPlantFormOpen(true)}>
-                  <GrassOutlinedIcon className={`left_button `} />
-                </IconButton>
-                <IconButton size="small" color="type" onClick={() => setIsNewTypeFormOpen(true)}>
-                  <MergeTypeSharpIcon className={`left_button `} />
-                </IconButton>
-                <IconButton size="small" color="genus" onClick={() => setIsNewGenusFormOpen(true)}>
-                  <FingerprintSharpIcon className={`left_button `} />
-                </IconButton>
-              </ButtonGroup>
-              <ButtonGroup size="lg" fullWidth lassName='centered' style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'inherit',
-                border: 'none',
-              }}>
-                <IconButton size="small" color="secondary" onClick={() => setIsNewSystemFormOpen(true)}>
-                  <PointOfSaleIcon className={`left_button `} />
-                </IconButton>
-                <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setIsNewLightFormOpen(true)}>
-                  <TungstenSharpIcon className="left_button"/>
-                </IconButton>
-              </ButtonGroup>
-              <ButtonGroup size="lg" fullWidth lassName='centered' style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: 'inherit',
-                border: 'none',
-              }}>
-                <IconButton size="small" color="error" onClick={() => setIsCreateButtonsOpen(false)}>
-                  <CloseSharpIcon className="left_button"/>
-                </IconButton>
-              </ButtonGroup>
-            </Box>
-          </Modal>
+          <CreateOptions
+            isOpen={isCreateButtonsOpen}
+            onClose={() => setIsCreateButtonsOpen(false)}
+          />
         )}
         {isViewButtonsOpen && (
           <Modal
@@ -166,27 +93,6 @@ const Home = () => {
             </Box>
           </Modal>
         )}
-        <NewPlantForm
-          isOpen={isNewPlantFormOpen}
-          onRequestClose={() => setIsNewPlantFormOpen(false)}
-        />
-        <NewSystemForm
-          isOpen={isNewSystemFormOpen}
-          onRequestClose={() => setIsNewSystemFormOpen(false)}
-        />
-        <NewGenusForm
-          isOpen={isNewGenusFormOpen}
-          onRequestClose={() => setIsNewGenusFormOpen(false)}
-          allGenus={genuses}
-        />
-        <NewLightForm
-          isOpen={isNewLightFormOpen}
-          onRequestClose={() => setIsNewLightFormOpen(false)}
-        />
-        <NewTypeForm
-          isOpen={isNewTypeFormOpen}
-          onRequestClose={() => setIsNewTypeFormOpen(false)}
-        />
       </div>
     </>
   );
