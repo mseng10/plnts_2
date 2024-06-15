@@ -54,13 +54,13 @@ const CreateOptions = ({ isOpen, onClose }) => {
             border: 'none',
           }}>
             <IconButton size="small" color="primary" onClick={() => setCurrentForm(CreateForm.PLANT)}>
-              <GrassOutlinedIcon className={`left_button `} />
+              <GrassOutlinedIcon className={`modal_button `} />
             </IconButton>
             <IconButton size="small" color="type" onClick={() => setCurrentForm(CreateForm.TYPE)}>
-              <MergeTypeSharpIcon className={`left_button `} />
+              <MergeTypeSharpIcon className={`modal_button `} />
             </IconButton>
             <IconButton size="small" color="genus" onClick={() => setCurrentForm(CreateForm.GENUS)}>
-              <FingerprintSharpIcon className={`left_button `} />
+              <FingerprintSharpIcon className={`modal_button `} />
             </IconButton>
           </ButtonGroup>
           <ButtonGroup size="lg" fullWidth lassName='centered' style={{
@@ -71,10 +71,10 @@ const CreateOptions = ({ isOpen, onClose }) => {
             border: 'none',
           }}>
             <IconButton size="small" color="secondary" onClick={() => setCurrentForm(CreateForm.SYSTEM)}>
-              <PointOfSaleIcon className={`left_button `} />
+              <PointOfSaleIcon className={`modal_button `} />
             </IconButton>
             <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setCurrentForm(CreateForm.LIGHT)}>
-              <TungstenSharpIcon className="left_button"/>
+              <TungstenSharpIcon className="modal_button"/>
             </IconButton>
           </ButtonGroup>
           <ButtonGroup size="lg" fullWidth lassName='centered' style={{

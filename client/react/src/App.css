@@ -55,6 +55,10 @@ h1, h2 {
   font-size: 124px !important;
 }
 
+.modal_button {
+  font-size: 124px !important;
+}
+
 .right {
   width: 50%;
   float:right;

@@ -9,22 +9,27 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 
-
-const NewTypeForm = ({ isOpen, onRequestClose }) => {
+/** Create a new plant type of a specified genus. */
+const NewTypeForm = ({ isOpen, onRequestClose, genuses }) => {
+  // Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [genus, setGenus] = useState(null);
 
-  const [allGenuses, setAllGenuses] = useState([]);
+  // Field Populators
+  const [allGenuses, setAllGenuses] = useState(genuses ? genuses : []);
 
+  // Submitted state
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/genus')
-      .then((response) => response.json())
-      .then((data) => setAllGenuses(data))
-      .catch((error) => console.error('Error fetching genus data:', error));
-  }, []);
+    if (isOpen && !allGenuses) {
+      fetch('http://127.0.0.1:5000/genus')
+        .then((response) => response.json())
+        .then((data) => setAllGenuses(data))
+        .catch((error) => console.error('Error fetching genus data:', error));
+    }
+  }, [isOpen, allGenuses]);
 
   useEffect(() => {
     if (submitted) {

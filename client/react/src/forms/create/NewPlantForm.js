@@ -11,7 +11,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 
 
 const NewPlantForm = ({ isOpen, onRequestClose }) => {
-
+  // Form Fields
   const [name, setName] = useState('');
   const [genus, setGenus] = useState(null);
   const [type, setType] = useState(null);
@@ -19,11 +19,13 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
 
+  // Field Populators
   const [allTypes, setAllTypes] = useState([]);
   const [allGenuses, setAllGenuses] = useState([]);
   const [genusChange, setGenusChanged] = useState(false);
   const [allSystems, setAllSystems] = useState([]);
 
+  // Submitted state
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {

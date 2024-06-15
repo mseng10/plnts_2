@@ -10,7 +10,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 
 
-const NewLightForm = ({ isOpen, onRequestClose }) => {
+const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
 
   const [name, setName] = useState('');
   const [system, setSystem] = useState(null);
@@ -21,12 +21,13 @@ const NewLightForm = ({ isOpen, onRequestClose }) => {
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    fetch('http://127.0.0.1:5000/system')
-      .then((response) => response.json())
-      .then((data) => setAllSystems(data))
-      .catch((error) => console.error('Error fetching all system data:', error));
-    
-  }, []);
+    if (!systems) {
+      fetch('http://127.0.0.1:5000/system')
+        .then((response) => response.json())
+        .then((data) => setAllSystems(data))
+        .catch((error) => console.error('Error fetching all system data:', error));
+    }
+  }, [isOpen, systems]);
 
   useEffect(() => {
     if (submitted) {

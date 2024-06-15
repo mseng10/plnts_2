@@ -14,8 +14,9 @@ import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
 import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
 import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
 
-
-const NewSystemForm = ({ isOpen, onRequestClose }) => {
+/** Create a system that houses plants */
+const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
+  // Form Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('')
   const [humidity, setHumidity] = useState(60);
@@ -23,18 +24,20 @@ const NewSystemForm = ({ isOpen, onRequestClose }) => {
   const [duration, setDuration] = useState(12);
   const [distance, setDistance] = useState(24);
 
-  const [allSystems, setAllSystems] = useState([]);
+  // Background Information
+  const [allSystems, setAllSystems] = useState(systems);
   
+  // Submitted State
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !allSystems) {
       fetch('http://127.0.0.1:5000/system')
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
         .catch((error) => console.error('Error fetching genus data:', error));
     }
-  }, []);
+  }, [isOpen, allSystems]);
 
   useEffect(() => {
     if (submitted) {

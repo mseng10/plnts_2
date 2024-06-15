@@ -10,9 +10,11 @@ import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 
 /** Create a genus. Ideally not really used. */
 const NewGenusForm = ({ isOpen, onRequestClose, allGenus }) => {
+  // Form Fields
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
-
+  
+  // Submitted state
   const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
