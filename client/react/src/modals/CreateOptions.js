@@ -53,39 +53,44 @@ const CreateOptions = ({ isOpen, onClose }) => {
             backgroundColor: 'inherit',
             border: 'none',
           }}>
-            <IconButton size="small" color="primary" onClick={() => setCurrentForm(CreateForm.PLANT)}>
+            <IconButton color="primary" onClick={() => setCurrentForm(CreateForm.PLANT)}>
               <GrassOutlinedIcon className={`modal_button `} />
             </IconButton>
-            <IconButton size="small" color="type" onClick={() => setCurrentForm(CreateForm.TYPE)}>
+            <IconButton color="type" onClick={() => setCurrentForm(CreateForm.TYPE)}>
               <MergeTypeSharpIcon className={`modal_button `} />
             </IconButton>
-            <IconButton size="small" color="genus" onClick={() => setCurrentForm(CreateForm.GENUS)}>
+            <IconButton color="genus" onClick={() => setCurrentForm(CreateForm.GENUS)}>
               <FingerprintSharpIcon className={`modal_button `} />
             </IconButton>
           </ButtonGroup>
-          <ButtonGroup size="lg" fullWidth lassName='centered' style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'inherit',
-            border: 'none',
-          }}>
-            <IconButton size="small" color="secondary" onClick={() => setCurrentForm(CreateForm.SYSTEM)}>
+          <ButtonGroup fullWidth 
+            lassName='centered' 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'inherit',
+              border: 'none',
+            }}
+          >
+            <IconButton color="secondary" onClick={() => setCurrentForm(CreateForm.SYSTEM)}>
               <PointOfSaleIcon className={`modal_button `} />
             </IconButton>
-            <IconButton size="small" sx={{ color: '#ffeb3b'}} onClick={() => setCurrentForm(CreateForm.LIGHT)}>
+            <IconButton color="light" onClick={() => setCurrentForm(CreateForm.LIGHT)}>
               <TungstenSharpIcon className="modal_button"/>
             </IconButton>
           </ButtonGroup>
-          <ButtonGroup size="lg" fullWidth lassName='centered' style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'inherit',
-            border: 'none',
-          }}>
+          <ButtonGroup fullWidth 
+            lassName='centered' 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: 'inherit',
+              border: 'none',
+            }}>
             <IconButton size="small" color="error" onClick={() => onCreateClose()}>
-              <CloseSharpIcon className="left_button"/>
+              <CloseSharpIcon className="modal_button"/>
             </IconButton>
           </ButtonGroup>
         </Box>
@@ -101,7 +106,6 @@ const CreateOptions = ({ isOpen, onClose }) => {
       <NewGenusForm
         isOpen={currentForm === CreateForm.GENUS}
         onRequestClose={onCreateClose}
-        allGenus={[]}
       />
       <NewLightForm
         isOpen={currentForm === CreateForm.LIGHT}
