@@ -83,7 +83,7 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
       <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <TungstenSharpIcon sx={{ color: '#ffeb3b'}} className={'home_icon_form'}/>
+            <TungstenSharpIcon color="light" className={'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>
@@ -95,6 +95,7 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
           </div>
           <div className='right'>
             <TextField
+              color="light"
               margin="normal"
               fullWidth
               required
@@ -105,12 +106,14 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
             />
             <Autocomplete
               freeSolo
+              color="light"
               disableClearable
               value={system ? system.name : ''}
               options={allSystems.map((option) => option.name)}
               onChange={(event) => setSystem(allSystems[event.target.value])}
               renderInput={(params) => (
                 <TextField
+                  color="light"
                   variant="standard"
                   {...params}
                   label="System"
@@ -123,6 +126,7 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
             />
             <TextField
               margin="normal"
+              color="light"
               fullWidth
               required
               type="number"
