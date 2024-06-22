@@ -189,13 +189,24 @@ def get_systems():
     """
     logger.info("Received request to retrieve all systems")
 
-    session = Session()
-    systems = session.query(System).all()
-    session.close()
+    db = Session()
+    systems = db.query(System).all()
+    db.close()
     # Transform systems to JSON format
     systems_json = [system.to_json() for system in systems]
     # Return JSON response
     return jsonify(systems_json)
+
+def create_light_from_json(light):
+    """
+    Utiltity method to create multiple lights
+    """
+    return Light(
+        name=light["name"],
+        cost=light["cost"],
+        system_id=light["system_id"]
+    )
+
 
 
 @app.route("/system", methods=["POST"])
@@ -221,6 +232,17 @@ def create_system():
     db = Session()
     db.add(new_system)
     db.commit()
+
+    # Potentially create lights that were created alongside the system
+    potentially_new_lights = new_system_json["light"]
+    if potentially_new_lights is not None:
+        logger.info("Attempting to create embedded lights from system request")
+        potentially_new_lights["system_id"] = system.id
+        count = potentially_new_light["count"] if potentially_new_light["count"] else 1
+        new_lights = [create_light_from_json(potentially_new_light) for i in range(count)]
+        db.add(new_lights)
+        db.commit()
+
     db.close()
 
     return jsonify({"message": "System added successfully"}), 201
@@ -250,11 +272,7 @@ def create_light():
     new_light_json = request.get_json()
 
     # Create a new Light object
-    new_light = Light(
-        name=new_light_json["name"],
-        cost=new_light_json["cost"],
-        system_id=new_light_json["system_id"],
-    )
+    new_light = create_light_from_json(new_light_json)
 
     # Add the new Light object to the session
     db = Session()
