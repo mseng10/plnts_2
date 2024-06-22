@@ -9,10 +9,10 @@ import CardContent from '@mui/material/CardContent';
 import { CardActionArea, CardHeader } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
-import { green } from '@mui/material/colors';
 import IconButton from '@mui/material/IconButton';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import CardActions from '@mui/material/CardActions';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 
 const System = ({ system, full }) => {
   if (!system) {
@@ -58,8 +58,8 @@ const System = ({ system, full }) => {
       <CardActionArea>
         <CardHeader
           avatar={
-            <Avatar sx={{ bgcolor: green[500] }} aria-label="recipe">
-              <GrassOutlinedIcon/>
+            <Avatar aria-label="recipe">
+              <PointOfSaleIcon/>
             </Avatar>
           }
           title={system.name}
