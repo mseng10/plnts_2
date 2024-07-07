@@ -3,16 +3,14 @@ import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import System from './System'
 import ButtonGroup from '@mui/material/ButtonGroup';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
-import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import {useNavigate} from "react-router-dom" 
 import Box from '@mui/material/Box';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
-import Modal from '@mui/material/Modal';
 import CreateOptions from '../modals/CreateOptions';
+import ViewOptions from '../modals/ViewOptions';
 
 const Home = () => {
   // Navigation
@@ -66,32 +64,16 @@ const Home = () => {
           />
         )}
         {isViewButtonsOpen && (
-          <Modal
-            open={isViewButtonsOpen}
-            aria-labelledby="new-bobby-form"
-            disableAutoFocus={true}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'inherit',
-              border: 'none',
-            }}
-          >
-            <Box sx={{ borderRadius: 2 }}>
-              <ButtonGroup size="lg">
-                <IconButton size="small" color="primary" onClick ={()=>{ navigate("/plants")}}>
-                  <GrassOutlinedIcon className={`left_button `} />
-                </IconButton>
-                <IconButton size="small" color="secondary" onClick ={()=>{ navigate("/systems")}}>
-                  <PointOfSaleIcon className={`left_button `} />
-                </IconButton>
-                <IconButton size="small" color="error" onClick={() => setIsViewButtonsOpen(false)}>
-                  <CloseSharpIcon className="left_button"/>
-                </IconButton>
-              </ButtonGroup>
-            </Box>
-          </Modal>
+          <CreateOptions
+            isOpen={isCreateButtonsOpen}
+            onClose={() => setIsCreateButtonsOpen(false)}
+          />
+        )}
+        {isViewButtonsOpen && (
+          <ViewOptions
+            isOpen={isViewButtonsOpen}
+            onClose={() => setIsViewButtonsOpen(false)}
+          />
         )}
       </div>
     </>

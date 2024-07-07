@@ -13,6 +13,9 @@ import AvTimerSharpIcon from '@mui/icons-material/AvTimerSharp';
 import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
 import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
 import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
+import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
+import Autocomplete from '@mui/material/Autocomplete';
+
 
 /** Create a system that houses plants */
 const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
@@ -23,6 +26,11 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
   const [temperature, setTempurature] = useState(68);
   const [duration, setDuration] = useState(12);
   const [distance, setDistance] = useState(24);
+
+  // Light Count
+  const [lightModel, setLightModel] = useState(null);
+  const [lightCount, setLightCount] = useState(1);
+  const [allLights, setAllLights] = useState([]); 
 
   // Background Information
   const [allSystems, setAllSystems] = useState(systems);
@@ -36,16 +44,30 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
         .catch((error) => console.error('Error fetching genus data:', error));
+      fetch('http://127.0.0.1:5000/light')
+        .then((response) => response.json())
+        .then((data) => setAllLights(data))
+        .catch((error) => console.error('Error fetching lights data:', error));
     }
   }, [isOpen, allSystems]);
 
   useEffect(() => {
     if (submitted) {
-      console.log(allSystems);
+      if (lightModel) {
+        lightModel.count = lightCount;
+      }
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, description: description, humidity: humidity, temperature: temperature, distance: distance, duration: duration })
+        body: JSON.stringify({ 
+          name: name,
+          description: description,
+          humidity: humidity,
+          temperature: temperature,
+          distance: distance,
+          duration: duration,
+          light: lightModel
+        })
       };
       fetch('http://127.0.0.1:5000/system', requestOptions)
         .then(response => response.json())
@@ -58,7 +80,7 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
       clearForm();
       onRequestClose();
     }
-  }, [submitted, name, description, temperature, humidity, distance, duration, onRequestClose]);
+  }, [submitted, name, description, temperature, humidity, distance, duration, onRequestClose,lightModel ]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -78,6 +100,8 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
     setDistance(0);
     setDuration(0);
     setSubmitted(false);
+    setLightModel(null);
+    setLightCount(0);
   };
 
   // Target temperature marks
@@ -260,6 +284,42 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
                 max={36}
                 valueLabelDisplay="auto"
               />
+            </Stack>
+          </Box>
+          <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2, float:'left', marginTop: 4  }}>
+            <Stack direction="row" alignItems="center">
+              <IconButton className="medium_button" color="light" onClick={handleCancel}>
+                <TungstenSharpIcon className="medium_button"/>
+              </IconButton>
+              <Autocomplete
+                freeSolo
+                sx={{
+                  width:'80%'
+                }}
+                color="light"
+                disableClearable
+                value={lightModel ? lightModel.name : ''}
+                options={allLights.map((option) => option.name)}
+                onChange={(event) => setLightModel(allLights[event.target.value])}
+                renderInput={(params) => (
+                  <TextField
+                    color="light"
+                    variant="standard"
+                    {...params}
+                    label="Light"
+                    InputProps={{
+                      ...params.InputProps,
+                      type: 'search',
+                    }}
+                  />
+                )}
+              />
+              <ButtonGroup sx = {{ float:'right'}}>
+                <IconButton className="medium_button" color="info">
+                  <CloseSharpIcon className="medium_button"/>
+                  {lightCount? lightCount : 1}
+                </IconButton>
+              </ButtonGroup>
             </Stack>
           </Box>
         </form>

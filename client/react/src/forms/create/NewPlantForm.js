@@ -106,7 +106,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <GrassOutlinedIcon color='info' className={'home_icon_form'}/>
+            <GrassOutlinedIcon color='primary' className={'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>
