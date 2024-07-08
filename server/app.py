@@ -235,7 +235,7 @@ def create_system():
 
     # Potentially create lights that were created alongside the system
     potentially_new_light = new_system_json["light"]
-    if potentially_new_lights is not None:
+    if potentially_new_light is not None:
         logger.info("Attempting to create embedded lights from system request")
         potentially_new_light["system_id"] = new_system.id
         count = potentially_new_light["count"] if potentially_new_light["count"] else 1
