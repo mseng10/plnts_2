@@ -1,16 +1,9 @@
 // Home.js
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import System from './System'
-import ButtonGroup from '@mui/material/ButtonGroup';
-import AddSharpIcon from '@mui/icons-material/AddSharp';
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import {useNavigate} from "react-router-dom" 
-import Box from '@mui/material/Box';
-import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
-import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
-import CreateOptions from '../modals/CreateOptions';
-import ViewOptions from '../modals/ViewOptions';
 
 const Home = () => {
   // Navigation
@@ -18,10 +11,6 @@ const Home = () => {
 
   // Passable Data
   const [systems, setSystems] = useState([]);
-
-  // Button Display
-  const [isCreateButtonsOpen, setIsCreateButtonsOpen] = useState(false);
-  const [isViewButtonsOpen, setIsViewButtonsOpen] = useState(false);
 
   useEffect(() => {
     // Fetch system data from the server
@@ -44,37 +33,6 @@ const Home = () => {
             <GrassOutlinedIcon className='home_icon'/>
           </IconButton>
         </div>
-        <Box>
-          <ButtonGroup size="lg">
-            <IconButton size="large" color="secondary" onClick={() => setIsCreateButtonsOpen(true)}>
-              <AddSharpIcon className={`home_button `} />
-            </IconButton>
-            <IconButton size="large" color="info" onClick={() => setIsViewButtonsOpen(true)}>
-              <VisibilitySharpIcon className={`home_button `} />
-            </IconButton>
-            <IconButton size="large" color="error" onClick={() => console.log("WIP")}>
-              <ReportGmailerrorredSharpIcon className={`home_button `} />
-            </IconButton>
-          </ButtonGroup>
-        </Box>
-        {isCreateButtonsOpen && (
-          <CreateOptions
-            isOpen={isCreateButtonsOpen}
-            onClose={() => setIsCreateButtonsOpen(false)}
-          />
-        )}
-        {isViewButtonsOpen && (
-          <CreateOptions
-            isOpen={isCreateButtonsOpen}
-            onClose={() => setIsCreateButtonsOpen(false)}
-          />
-        )}
-        {isViewButtonsOpen && (
-          <ViewOptions
-            isOpen={isViewButtonsOpen}
-            onClose={() => setIsViewButtonsOpen(false)}
-          />
-        )}
       </div>
     </>
   );

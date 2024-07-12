@@ -207,8 +207,6 @@ def create_light_from_json(light):
         system_id=light["system_id"]
     )
 
-
-
 @app.route("/system", methods=["POST"])
 def create_system():
     """

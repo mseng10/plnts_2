@@ -13,6 +13,9 @@ import Plants from './pages/Plants';
 import System from './pages/System';
 import Home from './pages/Home';
 import Systems from './pages/Systems';
+import Box from '@mui/material/Box';
+import AppNavigation from './AppNavigation';
+const drawerWidth = 240;
 
 const darkTheme = createTheme({
   palette: {
@@ -47,18 +50,26 @@ const darkTheme = createTheme({
   },
 });
 
-const App = () => {
+function App() {
   return (
-    <ThemeProvider theme={darkTheme}>
-      <CssBaseline />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/plants" element={<Plants />} />
-        <Route path="/system" element={<System />} />
-        <Route path="/systems" element={<Systems />} />
-      </Routes>
-    </ThemeProvider>
+    <Box sx={{ display: 'flex' }}>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <AppNavigation />
+        <Box
+          component="main"
+          sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+        >
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/plants" element={<Plants />} />
+            <Route path="/system" element={<System />} />
+            <Route path="/systems" element={<Systems />} />
+          </Routes>
+        </Box>
+      </ThemeProvider>
+    </Box>
   );
-};
+}
 
 export default App;
