@@ -49,7 +49,7 @@ logger = logging.getLogger(__name__)
 
 
 @app.route("/plants", methods=["POST"])
-def add_plant():
+def create_plant():
     """
     Add a new plant to the database.
     """
@@ -62,7 +62,8 @@ def add_plant():
         size=new_plant_data["size"],
         genus_id=new_plant_data["genus_id"],
         type_id=new_plant_data["type_id"],
-        system_id=new_plant_data["system_id"]
+        system_id=new_plant_data["system_id"],
+        watering=new_plant_data["watering"]
     )
     # Add the new plant object to the session
     session = Session()
@@ -296,10 +297,10 @@ def get_alerts():
 @app.route("/todo", methods=["GET"])
 def get_todo():
     """
-    Retrieve all Plant alerts from the database.
+    Retrieve all todos from the database.
     """
     logger.info("Received request to retrieve all todos")
-    print("GETTING CALLEd")
+
     db = Session()
     todos = db.query(Todo).all()
     db.close()
@@ -329,6 +330,40 @@ def create_todo():
     db.close()
 
     return jsonify({"message": "TODO added successfully"}), 201
+
+@app.route("/alert", methods=["GET"])
+def alert_check():
+    """
+    Retrieve all alerts from the database.
+    TODO: Comvert to runnable background processor
+    """
+    logger.info("Received request to run all alert scans")
+
+    session = Session()
+    existing_plant_alrts = session.query(PlantAlert).all()
+    existing_plant_alrts_map = {}
+    for existing_plant_alert in existing_plant_alrts:
+        existing_plant_alrts_map[existing_plant_alert.id] = existing_plant_alert
+
+    existing_plants = session.query(Plants).all()
+    for plant in existing_plant_alrts:
+        end_date = plant.watered_on + datetime.timedelta(days=plant.watering)
+        if end_date < datetime.now() and existing_plant_alrts_map.get(plnt.id) is None:
+            new_plant_alert = PlantAlert(
+                plant_id = plant.id,
+                system_id = plant.system_id
+            )
+            # Create the alert in the db
+            session.add(new_plant_alert)
+            # Save it to return to the server
+            existing_plant_alrts.appned(new_plant_alert)
+
+    session.close()
+
+    alerts_json = [existing_plant_alrt.to_json() for existing_plant_alrt in existing_plant_alrts]
+
+    # Return JSON response
+    return jsonify(alerts_json)
 
 if __name__ == "__main__":
     # Run the Flask app

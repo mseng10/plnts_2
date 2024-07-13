@@ -10,7 +10,7 @@ const Alerts = () => {
 
   useEffect(() => {
     // Fetch system data from the server
-    fetch('http://localhost:5000/alert')
+    fetch('http://127.0.0.1:5000/alert')
       .then((response) => response.json())
       .then((data) => setAlerts(data))
       .catch(() => console.log("Oh no"));

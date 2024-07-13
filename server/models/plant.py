@@ -33,6 +33,7 @@ class Plant(Base):
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    watering = Column(Integer(), default=0, nullable=False) # Days
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
     dead = Column(Boolean, default=False, nullable=False)  # Death Info
     dead_on = Column(DateTime(), default=None, nullable=True)
@@ -55,7 +56,8 @@ class Plant(Base):
             "updated_on": self.updated_on,
             "genus_id": self.genus_id,
             "system_id": self.system_id,
-            "type_id": self.type_id
+            "type_id": self.type_id,
+            "watering": self.watering
         }
 
 class Type(Base):
