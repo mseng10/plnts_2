@@ -17,7 +17,7 @@ from sqlalchemy.engine import URL
 # Local application imports
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
-from models.alert import PlantAlert
+from models.alert import PlantAlert, Todo
 
 # Load database configuration from JSON file
 with open("db.json", encoding="utf-8") as json_data_file:
@@ -307,6 +307,28 @@ def get_todos():
     todos_json = [todo.to_json() for todo in todos]
     # Return JSON response
     return jsonify(todos_json)
+
+@app.route("/todos", methods=["POST"])
+def get_todos():
+        """
+    Create a new todo and add it to the database.
+    """
+    logger.info("Attempting to create todo")
+
+    new_type_data = request.get_json()
+
+    # Create a new Todo object
+    new_todo = Todo(
+        description=new_type_data["description"],
+    )
+
+    # Add the new todo object to the session
+    db = Session()
+    db.add(new_todo)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "Todo added successfully"}), 201
 
 if __name__ == "__main__":
     # Run the Flask app

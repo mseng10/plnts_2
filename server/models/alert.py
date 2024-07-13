@@ -36,6 +36,7 @@ class Todo(Base):
             "due_on": self.due_on,
             "description": self.description
         }
+
 class PlantAlert(Base):
     """Plant alert model."""
 
