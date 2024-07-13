@@ -15,10 +15,10 @@ import CreateOptions from './modals/CreateOptions';
 import ViewOptions from './modals/ViewOptions';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
-import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, useLocation} from "react-router-dom" 
+import HomeIcon from '@mui/icons-material/Home';
 
 const drawerWidth = 64;
 
@@ -54,7 +54,7 @@ function AppNavigation(props) {
         </ListItem>
         <ListItem key={"text1"} disablePadding>
           <IconButton size="large" color="primary" onClick ={()=>{ navigate("/")}}>
-            <GrassOutlinedIcon className={`medium_button `} />
+            <HomeIcon className={`medium_button `} />
           </IconButton>
         </ListItem>
         <ListItem key={"text1"} disablePadding>
