@@ -13,6 +13,7 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 /** Create a new todo to accomplish. */
 const NewTodoForm = ({ isOpen, onRequestClose }) => {
   // Fields
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   //   const [dueOn, setDueOn] = useState(null);
 
@@ -25,7 +26,7 @@ const NewTodoForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: description })
+        body: JSON.stringify({ description: description, name: name })
       };
       fetch('http://127.0.0.1:5000/todo', requestOptions)
         .then(response => response.json())
@@ -52,6 +53,7 @@ const NewTodoForm = ({ isOpen, onRequestClose }) => {
 
   const clearForm = () => {
     setDescription('');
+    setName('');
     setSubmitted(false);
   };
 
@@ -92,6 +94,16 @@ const NewTodoForm = ({ isOpen, onRequestClose }) => {
                 renderInput={(params) => <TextField {...params} />}
                />
             </LocalizationProvider> */}
+            <TextField
+              margin="normal"
+              fullWidth
+              required
+              label="Title"
+              value={name}
+              variant="standard"
+              color="lime"
+              onChange={(event) => setName(event.target.value)}
+            />
             <TextField
               margin="normal"
               multiline

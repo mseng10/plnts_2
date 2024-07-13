@@ -32,8 +32,10 @@ const Todos = () => {
         .then(data => {
           console.log(data);
 
-          const updatedTodos = todos.filter((_t => _t.id !== resolve.id))
-          setTodos(updatedTodos);
+          setTimeout(() => {
+            const updatedTodos = todos.filter((_t => _t.id !== resolve.id))
+            setTodos(updatedTodos);
+          }, 1000);
 
           setResolve(null);
         })
@@ -46,7 +48,7 @@ const Todos = () => {
     fetch('http://127.0.0.1:5000/todo')
       .then((response) => response.json())
       .then((data) => setTodos(data))
-      .catch((error) => console.error('Error fetching system data:', error));
+      .catch((error) => console.error('Error fetching todo data:', error));
   }, []);
 
   return (
@@ -66,7 +68,8 @@ const Todos = () => {
                             <FormatListNumberedIcon color='lime'/>
                           </Avatar>
                         }
-                        title={todo.created_on}
+                        title={todo.name}
+                        subheader={todo.created_on}
                       />
                       <CardContent>
                         <Box full>

@@ -23,6 +23,7 @@ class Todo(Base):
     resolved = Column(Boolean, default=False, nullable=False)
     resolved_on = Column(DateTime(), default=None, nullable=True)
     due_on = Column(DateTime(), default=None, nullable=True)
+    name = Column(String(100), nullable=False)
     description = Column(String(400), nullable=True)
 
     def to_json(self):
@@ -34,7 +35,8 @@ class Todo(Base):
             "resolved": self.resolved,
             "resolved_on": self.resolved_on,
             "due_on": self.due_on,
-            "description": self.description
+            "description": self.description,
+            "name": self.name
         }
 
 class PlantAlert(Base):

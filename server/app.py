@@ -301,10 +301,10 @@ def get_todo():
     logger.info("Received request to retrieve all todos")
 
     db = Session()
-    todos = db.query(Todo).filter(Todo.resolved == False)
+    todos = db.query(Todo).all()
     db.close()
     # Transform plant alerts to JSON format
-    todos_json = [todo.to_json() for todo in todos]
+    todos_json = [todo.to_json() for todo in todos if todo.resolved is False]
     # Return JSON response
     return jsonify(todos_json)
 
@@ -320,6 +320,7 @@ def create_todo():
     # Create a new Todo object
     new_todo = Todo(
         description=new_todo_data["description"],
+        name=new_todo_data["name"]
     )
 
     # Add the new TODO object to the session
@@ -345,9 +346,9 @@ def alert_check():
         existing_plant_alrts_map[existing_plant_alert.id] = existing_plant_alert
 
     existing_plants = session.query(Plant).all()
-    for plant in existing_plant_alrts:
+    for plant in existing_plants:
         end_date = plant.watered_on + datetime.timedelta(days=plant.watering)
-        if end_date < datetime.now() and existing_plant_alrts_map.get(plnt.id) is None:
+        if end_date < datetime.now() and existing_plant_alrts_map.get(plant.id) is None:
             new_plant_alert = PlantAlert(
                 plant_id = plant.id,
                 system_id = plant.system_id
@@ -357,6 +358,7 @@ def alert_check():
             # Save it to return to the server
             existing_plant_alrts.appned(new_plant_alert)
 
+    session.commit()
     session.close()
 
     alerts_json = [existing_plant_alrt.to_json() for existing_plant_alrt in existing_plant_alrts]
@@ -370,7 +372,7 @@ def todo_resolve(id):
     Resolves the plant alert.
     """
     # Log the request
-    logger.info(f"Received request to resolve plant alert {id}")
+    logger.info("Received request to resolve plant alert")
     session = Session()
 
     todo = session.query(Todo).get(id)
