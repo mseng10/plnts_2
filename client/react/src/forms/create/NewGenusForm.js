@@ -9,7 +9,7 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 
 /** Create a genus. Ideally not really used. */
-const NewGenusForm = ({ isOpen, onRequestClose, allGenus }) => {
+const NewGenusForm = ({ isOpen, onRequestClose }) => {
   // Form Fields
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
@@ -38,9 +38,6 @@ const NewGenusForm = ({ isOpen, onRequestClose, allGenus }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (allGenus.find(genus => genus.name === name)) {
-      return;
-    }
     setSubmitted(true); // Update submitted state
   };
 
