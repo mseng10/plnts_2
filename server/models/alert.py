@@ -4,12 +4,10 @@ Module defining models for plants.
 
 # Standard library imports
 from datetime import datetime
-from typing import List
 
 # Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Mapped, mapped_column
 from models.plant import Base
 
 class Todo(Base):
@@ -25,6 +23,9 @@ class Todo(Base):
     due_on = Column(DateTime(), default=None, nullable=True)
     name = Column(String(100), nullable=False)
     description = Column(String(400), nullable=True)
+
+    def __repr__(self):
+        return f"{self.name}"
 
     def to_json(self):
         """Convert to json."""
@@ -57,6 +58,9 @@ class PlantAlert(Base):
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System this light belongs to
     alert_type = Column(String(400), nullable=False)
+
+    def __repr__(self):
+        return f"{self.alert_type}"
 
     def to_json(self):
         """Convert to json."""

@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Genus, Type, Base
+from models.plant import Plant, Genus, Type
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
 
@@ -366,8 +366,8 @@ def alert_check():
     # Return JSON response
     return jsonify(alerts_json)
 
-@app.route("/todo/<int:id>/resolve", methods=["POST"])
-def todo_resolve(id):
+@app.route("/todo/<int:todo_id>/resolve", methods=["POST"])
+def todo_resolve(todo_id):
     """
     Resolves the plant alert.
     """
@@ -375,7 +375,7 @@ def todo_resolve(id):
     logger.info("Received request to resolve plant alert")
     session = Session()
 
-    todo = session.query(Todo).get(id)
+    todo = session.query(Todo).get(todo_id)
     todo.resolved = True
     todo.resolved_on = datetime.now()
 
