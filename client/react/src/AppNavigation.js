@@ -17,6 +17,7 @@ import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
+import {useNavigate, useLocation} from "react-router-dom" 
 
 const drawerWidth = 64;
 
@@ -24,6 +25,15 @@ function AppNavigation(props) {
 
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
+
+  const location = useLocation();
+
+  React.useEffect(() => {
+    console.log("WHATT");
+  }, [location]);
+
+  // Navigation
+  const navigate = useNavigate();
 
   // Button Display
   const [isCreateButtonsOpen, setIsCreateButtonsOpen] = React.useState(false);
@@ -42,7 +52,7 @@ function AppNavigation(props) {
           </IconButton>
         </ListItem>
         <ListItem key={"text1"} disablePadding>
-          <IconButton size="large" color="primary" onClick={() => setIsCreateButtonsOpen(true)}>
+          <IconButton size="large" color="primary" onClick ={()=>{ navigate("/")}}>
             <GrassOutlinedIcon className={`medium_button `} />
           </IconButton>
         </ListItem>
@@ -57,7 +67,7 @@ function AppNavigation(props) {
           </IconButton>
         </ListItem>
         <ListItem key={"text3"} disablePadding>
-          <IconButton size="large" color="error" onClick={() => console.log("WIP")}>
+          <IconButton size="large" color="error" onClick={() => navigate("/alerts")}>
             <ReportGmailerrorredSharpIcon className={`medium_button `} />
           </IconButton>
         </ListItem>

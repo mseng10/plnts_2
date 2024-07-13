@@ -15,8 +15,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Genus, Type
+from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
+from models.alert import PlantAlert
 
 # Load database configuration from JSON file
 with open("db.json", encoding="utf-8") as json_data_file:
@@ -33,8 +34,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -70,7 +71,6 @@ def add_plant():
     session.close()
     # Return response
     return jsonify({"message": "Plant added successfully"}), 201
-
 
 # Example route to get all plants
 @app.route("/plants", methods=["GET"])
@@ -121,7 +121,6 @@ def get_genuses():
     # Return JSON response
     return jsonify(genuses_json)
 
-
 @app.route("/genus", methods=["POST"])
 def create_genus():
     """
@@ -156,7 +155,6 @@ def get_types():
     types_json = [_type.to_json() for _type in types]
     # Return JSON response
     return jsonify(types_json)
-
 
 @app.route("/type", methods=["POST"])
 def create_type():
@@ -279,6 +277,21 @@ def create_light():
     db.close()
 
     return jsonify({"message": "Light added successfully"}), 201
+
+@app.route("/alerts", methods=["GET"])
+def get_alerts():
+    """
+    Retrieve all Plant alerts from the database.
+    """
+    logger.info("Received request to retrieve all plant alerts")
+
+    db = Session()
+    plnt_alerts = db.query(PlantAlert).all()
+    db.close()
+    # Transform plant alerts to JSON format
+    plnt_alerts_json = [plnt_alert.to_json() for plnt_alert in plnt_alerts]
+    # Return JSON response
+    return jsonify(plnt_alerts_json)
 
 if __name__ == "__main__":
     # Run the Flask app

@@ -37,6 +37,10 @@ class Plant(Base):
     dead = Column(Boolean, default=False, nullable=False)  # Death Info
     dead_on = Column(DateTime(), default=None, nullable=True)
 
+    plant_alerts: Mapped[List["PlantAlert"]] = relationship(
+        "PlantAlert", backref="type", passive_deletes=True
+    )  # Available plants of this type
+
     def __repr__(self) -> str:
         return f"{self.id}"
 

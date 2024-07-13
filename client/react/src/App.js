@@ -13,6 +13,7 @@ import Plants from './pages/Plants';
 import System from './pages/System';
 import Home from './pages/Home';
 import Systems from './pages/Systems';
+import Alerts from './pages/Alerts';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
 const drawerWidth = 240;
@@ -51,6 +52,8 @@ const darkTheme = createTheme({
 });
 
 function App() {
+  console.log("CALLED");
+
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider theme={darkTheme}>
@@ -65,6 +68,7 @@ function App() {
             <Route path="/plants" element={<Plants />} />
             <Route path="/system" element={<System />} />
             <Route path="/systems" element={<Systems />} />
+            <Route path="/alerts" element={<Alerts />} />
           </Routes>
         </Box>
       </ThemeProvider>
