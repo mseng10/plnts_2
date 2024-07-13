@@ -16,6 +16,7 @@ import ViewOptions from './modals/ViewOptions';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, useLocation} from "react-router-dom" 
 
@@ -69,6 +70,11 @@ function AppNavigation(props) {
         <ListItem key={"text3"} disablePadding>
           <IconButton size="large" color="error" onClick={() => navigate("/alerts")}>
             <ReportGmailerrorredSharpIcon className={`medium_button `} />
+          </IconButton>
+        </ListItem>
+        <ListItem key={"text3"} disablePadding>
+          <IconButton size="large" color="lime" onClick={() => navigate("/todo")}>
+            <FormatListNumberedIcon className={`medium_button `} />
           </IconButton>
         </ListItem>
       </List>

@@ -293,20 +293,20 @@ def get_alerts():
     # Return JSON response
     return jsonify(plnt_alerts_json)
 
-@app.route("/meta", methods=["GET"])
-def meta():
+@app.route("/todos", methods=["GET"])
+def get_todos():
     """
     Retrieve all Plant alerts from the database.
     """
     logger.info("Received request to retrieve all plant alerts")
 
     db = Session()
-    plnt_alerts = db.query(PlantAlert).all()
+    todos = db.query(Todo).all()
     db.close()
     # Transform plant alerts to JSON format
-    plnt_alerts_json = [plnt_alert.to_json() for plnt_alert in plnt_alerts]
+    todos_json = [todo.to_json() for todo in todos]
     # Return JSON response
-    return jsonify(plnt_alerts_json)
+    return jsonify(todos_json)
 
 if __name__ == "__main__":
     # Run the Flask app
