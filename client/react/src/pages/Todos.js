@@ -1,12 +1,45 @@
 // Todos.js
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import Todo from '../models/Todo';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { CardActionArea, CardHeader } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
+import CardActions from '@mui/material/CardActions';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import Typography from '@mui/material/Typography';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const Todos = () => {
 
   // Passable Data
   const [todos, setTodos] = useState([]);
+
+  const [resolve, setResolve] = useState(null);
+
+  useEffect(() => {
+    if (resolve) {
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      };
+      const endpoint = 'http://127.0.0.1:5000/todo/' + resolve.id + "/resolve"
+      fetch(endpoint, requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+
+          const updatedTodos = todos.filter((_t => _t.id !== resolve.id))
+          setTodos(updatedTodos);
+
+          setResolve(null);
+        })
+        .catch(error => console.error('Error posting todo data:', error));
+    }
+  }, [resolve]);
 
   useEffect(() => {
     // Fetch Systems data from the server
@@ -25,16 +58,30 @@ const Todos = () => {
             <Grid container justifyContent="center" spacing={4}>
               {todos.map((todo) => (
                 <Grid key={todo} item>
-                  <Todo
-                    todo={todo}
-                    full={false}
-                    sx={{
-                      height: 140,
-                      width: 100,
-                      backgroundColor: (theme) =>
-                        theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-                    }}
-                  />
+                  <Card sx={{ maxWidth: 345 }}>
+                    <CardActionArea>
+                      <CardHeader
+                        avatar={
+                          <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
+                            <FormatListNumberedIcon color='lime'/>
+                          </Avatar>
+                        }
+                        title={todo.created_on}
+                      />
+                      <CardContent>
+                        <Box full>
+                          <Typography variant="body2" color="text.secondary">
+                            {todo.description}
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                      <CardActions disableSpacing>
+                        <IconButton color="info" onClick={() => setResolve(todo)}>
+                          <CheckCircleOutlineIcon />
+                        </IconButton>
+                      </CardActions>
+                    </CardActionArea>
+                  </Card>
                 </Grid>
               ))}
             </Grid>

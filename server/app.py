@@ -34,8 +34,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+# Base.metadata.drop_all(engine)
+# Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -301,7 +301,7 @@ def get_todo():
     logger.info("Received request to retrieve all todos")
 
     db = Session()
-    todos = db.query(Todo).all()
+    todos = db.query(Todo).filter(Todo.resolved == False)
     db.close()
     # Transform plant alerts to JSON format
     todos_json = [todo.to_json() for todo in todos]
@@ -363,6 +363,25 @@ def alert_check():
 
     # Return JSON response
     return jsonify(alerts_json)
+
+@app.route("/todo/<int:id>/resolve", methods=["POST"])
+def todo_resolve(id):
+    """
+    Resolves the plant alert.
+    """
+    # Log the request
+    logger.info(f"Received request to resolve plant alert {id}")
+    session = Session()
+
+    todo = session.query(Todo).get(id)
+    todo.resolved = True
+    todo.resolved_on = datetime.now()
+
+    session.flush()
+    session.commit()
+
+    # Return JSON response
+    return jsonify(todo.to_json())
 
 if __name__ == "__main__":
     # Run the Flask app
