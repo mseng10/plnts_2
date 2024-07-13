@@ -34,8 +34,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 
-Base.metadata.drop_all(engine)
-Base.metadata.create_all(engine)
+# Base.metadata.drop_all(engine)
+# Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -278,7 +278,7 @@ def create_light():
 
     return jsonify({"message": "Light added successfully"}), 201
 
-@app.route("/alerts", methods=["GET"])
+@app.route("/alert", methods=["GET"])
 def get_alerts():
     """
     Retrieve all Plant alerts from the database.
@@ -293,13 +293,13 @@ def get_alerts():
     # Return JSON response
     return jsonify(plnt_alerts_json)
 
-@app.route("/todos", methods=["GET"])
-def get_todos():
+@app.route("/todo", methods=["GET"])
+def get_todo():
     """
     Retrieve all Plant alerts from the database.
     """
-    logger.info("Received request to retrieve all plant alerts")
-
+    logger.info("Received request to retrieve all todos")
+    print("GETTING CALLEd")
     db = Session()
     todos = db.query(Todo).all()
     db.close()
@@ -308,27 +308,27 @@ def get_todos():
     # Return JSON response
     return jsonify(todos_json)
 
-@app.route("/todos", methods=["POST"])
-def get_todos():
-        """
-    Create a new todo and add it to the database.
+@app.route("/todo", methods=["POST"])
+def create_todo():
     """
-    logger.info("Attempting to create todo")
+    Create a new TODO and add it to the database.
+    """
+    logger.info("Attempting to create TODO")
 
-    new_type_data = request.get_json()
+    new_todo_data = request.get_json()
 
     # Create a new Todo object
     new_todo = Todo(
-        description=new_type_data["description"],
+        description=new_todo_data["description"],
     )
 
-    # Add the new todo object to the session
+    # Add the new TODO object to the session
     db = Session()
     db.add(new_todo)
     db.commit()
     db.close()
 
-    return jsonify({"message": "Todo added successfully"}), 201
+    return jsonify({"message": "TODO added successfully"}), 201
 
 if __name__ == "__main__":
     # Run the Flask app

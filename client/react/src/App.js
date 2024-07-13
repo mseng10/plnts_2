@@ -14,6 +14,7 @@ import System from './pages/System';
 import Home from './pages/Home';
 import Systems from './pages/Systems';
 import Alerts from './pages/Alerts';
+import Todos from './pages/Todos';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
 const drawerWidth = 240;
@@ -72,7 +73,7 @@ function App() {
             <Route path="/system" element={<System />} />
             <Route path="/systems" element={<Systems />} />
             <Route path="/alerts" element={<Alerts />} />
-            <Route path="/todos" element={<Alerts />} />
+            <Route path="/todos" element={<Todos />} />
           </Routes>
         </Box>
       </ThemeProvider>

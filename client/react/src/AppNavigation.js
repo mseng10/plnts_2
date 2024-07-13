@@ -68,12 +68,12 @@ function AppNavigation(props) {
           </IconButton>
         </ListItem>
         <ListItem key={"text3"} disablePadding>
-          <IconButton size="large" color="error" onClick={() => navigate("/alerts")}>
+          <IconButton size="large" color="error" onClick={() => {navigate("/alerts")}}>
             <ReportGmailerrorredSharpIcon className={`medium_button `} />
           </IconButton>
         </ListItem>
         <ListItem key={"text3"} disablePadding>
-          <IconButton size="large" color="lime" onClick={() => navigate("/todo")}>
+          <IconButton size="large" color="lime" onClick={() => {navigate("/todos")}}>
             <FormatListNumberedIcon className={`medium_button `} />
           </IconButton>
         </ListItem>
