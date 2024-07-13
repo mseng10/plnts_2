@@ -1,7 +1,7 @@
 // Todos.js
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import Todo from './Todo';
+import Todo from '../models/Todo';
 
 const Todos = () => {
 

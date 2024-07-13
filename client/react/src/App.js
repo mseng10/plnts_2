@@ -10,7 +10,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { green, pink, lightBlue, blueGrey, teal, brown, yellow, lightGreen, lime} from '@mui/material/colors';
 import Plants from './pages/Plants';
-import System from './pages/System';
+import System from './models/System';
 import Home from './pages/Home';
 import Systems from './pages/Systems';
 import Alerts from './pages/Alerts';

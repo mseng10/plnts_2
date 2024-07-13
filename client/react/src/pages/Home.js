@@ -1,6 +1,6 @@
 // Home.js
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
-import System from './System'
+import System from '../models/System'
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import {useNavigate} from "react-router-dom" 
