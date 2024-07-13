@@ -34,8 +34,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -73,7 +73,6 @@ def create_plant():
     # Return response
     return jsonify({"message": "Plant added successfully"}), 201
 
-# Example route to get all plants
 @app.route("/plants", methods=["GET"])
 def get_plants():
     """
@@ -331,7 +330,7 @@ def create_todo():
 
     return jsonify({"message": "TODO added successfully"}), 201
 
-@app.route("/alert", methods=["GET"])
+@app.route("/alert/check", methods=["GET"])
 def alert_check():
     """
     Retrieve all alerts from the database.
@@ -345,7 +344,7 @@ def alert_check():
     for existing_plant_alert in existing_plant_alrts:
         existing_plant_alrts_map[existing_plant_alert.id] = existing_plant_alert
 
-    existing_plants = session.query(Plants).all()
+    existing_plants = session.query(Plant).all()
     for plant in existing_plant_alrts:
         end_date = plant.watered_on + datetime.timedelta(days=plant.watering)
         if end_date < datetime.now() and existing_plant_alrts_map.get(plnt.id) is None:
