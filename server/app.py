@@ -293,6 +293,21 @@ def get_alerts():
     # Return JSON response
     return jsonify(plnt_alerts_json)
 
+@app.route("/meta", methods=["GET"])
+def meta():
+    """
+    Retrieve all Plant alerts from the database.
+    """
+    logger.info("Received request to retrieve all plant alerts")
+
+    db = Session()
+    plnt_alerts = db.query(PlantAlert).all()
+    db.close()
+    # Transform plant alerts to JSON format
+    plnt_alerts_json = [plnt_alert.to_json() for plnt_alert in plnt_alerts]
+    # Return JSON response
+    return jsonify(plnt_alerts_json)
+
 if __name__ == "__main__":
     # Run the Flask app
     app.run(debug=True)
