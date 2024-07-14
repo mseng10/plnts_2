@@ -29,7 +29,7 @@ const Home = () => {
               system = {systems[0]}
             />
           </div>
-          <IconButton size="large" className={`home_icon`} color="primary" onClick ={()=>{ navigate("/plants")}}>
+          <IconButton size="large" className={`home_icon`} color="primary" onClick ={()=>{ navigate("/plant/view")}}>
             <GrassOutlinedIcon className='home_icon'/>
           </IconButton>
         </div>

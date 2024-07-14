@@ -41,33 +41,33 @@ const CreateOptions = () => {
               <ListItemText primary={"Plant"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.TYPE}>
+          <ListItem key={CreateForm.TYPE} backgroundColor='secondary'>
             <ListItemButton onClick={() => navigate("/type/create")}>
-              <ListItemIcon color="info">
+              <ListItemIcon color="secondary">
                 <MergeTypeSharpIcon />
               </ListItemIcon>
               <ListItemText primary={"Type"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.GENUS}>
-            <ListItemButton onClick={() => navigate("/genus/create")}>
-              <ListItemIcon color="info">
+          <ListItem key={CreateForm.GENUS} backgroundColor='secondary'>
+            <ListItemButton  onClick={() => navigate("/genus/create")}>
+              <ListItemIcon color="secondary">
                 <FingerprintSharpIcon />
               </ListItemIcon>
               <ListItemText primary={"Genus"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.SYSTEM}>
+          <ListItem key={CreateForm.SYSTEM} backgroundColor='secondary'>
             <ListItemButton onClick={() => navigate("/system/create")}>
-              <ListItemIcon color="info">
+              <ListItemIcon color="secondary">
                 <PointOfSaleIcon />
               </ListItemIcon>
               <ListItemText primary={"System"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.LIGHT}>
+          <ListItem key={CreateForm.LIGHT} backgroundColor='secondary'>
             <ListItemButton onClick={() => navigate("/light/create")}>
-              <ListItemIcon color="info">
+              <ListItemIcon color="secondary">
                 <TungstenSharpIcon />
               </ListItemIcon>
               <ListItemText primary={"Light"} />
@@ -75,7 +75,7 @@ const CreateOptions = () => {
           </ListItem>
           <ListItem key={CreateForm.TODO}>
             <ListItemButton onClick={() => navigate("/todo/create")}>
-              <ListItemIcon color="info">
+              <ListItemIcon color="secondary">
                 <FormatListNumberedIcon />
               </ListItemIcon>
               <ListItemText primary={"TODO"} />
