@@ -6,15 +6,19 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
+import {useNavigate} from "react-router-dom" 
 
 /** Create a genus. Ideally not really used. */
-const NewGenusForm = ({ onRequestClose }) => {
+const NewGenusForm = () => {
   // Form Fields
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
   
   // Submitted state
   const [submitted, setSubmitted] = useState(false);
+
+  // Navigation
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (submitted) {
@@ -32,8 +36,9 @@ const NewGenusForm = ({ onRequestClose }) => {
         })
         .catch(error => console.error('Error posting genus data:', error));
       handleCancel();
+      navigate("/");
     }
-  }, [submitted, name, watering, onRequestClose]);
+  }, [submitted, name, watering]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -42,7 +47,7 @@ const NewGenusForm = ({ onRequestClose }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {

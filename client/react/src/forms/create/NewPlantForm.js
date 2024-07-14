@@ -8,9 +8,9 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 import MenuItem from '@mui/material/MenuItem';
+import {useNavigate} from "react-router-dom" 
 
-
-const NewPlantForm = ({ isOpen, onRequestClose }) => {
+const NewPlantForm = () => {
   const phases = ["cutting", "seed", "juvy", "adult"]
 
   // Form Fields
@@ -32,26 +32,28 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   // Submitted state
   const [submitted, setSubmitted] = useState(false);
 
+  // Navigation
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (isOpen) {
-      // Fetch plant data from the server
-      fetch('http://127.0.0.1:5000/genus')
+    // Fetch plant data from the server
+    fetch('http://127.0.0.1:5000/genus')
+      .then((response) => response.json())
+      .then((data) => setAllGenuses(data))
+      .catch((error) => console.error('Error fetching all genuses data:', error));
+    if (genus && genusChange) {
+      setGenusChanged(false);
+      fetch('http://127.0.0.1:5000/type')
         .then((response) => response.json())
-        .then((data) => setAllGenuses(data))
-        .catch((error) => console.error('Error fetching all genuses data:', error));
-      if (genus && genusChange) {
-        setGenusChanged(false);
-        fetch('http://127.0.0.1:5000/type')
-          .then((response) => response.json())
-          .then((data) => setAllTypes(data))
-          .catch((error) => console.error('Error fetching all types data:', error));
-      }
-      fetch('http://127.0.0.1:5000/system')
-        .then((response) => response.json())
-        .then((data) => setAllSystems(data))
-        .catch((error) => console.error('Error fetching all system data:', error));
+        .then((data) => setAllTypes(data))
+        .catch((error) => console.error('Error fetching all types data:', error));
     }
-  }, [isOpen, genus, genusChange]);
+    fetch('http://127.0.0.1:5000/system')
+      .then((response) => response.json())
+      .then((data) => setAllSystems(data))
+      .catch((error) => console.error('Error fetching all system data:', error));
+  
+  }, [genus, genusChange]);
 
   useEffect(() => {
     if (submitted) {
@@ -69,9 +71,9 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
         })
         .catch(error => console.error('Error posting plant data:', error));
       clearForm();
-      onRequestClose();
+      navigate("/");
     }
-  }, [submitted, name, size, cost, genus, type, system, watering, phase, onRequestClose]);
+  }, [submitted, name, size, cost, genus, type, system, watering, phase]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -80,7 +82,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {

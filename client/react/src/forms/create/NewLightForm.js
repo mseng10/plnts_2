@@ -7,9 +7,10 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
+import {useNavigate} from "react-router-dom" 
 
 
-const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
+const NewLightForm = ({ systems }) => {
 
   const [name, setName] = useState('');
   const [system, setSystem] = useState(null);
@@ -19,14 +20,17 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
 
   const [submitted, setSubmitted] = useState(false);
 
+  // Navigation
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (isOpen && !systems) {
+    if (!systems) {
       fetch('http://127.0.0.1:5000/system')
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
         .catch((error) => console.error('Error fetching all system data:', error));
     }
-  }, [isOpen, systems]);
+  }, [systems]);
 
   useEffect(() => {
     if (submitted) {
@@ -44,9 +48,9 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
         })
         .catch(error => console.error('Error posting plants data:', error));
       clearForm();
-      onRequestClose();
+      navigate("/");
     }
-  }, [submitted, name, cost, system, onRequestClose]);
+  }, [submitted, name, cost, system]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -55,7 +59,7 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {

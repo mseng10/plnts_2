@@ -8,13 +8,17 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 // import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 // import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import {useNavigate} from "react-router-dom" 
 
 /** Create a new todo to accomplish. */
-const NewTodoForm = ({ onRequestClose }) => {
+const NewTodoForm = () => {
   // Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   //   const [dueOn, setDueOn] = useState(null);
+
+  // Navigation
+  const navigate = useNavigate();
 
   // Submitted state
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
@@ -36,9 +40,9 @@ const NewTodoForm = ({ onRequestClose }) => {
         })
         .catch(error => console.error('Error posting todo data:', error));
       clearForm();
-      onRequestClose();
+      navigate("/");
     }
-  }, [submitted, description, onRequestClose]);
+  }, [submitted, description]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,7 +51,7 @@ const NewTodoForm = ({ onRequestClose }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {

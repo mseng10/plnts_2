@@ -7,9 +7,10 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import Autocomplete from '@mui/material/Autocomplete';
+import {useNavigate} from "react-router-dom" 
 
 /** Create a new plant type of a specified genus. */
-const NewTypeForm = ({ isOpen, onRequestClose }) => {
+const NewTypeForm = () => {
   // Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -21,14 +22,17 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
   // Submitted state
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
 
+  // Navigation
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (isOpen && allGenuses.length == 0) {
+    if (allGenuses.length == 0) {
       fetch('http://127.0.0.1:5000/genus')
         .then((response) => response.json())
         .then((data) => setAllGenuses(data))
         .catch((error) => console.error('Error fetching genus data:', error));
     }
-  }, [isOpen, allGenuses]);
+  }, [allGenuses]);
 
   useEffect(() => {
     if (submitted && genus) {
@@ -43,12 +47,12 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
           // handle the response data if needed
           // maybe update some state based on the response
           console.log(data);
+          navigate("/");
         })
         .catch(error => console.error('Error posting type data:', error));
       clearForm();
-      onRequestClose();
     }
-  }, [submitted, name, description, genus, onRequestClose]);
+  }, [submitted, name, description, genus]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -57,7 +61,7 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {
