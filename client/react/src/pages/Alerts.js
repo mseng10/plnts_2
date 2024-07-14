@@ -51,8 +51,6 @@ const Alerts = () => {
       .catch((error) => console.error('Error fetching alert data:', error));
   }, []);
 
-
-
   return (
     <>
       <div className="App">

@@ -1,9 +1,3 @@
-import './App.css';
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
-
 import React, { useState } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Box from '@mui/material/Box';
@@ -11,8 +5,8 @@ import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import IconButton from '@mui/material/IconButton';
-import CreateOptions from './modals/CreateOptions';
-import ViewOptions from './modals/ViewOptions';
+import CreateOptions from './CreateOptions';
+import ViewOptions from './ViewOptions';
 import VisibilitySharpIcon from '@mui/icons-material/VisibilitySharp';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
