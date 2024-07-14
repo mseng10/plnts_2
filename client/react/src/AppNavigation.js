@@ -20,6 +20,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, useLocation} from "react-router-dom" 
 import HomeIcon from '@mui/icons-material/Home';
 const drawerWidth = 70;
+const maxDrawerWidth = drawerWidth + 210
 
 function AppNavigation(props) {
 
@@ -51,8 +52,24 @@ function AppNavigation(props) {
   const openCreate = () => {
     setCurrentNavigation(NAVS.CREATE)
 
-    const newWidth = drawerWidth + 210
+    const newWidth = maxDrawerWidth
     setWidth(newWidth)
+  };
+
+  const openView = () => {
+    setCurrentNavigation(NAVS.VIEW);
+
+    const newWidth = maxDrawerWidth;
+    setWidth(newWidth);
+  };
+
+  const escapeListView = (path) => {
+    setCurrentNavigation(null);
+
+    const newWidth = drawerWidth;
+    setWidth(newWidth);
+
+    navigate(path);
   };
 
   const drawer = (
@@ -65,7 +82,7 @@ function AppNavigation(props) {
             </IconButton>
           </ListItem>
           <ListItem key={"text1"} disablePadding>
-            <IconButton size="large" color="primary" onClick ={()=>{ navigate("/")}}>
+            <IconButton size="large" color="primary" onClick ={()=>{ escapeListView("/")}}>
               <HomeIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
@@ -79,17 +96,17 @@ function AppNavigation(props) {
             </IconButton>
           </ListItem>
           <ListItem key={"text2"} disablePadding>
-            <IconButton size="large" color="view" onClick={() => openCreate()}>
+            <IconButton size="large" color="view" onClick={() => openView()}>
               <VisibilitySharpIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
           <ListItem key={"text3"} disablePadding>
-            <IconButton size="large" color="error" onClick={() => {navigate("/alerts")}}>
+            <IconButton size="large" color="error" onClick={() => {escapeListView("/alerts")}}>
               <ReportGmailerrorredSharpIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
           <ListItem key={"text3"} disablePadding>
-            <IconButton size="large" color="lime" onClick={() => {navigate("/todos")}}>
+            <IconButton size="large" color="lime" onClick={() => {escapeListView("/todos")}}>
               <FormatListNumberedIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
