@@ -4,7 +4,7 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-import React from 'react';
+import React, { useState } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -19,8 +19,8 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, useLocation} from "react-router-dom" 
 import HomeIcon from '@mui/icons-material/Home';
-
 const drawerWidth = 70;
+const maxDrawerWidth = drawerWidth + 210
 
 function AppNavigation(props) {
 
@@ -28,56 +28,116 @@ function AppNavigation(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   const location = useLocation();
+  
+  const [width, setWidth] = useState(drawerWidth);
+
+  const NAVS = Object.freeze({
+    CREATE: 0,
+    VIEW: 1,
+  });
+  const [currentNavigation, setCurrentNavigation] = useState(null);
+
+
+  const escapeListView = (path) => {
+    setCurrentNavigation(null);
+
+    const newWidth = drawerWidth;
+    setWidth(newWidth);
+
+    if (null != path) {
+      navigate(path);
+    }
+  };
 
   React.useEffect(() => {
-    console.log("WHATT");
-  }, [location]);
+    // TODO: Turn into factory
+    const path = location.pathname;
+    console.log(location.pathname);
+    if (path == "/" ) {
+      // escapeListView(null);
+    }
+  }, [location, currentNavigation]);
 
   // Navigation
   const navigate = useNavigate();
-
-  // Button Display
-  const [isCreateButtonsOpen, setIsCreateButtonsOpen] = React.useState(false);
-  const [isViewButtonsOpen, setIsViewButtonsOpen] = React.useState(false);
 
   const handleDrawerClose = () => {
     setMobileOpen(false);
   };
 
+  const openCreate = () => {
+    setCurrentNavigation(NAVS.CREATE)
+
+    const newWidth = maxDrawerWidth
+    setWidth(newWidth)
+
+    navigate("/create");
+  };
+
+  const openView = () => {
+    setCurrentNavigation(NAVS.VIEW);
+
+    const newWidth = maxDrawerWidth;
+    setWidth(newWidth);
+
+    navigate("/view");
+
+  };
+
   const drawer = (
     <div>
-      <List sx={{ bgcolor: 'background.paper' }}>
-        <ListItem key={"text1"} disablePadding>
-          <IconButton size="large" color="info" onClick={() => setIsCreateButtonsOpen(true)}>
-            <MenuIcon className={`medium_button `} />
-          </IconButton>
-        </ListItem>
-        <ListItem key={"text1"} disablePadding>
-          <IconButton size="large" color="primary" onClick ={()=>{ navigate("/")}}>
-            <HomeIcon className={`medium_button `} />
-          </IconButton>
-        </ListItem>
-        <ListItem key={"text1"} disablePadding>
-          <IconButton size="large" color="secondary" onClick={() => setIsCreateButtonsOpen(true)}>
-            <AddSharpIcon className={`medium_button `} />
-          </IconButton>
-        </ListItem>
-        <ListItem key={"text2"} disablePadding>
-          <IconButton size="large" color="view" onClick={() => setIsViewButtonsOpen(true)}>
-            <VisibilitySharpIcon className={`medium_button `} />
-          </IconButton>
-        </ListItem>
-        <ListItem key={"text3"} disablePadding>
-          <IconButton size="large" color="error" onClick={() => {navigate("/alerts")}}>
-            <ReportGmailerrorredSharpIcon className={`medium_button `} />
-          </IconButton>
-        </ListItem>
-        <ListItem key={"text3"} disablePadding>
-          <IconButton size="large" color="lime" onClick={() => {navigate("/todos")}}>
-            <FormatListNumberedIcon className={`medium_button `} />
-          </IconButton>
-        </ListItem>
-      </List>
+      <div className='left_half'>
+        <List width={drawerWidth} sx={{ bgcolor: 'background.paper' }}>
+          <ListItem key={"text1"} disablePadding>
+            <IconButton size="large" color="info" onClick={() => openCreate()}>
+              <MenuIcon className={`medium_button `} />
+            </IconButton>
+          </ListItem>
+          <ListItem key={"text1"} disablePadding>
+            <IconButton size="large" color="primary" onClick ={()=>{ escapeListView("/")}}>
+              <HomeIcon className={`medium_button `} />
+            </IconButton>
+          </ListItem>
+          <ListItem margin="normal"
+            sx={{
+              width: "75%"
+            }}
+            key={"text1"} disablePadding>
+            <IconButton size="large" color="secondary" onClick={() => openCreate()}>
+              <AddSharpIcon className={`medium_button `} />
+            </IconButton>
+          </ListItem>
+          <ListItem key={"text2"} disablePadding>
+            <IconButton size="large" color="view" onClick={() => openView()}>
+              <VisibilitySharpIcon className={`medium_button `} />
+            </IconButton>
+          </ListItem>
+          <ListItem key={"text3"} disablePadding>
+            <IconButton size="large" color="error" onClick={() => {escapeListView("/alerts")}}>
+              <ReportGmailerrorredSharpIcon className={`medium_button `} />
+            </IconButton>
+          </ListItem>
+          <ListItem key={"text3"} disablePadding>
+            <IconButton size="large" color="lime" onClick={() => {escapeListView("/todos")}}>
+              <FormatListNumberedIcon className={`medium_button `} />
+            </IconButton>
+          </ListItem>
+        </List>
+      </div>
+      <div className='right_three_qaurter'>
+        {currentNavigation === NAVS.CREATE && (
+          <CreateOptions
+            width={200}
+            onClose={() => setCurrentNavigation(null)}
+          />
+        )}
+        {currentNavigation === NAVS.VIEW && (
+          <ViewOptions
+            width={200}
+            onClose={() => setCurrentNavigation(null)}
+          />
+        )}
+      </div>
     </div>
   );
 
@@ -87,7 +147,7 @@ function AppNavigation(props) {
   return (
     <Box
       component="nav"
-      sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 }}}
+      sx={{ width: { sm: width }, flexShrink: { sm: 0 }}}
       aria-label="mailbox folders"
       backgroundColor='secondary'
       
@@ -103,7 +163,7 @@ function AppNavigation(props) {
         }}
         sx={{
           display: { xs: 'block', sm: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: width },
         }}
       >
         {drawer}
@@ -112,24 +172,12 @@ function AppNavigation(props) {
         variant="permanent"
         sx={{
           display: { xs: 'none', sm: 'block' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: width },
         }}
         open
       >
         {drawer}
       </Drawer>
-      {isCreateButtonsOpen && (
-        <CreateOptions
-          isOpen={isCreateButtonsOpen}
-          onClose={() => setIsCreateButtonsOpen(false)}
-        />
-      )}
-      {isViewButtonsOpen && (
-        <ViewOptions
-          isOpen={isViewButtonsOpen}
-          onClose={() => setIsViewButtonsOpen(false)}
-        />
-      )}
     </Box>
   );
 }

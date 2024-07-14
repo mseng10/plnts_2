@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -15,10 +14,11 @@ import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
 import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Autocomplete from '@mui/material/Autocomplete';
+import {useNavigate} from "react-router-dom" 
 
 
 /** Create a system that houses plants */
-const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
+const NewSystemForm = ({ systems }) => {
   // Form Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('')
@@ -38,8 +38,11 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
   // Submitted State
   const [submitted, setSubmitted] = useState(false);
 
+  // Navigation
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (isOpen && !allSystems) {
+    if ( !allSystems) {
       fetch('http://127.0.0.1:5000/system')
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
@@ -49,7 +52,7 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
         .then((data) => setAllLights(data))
         .catch((error) => console.error('Error fetching lights data:', error));
     }
-  }, [isOpen, allSystems]);
+  }, [allSystems]);
 
   useEffect(() => {
     if (submitted) {
@@ -78,9 +81,9 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
         })
         .catch(error => console.error('Error posting genus data:', error));
       clearForm();
-      onRequestClose();
+      navigate("/")
     }
-  }, [submitted, name, description, temperature, humidity, distance, duration, onRequestClose,lightModel ]);
+  }, [submitted, name, description, temperature, humidity, distance, duration,lightModel ]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -89,7 +92,7 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {
@@ -169,19 +172,7 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
   ];
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
-      disableAutoFocus={true}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'inherit',
-        border: 'none',
-      }}
-    >
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 800, height: 312, borderRadius: 2 }} display="flex">
         <form onSubmit={handleSubmit}>
           <Box sx={{ width: 512, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
@@ -324,7 +315,7 @@ const NewSystemForm = ({ isOpen, onRequestClose, systems }) => {
           </Box>
         </form>
       </Box>
-    </Modal>
+    </Box>
   );
 };
 

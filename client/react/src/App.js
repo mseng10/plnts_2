@@ -17,6 +17,15 @@ import Alerts from './pages/Alerts';
 import Todos from './pages/Todos';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
+import NewPlantForm from './forms/create/NewPlantForm';
+import NewSystemForm from './forms/create/NewSystemForm';
+import NewTodoForm from './forms/create/NewTodoForm';
+import NewTypeForm from './forms/create/NewTypeForm';
+import NewLightForm from './forms/create/NewLightForm';
+import NewGenusForm from './forms/create/NewGenusForm';
+import Create from './pages/Create';
+import View from './pages/View';
+
 const drawerWidth = 240;
 
 const darkTheme = createTheme({
@@ -72,11 +81,21 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/plants" element={<Plants />} />
             <Route path="/system" element={<System />} />
-            <Route path="/systems" element={<Systems />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/todos" element={<Todos />} />
+
+            <Route path="/view" element={<View />} />
+            <Route path="/system/view" element={<Systems />} />
+            <Route path="/plant/view" element={<Plants />} />
+
+            <Route path="/create" element={<Create />} />
+            <Route path="/plant/create" element={<NewPlantForm />} />
+            <Route path="/system/create" element={<NewSystemForm />} />
+            <Route path="/todo/create" element={<NewTodoForm /> } />
+            <Route path="/type/create" element={<NewTypeForm /> } />
+            <Route path="/light/create" element={<NewLightForm /> } />
+            <Route path="/genus/create" element={<NewGenusForm /> } />
           </Routes>
         </Box>
       </ThemeProvider>

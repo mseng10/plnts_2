@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
@@ -9,9 +8,9 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 import MenuItem from '@mui/material/MenuItem';
+import {useNavigate} from "react-router-dom" 
 
-
-const NewPlantForm = ({ isOpen, onRequestClose }) => {
+const NewPlantForm = () => {
   const phases = ["cutting", "seed", "juvy", "adult"]
 
   // Form Fields
@@ -33,26 +32,28 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   // Submitted state
   const [submitted, setSubmitted] = useState(false);
 
+  // Navigation
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (isOpen) {
-      // Fetch plant data from the server
-      fetch('http://127.0.0.1:5000/genus')
+    // Fetch plant data from the server
+    fetch('http://127.0.0.1:5000/genus')
+      .then((response) => response.json())
+      .then((data) => setAllGenuses(data))
+      .catch((error) => console.error('Error fetching all genuses data:', error));
+    if (genus && genusChange) {
+      setGenusChanged(false);
+      fetch('http://127.0.0.1:5000/type')
         .then((response) => response.json())
-        .then((data) => setAllGenuses(data))
-        .catch((error) => console.error('Error fetching all genuses data:', error));
-      if (genus && genusChange) {
-        setGenusChanged(false);
-        fetch('http://127.0.0.1:5000/type')
-          .then((response) => response.json())
-          .then((data) => setAllTypes(data))
-          .catch((error) => console.error('Error fetching all types data:', error));
-      }
-      fetch('http://127.0.0.1:5000/system')
-        .then((response) => response.json())
-        .then((data) => setAllSystems(data))
-        .catch((error) => console.error('Error fetching all system data:', error));
+        .then((data) => setAllTypes(data))
+        .catch((error) => console.error('Error fetching all types data:', error));
     }
-  }, [isOpen, genus, genusChange]);
+    fetch('http://127.0.0.1:5000/system')
+      .then((response) => response.json())
+      .then((data) => setAllSystems(data))
+      .catch((error) => console.error('Error fetching all system data:', error));
+  
+  }, [genus, genusChange]);
 
   useEffect(() => {
     if (submitted) {
@@ -70,9 +71,9 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
         })
         .catch(error => console.error('Error posting plant data:', error));
       clearForm();
-      onRequestClose();
+      navigate("/");
     }
-  }, [submitted, name, size, cost, genus, type, system, watering, phase, onRequestClose]);
+  }, [submitted, name, size, cost, genus, type, system, watering, phase]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -81,7 +82,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {
@@ -97,20 +98,8 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   };
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
-      disableAutoFocus={true}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'inherit',
-        border: 'none',
-      }}
-    >
-      <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
             <GrassOutlinedIcon color='primary' className={'home_icon_form'}/>
@@ -237,7 +226,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
           </div>
         </form>
       </Box>
-    </Modal>
+    </Box>
   );
 };
 

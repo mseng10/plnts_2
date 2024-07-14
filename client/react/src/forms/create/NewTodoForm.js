@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -9,13 +8,17 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 // import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
 // import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import {useNavigate} from "react-router-dom" 
 
 /** Create a new todo to accomplish. */
-const NewTodoForm = ({ isOpen, onRequestClose }) => {
+const NewTodoForm = () => {
   // Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   //   const [dueOn, setDueOn] = useState(null);
+
+  // Navigation
+  const navigate = useNavigate();
 
   // Submitted state
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
@@ -37,9 +40,9 @@ const NewTodoForm = ({ isOpen, onRequestClose }) => {
         })
         .catch(error => console.error('Error posting todo data:', error));
       clearForm();
-      onRequestClose();
+      navigate("/");
     }
-  }, [submitted, description, onRequestClose]);
+  }, [submitted, description]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -48,7 +51,7 @@ const NewTodoForm = ({ isOpen, onRequestClose }) => {
 
   const handleCancel = () => {
     clearForm();
-    onRequestClose();
+    navigate("/create");
   };
 
   const clearForm = () => {
@@ -58,19 +61,7 @@ const NewTodoForm = ({ isOpen, onRequestClose }) => {
   };
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
-      disableAutoFocus={true}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'inherit',
-        border: 'none',
-      }}
-    >
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
@@ -119,7 +110,7 @@ const NewTodoForm = ({ isOpen, onRequestClose }) => {
           </div>
         </form>
       </Box>
-    </Modal>
+    </Box>
   );
 };
 
