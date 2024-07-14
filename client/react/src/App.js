@@ -79,9 +79,9 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/plants" element={<Plants />} />
+            <Route path="/plant/view" element={<Plants />} />
             <Route path="/system" element={<System />} />
-            <Route path="/systems" element={<Systems />} />
+            <Route path="/system/view" element={<Systems />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/todos" element={<Todos />} />
             <Route path="/plant/create" element={<NewPlantForm />} />
