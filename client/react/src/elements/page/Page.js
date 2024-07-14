@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 
 /** Blank */
-const Blank = () => {
+const Page = () => {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
@@ -12,6 +12,6 @@ const Blank = () => {
   );
 };
 
-export default Blank;
+export default Page;
 
 

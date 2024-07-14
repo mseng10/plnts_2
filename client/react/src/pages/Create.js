@@ -1,12 +1,12 @@
 // Create.js
 import React from 'react';
-import Blank from './Blank';
+import Page from '../elements/page/Page';
 
 const Create = () => {
 
   return (
     <div className="App">
-      <Blank></Blank>
+      <Page></Page>
     </div>
   );
 };

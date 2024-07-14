@@ -68,7 +68,6 @@ const darkTheme = createTheme({
 });
 
 function App() {
-  console.log("CALLED");
 
   return (
     <Box sx={{ display: 'flex' }}>
