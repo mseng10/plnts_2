@@ -369,10 +369,10 @@ def alert_check():
 @app.route("/todo/<int:todo_id>/resolve", methods=["POST"])
 def todo_resolve(todo_id):
     """
-    Resolves the plant alert.
+    Resolves the todo.
     """
     # Log the request
-    logger.info("Received request to resolve plant alert")
+    logger.info("Received request to resolve todo")
     session = Session()
 
     todo = session.query(Todo).get(todo_id)
@@ -384,6 +384,25 @@ def todo_resolve(todo_id):
 
     # Return JSON response
     return jsonify(todo.to_json())
+
+@app.route("/alert/plant/<int:alert_id>/resolve", methods=["POST"])
+def plant_alert_resolve(alert_id):
+    """
+    Resolves the plant alert.
+    """
+    # Log the request
+    logger.info("Received request to resolve plant alert")
+    session = Session()
+
+    alert = session.query(PlantAlert).get(alert_id)
+    alert.resolved = True
+    alert.resolved_on = datetime.now()
+
+    session.flush()
+    session.commit()
+
+    # Return JSON response
+    return jsonify(alert.to_json())
 
 if __name__ == "__main__":
     # Run the Flask app
