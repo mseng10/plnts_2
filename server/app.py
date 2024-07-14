@@ -63,7 +63,8 @@ def create_plant():
         genus_id=new_plant_data["genus_id"],
         type_id=new_plant_data["type_id"],
         system_id=new_plant_data["system_id"],
-        watering=new_plant_data["watering"]
+        watering=new_plant_data["watering"],
+        phase = new_plant_data["phase"]
     )
     # Add the new plant object to the session
     session = Session()

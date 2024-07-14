@@ -8,9 +8,12 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Autocomplete from '@mui/material/Autocomplete';
+import MenuItem from '@mui/material/MenuItem';
 
 
 const NewPlantForm = ({ isOpen, onRequestClose }) => {
+  const phases = ["cutting", "seed", "juvy", "adult"]
+
   // Form Fields
   const [name, setName] = useState('');
   const [genus, setGenus] = useState(null);
@@ -19,6 +22,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
   const [watering, setWatering] = useState(0);
+  const [phase, setPhase] = useState('');
 
   // Field Populators
   const [allTypes, setAllTypes] = useState([]);
@@ -55,7 +59,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({name: name, size: size, cost: cost, genus_id: genus.id, system_id: system.id, type_id: type.id, watering: watering })
+        body: JSON.stringify({name: name, size: size, cost: cost, genus_id: genus.id, system_id: system.id, type_id: type.id, watering: watering, phase: phase })
       };
       fetch('http://127.0.0.1:5000/plants', requestOptions)
         .then(response => response.json())
@@ -68,7 +72,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       clearForm();
       onRequestClose();
     }
-  }, [submitted, name, size, cost, genus, type, system, watering, onRequestClose]);
+  }, [submitted, name, size, cost, genus, type, system, watering, phase, onRequestClose]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -84,6 +88,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
     setName('');
     setCost(0);
     setSize(0);
+    setPhase('');
     setWatering(0);
     setGenus(null);
     setType(null);
@@ -178,7 +183,26 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
             />
             <TextField
               margin="normal"
-              fullWidth
+              sx={{
+                width: "75%"
+              }}
+              required
+              select
+              label="Phase"
+              value={phase}
+              onChange={(event) => setPhase(event.target.value)}
+              variant="standard"
+              color="primary"
+            >
+              {Array.from(phases).map((ty) => (
+                <MenuItem key={ty} value={ty}>{ty}</MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              margin="normal"
+              sx={{
+                width: "25%"
+              }}
               required
               type="number"
               label="Size (inches)"

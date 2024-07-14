@@ -22,7 +22,6 @@ class Plant(Base):
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer(), default=0, nullable=False)
-    size = Column(Integer(), default=0, nullable=False)  # inches
     type_id: Mapped[int] = mapped_column(
         ForeignKey("type.id", ondelete="CASCADE")
     )  # Type of Genus
@@ -34,6 +33,10 @@ class Plant(Base):
     )  # System for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     
+    # Metrics
+    phase = Column(String(400), nullable=True)
+    size = Column(Integer(), default=0, nullable=False)  # inches
+
     # Watering info
     watering = Column(Integer(), default=0, nullable=False) # Days
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
@@ -64,7 +67,8 @@ class Plant(Base):
             "genus_id": self.genus_id,
             "system_id": self.system_id,
             "type_id": self.type_id,
-            "watering": self.watering
+            "watering": self.watering,
+            "phase": self.phase
         }
 
 class Type(Base):
