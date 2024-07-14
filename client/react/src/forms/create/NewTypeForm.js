@@ -32,7 +32,7 @@ const NewTypeForm = ({ isOpen, onRequestClose }) => {
   }, [isOpen, allGenuses]);
 
   useEffect(() => {
-    if (submitted) {
+    if (submitted && genus) {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
