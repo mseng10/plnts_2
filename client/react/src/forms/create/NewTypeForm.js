@@ -10,20 +10,20 @@ import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 
 /** Create a new plant type of a specified genus. */
-const NewTypeForm = ({ isOpen, onRequestClose, genuses }) => {
+const NewTypeForm = ({ isOpen, onRequestClose }) => {
   // Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [genus, setGenus] = useState(null);
 
   // Field Populators
-  const [allGenuses, setAllGenuses] = useState(genuses ? genuses : []);
+  const [allGenuses, setAllGenuses] = useState([]);
 
   // Submitted state
   const [submitted, setSubmitted] = useState(false); // Initialize submitted state
 
   useEffect(() => {
-    if (isOpen && !allGenuses) {
+    if (isOpen && allGenuses.length == 0) {
       fetch('http://127.0.0.1:5000/genus')
         .then((response) => response.json())
         .then((data) => setAllGenuses(data))

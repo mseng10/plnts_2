@@ -8,12 +8,14 @@ import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import NewPlantForm from '../forms/create/NewPlantForm';
 import NewGenusForm from '../forms/create/NewGenusForm';
+import NewTodoForm from '../forms/create/NewTodoForm';
 import NewSystemForm from '../forms/create/NewSystemForm';
 import NewLightForm from '../forms/create/NewLightForm';
 import NewTypeForm from '../forms/create/NewTypeForm';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered'
 
 const CreateOptions = ({ isOpen, onClose }) => {
   const CreateForm = Object.freeze({
@@ -21,7 +23,8 @@ const CreateOptions = ({ isOpen, onClose }) => {
     SYSTEM: 1,
     GENUS: 2,
     LIGHT: 3,
-    TYPE: 4
+    TYPE: 4,
+    TODO: 5
   });
 
   const [currentForm, setCurrentForm] = useState(null);
@@ -79,8 +82,11 @@ const CreateOptions = ({ isOpen, onClose }) => {
             <IconButton color="light" onClick={() => setCurrentForm(CreateForm.LIGHT)}>
               <TungstenSharpIcon className="modal_button"/>
             </IconButton>
+            <IconButton color="lime" onClick={() => setCurrentForm(CreateForm.TODO)}>
+              <FormatListNumberedIcon className="modal_button"/>
+            </IconButton>
           </ButtonGroup>
-          <ButtonGroup fullWidth 
+          <ButtonGroup fullWidth
             lassName='centered' 
             style={{
               display: 'flex',
@@ -113,6 +119,10 @@ const CreateOptions = ({ isOpen, onClose }) => {
       />
       <NewTypeForm
         isOpen={currentForm === CreateForm.TYPE}
+        onRequestClose={onCreateClose}
+      />
+      <NewTodoForm
+        isOpen={currentForm === CreateForm.TODO}
         onRequestClose={onCreateClose}
       />
     </div>

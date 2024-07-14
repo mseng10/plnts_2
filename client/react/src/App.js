@@ -8,11 +8,13 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { green, pink, lightBlue, blueGrey, teal, brown, yellow, lightGreen} from '@mui/material/colors';
+import { green, pink, lightBlue, blueGrey, teal, brown, yellow, lightGreen, lime} from '@mui/material/colors';
 import Plants from './pages/Plants';
-import System from './pages/System';
+import System from './models/System';
 import Home from './pages/Home';
 import Systems from './pages/Systems';
+import Alerts from './pages/Alerts';
+import Todos from './pages/Todos';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
 const drawerWidth = 240;
@@ -46,11 +48,16 @@ const darkTheme = createTheme({
     },
     genus: {
       main: teal[500]
+    },
+    lime: {
+      main: lime[500]
     }
   },
 });
 
 function App() {
+  console.log("CALLED");
+
   return (
     <Box sx={{ display: 'flex' }}>
       <ThemeProvider theme={darkTheme}>
@@ -65,6 +72,8 @@ function App() {
             <Route path="/plants" element={<Plants />} />
             <Route path="/system" element={<System />} />
             <Route path="/systems" element={<Systems />} />
+            <Route path="/alerts" element={<Alerts />} />
+            <Route path="/todos" element={<Todos />} />
           </Routes>
         </Box>
       </ThemeProvider>
