@@ -102,6 +102,11 @@ const Plants = () => {
       width: 100,
       editable: false,
     },
+    {
+      field: 'phase',
+      headerName: 'Phase',
+      width: 60,
+    },
   ];
 
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
