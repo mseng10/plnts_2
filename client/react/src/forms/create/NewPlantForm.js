@@ -18,6 +18,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   const [system, setSystem] = useState(null);
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
+  const [watering, setWatering] = useState(0);
 
   // Field Populators
   const [allTypes, setAllTypes] = useState([]);
@@ -54,7 +55,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({name: name, size: size, cost: cost, genus_id: genus.id, system_id: system.id, type_id: type.id })
+        body: JSON.stringify({name: name, size: size, cost: cost, genus_id: genus.id, system_id: system.id, type_id: type.id, watering: watering })
       };
       fetch('http://127.0.0.1:5000/plants', requestOptions)
         .then(response => response.json())
@@ -67,7 +68,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
       clearForm();
       onRequestClose();
     }
-  }, [submitted, name, size, cost, genus, type, system, onRequestClose]);
+  }, [submitted, name, size, cost, genus, type, system, watering, onRequestClose]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -83,6 +84,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
     setName('');
     setCost(0);
     setSize(0);
+    setWatering(0);
     setGenus(null);
     setType(null);
     setSystem(null);
@@ -186,12 +188,26 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
             />
             <TextField
               margin="normal"
-              fullWidth
+              sx={{
+                width: "50%"
+              }}
               required
               type="number"
               label="Cost"
               value={cost}
               onChange={(event) => setCost(event.target.value)}
+              variant="standard"
+            />
+            <TextField
+              margin="normal"
+              sx={{
+                width: "50%"
+              }}
+              required
+              type="number"
+              label="Watering"
+              value={watering}
+              onChange={(event) => setWatering(event.target.value)}
               variant="standard"
             />
           </div>
