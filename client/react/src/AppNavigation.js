@@ -63,7 +63,7 @@ function AppNavigation(props) {
           </IconButton>
         </ListItem>
         <ListItem key={"text2"} disablePadding>
-          <IconButton size="large" color="info" onClick={() => setIsViewButtonsOpen(true)}>
+          <IconButton size="large" color="view" onClick={() => setIsViewButtonsOpen(true)}>
             <VisibilitySharpIcon className={`medium_button `} />
           </IconButton>
         </ListItem>

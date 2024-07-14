@@ -20,6 +20,11 @@ import Box from '@mui/material/Box';
 
 const Plants = () => {
 
+  const [plants, setPlants] = useState([]);
+  const [genuses, setGensuses] = useState([]);
+  const [systems, setSystems] = useState([]);
+  const [types, setTypes] = useState([]);
+
   const columns = [
     {
       field: 'type_id',
@@ -89,13 +94,16 @@ const Plants = () => {
       type: 'string',
       width: 150,
       editable: false
-    }
+    },
+    {
+      field: 'watering',
+      headerName: 'Watering',
+      type: 'number',
+      width: 100,
+      editable: false,
+    },
   ];
 
-  const [plants, setPlants] = useState([]);
-  const [genuses, setGensuses] = useState([]);
-  const [systems, setSystems] = useState([]);
-  const [types, setTypes] = useState([]);
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);

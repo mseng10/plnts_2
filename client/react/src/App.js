@@ -8,7 +8,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { green, pink, lightBlue, blueGrey, teal, brown, yellow, lightGreen, lime} from '@mui/material/colors';
+import { green, pink, lightBlue, blueGrey, teal, brown, yellow, lightGreen, lime, deepPurple} from '@mui/material/colors';
 import Plants from './pages/Plants';
 import System from './models/System';
 import Home from './pages/Home';
@@ -51,6 +51,9 @@ const darkTheme = createTheme({
     },
     lime: {
       main: lime[500]
+    },
+    view: {
+      main: deepPurple[500]
     }
   },
 });
