@@ -20,7 +20,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, useLocation} from "react-router-dom" 
 import HomeIcon from '@mui/icons-material/Home';
 
-const drawerWidth = 64;
+const drawerWidth = 70;
 
 function AppNavigation(props) {
 
