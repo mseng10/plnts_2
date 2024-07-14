@@ -54,7 +54,6 @@ const Todos = () => {
   return (
     <>
       <div className="App">
-        {/* { todos.length > 0 && ( */}
         <div>
           <Grid item xs={12}>
             <Grid container justifyContent="center" spacing={4}>

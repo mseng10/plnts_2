@@ -23,8 +23,7 @@ import NewTodoForm from './forms/create/NewTodoForm';
 import NewTypeForm from './forms/create/NewTypeForm';
 import NewLightForm from './forms/create/NewLightForm';
 import NewGenusForm from './forms/create/NewGenusForm';
-import Create from './pages/Create';
-import View from './pages/View';
+import Page from './elements/page/Page';
 
 const drawerWidth = 240;
 
@@ -84,11 +83,11 @@ function App() {
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/todos" element={<Todos />} />
 
-            <Route path="/view" element={<View />} />
+            <Route path="/view" element={<Page />} />
             <Route path="/system/view" element={<Systems />} />
             <Route path="/plant/view" element={<Plants />} />
 
-            <Route path="/create" element={<Create />} />
+            <Route path="/create" element={<Page />} />
             <Route path="/plant/create" element={<NewPlantForm />} />
             <Route path="/system/create" element={<NewSystemForm />} />
             <Route path="/todo/create" element={<NewTodoForm /> } />
