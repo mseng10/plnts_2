@@ -33,11 +33,18 @@ class Plant(Base):
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    
+    # Watering info
     watering = Column(Integer(), default=0, nullable=False) # Days
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
+
+    # Death info
+    # Shared?
     dead = Column(Boolean, default=False, nullable=False)  # Death Info
     dead_on = Column(DateTime(), default=None, nullable=True)
+    dead_cause = Column(String(400), nullable=True)
 
+    # Misc
     plant_alerts: Mapped[List["PlantAlert"]] = relationship(
         "PlantAlert", backref="type", passive_deletes=True
     )  # Available plants of this type

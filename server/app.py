@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
 # Local application imports
-from models.plant import Plant, Genus, Type
+from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
 
@@ -34,8 +34,8 @@ url = URL.create(
 )
 engine = create_engine(url)
 
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+Base.metadata.drop_all(engine)
+Base.metadata.create_all(engine)
 
 Session = sessionmaker(bind=engine)
 
@@ -105,6 +105,30 @@ def water_plants():
     session.close()
 
     return jsonify({"message": f"{len(plants)} Plants watered successfully"}), 201
+
+@app.route("/plants/kill", methods=["POST"])
+def kill_plants():
+    """
+    Kill the specified plants.
+    """
+    logger.info("Received request to kill the specified plants")
+
+    kill_ids = [int(id) for id in request.get_json()["ids"]]
+    cause = request.get_json()["cause"]
+
+    session = Session()
+    plants = session.query(Plant).filter(Plant.id.in_(watering_ids)).all()
+    now = datetime.now()
+    for plant in plants:
+        plant.dead = True
+        plant.dead_on = datetime.now()
+        plant.dead_cause = cause
+    
+    session.commit()
+    session.close()
+
+    return jsonify({"message": f"{len(plants)} Plants killed successfully:("}), 201
+
 
 @app.route("/genus", methods=["GET"])
 def get_genuses():

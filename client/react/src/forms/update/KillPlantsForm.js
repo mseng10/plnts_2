@@ -11,27 +11,20 @@ import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
 
-const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
-    
-  useEffect(() => {
-    // Fetch plant data from the server
-    fetch('https://localhost/types')
-      .then((response) => response.json())
-      .then(() => setCauses(["Too much water", "Too little water", "Unknown", "Propogation"]))
-      .catch((error) => console.error('Error fetching plant data:', error));
-  }, []);
-
+const KillPlantsForm = ({ isOpen, plants, onRequestClose }) => {
   const [checked, setChecked] = useState(plants);
   const [submitted, setSubmit] = useState(false);
   const [cause, setCause] = useState(null);
-  const [causes, setCauses] = useState(["Too much water", "Too little water", "Unknown", "Propogation"]);
+
+  const causes = ["Too much water", "Too little water", "Unknown", "Propogation"];
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
+
 
     if (currentIndex === -1) {
       newChecked.push(value);
@@ -42,22 +35,29 @@ const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
     setChecked(newChecked);
   };
 
-  const handleKillPlants = () => {
-    const plantsById = new Map(plants.map((obj) => [obj.id, obj]));
-
-    setPlants((prevPlants) =>
-      prevPlants.map((plant) =>
-        plantsById.get(plant.id) ? { ...plant, alive: false, cause: cause } : plant
-      )
-    );
-  };
+  useEffect(() => {
+    if (submitted) {
+      const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ids:  checked.map((plant) => plant.id), cause: cause})
+      };
+      fetch('http://127.0.0.1:5000/plants/kill', requestOptions)
+        .then(response => response.json())
+        .then(data => {
+          // handle the response data if needed
+          // maybe update some state based on the response
+          console.log(data);
+        })
+        .catch(error => console.error('Error killing plants data:', error));
+      clearForm();
+      onRequestClose();
+    }
+  }, [submitted, checked, cause, onRequestClose]);
 
   const handleSubmit = (event) => {
     setSubmit(true);
-    handleKillPlants();
     event.preventDefault();
-    clearForm();
-    onRequestClose();
   };
 
   const handleCancel = () => {
@@ -65,11 +65,11 @@ const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
     onRequestClose();
   };
 
-  const getDisplayName = (plant) => {
-    return plant.name;
+  const clearForm = () => {
+    setSubmit(false);
+    setCause('');
+    setChecked([]);
   };
-
-  const clearForm = () => {};
 
   return (
     <Modal
@@ -88,7 +88,7 @@ const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
-            <DeleteOutlineSharpIcon color='error' className={submitted ? 'home_icon_form' : 'home_icon_form'}/>
+            <DeleteOutlineSharpIcon color='error' className={'home_icon_form'}/>
             <ButtonGroup>
               <IconButton className="left_button" type="submit" color="primary">
                 <CheckSharpIcon className="left_button"/>
@@ -121,14 +121,14 @@ const KillPlantsForm = ({ isOpen, plants, setPlants, onRequestClose }) => {
                     disableGutters
                     secondaryAction={
                       <Checkbox
-                        color='error'
                         edge="end"
                         onChange={handleToggle(plant)}
                         checked={checked.indexOf(plant) !== -1}
+                        color='error'
                       />
                     }
                   >
-                    <ListItemText primary={getDisplayName(plant)} />
+                    <ListItemText primary={plant.name} />
                   </ListItem>
                   <Divider sx={{width: '100%' }}  component="li" />
                 </div>
