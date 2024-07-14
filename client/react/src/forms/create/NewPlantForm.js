@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
@@ -97,20 +96,8 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
   };
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
-      disableAutoFocus={true}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'inherit',
-        border: 'none',
-      }}
-    >
-      <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
+      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
             <GrassOutlinedIcon color='primary' className={'home_icon_form'}/>
@@ -237,7 +224,7 @@ const NewPlantForm = ({ isOpen, onRequestClose }) => {
           </div>
         </form>
       </Box>
-    </Modal>
+    </Box>
   );
 };
 

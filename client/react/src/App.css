@@ -67,6 +67,15 @@ h1, h2 {
   width: 50%;
   float:right;
 }
+.left_half {
+  width: 25%;
+  float:left;
+}
+
+.right_three_qaurter {
+  width: 75%;
+  float:left;
+}
 
 .modal {
   outline: 0!important;

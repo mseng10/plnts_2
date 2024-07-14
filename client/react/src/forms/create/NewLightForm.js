@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -67,19 +66,7 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
   };
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
-      disableAutoFocus={true}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'inherit',
-        border: 'none',
-      }}
-    >
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
@@ -138,7 +125,7 @@ const NewLightForm = ({ isOpen, onRequestClose, systems }) => {
           </div>
         </form>
       </Box>
-    </Modal>
+    </Box>
   );
 };
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -9,7 +8,7 @@ import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 
 /** Create a genus. Ideally not really used. */
-const NewGenusForm = ({ isOpen, onRequestClose }) => {
+const NewGenusForm = ({ onRequestClose }) => {
   // Form Fields
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
@@ -53,19 +52,7 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
   };
 
   return (
-    <Modal
-      open={isOpen}
-      onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
-      disableAutoFocus={true}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'inherit',
-        border: 'none',
-      }}
-    >
+    <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
@@ -104,7 +91,7 @@ const NewGenusForm = ({ isOpen, onRequestClose }) => {
           </div>
         </form>
       </Box>
-    </Modal>
+    </Box>
   );
 };
 

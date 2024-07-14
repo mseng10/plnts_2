@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
-import Modal from '@mui/material/Modal';
+import React from 'react';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
-import NewPlantForm from '../forms/create/NewPlantForm';
-import NewGenusForm from '../forms/create/NewGenusForm';
-import NewTodoForm from '../forms/create/NewTodoForm';
-import NewSystemForm from '../forms/create/NewSystemForm';
-import NewLightForm from '../forms/create/NewLightForm';
-import NewTypeForm from '../forms/create/NewTypeForm';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered'
+import {useNavigate} from "react-router-dom" 
 
-const CreateOptions = ({ isOpen, onClose }) => {
+const CreateOptions = () => {
   const CreateForm = Object.freeze({
     PLANT: 0,
     SYSTEM: 1,
@@ -27,104 +23,66 @@ const CreateOptions = ({ isOpen, onClose }) => {
     TODO: 5
   });
 
-  const [currentForm, setCurrentForm] = useState(null);
-
-  const onCreateClose = () => {
-    setCurrentForm(null);
-    onClose();
-  };
+  const navigate = useNavigate();
 
   return (
     <div>
-      <Modal
-        open={isOpen}
-        aria-labelledby="new-bobby-form"
-        disableAutoFocus={true}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'inherit',
-          border: 'none',
-        }}
+      <Box
+        sx={{ flexShrink: { sm: 0 }}}
+        aria-label="mailbox folders"
+        backgroundColor='secondary' 
       >
-        <Box sx={{ borderRadius: 2 }}>
-          <ButtonGroup size="lg" fullWidth style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: 'inherit',
-            border: 'none',
-          }}>
-            <IconButton color="primary" onClick={() => setCurrentForm(CreateForm.PLANT)}>
-              <GrassOutlinedIcon className={`modal_button `} />
-            </IconButton>
-            <IconButton color="type" onClick={() => setCurrentForm(CreateForm.TYPE)}>
-              <MergeTypeSharpIcon className={`modal_button `} />
-            </IconButton>
-            <IconButton color="genus" onClick={() => setCurrentForm(CreateForm.GENUS)}>
-              <FingerprintSharpIcon className={`modal_button `} />
-            </IconButton>
-          </ButtonGroup>
-          <ButtonGroup fullWidth 
-            lassName='centered' 
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'inherit',
-              border: 'none',
-            }}
-          >
-            <IconButton color="secondary" onClick={() => setCurrentForm(CreateForm.SYSTEM)}>
-              <PointOfSaleIcon className={`modal_button `} />
-            </IconButton>
-            <IconButton color="light" onClick={() => setCurrentForm(CreateForm.LIGHT)}>
-              <TungstenSharpIcon className="modal_button"/>
-            </IconButton>
-            <IconButton color="lime" onClick={() => setCurrentForm(CreateForm.TODO)}>
-              <FormatListNumberedIcon className="modal_button"/>
-            </IconButton>
-          </ButtonGroup>
-          <ButtonGroup fullWidth
-            lassName='centered' 
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: 'inherit',
-              border: 'none',
-            }}>
-            <IconButton size="small" color="error" onClick={() => onCreateClose()}>
-              <CloseSharpIcon className="modal_button"/>
-            </IconButton>
-          </ButtonGroup>
-        </Box>
-      </Modal>
-      <NewPlantForm
-        isOpen={currentForm === CreateForm.PLANT}
-        onRequestClose={onCreateClose}
-      />
-      <NewSystemForm
-        isOpen={currentForm === CreateForm.SYSTEM}
-        onRequestClose={onCreateClose}
-      />
-      <NewGenusForm
-        isOpen={currentForm === CreateForm.GENUS}
-        onRequestClose={onCreateClose}
-      />
-      <NewLightForm
-        isOpen={currentForm === CreateForm.LIGHT}
-        onRequestClose={onCreateClose}
-      />
-      <NewTypeForm
-        isOpen={currentForm === CreateForm.TYPE}
-        onRequestClose={onCreateClose}
-      />
-      <NewTodoForm
-        isOpen={currentForm === CreateForm.TODO}
-        onRequestClose={onCreateClose}
-      />
+        <List color='secondary'>
+          <ListItem key={CreateForm.PLANT} color='secondary'>
+            <ListItemButton onClick={() => navigate("/plant/create")}>
+              <ListItemIcon color='secondary'>
+                <GrassOutlinedIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Plant"} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem key={CreateForm.TYPE}>
+            <ListItemButton onClick={() => navigate("/type/create")}>
+              <ListItemIcon color="info">
+                <MergeTypeSharpIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Type"} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem key={CreateForm.GENUS}>
+            <ListItemButton onClick={() => navigate("/genus/create")}>
+              <ListItemIcon color="info">
+                <FingerprintSharpIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Genus"} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem key={CreateForm.SYSTEM}>
+            <ListItemButton onClick={() => navigate("/system/create")}>
+              <ListItemIcon color="info">
+                <PointOfSaleIcon />
+              </ListItemIcon>
+              <ListItemText primary={"System"} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem key={CreateForm.LIGHT}>
+            <ListItemButton onClick={() => navigate("/light/create")}>
+              <ListItemIcon color="info">
+                <TungstenSharpIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Light"} />
+            </ListItemButton>
+          </ListItem>
+          <ListItem key={CreateForm.TODO}>
+            <ListItemButton onClick={() => navigate("/todo/create")}>
+              <ListItemIcon color="info">
+                <FormatListNumberedIcon />
+              </ListItemIcon>
+              <ListItemText primary={"TODO"} />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Box>
     </div>
   );
 };

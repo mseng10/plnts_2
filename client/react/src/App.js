@@ -17,6 +17,13 @@ import Alerts from './pages/Alerts';
 import Todos from './pages/Todos';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
+import NewPlantForm from './forms/create/NewPlantForm';
+import NewSystemForm from './forms/create/NewSystemForm';
+import NewTodoForm from './forms/create/NewTodoForm';
+import NewTypeForm from './forms/create/NewTypeForm';
+import NewLightForm from './forms/create/NewLightForm';
+import NewGenusForm from './forms/create/NewGenusForm';
+
 const drawerWidth = 240;
 
 const darkTheme = createTheme({
@@ -77,6 +84,12 @@ function App() {
             <Route path="/systems" element={<Systems />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/todos" element={<Todos />} />
+            <Route path="/plant/create" element={<NewPlantForm />} />
+            <Route path="/system/create" element={<NewSystemForm />} />
+            <Route path="/todo/create" element={<NewTodoForm /> } />
+            <Route path="/type/create" element={<NewTypeForm /> } />
+            <Route path="/light/create" element={<NewLightForm /> } />
+            <Route path="/genus/create" element={<NewGenusForm /> } />
           </Routes>
         </Box>
       </ThemeProvider>
