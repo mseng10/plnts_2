@@ -38,9 +38,25 @@ function AppNavigation(props) {
   const [currentNavigation, setCurrentNavigation] = useState(null);
 
 
+  const escapeListView = (path) => {
+    setCurrentNavigation(null);
+
+    const newWidth = drawerWidth;
+    setWidth(newWidth);
+
+    if (null != path) {
+      navigate(path);
+    }
+  };
+
   React.useEffect(() => {
-    console.log("WHATT");
-  }, [location]);
+    // TODO: Turn into factory
+    const path = location.pathname;
+    console.log(location.pathname);
+    if (path == "/" ) {
+      // escapeListView(null);
+    }
+  }, [location, currentNavigation]);
 
   // Navigation
   const navigate = useNavigate();
@@ -54,6 +70,8 @@ function AppNavigation(props) {
 
     const newWidth = maxDrawerWidth
     setWidth(newWidth)
+
+    navigate("/create");
   };
 
   const openView = () => {
@@ -61,15 +79,9 @@ function AppNavigation(props) {
 
     const newWidth = maxDrawerWidth;
     setWidth(newWidth);
-  };
 
-  const escapeListView = (path) => {
-    setCurrentNavigation(null);
+    navigate("/view");
 
-    const newWidth = drawerWidth;
-    setWidth(newWidth);
-
-    navigate(path);
   };
 
   const drawer = (
