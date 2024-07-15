@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
@@ -13,8 +13,12 @@ import IconButton from '@mui/material/IconButton';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import CardActions from '@mui/material/CardActions';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import SystemPlants from '../modals/SystemPlants';
 
 const System = ({ system, full }) => {
+
+  const [isSystemsPlanetsOpen, setIsSystemsPlanetsOpen] = useState(false);
+
   if (!system) {
     // Handle case when system data is not available
     return <div>No system data available</div>;
@@ -54,58 +58,67 @@ const System = ({ system, full }) => {
   }
 
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
-        <CardHeader
-          avatar={
-            <Avatar sx={{backgroundColor:'inherit'}}>
-              <PointOfSaleIcon className="medium_button" color='secondary'/>
-            </Avatar>
-          }
-          title={system.name}
-          subheader={system.created_on}
+    <>
+      <Card sx={{ maxWidth: 345 }}>
+        <CardActionArea>
+          <CardHeader
+            avatar={
+              <Avatar sx={{backgroundColor:'inherit'}}>
+                <PointOfSaleIcon className="medium_button" color='secondary'/>
+              </Avatar>
+            }
+            title={system.name}
+            subheader={system.created_on}
+          />
+          <CardContent>
+            <Box full>
+              <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={system.humidity}
+                  size={80}
+                  sx={{ color: '#3f51b5' }}
+                />
+                <InvertColorsSharpIcon sx={{color: '#3f51b5', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
+              </Box>      
+              <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={system.temperature}
+                  size={80}
+                  sx={{ color: '#ff9800' }}
+                />
+                <DeviceThermostatSharpIcon sx={{ color: '#ff9800', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
+              </Box>
+              <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
+                <CircularProgress
+                  variant="determinate"
+                  value={system.temperature}
+                  size={80}
+                  sx={{ color: '#ffeb3b' }}
+                />
+                <TungstenSharpIcon sx={{ color: '#ffeb3b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
+              </Box>
+            </Box>
+          </CardContent>
+          <CardActions disableSpacing>
+            <IconButton color="info">
+              <ReportGmailerrorredSharpIcon />
+            </IconButton>
+            <IconButton color="info" onClick={() => setIsSystemsPlanetsOpen(true)}>
+              <GrassOutlinedIcon />
+            </IconButton>
+          </CardActions>
+        </CardActionArea>
+      </Card>
+      {isSystemsPlanetsOpen && (
+        <SystemPlants
+          isOpen={isSystemsPlanetsOpen}
+          onRequestClose={() => setIsSystemsPlanetsOpen(false)}
+          system={{system}}
         />
-        <CardContent>
-          <Box full>
-            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
-              <CircularProgress
-                variant="determinate"
-                value={system.humidity}
-                size={80}
-                sx={{ color: '#3f51b5' }}
-              />
-              <InvertColorsSharpIcon sx={{color: '#3f51b5', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
-            </Box>      
-            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
-              <CircularProgress
-                variant="determinate"
-                value={system.temperature}
-                size={80}
-                sx={{ color: '#ff9800' }}
-              />
-              <DeviceThermostatSharpIcon sx={{ color: '#ff9800', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
-            </Box>
-            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
-              <CircularProgress
-                variant="determinate"
-                value={system.temperature}
-                size={80}
-                sx={{ color: '#ffeb3b' }}
-              />
-              <TungstenSharpIcon sx={{ color: '#ffeb3b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
-            </Box>
-          </Box>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton color="info">
-            <ReportGmailerrorredSharpIcon />
-          </IconButton>
-          <IconButton color="info">
-            <GrassOutlinedIcon />
-          </IconButton>
-        </CardActions>
-      </CardActionArea>
-    </Card>
+      )}
+    </>
   );
 };
 

@@ -428,6 +428,24 @@ def plant_alert_resolve(alert_id):
     # Return JSON response
     return jsonify(alert.to_json())
 
+@app.route("/system/<int:system_id>/plants", methods=["GET"])
+def get_systems_plants(system_id):
+    """
+    Get system's plants.
+    """
+    # Log the request
+    logger.info("Received request to get a system's plants")
+    
+    session = Session()
+    plants = session.query(Plant).filter(Plant.system_id == system_id).all()
+    session.close()
+
+    # Transform plant alerts to JSON format
+    plants_json = [plant.to_json() for plant in plants]
+
+    # Return JSON response
+    return jsonify(plants_json)
+
 if __name__ == "__main__":
     # Run the Flask app
     app.run(debug=True)

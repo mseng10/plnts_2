@@ -25,9 +25,9 @@ const phasesToLabels = {
   "adult": "Adult",
 }
 
-const Plants = () => {
+const Plants = (plnts) => {
 
-  const [plants, setPlants] = useState([]);
+  const [plants, setPlants] = useState(plnts ? plnts.plants : []);
   const [genuses, setGensuses] = useState([]);
   const [systems, setSystems] = useState([]);
   const [types, setTypes] = useState([]);
@@ -180,10 +180,14 @@ const Plants = () => {
   useEffect(() => {
     // TODO: Merge plants, genus, type to same model
     // Fetch plant data from the server
-    fetch('http://127.0.0.1:5000/plants')
-      .then((response) => response.json())
-      .then((data) => setPlants(data))
-      .catch((error) => console.error('Error fetching plant data:', error));
+    if (!plnts) {
+      fetch('http://127.0.0.1:5000/plants')
+        .then((response) => response.json())
+        .then((data) => setPlants(data))
+        .catch((error) => console.error('Error fetching plant data:', error));
+    } else {
+      setPlants(plnts.plants);
+    }
     // Fetch genus data from the server
     fetch('http://127.0.0.1:5000/genus')
       .then((response) => response.json())
@@ -198,7 +202,7 @@ const Plants = () => {
       .then((response) => response.json())
       .then((data) => setTypes(data))
       .catch((error) => console.error('Error fetching type data:', error));
-  }, []);
+  }, [plnts]);
 
   return (
     <>
