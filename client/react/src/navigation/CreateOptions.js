@@ -12,6 +12,8 @@ import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered'
 import {useNavigate} from "react-router-dom" 
+// import Typography from '@mui/material/Typography';
+// <Typography variant="body2" color={'secondary'}> MyTitle</Typography>
 
 const CreateOptions = () => {
   const CreateForm = Object.freeze({
@@ -23,7 +25,14 @@ const CreateOptions = () => {
     TODO: 5
   });
 
+  const [selected, setSelected] = React.useState(CreateForm.PLANT);
+
   const navigate = useNavigate();
+
+  const hightlightAndNavigate = (type, route) => {
+    setSelected(type);
+    navigate(route);
+  };
 
   return (
     <div>
@@ -32,15 +41,15 @@ const CreateOptions = () => {
       >
         <List color='secondary'>
           <ListItem key={CreateForm.PLANT}>
-            <ListItemButton onClick={() => navigate("/plant/create")}>
+            <ListItemButton selected={selected == CreateForm.PLANT} onClick={() => hightlightAndNavigate(CreateForm.PLANT, "/plant/create")}>
               <ListItemIcon>
-                <GrassOutlinedIcon />
+                <GrassOutlinedIcon/>
               </ListItemIcon>
               <ListItemText primary={"Plant"} />
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.TYPE}>
-            <ListItemButton onClick={() => navigate("/type/create")}>
+            <ListItemButton selected={selected == CreateForm.TYPE} onClick={() => hightlightAndNavigate(CreateForm.TYPE, "/type/create")}>
               <ListItemIcon>
                 <MergeTypeSharpIcon />
               </ListItemIcon>
@@ -48,7 +57,7 @@ const CreateOptions = () => {
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.GENUS}>
-            <ListItemButton  onClick={() => navigate("/genus/create")}>
+            <ListItemButton selected={selected == CreateForm.GENUS} onClick={() => hightlightAndNavigate(CreateForm.GENUS, "/genus/create")}>
               <ListItemIcon>
                 <FingerprintSharpIcon />
               </ListItemIcon>
@@ -56,7 +65,7 @@ const CreateOptions = () => {
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.SYSTEM}>
-            <ListItemButton onClick={() => navigate("/system/create")}>
+            <ListItemButton selected={selected == CreateForm.SYSTEM} onClick={() => hightlightAndNavigate(CreateForm.SYSTEM, "/system/create")}>
               <ListItemIcon>
                 <PointOfSaleIcon />
               </ListItemIcon>
@@ -64,7 +73,7 @@ const CreateOptions = () => {
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.LIGHT}>
-            <ListItemButton onClick={() => navigate("/light/create")}>
+            <ListItemButton selected={selected == CreateForm.LIGHT} onClick={() => hightlightAndNavigate(CreateForm.LIGHT, "/light/create")}>
               <ListItemIcon>
                 <TungstenSharpIcon />
               </ListItemIcon>
@@ -72,7 +81,7 @@ const CreateOptions = () => {
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.TODO}>
-            <ListItemButton onClick={() => navigate("/todo/create")}>
+            <ListItemButton selected={selected == CreateForm.TODO} onClick={() => hightlightAndNavigate(CreateForm.TODO, "/todo/create")}>
               <ListItemIcon>
                 <FormatListNumberedIcon />
               </ListItemIcon>

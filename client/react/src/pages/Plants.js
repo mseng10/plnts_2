@@ -131,7 +131,7 @@ const Plants = () => {
   const [selectedPlants, setSelectedPlants] = useState([]);
 
 
-  // Grid Toolbar
+  // Grid
   function CustomToolbar() {
     return (
       <GridToolbarContainer>

@@ -59,6 +59,10 @@ h1, h2 {
   font-size: 45px !important;
 }
 
+.small_button {
+  font-size: 32px !important;
+}
+
 .modal_button {
   font-size: 124px !important;
 }

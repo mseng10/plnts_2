@@ -58,7 +58,7 @@ const System = ({ system, full }) => {
       <CardActionArea>
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
+            <Avatar sx={{backgroundColor:'inherit'}}>
               <PointOfSaleIcon className="medium_button" color='secondary'/>
             </Avatar>
           }

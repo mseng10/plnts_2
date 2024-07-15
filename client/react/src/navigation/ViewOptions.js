@@ -15,7 +15,14 @@ const ViewOptions = () => {
     SYSTEM: 1,
   });
 
+  const [selected, setSelected] = React.useState(null);
+
   const navigate = useNavigate();
+
+  const hightlightAndNavigate = (type, route) => {
+    setSelected(type);
+    navigate(route);
+  };
 
   return (
     <div>
@@ -24,15 +31,15 @@ const ViewOptions = () => {
       >
         <List>
           <ListItem key={ViewForm.PLANT} >
-            <ListItemButton onClick={() => navigate("/plant/view")}>
-              <ListItemIcon>
+            <ListItemButton selected={selected == ViewForm.PLANT} onClick={() => hightlightAndNavigate(ViewForm.PLANT, "/plant/view")}>
+              <ListItemIcon key={ViewForm.PLANT}>
                 <GrassOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary={"Plant"} />
             </ListItemButton>
           </ListItem>
           <ListItem key={ViewForm.SYSTEM}>
-            <ListItemButton onClick={() => navigate("/system/view")}>
+            <ListItemButton selected={selected == ViewForm.SYSTEM} onClick={() => hightlightAndNavigate(ViewForm.SYSTEM, "/system/view")}>
               <ListItemIcon>
                 <PointOfSaleIcon />
               </ListItemIcon>
