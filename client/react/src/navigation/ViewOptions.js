@@ -21,13 +21,11 @@ const ViewOptions = () => {
     <div>
       <Box
         sx={{ flexShrink: { sm: 0 }}}
-        aria-label="mailbox folders"
-        backgroundColor='secondary' 
       >
-        <List color='secondary'>
-          <ListItem key={ViewForm.PLANT} color='secondary'>
+        <List>
+          <ListItem key={ViewForm.PLANT} >
             <ListItemButton onClick={() => navigate("/plant/view")}>
-              <ListItemIcon color='secondary'>
+              <ListItemIcon>
                 <GrassOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary={"Plant"} />
@@ -35,7 +33,7 @@ const ViewOptions = () => {
           </ListItem>
           <ListItem key={ViewForm.SYSTEM}>
             <ListItemButton onClick={() => navigate("/system/view")}>
-              <ListItemIcon color="info">
+              <ListItemIcon>
                 <PointOfSaleIcon />
               </ListItemIcon>
               <ListItemText primary={"System"} />

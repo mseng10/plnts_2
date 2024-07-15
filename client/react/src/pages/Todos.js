@@ -64,7 +64,7 @@ const Todos = () => {
                       <CardHeader
                         avatar={
                           <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
-                            <FormatListNumberedIcon color='lime'/>
+                            <FormatListNumberedIcon className="medium_button" color='lime'/>
                           </Avatar>
                         }
                         title={todo.name}

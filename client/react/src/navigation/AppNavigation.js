@@ -121,13 +121,11 @@ function AppNavigation(props) {
       <div className='right_three_qaurter'>
         {currentNavigation === NAVS.CREATE && (
           <CreateOptions
-            width={200}
             onClose={() => setCurrentNavigation(null)}
           />
         )}
         {currentNavigation === NAVS.VIEW && (
           <ViewOptions
-            width={200}
             onClose={() => setCurrentNavigation(null)}
           />
         )}

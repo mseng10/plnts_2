@@ -101,5 +101,3 @@ const NewGenusForm = () => {
 };
 
 export default NewGenusForm;
-
-

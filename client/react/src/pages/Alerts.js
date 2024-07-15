@@ -8,7 +8,7 @@ import { CardActionArea, CardHeader } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import CardActions from '@mui/material/CardActions';
-import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 // import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
@@ -65,7 +65,7 @@ const Alerts = () => {
                       <CardHeader
                         avatar={
                           <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
-                            <FormatListNumberedIcon color='info'/>
+                            <ReportGmailerrorredSharpIcon className="medium_button" color='alert'/>
                           </Avatar>
                         }
                         title={plantAlert.alert_type}

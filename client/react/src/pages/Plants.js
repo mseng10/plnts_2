@@ -18,6 +18,13 @@ import { DataGrid,GridToolbarContainer,
   GridToolbarDensitySelector, } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 
+const phasesToLabels = {
+  "cutting": "Cutting",
+  "seed": "Seed",
+  "juvy":  "Juvy",
+  "adult": "Adult",
+}
+
 const Plants = () => {
 
   const [plants, setPlants] = useState([]);
@@ -25,6 +32,7 @@ const Plants = () => {
   const [systems, setSystems] = useState([]);
   const [types, setTypes] = useState([]);
 
+  // Grid Columns for plants
   const columns = [
     {
       field: 'type_id',
@@ -105,10 +113,16 @@ const Plants = () => {
     {
       field: 'phase',
       headerName: 'Phase',
-      width: 60,
+      width: 120,
+      valueGetter: (value) => {
+        const label = phasesToLabels[value.value];
+        
+        return label ? label : "NaN";
+      }
     },
   ];
 
+  // Form Openers
   const [isUpdatePlantFormOpen, setIsUpdatePlantFormOpen] = useState(false);
   const [isWaterPlantsFormOpen, setIsWaterPlantsFormOpen] = useState(false);
   const [isKillPlantsFormOpen, setIsKillPlantsFormOpen] = useState(false);
@@ -117,6 +131,7 @@ const Plants = () => {
   const [selectedPlants, setSelectedPlants] = useState([]);
 
 
+  // Grid Toolbar
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
@@ -161,6 +176,7 @@ const Plants = () => {
     );
   }
 
+  // Data
   useEffect(() => {
     // TODO: Merge plants, genus, type to same model
     // Fetch plant data from the server

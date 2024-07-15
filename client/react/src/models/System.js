@@ -58,8 +58,8 @@ const System = ({ system, full }) => {
       <CardActionArea>
         <CardHeader
           avatar={
-            <Avatar aria-label="recipe">
-              <PointOfSaleIcon/>
+            <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
+              <PointOfSaleIcon className="medium_button" color='secondary'/>
             </Avatar>
           }
           title={system.name}
@@ -67,7 +67,7 @@ const System = ({ system, full }) => {
         />
         <CardContent>
           <Box full>
-            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
               <CircularProgress
                 variant="determinate"
                 value={system.humidity}
@@ -76,7 +76,7 @@ const System = ({ system, full }) => {
               />
               <InvertColorsSharpIcon sx={{color: '#3f51b5', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
             </Box>      
-            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
               <CircularProgress
                 variant="determinate"
                 value={system.temperature}
@@ -85,7 +85,7 @@ const System = ({ system, full }) => {
               />
               <DeviceThermostatSharpIcon sx={{ color: '#ff9800', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
             </Box>
-            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
               <CircularProgress
                 variant="determinate"
                 value={system.temperature}

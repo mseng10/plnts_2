@@ -29,45 +29,43 @@ const CreateOptions = () => {
     <div>
       <Box
         sx={{ flexShrink: { sm: 0 }}}
-        aria-label="mailbox folders"
-        backgroundColor='secondary' 
       >
         <List color='secondary'>
-          <ListItem key={CreateForm.PLANT} color='secondary'>
+          <ListItem key={CreateForm.PLANT}>
             <ListItemButton onClick={() => navigate("/plant/create")}>
-              <ListItemIcon color='secondary'>
+              <ListItemIcon>
                 <GrassOutlinedIcon />
               </ListItemIcon>
               <ListItemText primary={"Plant"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.TYPE} backgroundColor='secondary'>
+          <ListItem key={CreateForm.TYPE}>
             <ListItemButton onClick={() => navigate("/type/create")}>
-              <ListItemIcon color="secondary">
+              <ListItemIcon>
                 <MergeTypeSharpIcon />
               </ListItemIcon>
               <ListItemText primary={"Type"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.GENUS} backgroundColor='secondary'>
+          <ListItem key={CreateForm.GENUS}>
             <ListItemButton  onClick={() => navigate("/genus/create")}>
-              <ListItemIcon color="secondary">
+              <ListItemIcon>
                 <FingerprintSharpIcon />
               </ListItemIcon>
               <ListItemText primary={"Genus"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.SYSTEM} backgroundColor='secondary'>
+          <ListItem key={CreateForm.SYSTEM}>
             <ListItemButton onClick={() => navigate("/system/create")}>
-              <ListItemIcon color="secondary">
+              <ListItemIcon>
                 <PointOfSaleIcon />
               </ListItemIcon>
               <ListItemText primary={"System"} />
             </ListItemButton>
           </ListItem>
-          <ListItem key={CreateForm.LIGHT} backgroundColor='secondary'>
+          <ListItem key={CreateForm.LIGHT}>
             <ListItemButton onClick={() => navigate("/light/create")}>
-              <ListItemIcon color="secondary">
+              <ListItemIcon>
                 <TungstenSharpIcon />
               </ListItemIcon>
               <ListItemText primary={"Light"} />
@@ -75,7 +73,7 @@ const CreateOptions = () => {
           </ListItem>
           <ListItem key={CreateForm.TODO}>
             <ListItemButton onClick={() => navigate("/todo/create")}>
-              <ListItemIcon color="secondary">
+              <ListItemIcon>
                 <FormatListNumberedIcon />
               </ListItemIcon>
               <ListItemText primary={"TODO"} />

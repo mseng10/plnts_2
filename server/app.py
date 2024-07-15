@@ -130,7 +130,6 @@ def kill_plants():
 
     return jsonify({"message": f"{len(plants)} Plants killed successfully:("}), 201
 
-
 @app.route("/genus", methods=["GET"])
 def get_genuses():
     """

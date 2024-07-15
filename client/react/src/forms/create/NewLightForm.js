@@ -9,20 +9,22 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import {useNavigate} from "react-router-dom" 
 
-
+// Form to create a light that is potentially used on a system.
 const NewLightForm = ({ systems }) => {
 
+  // Fields
   const [name, setName] = useState('');
   const [system, setSystem] = useState(null);
   const [cost, setCost] = useState(0);
 
-  const [allSystems, setAllSystems] = useState([]);
-
+  // Submitted state
   const [submitted, setSubmitted] = useState(false);
 
   // Navigation
   const navigate = useNavigate();
 
+  // Available systems
+  const [allSystems, setAllSystems] = useState([]);
   useEffect(() => {
     if (!systems) {
       fetch('http://127.0.0.1:5000/system')
@@ -32,6 +34,7 @@ const NewLightForm = ({ systems }) => {
     }
   }, [systems]);
 
+  // POST
   useEffect(() => {
     if (submitted) {
       const requestOptions = {
@@ -52,16 +55,19 @@ const NewLightForm = ({ systems }) => {
     }
   }, [submitted, name, cost, system]);
 
+  // Initiate POST
   const handleSubmit = (event) => {
     event.preventDefault();
     setSubmitted(true); // Update submitted state
   };
 
+  // Exit
   const handleCancel = () => {
     clearForm();
     navigate("/create");
   };
 
+  // Clear Form Fields
   const clearForm = () => {
     setName('');
     setCost(0);
