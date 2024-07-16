@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Plants from '../pages/Plants';
+import Alerts from '../../pages/Alerts';
 
-const SystemPlants = ({ isOpen, system, onRequestClose }) => {
-  const [plants, setPlants] = useState([]);
+const SystemAlerts = ({ isOpen, system, onRequestClose }) => {
+  const [alerts, setAlerts] = useState([]);
 
   useEffect(() => {
     if (isOpen && system && system.system) {
-      const url = 'http://127.0.0.1:5000/system/' + system.system.id.toString() + '/plants'
+      const url = 'http://127.0.0.1:5000/system/' + system.system.id.toString() + '/alerts'
       // Fetch plant data from the server
       fetch(url)
         .then((response) => response.json())
-        .then((data) => setPlants(data))
+        .then((data) => setAlerts(data))
         .catch((error) => console.error('Error fetching plant data:', error));
     }
   }, [isOpen, system]);
 
   if (!system) {
-
     return (<div></div>);
   }
 
@@ -36,10 +35,10 @@ const SystemPlants = ({ isOpen, system, onRequestClose }) => {
       }}
     >
       <Box sx={{ width: 756, height: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
-        <Plants plants={plants}></Plants>
+        <Alerts alerts={alerts}></Alerts>
       </Box>
     </Modal>
   );
 };
 
-export default SystemPlants;
+export default SystemAlerts;

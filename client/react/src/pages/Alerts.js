@@ -12,10 +12,10 @@ import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorre
 // import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-const Alerts = () => {
+const Alerts = (alerts) => {
 
   // Passable Data
-  const [plantAlerts, setPlantAlerts] = useState([]);
+  const [plantAlerts, setPlantAlerts] = useState(alerts && alerts.alerts ? alerts.alerts : []);
 
   const [resolve, setResolve] = useState(null);
 

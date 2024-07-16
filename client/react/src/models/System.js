@@ -13,12 +13,14 @@ import IconButton from '@mui/material/IconButton';
 import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
 import CardActions from '@mui/material/CardActions';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-import SystemPlants from '../modals/SystemPlants';
+import SystemPlants from '../modals/system/SystemPlants';
+import SystemAlerts from '../modals/system/SystemAlerts';
 
 const System = ({ system, full }) => {
 
   const [isSystemsPlanetsOpen, setIsSystemsPlanetsOpen] = useState(false);
-
+  const [isSystemAlertsOpen, setIsSystemsAlertsOpen] = useState(false);
+ 
   if (!system) {
     // Handle case when system data is not available
     return <div>No system data available</div>;
@@ -115,6 +117,13 @@ const System = ({ system, full }) => {
         <SystemPlants
           isOpen={isSystemsPlanetsOpen}
           onRequestClose={() => setIsSystemsPlanetsOpen(false)}
+          system={{system}}
+        />
+      )}
+      {isSystemAlertsOpen && (
+        <SystemAlerts
+          isOpen={isSystemAlertsOpen}
+          onRequestClose={() => setIsSystemsAlertsOpen(false)}
           system={{system}}
         />
       )}
