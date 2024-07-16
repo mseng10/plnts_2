@@ -105,7 +105,7 @@ const System = ({ system, full }) => {
           </CardContent>
           <CardActions disableSpacing>
             <IconButton color="info">
-              <ReportGmailerrorredSharpIcon />
+              <ReportGmailerrorredSharpIcon onClick={() => setIsSystemsAlertsOpen(true)}/>
             </IconButton>
             <IconButton color="info" onClick={() => setIsSystemsPlanetsOpen(true)}>
               <GrassOutlinedIcon />
