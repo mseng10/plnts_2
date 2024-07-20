@@ -99,8 +99,8 @@ const NewPlantForm = () => {
   };
 
   return (
-    <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
+    <Box sx={{ height: '100%', width: '100%', zIndex: 3 }}>
+      <Box sx={{ width: 600 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
             <GrassOutlinedIcon color='primary' className={'home_icon_form'}/>
@@ -125,12 +125,19 @@ const NewPlantForm = () => {
               }}
               renderInput={(params) => (
                 <TextField
-                  variant="standard"
+                  style={{ color: '#ffffff' }}
+                  color="primary"
                   {...params}
                   label="Genus"
+                  variant="standard"
                   InputProps={{
                     ...params.InputProps,
                     type: 'search',
+                  }}
+                  sx={{
+                    '& input': {
+                      color: '#ffffff', // Set text color
+                    },
                   }}
                 />
               )}
@@ -143,6 +150,7 @@ const NewPlantForm = () => {
               onChange={(event) => setType(allTypes[event.target.value])}
               renderInput={(params) => (
                 <TextField
+                  color="primary"
                   variant="standard"
                   {...params}
                   label="Type"
@@ -161,9 +169,10 @@ const NewPlantForm = () => {
               onChange={(event) => setSystem(allSystems[event.target.value])}
               renderInput={(params) => (
                 <TextField
-                  variant="standard"
+                  color="primary"
                   {...params}
                   label="System"
+                  variant="standard"
                   InputProps={{
                     ...params.InputProps,
                     type: 'search',
@@ -179,9 +188,9 @@ const NewPlantForm = () => {
               required
               select
               label="Phase"
+              variant="standard"
               value={phase}
               onChange={(event) => setPhase(event.target.value)}
-              variant="standard"
               color="primary"
             >
               {Array.from(phases).map((ty) => (
@@ -195,10 +204,10 @@ const NewPlantForm = () => {
               }}
               required
               type="number"
+              variant="standard"
               label="Size (inches)"
               value={size}
               onChange={(event) => setSize(event.target.value)}
-              variant="standard"
             />
             <TextField
               margin="normal"
@@ -207,10 +216,10 @@ const NewPlantForm = () => {
               }}
               required
               type="number"
+              variant="standard"
               label="Cost"
               value={cost}
               onChange={(event) => setCost(event.target.value)}
-              variant="standard"
             />
             <TextField
               margin="normal"
@@ -219,10 +228,10 @@ const NewPlantForm = () => {
               }}
               required
               type="number"
+              variant="standard"
               label="Watering"
               value={watering}
               onChange={(event) => setWatering(event.target.value)}
-              variant="standard"
             />
           </div>
         </form>

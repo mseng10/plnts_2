@@ -62,7 +62,7 @@ const NewTodoForm = () => {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
+      <Box sx={{ width: 600, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <div className='left'>
             <FormatListNumberedIcon color='lime' className={'home_icon_form'}/>

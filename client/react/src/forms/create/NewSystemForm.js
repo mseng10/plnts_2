@@ -175,9 +175,9 @@ const NewSystemForm = ({ systems }) => {
     <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 800, height: 312, borderRadius: 2 }} display="flex">
         <form onSubmit={handleSubmit}>
-          <Box sx={{ width: 512, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
+          <Box sx={{ width: 512, height: 312, borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
             <div className='left'>
-              <PointOfSaleIcon color='secondary' className={'home_icon_form'}/>
+              <PointOfSaleIcon color='primary' className={'home_icon_form'}/>
               <ButtonGroup>
                 <IconButton className="left_button" type="submit" color="primary">
                   <CheckSharpIcon className="left_button"/>
@@ -189,6 +189,7 @@ const NewSystemForm = ({ systems }) => {
             </div>
             <div className='right'>
               <TextField
+                color="primary"
                 margin="normal"
                 fullWidth
                 required
@@ -196,7 +197,6 @@ const NewSystemForm = ({ systems }) => {
                 value={name}
                 variant="standard"
                 onChange={(event) => setName(event.target.value)}
-                color='secondary'
               />
               <TextField
                 label="Description"
@@ -207,13 +207,13 @@ const NewSystemForm = ({ systems }) => {
                 variant="standard"
                 fullWidth
                 margin="normal"
-                color='secondary'
+                color='primary'
               />
             </div>
           </Box>
-          <Box sx={{ width: 256, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
+          <Box sx={{ width: 256, height: 312, borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
             <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <InvertColorsSharpIcon color="light" sx={{fontSize:40,color: '#3f51b5'}} />
+              <InvertColorsSharpIcon sx={{fontSize:40,color: '#ffffff', opacity: 0.7}} />
               <Slider
                 color="info"
                 required
@@ -229,8 +229,8 @@ const NewSystemForm = ({ systems }) => {
                 valueLabelDisplay="auto"
               />
             </Stack>
-            <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <DeviceThermostatSharpIcon color="light" sx={{fontSize:40 , color: '#ff9800'}}/>
+            <Stack spacing={2} direction="row" alignItems="center" height={64}>
+              <DeviceThermostatSharpIcon sx={{fontSize:40 , color: '#ffffff', opacity: 0.7}}/>
               <Slider 
                 color="info" 
                 aria-label="Distance (inches)" 
@@ -244,8 +244,8 @@ const NewSystemForm = ({ systems }) => {
                 valueLabelDisplay="auto"
               />
             </Stack>
-            <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <AvTimerSharpIcon color="light" sx={{fontSize:40}} />
+            <Stack spacing={2} direction="row" alignItems="center" height={64}>
+              <AvTimerSharpIcon sx={{fontSize:40, color: '#ffffff', opacity: 0.7}} />
               <Slider
                 color="info" 
                 aria-label="Duration" 
@@ -261,7 +261,7 @@ const NewSystemForm = ({ systems }) => {
               />
             </Stack>
             <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <StraightenSharpIcon color="info" sx={{fontSize:40}}/>
+              <StraightenSharpIcon color="info" sx={{fontSize:40, color: '#ffffff', opacity: 0.7}}/>
               <Slider 
                 color="info" 
                 aria-label="Distance (inches)" 
@@ -277,9 +277,9 @@ const NewSystemForm = ({ systems }) => {
               />
             </Stack>
           </Box>
-          <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2, float:'left', marginTop: 4  }}>
+          <Box sx={{ width: 800, float:'left', marginTop: 4  }}>
             <Stack direction="row" alignItems="center">
-              <IconButton className="medium_button" color="light" onClick={handleCancel}>
+              <IconButton color="primary" onClick={handleCancel}>
                 <TungstenSharpIcon className="medium_button"/>
               </IconButton>
               <Autocomplete
@@ -306,7 +306,7 @@ const NewSystemForm = ({ systems }) => {
                 )}
               />
               <ButtonGroup sx = {{ float:'right'}}>
-                <IconButton className="medium_button" color="info">
+                <IconButton className="medium_button" color="primary">
                   <CloseSharpIcon className="medium_button"/>
                   {lightCount? lightCount : 1}
                 </IconButton>

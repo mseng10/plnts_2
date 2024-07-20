@@ -8,7 +8,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme,  } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { pink, blueGrey, teal, brown, yellow, lightGreen, lime, deepPurple} from '@mui/material/colors';
+import { blueGrey, amber } from '@mui/material/colors';
 import Plants from './pages/Plants';
 import System from './models/System';
 import Home from './pages/Home';
@@ -53,28 +53,28 @@ const officalTheme = createTheme({
       main: blueGrey[500],
     },
     error: {
-      main: pink[500],
+      main: amber[500],
     },
     fertilize: {
-      main: teal[500],
+      main: '#ffffff',
     },
     repot: {
-      main: brown[500],
+      main: '#ffffff',
     },
     light: {
-      main: yellow[500]
+      main: '#ffffff'
     },
     type: {
-      main: lightGreen[500]
+      main: '#ffffff',
     },
     genus: {
-      main: teal[500]
+      main: '#ffffff',
     },
     lime: {
-      main: lime[500]
+      main: '#ffffff',
     },
     view: {
-      main: deepPurple[500]
+      main: '#ffffff',
     }
   },
 });
@@ -127,7 +127,7 @@ function App() {
         <AppNavigation />
         <Box
           component="main"
-          sx={{ flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
+          sx={{  zIndex: 2, flexGrow: 1, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
         >
           <Routes>
             <Route path="/" element={<Home />} />
@@ -147,20 +147,20 @@ function App() {
             <Route path="/light/create" element={<NewLightForm /> } />
             <Route path="/genus/create" element={<NewGenusForm /> } />
           </Routes>
-          <ul className="bg-bubbles">
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-            <li></li>
-          </ul>
         </Box>
       </ThemeProvider>
+      <ul className="bg-bubbles">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+      </ul>
     </Box>
   );
 }
