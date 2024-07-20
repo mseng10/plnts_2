@@ -39,53 +39,53 @@ const CreateOptions = () => {
       <Box
         sx={{ flexShrink: { sm: 0 }}}
       >
-        <List color='secondary'>
+        <List color='primary'>
           <ListItem key={CreateForm.PLANT}>
             <ListItemButton selected={selected == CreateForm.PLANT} onClick={() => hightlightAndNavigate(CreateForm.PLANT, "/plant/create")}>
               <ListItemIcon>
-                <GrassOutlinedIcon/>
+                <GrassOutlinedIcon color='primary'/>
               </ListItemIcon>
-              <ListItemText primary={"Plant"} />
+              <ListItemText style={{ color: '#ffffff' }} primary={"Plant"} />
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.TYPE}>
             <ListItemButton selected={selected == CreateForm.TYPE} onClick={() => hightlightAndNavigate(CreateForm.TYPE, "/type/create")}>
               <ListItemIcon>
-                <MergeTypeSharpIcon />
+                <MergeTypeSharpIcon color='primary'/>
               </ListItemIcon>
-              <ListItemText primary={"Type"} />
+              <ListItemText style={{ color: '#ffffff' }} primary={"Type"} />
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.GENUS}>
             <ListItemButton selected={selected == CreateForm.GENUS} onClick={() => hightlightAndNavigate(CreateForm.GENUS, "/genus/create")}>
               <ListItemIcon>
-                <FingerprintSharpIcon />
+                <FingerprintSharpIcon color='primary'/>
               </ListItemIcon>
-              <ListItemText primary={"Genus"} />
+              <ListItemText style={{ color: '#ffffff' }} primary={"Genus"} />
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.SYSTEM}>
             <ListItemButton selected={selected == CreateForm.SYSTEM} onClick={() => hightlightAndNavigate(CreateForm.SYSTEM, "/system/create")}>
               <ListItemIcon>
-                <PointOfSaleIcon />
+                <PointOfSaleIcon color='primary'/>
               </ListItemIcon>
-              <ListItemText primary={"System"} />
+              <ListItemText style={{ color: '#ffffff' }} primary={"System"} />
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.LIGHT}>
             <ListItemButton selected={selected == CreateForm.LIGHT} onClick={() => hightlightAndNavigate(CreateForm.LIGHT, "/light/create")}>
               <ListItemIcon>
-                <TungstenSharpIcon />
+                <TungstenSharpIcon color='primary'/>
               </ListItemIcon>
-              <ListItemText primary={"Light"} />
+              <ListItemText style={{ color: '#ffffff' }} primary={"Light"} />
             </ListItemButton>
           </ListItem>
           <ListItem key={CreateForm.TODO}>
             <ListItemButton selected={selected == CreateForm.TODO} onClick={() => hightlightAndNavigate(CreateForm.TODO, "/todo/create")}>
               <ListItemIcon>
-                <FormatListNumberedIcon />
+                <FormatListNumberedIcon color='primary'/>
               </ListItemIcon>
-              <ListItemText primary={"TODO"} />
+              <ListItemText style={{ color: '#ffffff' }} primary={"TODO"} />
             </ListItemButton>
           </ListItem>
         </List>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -13,6 +13,7 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MenuIcon from '@mui/icons-material/Menu';
 import {useNavigate, useLocation} from "react-router-dom" 
 import HomeIcon from '@mui/icons-material/Home';
+
 const drawerWidth = 70;
 const maxDrawerWidth = drawerWidth + 210
 
@@ -31,6 +32,21 @@ function AppNavigation(props) {
   });
   const [currentNavigation, setCurrentNavigation] = useState(null);
 
+  // const NavigationButton  = ({
+  //   onClick,
+  //   color,
+  //   icon
+  // }) => {
+  
+  //   return (
+  //     <ListItem disablePadding>
+  //       <IconButton size="large" color={color} onClick={() => onClick()}>
+  //         {icon}
+  //       </IconButton>
+  //     </ListItem>
+  //   );
+  // }
+
 
   const escapeListView = (path) => {
     setCurrentNavigation(null);
@@ -43,7 +59,7 @@ function AppNavigation(props) {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     // TODO: Turn into factory
     const path = location.pathname;
     console.log(location.pathname);
@@ -81,7 +97,7 @@ function AppNavigation(props) {
   const drawer = (
     <div>
       <div className='left_half'>
-        <List width={drawerWidth} sx={{ bgcolor: 'background.paper' }}>
+        <List width={drawerWidth}>
           <ListItem key={"text1"} disablePadding>
             <IconButton size="large" color="info" onClick={() => openCreate()}>
               <MenuIcon className={`medium_button `} />
@@ -92,28 +108,24 @@ function AppNavigation(props) {
               <HomeIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
-          <ListItem margin="normal"
-            sx={{
-              width: "75%"
-            }}
-            key={"text1"} disablePadding>
-            <IconButton size="large" color="secondary" onClick={() => openCreate()}>
+          <ListItem key={"text1"} disablePadding>
+            <IconButton size="large" color="primary" onClick={() => openCreate()}>
               <AddSharpIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
           <ListItem key={"text2"} disablePadding>
-            <IconButton size="large" color="view" onClick={() => openView()}>
+            <IconButton size="large" color="primary" onClick={() => openView()}>
               <VisibilitySharpIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
           <ListItem key={"text3"} disablePadding>
-            <IconButton size="large" color="error" onClick={() => {escapeListView("/alerts")}}>
+            <IconButton size="large" color="primary" onClick={() => {escapeListView("/alerts")}}>
               <ReportGmailerrorredSharpIcon className={`medium_button `} />
             </IconButton>
           </ListItem>
           <ListItem key={"text3"} disablePadding>
-            <IconButton size="large" color="lime" onClick={() => {escapeListView("/todos")}}>
-              <FormatListNumberedIcon className={`medium_button `} />
+            <IconButton size="large" color="primary" onClick={() => {escapeListView("/todos")}}>
+              <FormatListNumberedIcon className={`medium_button`} />
             </IconButton>
           </ListItem>
         </List>
@@ -138,6 +150,7 @@ function AppNavigation(props) {
 
   return (
     <Box
+      className='inherit'
       component="nav"
       sx={{ width: { sm: width }, flexShrink: { sm: 0 }}}
       aria-label="mailbox folders"
@@ -146,6 +159,7 @@ function AppNavigation(props) {
     >
       {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
       <Drawer
+        className='inherit'
         container={container}
         variant="temporary"
         open={mobileOpen}
@@ -161,10 +175,11 @@ function AppNavigation(props) {
         {drawer}
       </Drawer>
       <Drawer
+        className='inherit'
         variant="permanent"
         sx={{
           display: { xs: 'none', sm: 'block' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: width },
+          '& .MuiDrawer-paper': { background: 'inherit', boxSizing: 'border-box', width: width },
         }}
         open
       >
