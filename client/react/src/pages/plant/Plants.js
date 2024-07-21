@@ -1,15 +1,15 @@
 // Plants.js
 import React, { useState, useEffect } from 'react';
-import UpdatePlantForm from '../forms/update/UpdatePlantForm';
-import WaterPlantsForm from '../modals/plant/WaterPlantsForm';
-import FertilizePlantsForm from '../forms/update/FertilizePlantsForm';
-import RepotPlantsForm from '../forms/update/RepotPlantsForm';
+import UpdatePlantForm from '../../forms/update/UpdatePlantForm';
+import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
+import FertilizePlantsForm from '../../forms/update/FertilizePlantsForm';
+import RepotPlantsForm from '../../forms/update/RepotPlantsForm';
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
-import KillPlantsForm from '../modals/plant/KillPlantsForm';
+import KillPlantsForm from '../../modals/plant/KillPlantsForm';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
 import { DataGrid,GridToolbarContainer,
   GridToolbarColumnsButton,

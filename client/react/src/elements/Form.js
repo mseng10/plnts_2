@@ -35,38 +35,7 @@ export const FormButton = ({icon, color, handleCancel}) => {
       </ButtonGroup>
     </div>)
 };
-// };
-//export const FormTextInput = (color, label, value, setValue) => {
 
-// export const AutoCompleteInput = (fieldInfo) => {
-//   if (!fieldInfo) {
-//     return <div></div>
-//   }
-
-//   return  (
-//     <div>
-//       <Autocomplete
-//         freeSolo
-//         color={fieldInfo.color}
-//         disableClearable
-//         value={fieldInfo.value ? fieldInfo.value.name : ''}
-//         options={fieldInfo.options.map((option) => option.name)}
-//         onChange={(event) => fieldInfo.setValue(fieldInfo.options[event.target.value])}
-//         renderInput={(params) => (
-//           <TextField
-//             color={fieldInfo.color}
-//             variant="standard"
-//             {...params}
-//             label={fieldInfo.label}
-//             InputProps={{
-//               ...params.InputProps,
-//               type: 'search',
-//             }}
-//           />
-//         )}
-//       />
-//     </div>)
-// };
 export const TextAreaInput = (fieldInfo) => {
   if (!fieldInfo) {
     return <div></div>

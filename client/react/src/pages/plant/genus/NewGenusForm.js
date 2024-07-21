@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import {useNavigate} from "react-router-dom" 
-import { FormTextInput, NumberInput, FormButton} from '../../elements/Form';
+import { FormTextInput, NumberInput, FormButton} from '../../../elements/Form';
 
 /** Create a genus. Ideally not really used. */
 const NewGenusForm = () => {

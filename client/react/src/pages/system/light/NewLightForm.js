@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import {useNavigate} from "react-router-dom" 
-import { FormTextInput, NumberInput, AutoCompleteInput, FormButton } from '../../elements/Form';
+import { FormTextInput, NumberInput, AutoCompleteInput, FormButton } from '../../../elements/Form';
 
 // Form to create a light that is potentially used on a system.
 const NewLightForm = ({ systems }) => {

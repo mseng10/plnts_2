@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import System from '../models/System';
+import System from '../../models/System';
 
 
 const Systems = () => {

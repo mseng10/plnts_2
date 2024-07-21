@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import {useNavigate} from "react-router-dom" 
-import { FormButton, FormTextInput, AutoCompleteInput, TextAreaInput } from '../../elements/Form';
+import { FormButton, FormTextInput, AutoCompleteInput, TextAreaInput } from '../../../elements/Form';
 
 /** Create a new plant type of a specified genus. */
 const NewTypeForm = () => {
