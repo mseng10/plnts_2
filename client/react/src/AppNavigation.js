@@ -5,7 +5,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import IconButton from '@mui/material/IconButton';
 import {useNavigate, useLocation} from "react-router-dom" 
-import IconFactory from '../elements/IconFactory';
+import IconFactory from './elements/IconFactory';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -121,32 +121,32 @@ function AppNavigation(props) {
   const CREATE_OPTIONS = [{
     nav: CreateForm.PLANT,
     url: "/plant/create",
-    icon: "Plant",
+    icon: "plant",
     label: "Plant"
   },{
     nav: CreateForm.TYPE,
     url: "/type/create",
-    icon: "Type",
+    icon: "type",
     label: "Type"
   },{
     nav: CreateForm.GENUS,
     url: "/genus/create",
-    icon: "Genus",
+    icon: "genus",
     label: "Genus"
   },{
     nav: CreateForm.SYSTEM,
     url: "/system/create",
-    icon: "System",
+    icon: "system",
     label: "System"
   },{
     nav: CreateForm.LIGHT,
     url: "/light/create",
-    icon: "Light",
+    icon: "light",
     label: "Light"
   },{
     nav: CreateForm.TODO,
     url: "/todo/create",
-    icon: "Todo",
+    icon: "todo",
     label: "Todo"
   },
   ];
@@ -154,12 +154,12 @@ function AppNavigation(props) {
   const VIEW_OPTIONS = [{
     nav: ViewForm.PLANT,
     url: "/plant/view",
-    icon: "Plant",
+    icon: "plant",
     label: "Plant"
   },{
     nav: ViewForm.SYSTEM,
     url: "/system/view",
-    icon: "System",
+    icon: "system",
     label: "System"
   }];
 
@@ -167,32 +167,32 @@ function AppNavigation(props) {
     color: "info",
     nav: NAVS.NONE,
     url: "/",
-    icon: "Menu"
+    icon: "menu"
   },{
     color: "primary",
     nav: NAVS.HOME,
     url: "/",
-    icon: "Home"
+    icon: "home"
   },{
     color: "primary",
     nav: NAVS.CREATE,
     url: "/create",
-    icon: "Create"
+    icon: "create"
   },{
     color: "primary",
     nav: NAVS.VIEW,
     url: "/view",
-    icon: "VisibilitySharp"
+    icon: "view"
   },{
     color: "primary",
     nav: NAVS.ALERT,
     url: "/alerts",
-    icon: "ReportGmailerrorredSharp"
+    icon: "alert"
   },{
     color: "primary",
     nav: NAVS.TODO,
     url: "/todos",
-    icon: "TODO"
+    icon: "todo"
   }];
 
   const drawer = (

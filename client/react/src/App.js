@@ -16,7 +16,7 @@ import Systems from './pages/Systems';
 import Alerts from './pages/Alerts';
 import Todos from './pages/Todos';
 import Box from '@mui/material/Box';
-import AppNavigation from './pages/AppNavigation';
+import AppNavigation from './AppNavigation';
 import NewPlantForm from './forms/create/NewPlantForm';
 import NewSystemForm from './forms/create/NewSystemForm';
 import NewTodoForm from './forms/create/NewTodoForm';

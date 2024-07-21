@@ -10,49 +10,75 @@ import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
+import CloseSharpIcon from '@mui/icons-material/CloseSharp';
+import CheckSharpIcon from '@mui/icons-material/CheckSharp';
+import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
+import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
+import AvTimerSharpIcon from '@mui/icons-material/AvTimerSharp';
+import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
     "sm": "small_button",
     "md": "medium_button",
+    "xlg": "left_button",
+    "xxxlg": "home_icon_form"
     // Add more sizes as needed
   };
 
   // Determine which icon to render based on 'icon' prop
   let IconComponent;
   switch (icon) {
-  case 'VisibilitySharp':
+  case 'view':
     IconComponent = VisibilitySharpIcon;
     break;
-  case 'ReportGmailerrorredSharp':
+  case 'alert':
     IconComponent = ReportGmailerrorredSharpIcon;
     break;
-  case 'Home':
+  case 'home':
     IconComponent = HomeIcon;
     break;
-  case 'Create':
+  case 'create':
     IconComponent = AddSharpIcon;
     break;
-  case 'Menu':
+  case 'menu':
     IconComponent = MenuIcon;
     break;
-  case 'Plant':
+  case 'plant':
     IconComponent = GrassOutlinedIcon;
     break;
-  case 'Type':
+  case 'type':
     IconComponent = MergeTypeSharpIcon;
     break;
-  case 'System':
+  case 'system':
     IconComponent = PointOfSaleIcon;
     break;
-  case 'TODO':
+  case 'todo':
     IconComponent = FormatListNumberedIcon;
     break;
-  case 'Light':
+  case 'light':
     IconComponent = TungstenSharpIcon;
     break;
-  case 'Genus':
+  case 'genus':
     IconComponent = FingerprintSharpIcon;
+    break;
+  case 'close':
+    IconComponent = CloseSharpIcon;
+    break;
+  case 'check':
+    IconComponent = CheckSharpIcon;
+    break;
+  case 'humidity':
+    IconComponent = InvertColorsSharpIcon;
+    break;
+  case 'temperature':
+    IconComponent = DeviceThermostatSharpIcon;
+    break;
+  case 'duration':
+    IconComponent = AvTimerSharpIcon;
+    break;
+  case 'distance':
+    IconComponent = StraightenSharpIcon;
     break;
   // Add more cases for other icons
   default:
