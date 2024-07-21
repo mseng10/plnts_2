@@ -58,8 +58,8 @@ const Todos = () => {
           <Grid item xs={12}>
             <Grid container justifyContent="center" spacing={4}>
               {todos.map((todo) => (
-                <Grid key={todo} item>
-                  <Card sx={{ maxWidth: 345 }}>
+                <Grid key={todo} borderRadius={20} item>
+                  <Card sx={{ maxWidth: 345, opacity: 0.7 }} borderRadius={20}>
                     <CardActionArea>
                       <CardHeader
                         avatar={
