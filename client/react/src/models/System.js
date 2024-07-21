@@ -61,12 +61,12 @@ const System = ({ system, full }) => {
 
   return (
     <>
-      <Card sx={{ maxWidth: 345 }}>
+      <Card sx={{ maxWidth: 345, opacity: 0.7 }}>
         <CardActionArea>
           <CardHeader
             avatar={
               <Avatar sx={{backgroundColor:'inherit'}}>
-                <PointOfSaleIcon className="medium_button" color='secondary'/>
+                <PointOfSaleIcon className="small_button" color='primary'/>
               </Avatar>
             }
             title={system.name}

@@ -25,9 +25,7 @@ const Systems = () => {
                 full={false}
                 sx={{
                   height: 140,
-                  width: 100,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                  width: 100
                 }}
               />
             </Grid>

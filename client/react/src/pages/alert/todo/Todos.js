@@ -12,6 +12,7 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
+/** Todos Page */
 const Todos = () => {
 
   // Passable Data
@@ -39,7 +40,7 @@ const Todos = () => {
 
           setResolve(null);
         })
-        .catch(error => console.error('Error posting todo data:', error));
+        .catch(error => console.error('Error resolving todo:', error));
     }
   }, [resolve]);
 
@@ -63,7 +64,7 @@ const Todos = () => {
                     <CardActionArea>
                       <CardHeader
                         avatar={
-                          <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
+                          <Avatar sx={{backgroundColor:'inherit'}}>
                             <FormatListNumberedIcon className="small_button" color='lime'/>
                           </Avatar>
                         }
