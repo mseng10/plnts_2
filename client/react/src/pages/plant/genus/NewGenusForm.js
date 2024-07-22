@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import CheckSharpIcon from '@mui/icons-material/CheckSharp';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-import FingerprintSharpIcon from '@mui/icons-material/FingerprintSharp';
 import {useNavigate} from "react-router-dom" 
+import { FormTextInput, NumberInput, FormButton} from '../../../elements/Form';
 
 /** Create a genus. Ideally not really used. */
 const NewGenusForm = () => {
@@ -60,39 +55,25 @@ const NewGenusForm = () => {
     <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
-          <div className='left'>
-            <FingerprintSharpIcon color='genus' className='home_icon_form'/>
-            <ButtonGroup>
-              <IconButton className="left_button" type="submit" color="primary">
-                <CheckSharpIcon className="left_button"/>
-              </IconButton>
-              <IconButton className="left_button" color="error" onClick={handleCancel}>
-                <CloseSharpIcon className="left_button"/>
-              </IconButton>
-            </ButtonGroup>
-          </div>
+          <FormButton
+            icon="genus"
+            color="genus"
+            handleCancel={handleCancel}
+          ></FormButton>
           <div className='right'>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              label="Genus Name"
+            <FormTextInput
+              label={"Name"}
               value={name}
-              variant="standard"
-              color="genus"
-              onChange={(event) => setName(event.target.value)}
-            />
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              type="number"
-              label="Watering (days)"
+              color={"genus"}
+              setValue={setName}
+            >
+            </FormTextInput>
+            <NumberInput
+              label={"Watering (days)"}
               value={watering}
-              onChange={(event) => setWatering(event.target.value)}
-              color="genus"
-              variant="standard"
-            />
+              color={"genus"}
+              setValue={setWatering}
+            ></NumberInput>
           </div>
         </form>
       </Box>

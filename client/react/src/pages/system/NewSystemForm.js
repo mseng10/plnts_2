@@ -3,18 +3,12 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import CheckSharpIcon from '@mui/icons-material/CheckSharp';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
-import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
-import AvTimerSharpIcon from '@mui/icons-material/AvTimerSharp';
-import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
-import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
-import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 import {useNavigate} from "react-router-dom" 
+import { SliderInput, TextAreaInput, FormTextInput, FormButton } from '../../elements/Form';
 
 
 /** Create a system that houses plants */
@@ -175,111 +169,73 @@ const NewSystemForm = ({ systems }) => {
     <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 800, height: 312, borderRadius: 2 }} display="flex">
         <form onSubmit={handleSubmit}>
-          <Box sx={{ width: 512, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
-            <div className='left'>
-              <PointOfSaleIcon color='secondary' className={'home_icon_form'}/>
-              <ButtonGroup>
-                <IconButton className="left_button" type="submit" color="primary">
-                  <CheckSharpIcon className="left_button"/>
-                </IconButton>
-                <IconButton className="left_button" color="error" onClick={handleCancel}>
-                  <CloseSharpIcon className="left_button"/>
-                </IconButton>
-              </ButtonGroup>
-            </div>
+          <Box sx={{ width: 512, height: 312, borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
+            <FormButton
+              icon="system"
+              color="primary"
+              handleCancel={handleCancel}
+            />
             <div className='right'>
-              <TextField
-                margin="normal"
-                fullWidth
-                required
+              <FormTextInput
                 label="Name"
                 value={name}
-                variant="standard"
-                onChange={(event) => setName(event.target.value)}
-                color='secondary'
+                color="primary"
+                setValue={setName}
               />
-              <TextField
+              <TextAreaInput
                 label="Description"
-                multiline
-                rows={6}
                 value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                variant="standard"
-                fullWidth
-                margin="normal"
-                color='secondary'
+                color="primary"
+                setValue={setDescription}
               />
             </div>
           </Box>
-          <Box sx={{ width: 256, height: 312, bgcolor: 'background.paper', borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
-            <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <InvertColorsSharpIcon color="light" sx={{fontSize:40,color: '#3f51b5'}} />
-              <Slider
-                color="info"
-                required
-                aria-label="Humidity" 
-                value={humidity} 
-                onChange={(event) => setHumidity(event.target.value)}
-                variant="standard"
-                defaultValue={12}
-                step={1}
-                marks={humidityMarks}
-                min={0}
-                max={100}
-                valueLabelDisplay="auto"
-              />
-            </Stack>
-            <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <DeviceThermostatSharpIcon color="light" sx={{fontSize:40 , color: '#ff9800'}}/>
-              <Slider 
-                color="info" 
-                aria-label="Distance (inches)" 
-                value={temperature} 
-                onChange={(event) => setTempurature(event.target.value)}
-                variant="standard"
-                step={2}
-                marks={temperatureMarks}
-                min={48}
-                max={80}
-                valueLabelDisplay="auto"
-              />
-            </Stack>
-            <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <AvTimerSharpIcon color="light" sx={{fontSize:40}} />
-              <Slider
-                color="info" 
-                aria-label="Duration" 
-                value={duration} 
-                onChange={(event) => setDuration(event.target.value)}
-                variant="standard"
-                defaultValue={12}
-                step={1}
-                marks={durationMarks}
-                min={6}
-                max={18}
-                valueLabelDisplay="auto"
-              />
-            </Stack>
-            <Stack spacing={2} direction="row" alignItems="center" color="light" height={64}>
-              <StraightenSharpIcon color="info" sx={{fontSize:40}}/>
-              <Slider 
-                color="info" 
-                aria-label="Distance (inches)" 
-                value={distance} 
-                onChange={(event) => setDistance(event.target.value)}
-                variant="standard"
-                defaultValue={24}
-                step={2}
-                marks={distanceMarks}
-                min={12}
-                max={36}
-                valueLabelDisplay="auto"
-              />
-            </Stack>
+          <Box sx={{ width: 256, height: 312, borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
+            <SliderInput
+              icon="humidity"
+              label={"Humidity"}
+              value={humidity}
+              setValue={setHumidity}
+              defaultValue={12}
+              step={1}
+              marks={humidityMarks}
+              min={0}
+              max={100}
+            />
+            <SliderInput
+              icon="temperature"
+              label={"Temperature"}
+              value={temperature}
+              setValue={setTempurature}
+              marks={temperatureMarks}
+              step={2}
+              min={48}
+              max={80}
+            />
+            <SliderInput
+              icon="duration"
+              label={"Duration"}
+              value={duration}
+              setValue={setDuration}
+              marks={durationMarks}
+              min={6}
+              max={18}
+              step={1}
+            />
+            <SliderInput
+              icon="distance"
+              label={"Distance"}
+              value={distance}
+              setValue={setDistance}
+              step={2}
+              marks={distanceMarks}
+              min={12}
+              max={36}
+            />
           </Box>
-          <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2, float:'left', marginTop: 4  }}>
+          <Box sx={{ width: 800, float:'left', marginTop: 4  }}>
             <Stack direction="row" alignItems="center">
-              <IconButton className="medium_button" color="light" onClick={handleCancel}>
+              <IconButton color="primary" onClick={handleCancel}>
                 <TungstenSharpIcon className="medium_button"/>
               </IconButton>
               <Autocomplete
@@ -306,7 +262,7 @@ const NewSystemForm = ({ systems }) => {
                 )}
               />
               <ButtonGroup sx = {{ float:'right'}}>
-                <IconButton className="medium_button" color="info">
+                <IconButton className="medium_button" color="primary">
                   <CloseSharpIcon className="medium_button"/>
                   {lightCount? lightCount : 1}
                 </IconButton>

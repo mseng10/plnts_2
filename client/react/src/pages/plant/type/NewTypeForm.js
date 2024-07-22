@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import CheckSharpIcon from '@mui/icons-material/CheckSharp';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-import MergeTypeSharpIcon from '@mui/icons-material/MergeTypeSharp';
-import Autocomplete from '@mui/material/Autocomplete';
 import {useNavigate} from "react-router-dom" 
+import { FormButton, FormTextInput, AutoCompleteInput, TextAreaInput } from '../../../elements/Form';
 
 /** Create a new plant type of a specified genus. */
 const NewTypeForm = () => {
@@ -73,59 +67,32 @@ const NewTypeForm = () => {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
+      <Box sx={{ width: 600, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
-          <div className='left'>
-            <MergeTypeSharpIcon color='type' className={'home_icon_form'}/>
-            <ButtonGroup>
-              <IconButton className="left_button" type="submit" color="primary">
-                <CheckSharpIcon className="left_button"/>
-              </IconButton>
-              <IconButton className="left_button" color="error" onClick={handleCancel}>
-                <CloseSharpIcon className="left_button"/>
-              </IconButton>
-            </ButtonGroup>
-          </div>
+          <FormButton
+            icon="type"
+            color="type"
+            handleCancel={handleCancel}
+          />
           <div className='right'>
-            <TextField
-              margin="normal"
-              fullWidth
-              required
-              label="Name"
+            <FormTextInput
+              label={"Name"}
               value={name}
-              variant="standard"
+              color={"type"}
+              setValue={setName}
+            />
+            <AutoCompleteInput
+              label="Genus"
               color="type"
-              onChange={(event) => setName(event.target.value)}
+              value={genus}
+              options={allGenuses}
+              setValue={setGenus}
             />
-            <Autocomplete
-              freeSolo
-              disableClearable
-              value={genus ? genus.name : ''}
-              options={allGenuses.map((option) => option.name)}
-              onChange={(event) => setGenus(allGenuses[event.target.value])}
-              renderInput={(params) => (
-                <TextField
-                  variant="standard"
-                  {...params}
-                  label="Genus"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: 'search',
-                  }}
-                />
-              )}
-            />
-            <TextField
-              margin="normal"
-              multiline
-              rows={6}
-              fullWidth
-              required
+            <TextAreaInput
               label="Description"
               value={description}
-              variant="standard"
               color="type"
-              onChange={(event) => setDescription(event.target.value)}
+              setValue={setDescription}
             />
           </div>
         </form>

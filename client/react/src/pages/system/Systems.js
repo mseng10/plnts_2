@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
-import System from '../models/System';
+import System from '../../models/System';
 
 
 const Systems = () => {
@@ -14,6 +14,10 @@ const Systems = () => {
       .catch((error) => console.error('Error fetching system data:', error));
   }, []);
 
+  if (systems.length == 0) {
+    return <div>No Systems!</div>
+  }
+
   return (
     <>
       <Grid item xs={12}>
@@ -25,9 +29,7 @@ const Systems = () => {
                 full={false}
                 sx={{
                   height: 140,
-                  width: 100,
-                  backgroundColor: (theme) =>
-                    theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+                  width: 100
                 }}
               />
             </Grid>

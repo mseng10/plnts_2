@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Plants from '../../pages/Plants';
+import Plants from '../../pages/plant/Plants';
 
 const SystemPlants = ({ isOpen, system, onRequestClose }) => {
   const [plants, setPlants] = useState([]);

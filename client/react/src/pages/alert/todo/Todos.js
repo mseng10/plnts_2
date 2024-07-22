@@ -12,6 +12,7 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
+/** Todos Page */
 const Todos = () => {
 
   // Passable Data
@@ -39,7 +40,7 @@ const Todos = () => {
 
           setResolve(null);
         })
-        .catch(error => console.error('Error posting todo data:', error));
+        .catch(error => console.error('Error resolving todo:', error));
     }
   }, [resolve]);
 
@@ -51,6 +52,10 @@ const Todos = () => {
       .catch((error) => console.error('Error fetching todo data:', error));
   }, []);
 
+  if (todos.length == 0) {
+    return <div>No TODOs!</div>
+  }
+
   return (
     <>
       <div className="App">
@@ -58,13 +63,13 @@ const Todos = () => {
           <Grid item xs={12}>
             <Grid container justifyContent="center" spacing={4}>
               {todos.map((todo) => (
-                <Grid key={todo} item>
-                  <Card sx={{ maxWidth: 345 }}>
+                <Grid key={todo} borderRadius={20} item>
+                  <Card sx={{ maxWidth: 345, opacity: 0.7 }} borderRadius={20}>
                     <CardActionArea>
                       <CardHeader
                         avatar={
-                          <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
-                            <FormatListNumberedIcon className="small_button" color='lime'/>
+                          <Avatar sx={{backgroundColor:'inherit'}}>
+                            <FormatListNumberedIcon className="small_button" color='info'/>
                           </Avatar>
                         }
                         title={todo.name}

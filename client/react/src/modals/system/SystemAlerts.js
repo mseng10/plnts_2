@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import Alerts from '../../pages/Alerts';
+import Alerts from '../../pages/alert/Alerts';
 
 const SystemAlerts = ({ isOpen, system, onRequestClose }) => {
   const [alerts, setAlerts] = useState([]);

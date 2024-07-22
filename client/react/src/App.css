@@ -1,6 +1,7 @@
 /* App.css */
 .App {
   text-align: center;
+  z-index: 2;
 }
 
 .inherit {

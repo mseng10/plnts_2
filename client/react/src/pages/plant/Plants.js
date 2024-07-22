@@ -1,15 +1,15 @@
 // Plants.js
 import React, { useState, useEffect } from 'react';
-import UpdatePlantForm from '../forms/update/UpdatePlantForm';
-import WaterPlantsForm from '../modals/plant/WaterPlantsForm';
-import FertilizePlantsForm from '../forms/update/FertilizePlantsForm';
-import RepotPlantsForm from '../forms/update/RepotPlantsForm';
+import UpdatePlantForm from '../../forms/update/UpdatePlantForm';
+import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
+import FertilizePlantsForm from '../../forms/update/FertilizePlantsForm';
+import RepotPlantsForm from '../../forms/update/RepotPlantsForm';
 import IconButton from '@mui/material/IconButton';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import LunchDiningIcon from '@mui/icons-material/LunchDining';
 import EditSharpIcon from '@mui/icons-material/EditSharp';
-import KillPlantsForm from '../modals/plant/KillPlantsForm';
+import KillPlantsForm from '../../modals/plant/KillPlantsForm';
 import ParkSharpIcon from '@mui/icons-material/ParkSharp';
 import { DataGrid,GridToolbarContainer,
   GridToolbarColumnsButton,
@@ -25,9 +25,9 @@ const phasesToLabels = {
   "adult": "Adult",
 }
 
-const Plants = (plnts) => {
+const Plants = ({plnts}) => {
 
-  const [plants, setPlants] = useState(plnts ? plnts.plants : []);
+  const [plants, setPlants] = useState([]);
   const [genuses, setGensuses] = useState([]);
   const [systems, setSystems] = useState([]);
   const [types, setTypes] = useState([]);
@@ -153,7 +153,7 @@ const Plants = (plnts) => {
           </IconButton>
         )}
         {selectedPlants.length > 0 && (
-          <IconButton size="small" color="secondary" onClick={() => setIsWaterPlantsFormOpen(true)}>
+          <IconButton size="small" color="info" onClick={() => setIsWaterPlantsFormOpen(true)}>
             <WaterDropOutlinedIcon />
           </IconButton>
         )}
@@ -163,12 +163,12 @@ const Plants = (plnts) => {
           </IconButton>
         )}
         {selectedPlants.length > 0 && (
-          <IconButton size="small" sx={{color: '#009688'}} onClick={() => setIsFertilizePlantsFormOpen(true)}>
+          <IconButton size="small" color="info" onClick={() => setIsFertilizePlantsFormOpen(true)}>
             <LunchDiningIcon />
           </IconButton>
         )}          
         {selectedPlants.length > 0 && (
-          <IconButton size="small" color='repot' onClick={() => setIsRepotPlantsFormOpen(true)}>
+          <IconButton size="small" color="info" onClick={() => setIsRepotPlantsFormOpen(true)}>
             <ParkSharpIcon />
           </IconButton>
         )}
@@ -186,7 +186,7 @@ const Plants = (plnts) => {
         .then((data) => setPlants(data))
         .catch((error) => console.error('Error fetching plant data:', error));
     } else {
-      setPlants(plnts.plants);
+      setPlants(plnts);
     }
     // Fetch genus data from the server
     fetch('http://127.0.0.1:5000/genus')

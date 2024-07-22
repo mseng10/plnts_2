@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import CheckSharpIcon from '@mui/icons-material/CheckSharp';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
-import Autocomplete from '@mui/material/Autocomplete';
-import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import {useNavigate} from "react-router-dom" 
+import { FormTextInput, NumberInput, AutoCompleteInput, FormButton } from '../../../elements/Form';
 
 // Form to create a light that is potentially used on a system.
 const NewLightForm = ({ systems }) => {
@@ -77,60 +71,33 @@ const NewLightForm = ({ systems }) => {
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ width: 560, bgcolor: 'background.paper', borderRadius: 2 }}>
+      <Box sx={{ width: 600, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
-          <div className='left'>
-            <TungstenSharpIcon color="light" className={'home_icon_form'}/>
-            <ButtonGroup>
-              <IconButton className="left_button" type="submit" color="primary">
-                <CheckSharpIcon className="left_button"/>
-              </IconButton>
-              <IconButton className="left_button" color="error" onClick={handleCancel}>
-                <CloseSharpIcon className="left_button"/>
-              </IconButton>
-            </ButtonGroup>
-          </div>
+          <FormButton
+            icon="light"
+            color="light"
+            handleCancel={handleCancel}
+          />
           <div className='right'>
-            <TextField
-              color="light"
-              margin="normal"
-              fullWidth
-              required
+            <FormTextInput
               label="Name"
               value={name}
-              variant="standard"
-              onChange={(event) => setName(event.target.value)}
-            />
-            <Autocomplete
-              freeSolo
               color="light"
-              disableClearable
-              value={system ? system.name : ''}
-              options={allSystems.map((option) => option.name)}
-              onChange={(event) => setSystem(allSystems[event.target.value])}
-              renderInput={(params) => (
-                <TextField
-                  color="light"
-                  variant="standard"
-                  {...params}
-                  label="System"
-                  InputProps={{
-                    ...params.InputProps,
-                    type: 'search',
-                  }}
-                />
-              )}
-            />
-            <TextField
-              margin="normal"
+              setValue={setName}
+            ></FormTextInput>
+            <AutoCompleteInput
+              label="System"
               color="light"
-              fullWidth
-              required
-              type="number"
+              value={system}
+              options={allSystems}
+              setValue={setSystem}
+            >
+            </AutoCompleteInput>
+            <NumberInput
               label="Cost"
               value={cost}
-              onChange={(event) => setCost(event.target.value)}
-              variant="standard"
+              color="light"
+              setValue={setCost}
             />
           </div>
         </form>
