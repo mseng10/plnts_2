@@ -52,6 +52,10 @@ const Todos = () => {
       .catch((error) => console.error('Error fetching todo data:', error));
   }, []);
 
+  if (todos.length == 0) {
+    return <div>No TODOs!</div>
+  }
+
   return (
     <>
       <div className="App">
@@ -65,7 +69,7 @@ const Todos = () => {
                       <CardHeader
                         avatar={
                           <Avatar sx={{backgroundColor:'inherit'}}>
-                            <FormatListNumberedIcon className="small_button" color='lime'/>
+                            <FormatListNumberedIcon className="small_button" color='info'/>
                           </Avatar>
                         }
                         title={todo.name}

@@ -66,7 +66,7 @@ const System = ({ system, full }) => {
           <CardHeader
             avatar={
               <Avatar sx={{backgroundColor:'inherit'}}>
-                <PointOfSaleIcon className="small_button" color='primary'/>
+                <PointOfSaleIcon className="small_button" color='info'/>
               </Avatar>
             }
             title={system.name}
@@ -79,27 +79,27 @@ const System = ({ system, full }) => {
                   variant="determinate"
                   value={system.humidity}
                   size={80}
-                  sx={{ color: '#3f51b5' }}
+                  sx={{ color: '#607d8b' }}
                 />
-                <InvertColorsSharpIcon sx={{color: '#3f51b5', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
+                <InvertColorsSharpIcon sx={{color: '#607d8b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
               </Box>      
               <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
                 <CircularProgress
                   variant="determinate"
                   value={system.temperature}
                   size={80}
-                  sx={{ color: '#ff9800' }}
+                  sx={{ color: '#607d8b' }}
                 />
-                <DeviceThermostatSharpIcon sx={{ color: '#ff9800', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
+                <DeviceThermostatSharpIcon sx={{ color: '#607d8b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
               </Box>
               <Box sx={{ position: 'relative', display: 'inline-flex', flexDirection: 'column', alignItems: 'center', width:100 }}>
                 <CircularProgress
                   variant="determinate"
                   value={system.temperature}
                   size={80}
-                  sx={{ color: '#ffeb3b' }}
+                  sx={{ color: '#607d8b'}}
                 />
-                <TungstenSharpIcon sx={{ color: '#ffeb3b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
+                <TungstenSharpIcon sx={{ color: '#607d8b', position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', fontSize: '32px' }} />
               </Box>
             </Box>
           </CardContent>

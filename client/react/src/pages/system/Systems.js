@@ -14,6 +14,10 @@ const Systems = () => {
       .catch((error) => console.error('Error fetching system data:', error));
   }, []);
 
+  if (systems.length == 0) {
+    return <div>No Systems!</div>
+  }
+
   return (
     <>
       <Grid item xs={12}>
