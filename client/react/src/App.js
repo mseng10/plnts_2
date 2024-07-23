@@ -10,16 +10,15 @@ import { ThemeProvider, createTheme,  } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { blueGrey, amber } from '@mui/material/colors';
 import Plants from './pages/plant/Plants';
-import System from './models/System';
 import Home from './pages/Home';
 import Systems from './pages/system/Systems';
 import Alerts from './pages/alert/Alerts';
-import Todos from './pages/alert/todo/Todos';
+import Todos from './pages/todo/Todos';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
 import NewPlantForm from './pages/plant/NewPlantForm';
 import NewSystemForm from './pages/system/NewSystemForm';
-import NewTodoForm from './pages/alert/todo/NewTodoForm';
+import NewTodoForm from './pages/todo/NewTodoForm';
 import NewTypeForm from './pages/plant/type/NewTypeForm';
 import NewLightForm from './pages/system/light/NewLightForm';
 import NewGenusForm from './pages/plant/genus/NewGenusForm';
@@ -131,7 +130,6 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/system" element={<System />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/todos" element={<Todos />} />
 

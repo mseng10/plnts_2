@@ -1,306 +1,160 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
-import IconButton from '@mui/material/IconButton';
-import {useNavigate, useLocation} from "react-router-dom" 
-import IconFactory from './elements/IconFactory';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import IconFactory from './elements/IconFactory';
 
 const drawerWidth = 70;
-const maxDrawerWidth = drawerWidth + 210
+const expandedDrawerWidth = 280;
 
-function AppNavigation(props) {
+const navigationOptions = [
+  { id: 'menu', url: '/', icon: 'menu', color: 'info' },
+  { id: 'home', url: '/', icon: 'home', color: 'primary' },
+  { id: 'create', url: '/create', icon: 'create', color: 'primary', subMenu: [
+    { id: 'plant', url: '/plant/create', icon: 'plant', label: 'Plant' },
+    { id: 'type', url: '/type/create', icon: 'type', label: 'Type' },
+    { id: 'genus', url: '/genus/create', icon: 'genus', label: 'Genus' },
+    { id: 'system', url: '/system/create', icon: 'system', label: 'System' },
+    { id: 'light', url: '/light/create', icon: 'light', label: 'Light' },
+    { id: 'todo', url: '/todo/create', icon: 'todo', label: 'Todo' },
+  ]},
+  { id: 'view', url: '/view', icon: 'view', color: 'primary', subMenu: [
+    { id: 'plant', url: '/plant/view', icon: 'plant', label: 'Plant' },
+    { id: 'system', url: '/system/view', icon: 'system', label: 'System' },
+  ]},
+  { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary' },
+  { id: 'todo', url: '/todos', icon: 'todo', color: 'primary' },
+];
 
-  const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-
-  // Navigation
+function AppNavigation({ window }) {
   const navigate = useNavigate();
-
-  // Routing Information
   const location = useLocation();
   
-  const [width, setWidth] = useState(drawerWidth);
-
-  const NAVS = Object.freeze({
-    NONE: 0,
-    CREATE: 1,
-    VIEW: 2,
-    ALERT: 3,
-    TODO: 4,
-    HOME: 5
-  });
-  const [currentNavigation, setCurrentNavigation] = useState(null);
-
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedSubOption, setSelectedSubOption] = useState(null);
 
   useEffect(() => {
-    // TODO: Turn into factory
-    const path = location.pathname;
-    console.log(location.pathname);
-    if (path == "/" ) {
-      // escapeListView(null);
+    const currentPath = location.pathname;
+    const currentOption = navigationOptions.find(option => 
+      option.url === currentPath || (option.subMenu && option.subMenu.some(subOption => subOption.url === currentPath))
+    );
+    
+    if (currentOption) {
+      setSelectedOption(currentOption.id);
+      if (currentOption.subMenu) {
+        const currentSubOption = currentOption.subMenu.find(subOption => subOption.url === currentPath);
+        setSelectedSubOption(currentSubOption ? currentSubOption.id : null);
+      }
     }
-  }, [location, currentNavigation]);
+  }, [location]);
 
-  const handleDrawerClose = () => {
-    setMobileOpen(false);
-  };
-
-  const changeNav = (options) => {
-    if (options.nav) {
-      setCurrentNavigation(options.nav)
-
-      const newWidth = maxDrawerWidth
-      setWidth(newWidth)
-    }
-    else {
-      setWidth(drawerWidth)
-    }
-
-    if (options.url) {
-      navigate(options.url);
+  const handleNavigation = (option) => {
+    if (option.subMenu) {
+      setDrawerOpen(true);
+      setSelectedOption(option.id);
+    } else {
+      navigate(option.url);
+      setDrawerOpen(false);
+      setSelectedOption(option.id);
+      setSelectedSubOption(null);
     }
   };
 
-  const CreateForm = Object.freeze({
-    PLANT: 0,
-    SYSTEM: 1,
-    GENUS: 2,
-    LIGHT: 3,
-    TYPE: 4,
-    TODO: 5
-  });
-
-  const ViewForm = Object.freeze({
-    PLANT: 0,
-    SYSTEM: 1,
-  });
-
-  const [selected, setSelected] = React.useState(null);
-
-  const hightlightAndNavigate = (type, route) => {
-    setSelected(type);
-    navigate(route);
+  const handleSubNavigation = (subOption) => {
+    navigate(subOption.url);
+    setSelectedSubOption(subOption.id);
+    setDrawerOpen(false);
   };
-
-  // const NavigationListView = (options) => {
-  //   console.log(options);
-
-  //   const values = options.length > 0 ? options : [];
-  
-  //   return  (
-  //     <div>
-  //       <Box
-  //         sx={{ flexShrink: { sm: 0 }}}
-  //       >
-  //         <List color='primary'>
-  //           {Array.from(values).map((option) => (
-  //             <ListItem key={option.nav}>
-  //               <ListItemButton selected={selected == option.nav} onClick={() => hightlightAndNavigate(option.nav, option.url)}>
-  //                 <ListItemIcon>
-  //                   <IconFactory
-  //                     icon={option.icon}
-  //                     color={"primary"}
-  //                   >
-  //                   </IconFactory>                
-  //                 </ListItemIcon>
-  //                 <ListItemText style={{ color: "primary" }} primary={option.label} />
-  //               </ListItemButton>
-  //             </ListItem>
-  //           ))}
-  //         </List>
-  //       </Box>
-  //     </div>
-  //   )
-  // };
-
-  const CREATE_OPTIONS = [{
-    nav: CreateForm.PLANT,
-    url: "/plant/create",
-    icon: "plant",
-    label: "Plant"
-  },{
-    nav: CreateForm.TYPE,
-    url: "/type/create",
-    icon: "type",
-    label: "Type"
-  },{
-    nav: CreateForm.GENUS,
-    url: "/genus/create",
-    icon: "genus",
-    label: "Genus"
-  },{
-    nav: CreateForm.SYSTEM,
-    url: "/system/create",
-    icon: "system",
-    label: "System"
-  },{
-    nav: CreateForm.LIGHT,
-    url: "/light/create",
-    icon: "light",
-    label: "Light"
-  },{
-    nav: CreateForm.TODO,
-    url: "/todo/create",
-    icon: "todo",
-    label: "Todo"
-  },
-  ];
-
-  const VIEW_OPTIONS = [{
-    nav: ViewForm.PLANT,
-    url: "/plant/view",
-    icon: "plant",
-    label: "Plant"
-  },{
-    nav: ViewForm.SYSTEM,
-    url: "/system/view",
-    icon: "system",
-    label: "System"
-  }];
-
-  const OPTIONS = [{
-    color: "info",
-    nav: NAVS.NONE,
-    url: "/",
-    icon: "menu"
-  },{
-    color: "primary",
-    nav: NAVS.HOME,
-    url: "/",
-    icon: "home"
-  },{
-    color: "primary",
-    nav: NAVS.CREATE,
-    url: "/create",
-    icon: "create"
-  },{
-    color: "primary",
-    nav: NAVS.VIEW,
-    url: "/view",
-    icon: "view"
-  },{
-    color: "primary",
-    nav: NAVS.ALERT,
-    url: "/alerts",
-    icon: "alert"
-  },{
-    color: "primary",
-    nav: NAVS.TODO,
-    url: "/todos",
-    icon: "todo"
-  }];
 
   const drawer = (
     <div>
       <div className='left_half'>
-        <List width={drawerWidth}>
-          {Array.from(OPTIONS).map((option) => (
-            <ListItem key={option.nav} disablePadding>
-              <IconButton size="large" color={option.color} onClick={() => changeNav(option)}>
+        <List>
+          {navigationOptions.map((option) => (
+            <ListItem key={option.id} disablePadding>
+              <IconButton
+                size="large"
+                color={option.color}
+                onClick={() => handleNavigation(option)}
+              >
                 <IconFactory
                   icon={option.icon}
                   color={option.color}
-                  size={"md"}
-                >
-                </IconFactory>
+                  size="md"
+                />
               </IconButton>
             </ListItem>
           ))}
         </List>
       </div>
       <div className='right_three_qaurter'>
-        {currentNavigation === NAVS.CREATE && (
-          <div>
-            <Box
-              sx={{ flexShrink: { sm: 0 }}}
-            >
-              <List color='primary'>
-                {Array.from(CREATE_OPTIONS).map((option) => (
-                  <ListItem key={option.nav}>
-                    <ListItemButton selected={selected == option.nav} onClick={() => hightlightAndNavigate(option.nav, option.url)}>
-                      <ListItemIcon>
-                        <IconFactory
-                          icon={option.icon}
-                          color={"primary"}
-                        >
-                        </IconFactory>                
-                      </ListItemIcon>
-                      <ListItemText style={{ color: "#ffffff" }} primary={option.label} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          </div>
-        )}
-        {currentNavigation === NAVS.VIEW && (
-          <div>
-            <Box
-              sx={{ flexShrink: { sm: 0 }}}
-            >
-              <List color='primary'>
-                {Array.from(VIEW_OPTIONS).map((option) => (
-                  <ListItem key={option.nav}>
-                    <ListItemButton selected={selected == option.nav} onClick={() => hightlightAndNavigate(option.nav, option.url)}>
-                      <ListItemIcon>
-                        <IconFactory
-                          icon={option.icon}
-                          color={"primary"}
-                        >
-                        </IconFactory>                
-                      </ListItemIcon>
-                      <ListItemText style={{ color: "#ffffff" }} primary={option.label} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-              </List>
-            </Box>
-          </div>
+        {drawerOpen && selectedOption && (
+          <List>
+            {navigationOptions.find(option => option.id === selectedOption)?.subMenu?.map((subOption) => (
+              <ListItem key={subOption.id}>
+                <ListItemButton
+                  selected={selectedSubOption === subOption.id}
+                  onClick={() => handleSubNavigation(subOption)}
+                >
+                  <ListItemIcon>
+                    <IconFactory
+                      icon={subOption.icon}
+                      color="primary"
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={subOption.label} style={{ color: "#ffffff" }} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
         )}
       </div>
     </div>
   );
 
-  // Remove this const when copying and pasting into your project.
   const container = window ? () => window().document.body : null;
 
   return (
     <Box
-      className='inherit'
       component="nav"
-      sx={{ width: { sm: width }, flexShrink: { sm: 0 }}}
-      aria-label="mailbox folders"
-      backgroundColor='secondary'
-      
+      sx={{
+        width: { sm: drawerOpen ? expandedDrawerWidth : drawerWidth },
+        flexShrink: { sm: 0 },
+      }}
+      aria-label="navigation drawer"
     >
-      {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
       <Drawer
-        className='inherit'
         container={container}
         variant="temporary"
-        open={mobileOpen}
-        onClose={handleDrawerClose}
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
         ModalProps={{
           keepMounted: true, // Better open performance on mobile.
         }}
         sx={{
           display: { xs: 'block', sm: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: width },
+          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerOpen ? expandedDrawerWidth : drawerWidth },
         }}
       >
         {drawer}
       </Drawer>
       <Drawer
-        className='inherit'
         variant="permanent"
         sx={{
           display: { xs: 'none', sm: 'block' },
-          '& .MuiDrawer-paper': { background: 'inherit', boxSizing: 'border-box', width: width },
+          '& .MuiDrawer-paper': { 
+            boxSizing: 'border-box', 
+            width: drawerOpen ? expandedDrawerWidth : drawerWidth,
+            transition: 'width 0.3s ease-in-out',
+            background: 'inherit'
+          },
         }}
         open
       >
