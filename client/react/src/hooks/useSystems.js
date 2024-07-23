@@ -28,3 +28,30 @@ export const useSystems = () => {
 
   return { systems, isLoading, error };
 };
+
+export const useSystemsPlants = (system) => {
+  const [plants, setPlants] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSystems = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_BASE_URL}/system/${system.id}/plants`);
+        const data = await response.json();
+        setPlants(data);
+      } catch (error) {
+        console.error('Error fetching system data:', error);
+        setError('Failed to fetch systems. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSystems();
+  }, []);
+
+  return { plants, isLoading, error };
+};
