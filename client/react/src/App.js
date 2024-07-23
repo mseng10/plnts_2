@@ -10,7 +10,6 @@ import { ThemeProvider, createTheme,  } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { blueGrey, amber } from '@mui/material/colors';
 import Plants from './pages/plant/Plants';
-import System from './models/System';
 import Home from './pages/Home';
 import Systems from './pages/system/Systems';
 import Alerts from './pages/alert/Alerts';
@@ -131,7 +130,6 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/system" element={<System />} />
             <Route path="/alerts" element={<Alerts />} />
             <Route path="/todos" element={<Todos />} />
 
