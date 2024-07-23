@@ -4,18 +4,22 @@ import Box from '@mui/material/Box';
 import Plants from '../../pages/plant/Plants';
 
 const SystemPlants = ({ isOpen, system, onRequestClose }) => {
+  console.log(system);
   const [plants, setPlants] = useState([]);
+  const [queried, setQueried] = useState(false);
 
   useEffect(() => {
-    if (isOpen && system && system.system) {
-      const url = 'http://127.0.0.1:5000/system/' + system.system.id.toString() + '/plants'
+    if (isOpen && system && !queried) {
+      const url = 'http://127.0.0.1:5000/system/' + system.id.toString() + '/plants'
       // Fetch plant data from the server
       fetch(url)
         .then((response) => response.json())
         .then((data) => setPlants(data))
         .catch((error) => console.error('Error fetching plant data:', error));
+
+      setQueried(true);
     }
-  }, [isOpen, system]);
+  }, [isOpen, system, plants, queried]);
 
   if (!system) {
     return (<div></div>);
@@ -35,7 +39,7 @@ const SystemPlants = ({ isOpen, system, onRequestClose }) => {
       }}
     >
       <Box sx={{ width: 756, height: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
-        <Plants plants={plants}></Plants>
+        <Plants initialPlants={plants}></Plants>
       </Box>
     </Modal>
   );
