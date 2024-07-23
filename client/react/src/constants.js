@@ -12,6 +12,14 @@ export const CARD_STYLE = {
   maxWidth: 345,
   opacity: 0.7,
 };
+
+export const MODAL_STYLE = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  backgroundColor: 'inherit',
+  border: 'none',
+};
   
 export const AVATAR_STYLE = {
   backgroundColor: 'inherit',
