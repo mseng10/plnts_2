@@ -1,4 +1,3 @@
-// usePlants.js
 import { useState, useEffect } from 'react';
 
 const API_BASE_URL = 'http://127.0.0.1:5000';
@@ -22,13 +21,11 @@ export const usePlants = (initialPlants) => {
         } else {
           setPlants(initialPlants);
         }
-
         const [genusResponse, systemResponse, typeResponse] = await Promise.all([
           fetch(`${API_BASE_URL}/genus`),
           fetch(`${API_BASE_URL}/system`),
           fetch(`${API_BASE_URL}/type`)
         ]);
-
         setGenuses(await genusResponse.json());
         setSystems(await systemResponse.json());
         setTypes(await typeResponse.json());
@@ -39,9 +36,27 @@ export const usePlants = (initialPlants) => {
         setIsLoading(false);
       }
     };
-
     fetchData();
   }, [initialPlants]);
 
-  return { plants, setPlants, genuses, systems, types, isLoading, error };
+  const addPlant = async (newPlant) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/plants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPlant)
+      });
+      const data = await response.json();
+      setPlants(prevPlants => [...prevPlants, data]);
+
+      return data;
+    } catch (error) {
+      console.error('Error posting plant data:', error);
+      setError('Failed to add new plant. Please try again later.');
+      
+      throw error;
+    }
+  };
+
+  return { plants, setPlants, genuses, systems, types, isLoading, error, addPlant };
 };
