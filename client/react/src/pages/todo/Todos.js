@@ -10,8 +10,8 @@ import CardActions from '@mui/material/CardActions';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import { useTodos } from '../../../hooks/useTodos';
-import { CARD_STYLE, AVATAR_STYLE } from '../../../constants';
+import { useTodos } from '../../hooks/useTodos';
+import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
 
 const TodoCard = ({ todo, onResolve }) => (
   <Grid item>
