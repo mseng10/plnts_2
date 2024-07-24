@@ -16,6 +16,8 @@ import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
 import DeviceThermostatSharpIcon from '@mui/icons-material/DeviceThermostatSharp';
 import AvTimerSharpIcon from '@mui/icons-material/AvTimerSharp';
 import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
+import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
+import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -79,6 +81,12 @@ const IconFactory = ({ icon, color, size }) => {
     break;
   case 'distance':
     IconComponent = StraightenSharpIcon;
+    break;
+  case 'water':
+    IconComponent = WaterDropOutlinedIcon;
+    break;
+  case 'kill':
+    IconComponent = DeleteOutlineSharpIcon;
     break;
   // Add more cases for other icons
   default:

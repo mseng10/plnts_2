@@ -101,7 +101,8 @@ const Plants = ({ initialPlants }) => {
           checkboxSelection
           disableRowSelectionOnClick
           onRowSelectionModelChange={(newSelectionModel) => {
-            setSelectedPlants(newSelectionModel.map(index => plants[index - 1]));
+            const newSelectedPlants = newSelectionModel.map(index => plants[index - 1]);
+            setSelectedPlants(newSelectedPlants);
           }}
           slots={{ toolbar: CustomToolbar }}
         />
@@ -119,15 +120,14 @@ const Plants = ({ initialPlants }) => {
         <WaterPlantsForm
           isOpen={formStates.waterPlants}
           onRequestClose={() => setFormStates(prev => ({ ...prev, waterPlants: false }))}
-          plants={selectedPlants}
+          initialPlants={selectedPlants}
         />
       )}
       {formStates.killPlants && (
         <KillPlantsForm
           isOpen={formStates.killPlants}
           onRequestClose={() => setFormStates(prev => ({ ...prev, killPlants: false }))}
-          setPlants={setPlants}
-          plants={selectedPlants}
+          initialPlants={selectedPlants}
         />
       )}
       {formStates.fertilizePlants && (

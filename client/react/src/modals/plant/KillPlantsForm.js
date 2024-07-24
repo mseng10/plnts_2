@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { DropdownInput, FormButton } from '../../elements/Form';
 import { usePlants } from '../../hooks/usePlants';
@@ -24,9 +23,7 @@ const CauseOfDeath = Object.freeze({
 });
 
 const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
-  const navigate = useNavigate();
   const { plants, isLoading, error, setPlants, killPlant } = usePlants(initialPlants);
-  console.log(plants);
   const [checkedPlants, setCheckedPlants] = useState([]);
   const [allChecked, setAllChecked] = useState(true);
 
@@ -39,7 +36,7 @@ const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
       setCheckedPlants([...plants]);
       setAllChecked(true);
     }
-  }, [plants]);
+  }, [plants, initialPlants]);
 
   const handleToggle = (plant) => () => {
     const currentIndex = checkedPlants.findIndex(_p => _p.id === plant.id);
@@ -79,16 +76,15 @@ const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
 
     try {
       const killDate = new Date().toISOString().split('T')[0]; // Current date
-      for (const plant of checkedPlants) {
-        await killPlant(plant.id, killDate, causeOfDeath);
-      }
+      await killPlant(killDate, causeOfDeath);
+
       setPlants(prevPlants => prevPlants.map(plant => 
         checkedPlants.some(checkedPlant => checkedPlant.id === plant.id)
           ? { ...plant, kill_date: killDate, cause_of_death: causeOfDeath }
           : plant
       ));
       clearForm();
-      navigate("/");
+      onRequestClose();
     } catch (error) {
       console.error('Error killing plants:', error);
       setFormError("Failed to kill plants. Please try again.");
@@ -97,7 +93,7 @@ const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
 
   const handleCancel = () => {
     clearForm();
-    navigate("/");
+    onRequestClose();
   };
 
   const clearForm = () => {
@@ -120,7 +116,7 @@ const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
       <Box sx={{ width: 756, height: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <FormButton
-            icon="plant"
+            icon="kill"
             color="error"
             handleCancel={handleCancel}
           />

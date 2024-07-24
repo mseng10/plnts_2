@@ -1,57 +1,77 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import { FormButton } from '../../elements/Form';
+import { usePlants } from '../../hooks/usePlants';
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
-import IconButton from '@mui/material/IconButton';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import CheckSharpIcon from '@mui/icons-material/CheckSharp';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
+import Modal from '@mui/material/Modal';
+import { MODAL_STYLE } from '../../constants';
 
-const WaterPlantsForm = ({ isOpen, plants, onRequestClose }) => {
-  const [checked, setChecked] = useState(plants);
-  const [submitted, setSubmit] = useState(false);
+const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
+  const { plants, isLoading, error, setPlants, waterPlants } = usePlants(initialPlants);
+  const [checkedPlants, setCheckedPlants] = useState([]);
+  const [allChecked, setAllChecked] = useState(true);
+  const [formError, setFormError] = useState(null);
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
+  // Initialize all plants as checked when the component mounts or plants change
+  useEffect(() => {
+    if (plants.length > 0) {
+      setCheckedPlants([...plants]);
+      setAllChecked(true);
+    }
+    console.log(initialPlants);
+  }, [plants, initialPlants]);
+
+  const handleToggle = (plant) => () => {
+    const currentIndex = checkedPlants.findIndex(_p => _p.id === plant.id);
+    const newChecked = [...checkedPlants];
 
     if (currentIndex === -1) {
-      newChecked.push(value);
+      newChecked.push(plant);
     } else {
       newChecked.splice(currentIndex, 1);
     }
 
-    setChecked(newChecked);
+    setCheckedPlants(newChecked);
+    setAllChecked(newChecked.length === plants.length);
   };
 
-  useEffect(() => {
-    if (submitted) {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ids:  checked.map((plant) => plant.id)})
-      };
-      fetch('http://127.0.0.1:5000/plants/water', requestOptions)
-        .then(response => response.json())
-        .then(data => {
-          // handle the response data if needed
-          // maybe update some state based on the response
-          console.log(data);
-        })
-        .catch(error => console.error('Error watering plants data:', error));
+  const handleToggleAll = () => {
+    if (allChecked) {
+      setCheckedPlants([]);
+    } else {
+      setCheckedPlants([...plants]);
+    }
+    setAllChecked(!allChecked);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (checkedPlants.length === 0) {
+      setFormError("Please select at least one plant");
+
+      return;
+    }
+
+    try {
+      const waterDate = new Date().toISOString().split('T')[0]; // Current date
+      for (const plant of checkedPlants) {
+        await waterPlants(plant.id);
+      }
+      setPlants(prevPlants => prevPlants.map(plant => 
+        checkedPlants.some(checkedPlant => checkedPlant.id === plant.id)
+          ? { ...plant, watered_on: waterDate }
+          : plant
+      ));
       clearForm();
       onRequestClose();
+    } catch (error) {
+      console.error('Error killing plants:', error);
+      setFormError("Failed to kill plants. Please try again.");
     }
-  }, [submitted, checked, onRequestClose]);
-
-  const handleSubmit = (event) => {
-    setSubmit(true);
-    event.preventDefault();
   };
 
   const handleCancel = () => {
@@ -60,39 +80,39 @@ const WaterPlantsForm = ({ isOpen, plants, onRequestClose }) => {
   };
 
   const clearForm = () => {
-    setSubmit(false);
-    setChecked([]);
-  };
+    setCheckedPlants([]);
+    setAllChecked(false);
+    setFormError(null);  };
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <Modal
       open={isOpen}
       onClose={onRequestClose}
-      aria-labelledby="new-bobby-form"
       disableAutoFocus={true}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: 'inherit',
-        border: 'none',
-      }}
+      style={MODAL_STYLE}
     >
-      <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
+      <Box sx={{ width: 756, height: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
-          <div className='left'>
-            <WaterDropOutlinedIcon color='secondary' className={'home_icon_form'}/>
-            <ButtonGroup>
-              <IconButton className="left_button" type="submit" color="primary">
-                <CheckSharpIcon className="left_button"/>
-              </IconButton>
-              <IconButton className="left_button" color="error" onClick={handleCancel}>
-                <CloseSharpIcon className="left_button"/>
-              </IconButton>
-            </ButtonGroup>
-          </div>
+          <FormButton
+            icon="water"
+            color="info"
+            handleCancel={handleCancel}
+          />
           <div className='right'>
             <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+              <ListItem>
+                <ListItemText primary="Select All" style={{ color: "black" }}/>
+                <Checkbox
+                  edge="end"
+                  onChange={handleToggleAll}
+                  checked={allChecked}
+                  color='info'
+                />
+              </ListItem>
+              <Divider sx={{width: '100%' }}  component="li" />
               {plants.map((plant) => (
                 <div key={plant.id}>
                   <ListItem
@@ -101,17 +121,18 @@ const WaterPlantsForm = ({ isOpen, plants, onRequestClose }) => {
                       <Checkbox
                         edge="end"
                         onChange={handleToggle(plant)}
-                        checked={checked.indexOf(plant) !== -1}
-                        color='secondary'
+                        checked={checkedPlants.some(_p => _p.id === plant.id)}
+                        color='info'
                       />
                     }
                   >
-                    <ListItemText primary={plant.name} />
+                    <ListItemText primary={plant.name} style={{ color: "black" }}/>
                   </ListItem>
                   <Divider sx={{width: '100%' }}  component="li" />
                 </div>
               ))}
             </List>
+            {formError && <div style={{ color: 'red' }}>{formError}</div>}
           </div>
         </form>
       </Box>
