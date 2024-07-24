@@ -177,15 +177,6 @@ const UpdatePlantForm = ({ isOpen, onRequestClose, setPlants, plant }) => {
               onChange={(event) => setUpdatedWateringFrequency(event.target.value)}
               variant="standard"
             />
-            {/* <label>
-            Last Watered:
-            <input
-              type="date"
-              value={updatedLastWatered}
-              onChange={(event) => setUpdatedLastWatered(event.target.value)}
-              required
-            />
-          </label> */}
           </div>
         </form>
       </Box>
