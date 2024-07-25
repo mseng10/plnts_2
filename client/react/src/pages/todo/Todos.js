@@ -12,36 +12,48 @@ import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTodos } from '../../hooks/useTodos';
 import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
+import dayjs from 'dayjs';
 
-const TodoCard = ({ todo, onResolve }) => (
-  <Grid item>
-    <Card sx={CARD_STYLE} borderRadius={20}>
-      <CardActionArea>
-        <CardHeader
-          avatar={
-            <Avatar sx={AVATAR_STYLE}>
-              <FormatListNumberedIcon className="small_button" color='info'/>
-            </Avatar>
-          }
-          title={todo.name}
-          subheader={todo.created_on}
-        />
-        <CardContent>
-          <Box>
-            <Typography variant="body2" color="text.secondary">
-              {todo.description}
-            </Typography>
-          </Box>
-        </CardContent>
-        <CardActions disableSpacing>
-          <IconButton color="info" onClick={() => onResolve(todo.id)}>
-            <CheckCircleOutlineIcon />
-          </IconButton>
-        </CardActions>
-      </CardActionArea>
-    </Card>
-  </Grid>
-);
+const TodoCard = ({ todo, onResolve }) => {
+  const isPastDue = dayjs(todo.due_on).isBefore(dayjs(), 'day');
+
+  return (
+    <Grid item>
+      <Card sx={CARD_STYLE} borderRadius={20}>
+        <CardActionArea>
+          <CardHeader
+            avatar={
+              <Avatar sx={AVATAR_STYLE}>
+                <FormatListNumberedIcon className="small_button" color='info'/>
+              </Avatar>
+            }
+            title={todo.name}
+            subheader={
+              <span style={{ color: isPastDue ? 'error.main' : 'text.secondary' }}>
+                {dayjs(todo.due_on).format('MMM D, YYYY')}
+              </span>
+            }
+            subheaderTypographyProps={{
+              sx: { color: isPastDue ? 'error.main' : 'text.secondary' }
+            }}
+          />
+          <CardContent>
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                {todo.description}
+              </Typography>
+            </Box>
+          </CardContent>
+          <CardActions disableSpacing>
+            <IconButton color="info" onClick={() => onResolve(todo.id)}>
+              <CheckCircleOutlineIcon />
+            </IconButton>
+          </CardActions>
+        </CardActionArea>
+      </Card>
+    </Grid>
+  )
+};
 
 const Todos = () => {
   const { todos, isLoading, error, resolveTodo } = useTodos();

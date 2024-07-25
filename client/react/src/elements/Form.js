@@ -7,6 +7,10 @@ import IconFactory from './IconFactory';
 import Slider from '@mui/material/Slider';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
 
 export const FormButton = ({icon, color, handleCancel}) => {
   // Handle case when system data is not available
@@ -184,5 +188,27 @@ export const DropdownInput = (fieldInfo) => {
           <MenuItem key={ty} value={ty}>{ty}</MenuItem>
         ))}
       </TextField>
+    </div>)
+};
+
+export const DateSelector = (fieldInfo) => {
+  if (!fieldInfo) {
+    return <div></div>
+  }
+
+  return  (
+    <div>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          variant="standard"
+          margin="normal"
+          fullWidth
+          label={fieldInfo.label}
+          value={fieldInfo.value}
+          onChange={(event) => fieldInfo.setValue(event)}
+          renderInput={(params) => <TextField {...params} />}
+          color={fieldInfo.color}
+        />
+      </LocalizationProvider>
     </div>)
 };

@@ -344,7 +344,8 @@ def create_todo():
     # Create a new Todo object
     new_todo = Todo(
         description=new_todo_data["description"],
-        name=new_todo_data["name"]
+        name=new_todo_data["name"],
+        due_on=new_todo_data["due_on"]
     )
 
     # Add the new TODO object to the session

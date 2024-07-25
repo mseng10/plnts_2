@@ -38,9 +38,31 @@ export const useTodos = () => {
     }
   };
 
+  const createTodo = async (todoData) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_BASE_URL}/todo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(todoData),
+      });
+      const data = await response.json();
+      setTodos(prevTodos => [...prevTodos, data]);
+
+      return data;
+    } catch (error) {
+      console.error('Error creating todo:', error);
+      setError('Failed to create todo. Please try again.');
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  return { todos, isLoading, error, resolveTodo };
+  return { todos, isLoading, error, resolveTodo, createTodo };
 };
