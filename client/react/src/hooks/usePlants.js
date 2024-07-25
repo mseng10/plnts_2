@@ -93,5 +93,24 @@ export const usePlants = (initialPlants) => {
     }
   };
 
-  return { plants, setPlants, genuses, systems, types, isLoading, error, addPlant, killPlant, waterPlants };
+  const updatePlant = async (id, updatedPlant) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/plants/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedPlant),
+      });
+      const data = await response.json();
+      setPlants(prevPlants => prevPlants.map(plant => 
+        plant.id === id ? { ...plant, ...data } : plant
+      ));
+
+      return data;
+    } catch (error) {
+      console.error('Error updating plant:', error);
+      throw error;
+    }
+  };
+
+  return { plants, setPlants, genuses, systems, types, isLoading, error, addPlant, killPlant, waterPlants, updatePlant};
 };

@@ -22,6 +22,7 @@ import NewTodoForm from './pages/todo/NewTodoForm';
 import NewTypeForm from './pages/plant/type/NewTypeForm';
 import NewLightForm from './pages/system/light/NewLightForm';
 import NewGenusForm from './pages/plant/genus/NewGenusForm';
+import UpdatePlantForm from './pages/plant/UpdatePlantForm';
 // import '@mui/x-date-pickers/styles';
 
 const drawerWidth = 240;
@@ -137,6 +138,7 @@ function App() {
             <Route path="/view" element={<Home />} />
             <Route path="/system/view" element={<Systems />} />
             <Route path="/plant/view" element={<Plants />} />
+            <Route path="/plants/:id" element={<UpdatePlantForm />} />
 
             <Route path="/create" element={<Home />} />
             <Route path="/plant/create" element={<NewPlantForm />} />
