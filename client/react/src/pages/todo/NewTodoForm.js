@@ -1,48 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
-// import { LocalizationProvider, DatePicker } from '@mui/x-date-pickers';
-// import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import {useNavigate} from "react-router-dom" 
-import { FormTextInput, TextAreaInput, FormButton } from '../../elements/Form';
- 
+import { FormTextInput, TextAreaInput, FormButton, DateSelector } from '../../elements/Form';
+import dayjs from 'dayjs';
+import { useTodos } from '../../hooks/useTodos';
 
-/** Create a new todo to accomplish. */
 const NewTodoForm = () => {
-  // Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  //   const [dueOn, setDueOn] = useState(null);
+  const [dueOn, setDueOn] = useState(dayjs());
+  const [error, setError] = useState(null);
 
-  // Navigation
   const navigate = useNavigate();
+  const { createTodo } = useTodos();
 
-  // Submitted state
-  const [submitted, setSubmitted] = useState(false); // Initialize submitted state
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError(null);
 
-  useEffect(() => {
-    if (submitted) {
-      console.log("hELLO");
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: description, name: name })
-      };
-      fetch('http://127.0.0.1:5000/todo', requestOptions)
-        .then(response => response.json())
-        .then(data => {
-          // handle the response data if needed
-          // maybe update some state based on the response
-          console.log(data);
-        })
-        .catch(error => console.error('Error posting todo data:', error));
+    try {
+      await createTodo({ name, description, due_on: dueOn.toISOString() });
       clearForm();
       navigate("/");
+    } catch (err) {
+      setError("Failed to create todo. Please try again.");
     }
-  }, [submitted, description]);
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    setSubmitted(true); // Update submitted state
   };
 
   const handleCancel = () => {
@@ -51,9 +33,9 @@ const NewTodoForm = () => {
   };
 
   const clearForm = () => {
-    setDescription('');
     setName('');
-    setSubmitted(false);
+    setDescription('');
+    setDueOn(dayjs());
   };
 
   return (
@@ -66,19 +48,10 @@ const NewTodoForm = () => {
             handleCancel={handleCancel}
           />
           <div className='right'>
-            {/* <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                value={value}
-                onChange={(newValue) => {
-                  setDueOn(newValue);
-                }}
-                renderInput={(params) => <TextField {...params} />}
-               />
-            </LocalizationProvider> */}
             <FormTextInput
-              label={"Title"}
+              label="Title"
               value={name}
-              color={"type"}
+              color="type"
               setValue={setName}
             />
             <TextAreaInput
@@ -87,6 +60,12 @@ const NewTodoForm = () => {
               color="lime"
               setValue={setDescription}
             />
+            <DateSelector
+              label="Due"
+              value={dueOn}
+              setValue={setDueOn}
+            />
+            {error && <p style={{ color: 'red' }}>{error}</p>}
           </div>
         </form>
       </Box>
@@ -95,5 +74,3 @@ const NewTodoForm = () => {
 };
 
 export default NewTodoForm;
-
-

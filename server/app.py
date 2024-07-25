@@ -89,6 +89,58 @@ def get_plants():
     # Return JSON response
     return jsonify(plants_json)
 
+@app.route("/plants/<int:plant_id>", methods=["PATCH"])
+def get_plant(plant_id):
+    """
+    Query the specific plant.
+    """
+    # Log the request
+    logger.info("Received request to query the plant")
+    session = Session()
+    plant = session.query(Plant).get(plant_id)
+    session.close()
+
+    # Return JSON response
+    return jsonify(plant.to_json())
+
+@app.route("/plants/<int:plant_id>", methods=["PUT"])
+def update_plant(plant_id):
+    """
+    Query the specific plant.
+    """
+    # Log the request
+    logger.info("Received request to query the plant")
+
+    changes = request.get_json()
+    # Create a new Plant object
+    new_plant = Plant(
+        cost=new_plant_data["cost"],
+        size=new_plant_data["size"],
+        genus_id=new_plant_data["genus_id"],
+        type_id=new_plant_data["type_id"],
+        system_id=new_plant_data["system_id"],
+        watering=new_plant_data["watering"],
+        phase = new_plant_data["phase"]
+    )
+
+    session = Session()
+    plant = session.query(Plant).get(plant_id)
+
+    plant.cost = changes["cost"]
+    plant.size = change["size"]
+    plant.genus_id = change["genus_id"]
+    plant.type_id=change["type_id"],
+    plant.system_id=change["system_id"],
+    plant.watering=change["watering"],
+    plant.phase = change["phase"]
+    plant.updated_on = datetime.now
+
+    session.commit()
+    session.close()
+
+    # Return JSON response
+    return jsonify(plant.to_json())
+
 @app.route("/plants/water", methods=["POST"])
 def water_plants():
     """
@@ -344,7 +396,8 @@ def create_todo():
     # Create a new Todo object
     new_todo = Todo(
         description=new_todo_data["description"],
-        name=new_todo_data["name"]
+        name=new_todo_data["name"],
+        due_on=new_todo_data["due_on"]
     )
 
     # Add the new TODO object to the session

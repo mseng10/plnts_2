@@ -3,15 +3,16 @@ import { DataGrid, GridToolbarContainer, GridToolbarColumnsButton, GridToolbarFi
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { EditSharp, WaterDropOutlined, DeleteOutlineSharp, LunchDining, ParkSharp } from '@mui/icons-material';
-import UpdatePlantForm from '../../forms/update/UpdatePlantForm';
 import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
 import KillPlantsForm from '../../modals/plant/KillPlantsForm';
 import FertilizePlantsForm from '../../forms/update/FertilizePlantsForm';
 import RepotPlantsForm from '../../forms/update/RepotPlantsForm';
 import { PHASE_LABELS } from '../../constants';
 import { usePlants } from '../../hooks/usePlants';
+import { useNavigate } from "react-router-dom";
 
 const Plants = ({ initialPlants }) => {
+  const navigate = useNavigate();
   const { plants, setPlants, genuses, systems, types, isLoading, error } = usePlants(initialPlants);
   const [selectedPlants, setSelectedPlants] = useState([]);
   const [formStates, setFormStates] = useState({
@@ -62,7 +63,7 @@ const Plants = ({ initialPlants }) => {
       <GridToolbarExport />
       <Box sx={{ flexGrow: 1 }} />
       {selectedPlants.length === 1 && (
-        <IconButton size="small" color="primary" onClick={() => setFormStates(prev => ({ ...prev, updatePlant: true }))}>
+        <IconButton size="small" color="primary" onClick={() => navigate(`/plants/${selectedPlants[0].id}`, { plantProp: selectedPlants[0] })}>
           <EditSharp />
         </IconButton>
       )}
@@ -101,33 +102,24 @@ const Plants = ({ initialPlants }) => {
           checkboxSelection
           disableRowSelectionOnClick
           onRowSelectionModelChange={(newSelectionModel) => {
-            setSelectedPlants(newSelectionModel.map(index => plants[index - 1]));
+            const newSelectedPlants = newSelectionModel.map(index => plants[index - 1]);
+            setSelectedPlants(newSelectedPlants);
           }}
           slots={{ toolbar: CustomToolbar }}
         />
       </Box>
-
-      {formStates.updatePlant && (
-        <UpdatePlantForm
-          isOpen={formStates.updatePlant}
-          onRequestClose={() => setFormStates(prev => ({ ...prev, updatePlant: false }))}
-          setPlants={setPlants}
-          plant={selectedPlants[0]}
-        />
-      )}
       {formStates.waterPlants && (
         <WaterPlantsForm
           isOpen={formStates.waterPlants}
           onRequestClose={() => setFormStates(prev => ({ ...prev, waterPlants: false }))}
-          plants={selectedPlants}
+          initialPlants={selectedPlants}
         />
       )}
       {formStates.killPlants && (
         <KillPlantsForm
           isOpen={formStates.killPlants}
           onRequestClose={() => setFormStates(prev => ({ ...prev, killPlants: false }))}
-          setPlants={setPlants}
-          plants={selectedPlants}
+          initialPlants={selectedPlants}
         />
       )}
       {formStates.fertilizePlants && (
