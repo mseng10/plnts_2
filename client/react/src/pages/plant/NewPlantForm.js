@@ -9,7 +9,6 @@ const NewPlantForm = () => {
   const navigate = useNavigate();
   const { genuses, systems, types, isLoading, error, addPlant } = usePlants();
 
-  const [name, setName] = useState('');
   const [genus, setGenus] = useState(null);
   const [type, setType] = useState(null);
   const [system, setSystem] = useState(null);
@@ -21,7 +20,6 @@ const NewPlantForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const newPlant = {
-      name,
       size,
       cost,
       genus_id: genus.id,
@@ -33,7 +31,6 @@ const NewPlantForm = () => {
 
     try {
       await addPlant(newPlant);
-      clearForm();
       navigate("/");
     } catch (error) {
       console.error('Error adding new plant:', error);
@@ -42,19 +39,7 @@ const NewPlantForm = () => {
   };
 
   const handleCancel = () => {
-    clearForm();
-    navigate("/create");
-  };
-
-  const clearForm = () => {
-    setName('');
-    setCost(0);
-    setSize(0);
-    setPhase('adult');
-    setWatering(0);
-    setGenus(null);
-    setType(null);
-    setSystem(null);
+    navigate("/");
   };
 
   if (isLoading) return <div>Loading...</div>;

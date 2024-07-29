@@ -20,7 +20,6 @@ const NewTodoForm = () => {
 
     try {
       await createTodo({ name, description, due_on: dueOn.toISOString() });
-      clearForm();
       navigate("/");
     } catch (err) {
       setError("Failed to create todo. Please try again.");
@@ -28,14 +27,7 @@ const NewTodoForm = () => {
   };
 
   const handleCancel = () => {
-    clearForm();
-    navigate("/create");
-  };
-
-  const clearForm = () => {
-    setName('');
-    setDescription('');
-    setDueOn(dayjs());
+    navigate("/");
   };
 
   return (

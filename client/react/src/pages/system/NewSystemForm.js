@@ -36,7 +36,8 @@ const NewSystemForm = ({ systems }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if ( !allSystems) {
+    if (!allSystems) {
+      setLightCount(1);
       fetch('http://127.0.0.1:5000/system')
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
@@ -74,7 +75,6 @@ const NewSystemForm = ({ systems }) => {
           console.log(data);
         })
         .catch(error => console.error('Error posting genus data:', error));
-      clearForm();
       navigate("/")
     }
   }, [submitted, name, description, temperature, humidity, distance, duration,lightModel ]);
@@ -85,22 +85,8 @@ const NewSystemForm = ({ systems }) => {
   };
 
   const handleCancel = () => {
-    clearForm();
     navigate("/create");
   };
-
-  const clearForm = () => {
-    setName('');
-    setDescription('');
-    setTempurature(0);
-    setHumidity(0);
-    setDistance(0);
-    setDuration(0);
-    setSubmitted(false);
-    setLightModel(null);
-    setLightCount(0);
-  };
-
   // Target temperature marks
   const temperatureMarks = [
     {

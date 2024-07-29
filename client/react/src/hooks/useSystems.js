@@ -8,6 +8,25 @@ export const useSystems = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const updateSystem = async (id, updatedSystem) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/system/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedSystem),
+      });
+      const data = await response.json();
+      setSystems(prevSystems => prevSystems.map(system => 
+        system.id === id ? { ...system, ...data } : system
+      ));
+
+      return data;
+    } catch (error) {
+      console.error('Error updating system:', error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     const fetchSystems = async () => {
       setIsLoading(true);
@@ -27,7 +46,7 @@ export const useSystems = () => {
     fetchSystems();
   }, []);
 
-  return { systems, isLoading, error };
+  return { systems, isLoading, error, updateSystem };
 };
 
 /** Query a system for it's respective plants. */

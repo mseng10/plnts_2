@@ -43,7 +43,6 @@ const UpdateTodoForm = ({ todoProp }) => {
     };
     try {
       await updateTodo(todoProp ? todoProp.id : id, updatedTodo);
-      clearForm();
       navigate("/");
     } catch (error) {
       console.error('Error updating todo:', error);
@@ -52,14 +51,7 @@ const UpdateTodoForm = ({ todoProp }) => {
   };
 
   const handleCancel = () => {
-    clearForm();
     navigate("/todo");
-  };
-
-  const clearForm = () => {
-    setName('');
-    setDescription('');
-    setDueOn(dayjs());
   };
 
   if (isLoading) return <div>Loading...</div>;

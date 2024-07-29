@@ -44,7 +44,6 @@ const NewLightForm = ({ systems }) => {
           console.log(data);
         })
         .catch(error => console.error('Error posting plants data:', error));
-      clearForm();
       navigate("/");
     }
   }, [submitted, name, cost, system]);
@@ -57,16 +56,7 @@ const NewLightForm = ({ systems }) => {
 
   // Exit
   const handleCancel = () => {
-    clearForm();
-    navigate("/create");
-  };
-
-  // Clear Form Fields
-  const clearForm = () => {
-    setName('');
-    setCost(0);
-    setSystem(null);
-    setSubmitted(false);
+    navigate("/");
   };
 
   return (

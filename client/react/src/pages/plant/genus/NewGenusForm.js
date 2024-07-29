@@ -41,14 +41,7 @@ const NewGenusForm = () => {
   };
 
   const handleCancel = () => {
-    clearForm();
-    navigate("/create");
-  };
-
-  const clearForm = () => {
-    setName('');
-    setWatering(0);
-    setSubmitted(false);
+    navigate("/");
   };
 
   return (

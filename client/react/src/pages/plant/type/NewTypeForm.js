@@ -44,7 +44,6 @@ const NewTypeForm = () => {
           navigate("/");
         })
         .catch(error => console.error('Error posting type data:', error));
-      clearForm();
     }
   }, [submitted, name, description, genus]);
 
@@ -54,15 +53,7 @@ const NewTypeForm = () => {
   };
 
   const handleCancel = () => {
-    clearForm();
-    navigate("/create");
-  };
-
-  const clearForm = () => {
-    setName('');
-    setDescription('');
-    setGenus(null);
-    setSubmitted(false);
+    navigate("/");
   };
 
   return (
