@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom"
 import { FormTextInput, NumberInput, FormButton} from '../../../elements/Form';
 
 /** Create a genus. Ideally not really used. */
-const NewGenusForm = () => {
+const GenusCreate = () => {
   // Form Fields
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
@@ -74,4 +74,4 @@ const NewGenusForm = () => {
   );
 };
 
-export default NewGenusForm;
+export default GenusCreate;

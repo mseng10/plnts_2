@@ -5,7 +5,7 @@ import { FormTextInput, TextAreaInput, FormButton, DateSelector } from '../../el
 import dayjs from 'dayjs';
 import { useTodos } from '../../hooks/useTodos';
 
-const NewTodoForm = () => {
+const TodoCreate = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [dueOn, setDueOn] = useState(dayjs());
@@ -65,4 +65,4 @@ const NewTodoForm = () => {
   );
 };
 
-export default NewTodoForm;
+export default TodoCreate;

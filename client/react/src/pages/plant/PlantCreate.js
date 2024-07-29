@@ -1,14 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
+import { useNavigate } from "react-router-dom";
 import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../../elements/Form';
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
 
-const UpdatePlantForm = ({ plantProp }) => {
-  const { id } = useParams();
+const PlantCreate = () => {
   const navigate = useNavigate();
-  const { plants, genuses, systems, types, isLoading, error, updatePlant } = usePlants();
+  const { genuses, systems, types, isLoading, error, addPlant } = usePlants();
 
   const [genus, setGenus] = useState(null);
   const [type, setType] = useState(null);
@@ -16,34 +15,11 @@ const UpdatePlantForm = ({ plantProp }) => {
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
   const [watering, setWatering] = useState(0);
-  const [phase, setPhase] = useState("adult");
-
-  useEffect(() => {
-    const initializeForm = (plant) => {
-      if (plant) {
-        setGenus(genuses.find(_g => _g.id === plant.genus_id));
-        setType(types.find(_t => _t.id === plant.type_id));
-        setSystem(systems.find(_s => _s.id === plant.system_id));
-        setSize(plant.size);
-        setCost(plant.cost);
-        setWatering(plant.watering);
-        setPhase(plant.phase);
-      }
-    };
-
-    if (plantProp) {
-      initializeForm(plantProp);
-    } else if (plants.length > 0 && id) {
-      const plant = plants.find(_p => _p.id === parseInt(id));
-      if (plant) {
-        initializeForm(plant);
-      }
-    }
-  }, [plantProp, plants, id, genuses, types, systems]);
+  const [phase, setPhase] = useState(PHASE_LABELS.adult);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const updatedPlant = {
+    const newPlant = {
       size,
       cost,
       genus_id: genus.id,
@@ -52,11 +28,12 @@ const UpdatePlantForm = ({ plantProp }) => {
       watering,
       phase
     };
+
     try {
-      await updatePlant(plantProp ? plantProp.id : id, updatedPlant);
+      await addPlant(newPlant);
       navigate("/");
     } catch (error) {
-      console.error('Error updating plant:', error);
+      console.error('Error adding new plant:', error);
       // You might want to show an error message to the user here
     }
   };
@@ -131,4 +108,4 @@ const UpdatePlantForm = ({ plantProp }) => {
   );
 };
 
-export default UpdatePlantForm;
+export default PlantCreate;

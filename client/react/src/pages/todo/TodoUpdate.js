@@ -5,7 +5,7 @@ import { FormButton, FormTextInput, DateSelector, TextAreaInput } from '../../el
 import { useTodos } from '../../hooks/useTodos';
 import dayjs from 'dayjs';
 
-const UpdateTodoForm = ({ todoProp }) => {
+const TodoUpdate = ({ todoProp }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { todos, isLoading, error, updateTodo } = useTodos();
@@ -92,4 +92,4 @@ const UpdateTodoForm = ({ todoProp }) => {
   );
 };
 
-export default UpdateTodoForm;
+export default TodoUpdate;

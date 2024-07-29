@@ -16,15 +16,15 @@ import Alerts from './pages/alert/Alerts';
 import Todos from './pages/todo/Todos';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
-import NewPlantForm from './pages/plant/NewPlantForm';
+import PlantCreate from './pages/plant/PlantCreate';
 import SystemCreate from './pages/system/SystemCreate';
-import NewTodoForm from './pages/todo/NewTodoForm';
-import NewTypeForm from './pages/plant/type/NewTypeForm';
-import NewLightForm from './pages/system/light/NewLightForm';
-import NewGenusForm from './pages/plant/genus/NewGenusForm';
-import UpdatePlantForm from './pages/plant/UpdatePlantForm';
-import UpdateTodoForm from './pages/todo/UpdateTodoForm';
+import TypeCreate from './pages/plant/type/TypeCreate';
+import LightCreate from './pages/system/light/LightCreate';
+import GenusCreate from './pages/plant/genus/GenusCreate';
+import PlantUpdate from './pages/plant/PlantUpdate';
 import SystemUpdate from './pages/system/SystemUpdate';
+import TodoUpdate from './pages/todo/TodoUpdate';
+import TodoCreate from './pages/todo/TodoCreate';
 // import '@mui/x-date-pickers/styles';
 
 const drawerWidth = 240;
@@ -137,21 +137,19 @@ function App() {
             <Route path="/alerts" element={<Alerts />} />
 
             <Route path="/todo" element={<Todos />} />
-            <Route path="/todo/:id" element={<UpdateTodoForm />} />
-            <Route path="/todo/create" element={<NewTodoForm /> } />
+            <Route path="/todo/:id" element={<TodoUpdate />} />
+            <Route path="/todo/create" element={<TodoCreate /> } />
 
-            <Route path="/view" element={<Home />} />
             <Route path="/system/view" element={<Systems />} />
             <Route path="/system/:id" element={<SystemUpdate />} />
             <Route path="/plant/view" element={<Plants />} />
-            <Route path="/plants/:id" element={<UpdatePlantForm />} />
+            <Route path="/plants/:id" element={<PlantUpdate />} />
 
-            <Route path="/create" element={<Home />} />
-            <Route path="/plant/create" element={<NewPlantForm />} />
+            <Route path="/plant/create" element={<PlantCreate />} />
             <Route path="/system/create" element={<SystemCreate />} />
-            <Route path="/type/create" element={<NewTypeForm /> } />
-            <Route path="/light/create" element={<NewLightForm /> } />
-            <Route path="/genus/create" element={<NewGenusForm /> } />
+            <Route path="/type/create" element={<TypeCreate /> } />
+            <Route path="/light/create" element={<LightCreate /> } />
+            <Route path="/genus/create" element={<GenusCreate /> } />
           </Routes>
         </Box>
       </ThemeProvider>

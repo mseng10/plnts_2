@@ -4,7 +4,7 @@ import {useNavigate} from "react-router-dom"
 import { FormButton, FormTextInput, AutoCompleteInput, TextAreaInput } from '../../../elements/Form';
 
 /** Create a new plant type of a specified genus. */
-const NewTypeForm = () => {
+const TypeCreate = () => {
   // Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -92,6 +92,6 @@ const NewTypeForm = () => {
   );
 };
 
-export default NewTypeForm;
+export default TypeCreate;
 
 

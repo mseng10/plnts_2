@@ -16,7 +16,7 @@ const expandedDrawerWidth = 280;
 const navigationOptions = [
   { id: 'menu', url: '/', icon: 'menu', color: 'info' },
   { id: 'home', url: '/', icon: 'home', color: 'primary' },
-  { id: 'create', url: '/create', icon: 'create', color: 'primary', subMenu: [
+  { id: 'create', icon: 'create', color: 'primary', subMenu: [
     { id: 'plant', url: '/plant/create', icon: 'plant', label: 'Plant' },
     { id: 'type', url: '/type/create', icon: 'type', label: 'Type' },
     { id: 'genus', url: '/genus/create', icon: 'genus', label: 'Genus' },
@@ -24,7 +24,7 @@ const navigationOptions = [
     { id: 'light', url: '/light/create', icon: 'light', label: 'Light' },
     { id: 'todo', url: '/todo/create', icon: 'todo', label: 'Todo' },
   ]},
-  { id: 'view', url: '/view', icon: 'view', color: 'primary', subMenu: [
+  { id: 'view', icon: 'view', color: 'primary', subMenu: [
     { id: 'plant', url: '/plant/view', icon: 'plant', label: 'Plant' },
     { id: 'system', url: '/system/view', icon: 'system', label: 'System' },
   ]},
