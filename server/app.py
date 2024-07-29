@@ -103,7 +103,7 @@ def get_plant(plant_id):
     # Return JSON response
     return jsonify(plant.to_json())
 
-@app.route("/plants/<int:plant_id>", methods=["PUT"])
+@app.route("/plants/<int:plant_id>", methods=["PATCH"])
 def update_plant(plant_id):
     """
     Query the specific plant.
@@ -112,16 +112,6 @@ def update_plant(plant_id):
     logger.info("Received request to query the plant")
 
     changes = request.get_json()
-    # Create a new Plant object
-    new_plant = Plant(
-        cost=new_plant_data["cost"],
-        size=new_plant_data["size"],
-        genus_id=new_plant_data["genus_id"],
-        type_id=new_plant_data["type_id"],
-        system_id=new_plant_data["system_id"],
-        watering=new_plant_data["watering"],
-        phase = new_plant_data["phase"]
-    )
 
     session = Session()
     plant = session.query(Plant).get(plant_id)
@@ -135,11 +125,48 @@ def update_plant(plant_id):
     plant.phase = change["phase"]
     plant.updated_on = datetime.now
 
+    session.flush()
     session.commit()
-    session.close()
 
     # Return JSON response
     return jsonify(plant.to_json())
+
+@app.route("/todo/<int:todo_id>", methods=["PATCH"])
+def update_todo(todo_id):
+    """
+    Query the specific todo.
+    """
+    # Log the request
+    logger.info(f"Received request to patch todo {todo_id}")
+
+    changes = request.get_json()
+
+    session = Session()
+    todo = session.query(Todo).get(todo_id)
+
+    todo.name = changes["name"]
+    todo.description = changes["description"]
+    todo.due_on = changes["due_on"]
+
+    session.flush()
+    session.commit()
+
+    # Return JSON response
+    return jsonify(todo.to_json())
+
+@app.route("/todo/<int:todo_id>", methods=["GET"])
+def get_todo(todo_id):
+    """
+    Query the specific todo.
+    """
+    # Log the request
+    logger.info("Received request to query the todo")
+    session = Session()
+    todo = session.query(Todo).get(todo_id)
+    session.close()
+
+    # Return JSON response
+    return jsonify(todo.to_json())
 
 @app.route("/plants/water", methods=["POST"])
 def water_plants():
@@ -370,7 +397,7 @@ def get_alerts():
     return jsonify(plnt_alerts_json)
 
 @app.route("/todo", methods=["GET"])
-def get_todo():
+def get_todos():
     """
     Retrieve all todos from the database.
     """

@@ -13,12 +13,15 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTodos } from '../../hooks/useTodos';
 import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
 import dayjs from 'dayjs';
+import { useNavigate } from 'react-router-dom';
+import { EditSharp } from '@mui/icons-material';
 
 const TodoCard = ({ todo, onResolve }) => {
+  const navigate = useNavigate();
   const isPastDue = dayjs(todo.due_on).isBefore(dayjs(), 'day');
 
   return (
-    <Grid item>
+    <Grid item width={300}>
       <Card sx={CARD_STYLE} borderRadius={20}>
         <CardActionArea>
           <CardHeader
@@ -45,6 +48,9 @@ const TodoCard = ({ todo, onResolve }) => {
             </Box>
           </CardContent>
           <CardActions disableSpacing>
+            <IconButton color="info" onClick={() => navigate(`/todo/${todo.id}`)}>
+              <EditSharp />
+            </IconButton>
             <IconButton color="info" onClick={() => onResolve(todo.id)}>
               <CheckCircleOutlineIcon />
             </IconButton>

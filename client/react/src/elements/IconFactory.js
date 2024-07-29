@@ -18,6 +18,7 @@ import AvTimerSharpIcon from '@mui/icons-material/AvTimerSharp';
 import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
+import EditSharp from '@mui/icons-material/Edit'
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -87,6 +88,9 @@ const IconFactory = ({ icon, color, size }) => {
     break;
   case 'kill':
     IconComponent = DeleteOutlineSharpIcon;
+    break;
+  case 'edit':
+    IconComponent = EditSharp;
     break;
   // Add more cases for other icons
   default:

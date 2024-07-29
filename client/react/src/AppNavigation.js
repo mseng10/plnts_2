@@ -29,7 +29,7 @@ const navigationOptions = [
     { id: 'system', url: '/system/view', icon: 'system', label: 'System' },
   ]},
   { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary' },
-  { id: 'todo', url: '/todos', icon: 'todo', color: 'primary' },
+  { id: 'todo', url: '/todo', icon: 'todo', color: 'primary' },
 ];
 
 function AppNavigation({ window }) {

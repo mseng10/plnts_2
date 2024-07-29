@@ -60,9 +60,28 @@ export const useTodos = () => {
     }
   };
 
+  const updateTodo = async (id, updatedTodo) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/todo/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTodo),
+      });
+      const data = await response.json();
+      setTodos(prevTodos => prevTodos.map(todo => 
+        todo.id === id ? { ...todo, ...data } : todo
+      ));
+
+      return data;
+    } catch (error) {
+      console.error('Error updating todo:', error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  return { todos, isLoading, error, resolveTodo, createTodo };
+  return { todos, isLoading, error, resolveTodo, createTodo, updateTodo };
 };
