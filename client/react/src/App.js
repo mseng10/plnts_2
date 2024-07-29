@@ -24,6 +24,7 @@ import NewLightForm from './pages/system/light/NewLightForm';
 import NewGenusForm from './pages/plant/genus/NewGenusForm';
 import UpdatePlantForm from './pages/plant/UpdatePlantForm';
 import UpdateTodoForm from './pages/todo/UpdateTodoForm';
+import SystemUpdate from './pages/system/SystemUpdate';
 // import '@mui/x-date-pickers/styles';
 
 const drawerWidth = 240;
@@ -137,16 +138,17 @@ function App() {
 
             <Route path="/todo" element={<Todos />} />
             <Route path="/todo/:id" element={<UpdateTodoForm />} />
+            <Route path="/todo/create" element={<NewTodoForm /> } />
 
             <Route path="/view" element={<Home />} />
             <Route path="/system/view" element={<Systems />} />
+            <Route path="/system/:id" element={<SystemUpdate />} />
             <Route path="/plant/view" element={<Plants />} />
             <Route path="/plants/:id" element={<UpdatePlantForm />} />
 
             <Route path="/create" element={<Home />} />
             <Route path="/plant/create" element={<NewPlantForm />} />
             <Route path="/system/create" element={<NewSystemForm />} />
-            <Route path="/todo/create" element={<NewTodoForm /> } />
             <Route path="/type/create" element={<NewTypeForm /> } />
             <Route path="/light/create" element={<NewLightForm /> } />
             <Route path="/genus/create" element={<NewGenusForm /> } />

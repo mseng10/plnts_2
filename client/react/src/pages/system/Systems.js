@@ -19,8 +19,11 @@ import SystemPlants from '../../modals/system/SystemPlants';
 import SystemAlerts from '../../modals/system/SystemAlerts';
 import { useSystems } from '../../hooks/useSystems';
 import { CARD_STYLE, AVATAR_STYLE, CIRCULAR_PROGRESS_STYLE, ICON_STYLE } from '../../constants';
+import { EditSharp } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 const SystemCard = ({ system }) => {
+  const navigate = useNavigate();
   const [isSystemsPlanetsOpen, setIsSystemsPlanetsOpen] = useState(false);
   const [isSystemAlertsOpen, setIsSystemsAlertsOpen] = useState(false);
 
@@ -69,6 +72,9 @@ const SystemCard = ({ system }) => {
             </Box>
           </CardContent>
           <CardActions disableSpacing>
+            <IconButton color="info" onClick={() => navigate(`/system/${system.id}`)}>
+              <EditSharp />
+            </IconButton>
             <IconButton color="info" onClick={() => setIsSystemsAlertsOpen(true)}>
               <ReportGmailerrorredSharpIcon />
             </IconButton>

@@ -544,6 +544,47 @@ def get_systems_alerts(system_id):
     # Return JSON response
     return jsonify(plant_alerts_json)
 
+@app.route("/system/<int:system_id>", methods=["PATCH"])
+def update_system(system_id):
+    """
+    Query the specific system.
+    """
+    # Log the request
+    logger.info(f"Received request to patch system {system_id}")
+
+    changes = request.get_json()
+
+    session = Session()
+    system = session.query(System).get(system_id)
+
+    system.name=changes["name"],
+    system.temperature=changes["temperature"],
+    system.humidity=changes["humidity"],
+    system.duration=changes["duration"],
+    system.distance=changes["distance"],
+    system.description=changes["description"]
+
+    session.flush()
+    session.commit()
+
+    # Return JSON response
+    return jsonify(system.to_json())
+
+@app.route("/system/<int:system_id>", methods=["GET"])
+def get_system(system_id):
+    """
+    Query the specific system.
+    """
+    # Log the request
+    logger.info("Received request to query the system")
+    session = Session()
+    system = session.query(System).get(system_id)
+    session.close()
+
+    # Return JSON response
+    return jsonify(system.to_json())
+
+
 if __name__ == "__main__":
     # Run the Flask app
     app.run(debug=True)
