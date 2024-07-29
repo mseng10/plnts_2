@@ -17,7 +17,7 @@ import Todos from './pages/todo/Todos';
 import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
 import NewPlantForm from './pages/plant/NewPlantForm';
-import NewSystemForm from './pages/system/NewSystemForm';
+import SystemCreate from './pages/system/SystemCreate';
 import NewTodoForm from './pages/todo/NewTodoForm';
 import NewTypeForm from './pages/plant/type/NewTypeForm';
 import NewLightForm from './pages/system/light/NewLightForm';
@@ -148,7 +148,7 @@ function App() {
 
             <Route path="/create" element={<Home />} />
             <Route path="/plant/create" element={<NewPlantForm />} />
-            <Route path="/system/create" element={<NewSystemForm />} />
+            <Route path="/system/create" element={<SystemCreate />} />
             <Route path="/type/create" element={<NewTypeForm /> } />
             <Route path="/light/create" element={<NewLightForm /> } />
             <Route path="/genus/create" element={<NewGenusForm /> } />

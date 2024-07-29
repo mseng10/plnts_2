@@ -3,13 +3,14 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import Stack from '@mui/material/Stack';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 import {useNavigate} from "react-router-dom" 
 import { SliderInput, TextAreaInput, FormTextInput, FormButton } from '../../elements/Form';
 import { temperatureMarks, humidityMarks, durationMarks, distanceMarks } from '../../hooks/useSystems';
+import AddSharpIcon from '@mui/icons-material/AddSharp';
+import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 
 /** Create a system that houses plants */
 const NewSystemForm = ({ systems }) => {
@@ -77,11 +78,19 @@ const NewSystemForm = ({ systems }) => {
         .catch(error => console.error('Error posting genus data:', error));
       navigate("/")
     }
-  }, [submitted, name, description, temperature, humidity, distance, duration,lightModel ]);
+  }, [submitted, name, description, temperature, humidity, distance, duration,lightModel, lightCount ]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setSubmitted(true); // Update submitted state
+  };
+
+  const updateLightCount = (increment) => {
+    let newCount = lightCount;
+    newCount+=increment;
+    if (newCount > 0) {
+      setLightCount(newCount);
+    }
   };
 
   const handleCancel = () => {
@@ -185,9 +194,12 @@ const NewSystemForm = ({ systems }) => {
                 )}
               />
               <ButtonGroup sx = {{ float:'right'}}>
-                <IconButton className="medium_button" color="primary">
-                  <CloseSharpIcon className="medium_button"/>
-                  {lightCount? lightCount : 1}
+                <IconButton color='primary' onClick={() => updateLightCount(-1)}>
+                  <RemoveSharpIcon/>
+                </IconButton>
+                <p>{lightCount}</p>
+                <IconButton color='primary' onClick={() => updateLightCount(1)}>
+                  <AddSharpIcon/>
                 </IconButton>
               </ButtonGroup>
             </Stack>

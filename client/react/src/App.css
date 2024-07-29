@@ -223,3 +223,8 @@
   0%   { transform: translateY(0); }
   100% { transform: translateY(calc(-200vh)) rotate(600deg); }
 }
+
+.test {
+  background-color: white!important;
+  color: white!important;
+}
