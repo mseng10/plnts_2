@@ -15,7 +15,7 @@ const NewPlantForm = () => {
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
   const [watering, setWatering] = useState(0);
-  const [phase, setPhase] = useState("adult");
+  const [phase, setPhase] = useState(PHASE_LABELS.adult);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
