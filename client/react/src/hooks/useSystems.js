@@ -104,3 +104,67 @@ export const useSystemAlerts = (system) => {
 
   return { alerts, isLoading, error };
 };
+
+// Target temperature marks
+export const temperatureMarks = [
+  {
+    value: 48,
+    label: '48',
+  },
+  {
+    value: 68,
+    label: '68°F',
+  },
+  {
+    value: 80,
+    label: '80°F',
+  }
+];
+
+// Humidity field marks
+export const humidityMarks = [
+  {
+    value: 0,
+    label: '0%',
+  },
+  {
+    value: 60,
+    label: '60%',
+  },
+  {
+    value: 100,
+    label: '100%',
+  }
+];
+
+// Duration field marks
+export const durationMarks = [
+  {
+    value: 6,
+    label: '6',
+  },
+  {
+    value: 12,
+    label: '12',
+  },
+  {
+    value: 18,
+    label: '18',
+  }
+];
+
+// Lighting field marks
+export const distanceMarks = [
+  {
+    value: 12,
+    label: '12"',
+  },
+  {
+    value: 24,
+    label: '24"',
+  },
+  {
+    value: 36,
+    label: '36"',
+  }
+];

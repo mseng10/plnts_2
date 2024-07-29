@@ -9,7 +9,7 @@ import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 import {useNavigate} from "react-router-dom" 
 import { SliderInput, TextAreaInput, FormTextInput, FormButton } from '../../elements/Form';
-
+import { temperatureMarks, humidityMarks, durationMarks, distanceMarks } from '../../hooks/useSystems';
 
 /** Create a system that houses plants */
 const NewSystemForm = ({ systems }) => {
@@ -87,69 +87,6 @@ const NewSystemForm = ({ systems }) => {
   const handleCancel = () => {
     navigate("/create");
   };
-  // Target temperature marks
-  const temperatureMarks = [
-    {
-      value: 48,
-      label: '48',
-    },
-    {
-      value: 68,
-      label: '68°F',
-    },
-    {
-      value: 80,
-      label: '80°F',
-    }
-  ];
-
-  // Humidity field marks
-  const humidityMarks = [
-    {
-      value: 0,
-      label: '0%',
-    },
-    {
-      value: 60,
-      label: '60%',
-    },
-    {
-      value: 100,
-      label: '100%',
-    }
-  ];
-
-  // Duration field marks
-  const durationMarks = [
-    {
-      value: 6,
-      label: '6',
-    },
-    {
-      value: 12,
-      label: '12',
-    },
-    {
-      value: 18,
-      label: '18',
-    }
-  ];
-
-  // Lighting field marks
-  const distanceMarks = [
-    {
-      value: 12,
-      label: '12"',
-    },
-    {
-      value: 24,
-      label: '24"',
-    },
-    {
-      value: 36,
-      label: '36"',
-    }
-  ];
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
