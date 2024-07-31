@@ -139,15 +139,18 @@ function App() {
             <Route path="/todo/:id" element={<TodoUpdate />} />
             <Route path="/todo/create" element={<TodoCreate /> } />
 
-            <Route path="/system/view" element={<Systems />} />
+            <Route path="/system" element={<Systems />} />
             <Route path="/system/:id" element={<SystemUpdate />} />
-            <Route path="/plant/view" element={<Plants />} />
-            <Route path="/plants/:id" element={<PlantUpdate />} />
-
-            <Route path="/plant/create" element={<PlantCreate />} />
             <Route path="/system/create" element={<SystemCreate />} />
-            <Route path="/type/create" element={<TypeCreate /> } />
+
             <Route path="/light/create" element={<LightCreate /> } />
+
+            <Route path="/plant" element={<Plants />} />
+            <Route path="/plants/:id" element={<PlantUpdate />} />
+            <Route path="/plant/create" element={<PlantCreate />} />
+
+            <Route path="/type/create" element={<TypeCreate /> } />
+
             <Route path="/genus/create" element={<GenusCreate /> } />
           </Routes>
         </Box>

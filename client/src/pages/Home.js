@@ -14,7 +14,7 @@ const Home = () => {
         <div>
           <div className='system_min'>
           </div>
-          <IconButton color="primary" onClick ={()=>{ navigate("/plant/view")}}>
+          <IconButton color="primary" onClick ={()=>{ navigate("/plant")}}>
             <GrassOutlinedIcon className='home_icon'/>
           </IconButton>
         </div>

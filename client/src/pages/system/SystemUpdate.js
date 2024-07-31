@@ -67,7 +67,7 @@ const SystemUpdate = ({ systemProp }) => {
     };
     try {
       await updateSystem(systemProp ? systemProp.id : id, updatedSystem);
-      navigate("/system/view");
+      navigate("/system");
     } catch (error) {
       console.error('Error updating system:', error);
       // You might want to show an error message to the user here
@@ -75,7 +75,7 @@ const SystemUpdate = ({ systemProp }) => {
   };
 
   const handleCancel = () => {
-    navigate("/system/view");
+    navigate("/system");
   };
 
   if (isLoading) return <div>Loading...</div>;

@@ -25,8 +25,8 @@ const navigationOptions = [
     { id: 'todo', url: '/todo/create', icon: 'todo', label: 'Todo' },
   ]},
   { id: 'view', icon: 'view', color: 'primary', subMenu: [
-    { id: 'plant', url: '/plant/view', icon: 'plant', label: 'Plant' },
-    { id: 'system', url: '/system/view', icon: 'system', label: 'System' },
+    { id: 'plant', url: '/plant', icon: 'plant', label: 'Plant' },
+    { id: 'system', url: '/system', icon: 'system', label: 'System' },
   ]},
   { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary' },
   { id: 'todo', url: '/todo', icon: 'todo', color: 'primary' },
