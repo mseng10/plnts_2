@@ -3,7 +3,6 @@ This is the main module of the application.
 """
 
 # Standard library imports
-import json
 import logging
 from datetime import datetime
 
@@ -19,25 +18,11 @@ from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
 
-# Load database configuration from JSON file
-with open("db.json", encoding="utf-8") as json_data_file:
-    db_config = json.load(json_data_file)
+from db import init_db
+from db import Session
 
-# Create SQLAlchemy engine
-url = URL.create(
-    drivername=db_config["drivername"],
-    username=db_config["username"],
-    password=db_config["password"],
-    host=db_config["host"],
-    database=db_config["database"],
-    port=db_config["port"],
-)
-engine = create_engine(url)
-
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
-
-Session = sessionmaker(bind=engine)
+# Call this when starting your application
+init_db()
 
 # Create Flask app
 app = Flask(__name__)
