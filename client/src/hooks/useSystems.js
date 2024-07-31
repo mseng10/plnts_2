@@ -121,7 +121,7 @@ export const temperatureMarks = [
   }
 ];
 
-// Humidity field marks
+// Target humidity field marks
 export const humidityMarks = [
   {
     value: 0,
@@ -137,7 +137,7 @@ export const humidityMarks = [
   }
 ];
 
-// Duration field marks
+// Target lighting duration field marks
 export const durationMarks = [
   {
     value: 6,
@@ -153,7 +153,7 @@ export const durationMarks = [
   }
 ];
 
-// Lighting field marks
+// Target lighting distance field marks
 export const distanceMarks = [
   {
     value: 12,

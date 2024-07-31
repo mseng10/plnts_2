@@ -13,6 +13,11 @@ from models.alert import PlantAlert, Todo
 
 import json
 
+# TODO FOR DIFFERENT MODES
+# DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/dbname")
+# Create the SQLAlchemy engine
+# engine = create_engine(DATABASE_URL)
+
 # Replace this with your actual database URL
 with open("db.json", encoding="utf-8") as json_data_file:
     db_config = json.load(json_data_file)

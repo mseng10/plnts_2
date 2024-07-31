@@ -112,5 +112,16 @@ export const usePlants = (initialPlants) => {
     }
   };
 
-  return { plants, setPlants, genuses, systems, types, isLoading, error, addPlant, killPlant, waterPlants, updatePlant};
+  return { plants,
+    setPlants,
+    genuses,
+    systems, 
+    types,
+    isLoading,
+    error,
+    addPlant,
+    killPlant,
+    waterPlants,
+    updatePlant
+  };
 };

@@ -36,6 +36,7 @@ const SystemUpdate = ({ systemProp }) => {
         setTempurature(system.temperature);
         setDuration(system.duration);
         setDistance(system.distance);
+        // TODO: Sync light data
         setLightModel(null);
         setLightCount(1);
         setAllLights([]);
