@@ -2,18 +2,15 @@
 This is the main module of the application.
 """
 
-# Standard library imports
 import logging
 from datetime import datetime
 
-# Third-party imports
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-# Local application imports
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
@@ -21,17 +18,18 @@ from models.alert import PlantAlert, Todo
 from db import init_db
 from db import Session
 
+from logger import setup_logger
+import logging
+
+# Create a logger for this specific module
+logger = setup_logger(__name__, logging.DEBUG)
+
 # Call this when starting your application
 init_db()
 
 # Create Flask app
 app = Flask(__name__)
 CORS(app)
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 @app.route("/plants", methods=["POST"])
 def create_plant():
