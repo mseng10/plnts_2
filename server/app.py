@@ -2,51 +2,34 @@
 This is the main module of the application.
 """
 
-# Standard library imports
-import json
 import logging
 from datetime import datetime
 
-# Third-party imports
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-# Local application imports
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
 
-# Load database configuration from JSON file
-with open("db.json", encoding="utf-8") as json_data_file:
-    db_config = json.load(json_data_file)
+from db import init_db
+from db import Session
 
-# Create SQLAlchemy engine
-url = URL.create(
-    drivername=db_config["drivername"],
-    username=db_config["username"],
-    password=db_config["password"],
-    host=db_config["host"],
-    database=db_config["database"],
-    port=db_config["port"],
-)
-engine = create_engine(url)
+from logger import setup_logger
+import logging
 
-# Base.metadata.drop_all(engine)
-# Base.metadata.create_all(engine)
+# Create a logger for this specific module
+logger = setup_logger(__name__, logging.DEBUG)
 
-Session = sessionmaker(bind=engine)
+# Call this when starting your application
+init_db()
 
 # Create Flask app
 app = Flask(__name__)
 CORS(app)
-
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 
 @app.route("/plants", methods=["POST"])
 def create_plant():
@@ -103,7 +86,7 @@ def get_plant(plant_id):
     # Return JSON response
     return jsonify(plant.to_json())
 
-@app.route("/plants/<int:plant_id>", methods=["PUT"])
+@app.route("/plants/<int:plant_id>", methods=["PATCH"])
 def update_plant(plant_id):
     """
     Query the specific plant.
@@ -112,16 +95,6 @@ def update_plant(plant_id):
     logger.info("Received request to query the plant")
 
     changes = request.get_json()
-    # Create a new Plant object
-    new_plant = Plant(
-        cost=new_plant_data["cost"],
-        size=new_plant_data["size"],
-        genus_id=new_plant_data["genus_id"],
-        type_id=new_plant_data["type_id"],
-        system_id=new_plant_data["system_id"],
-        watering=new_plant_data["watering"],
-        phase = new_plant_data["phase"]
-    )
 
     session = Session()
     plant = session.query(Plant).get(plant_id)
@@ -135,11 +108,48 @@ def update_plant(plant_id):
     plant.phase = change["phase"]
     plant.updated_on = datetime.now
 
+    session.flush()
     session.commit()
-    session.close()
 
     # Return JSON response
     return jsonify(plant.to_json())
+
+@app.route("/todo/<int:todo_id>", methods=["PATCH"])
+def update_todo(todo_id):
+    """
+    Query the specific todo.
+    """
+    # Log the request
+    logger.info(f"Received request to patch todo {todo_id}")
+
+    changes = request.get_json()
+
+    session = Session()
+    todo = session.query(Todo).get(todo_id)
+
+    todo.name = changes["name"]
+    todo.description = changes["description"]
+    todo.due_on = changes["due_on"]
+
+    session.flush()
+    session.commit()
+
+    # Return JSON response
+    return jsonify(todo.to_json())
+
+@app.route("/todo/<int:todo_id>", methods=["GET"])
+def get_todo(todo_id):
+    """
+    Query the specific todo.
+    """
+    # Log the request
+    logger.info("Received request to query the todo")
+    session = Session()
+    todo = session.query(Todo).get(todo_id)
+    session.close()
+
+    # Return JSON response
+    return jsonify(todo.to_json())
 
 @app.route("/plants/water", methods=["POST"])
 def water_plants():
@@ -308,11 +318,12 @@ def create_system():
     # Potentially create lights that were created alongside the system
     potentially_new_light = new_system_json["light"]
     if potentially_new_light is not None:
-        logger.info("Attempting to create embedded lights from system request")
-        potentially_new_light["system_id"] = new_system.id
         count = potentially_new_light["count"] if potentially_new_light["count"] else 1
+        logger.info(f"Attempting to create {count} embedded lights from system request")
+        
+        potentially_new_light["system_id"] = new_system.id
         new_lights = [create_light_from_json(potentially_new_light) for i in range(count)]
-        db.add(new_lights)
+        db.add_all(new_lights)
         db.commit()
 
     db.close()
@@ -370,7 +381,7 @@ def get_alerts():
     return jsonify(plnt_alerts_json)
 
 @app.route("/todo", methods=["GET"])
-def get_todo():
+def get_todos():
     """
     Retrieve all todos from the database.
     """
@@ -411,37 +422,20 @@ def create_todo():
 @app.route("/alert/check", methods=["GET"])
 def alert_check():
     """
-    Retrieve all alerts from the database.
-    TODO: Comvert to runnable background processor
+    Get system's alerts.
     """
-    logger.info("Received request to run all alert scans")
-
+    # Log the request
+    logger.info("Received request to get a system's alerts")
+    
     session = Session()
-    existing_plant_alrts = session.query(PlantAlert).all()
-    existing_plant_alrts_map = {}
-    for existing_plant_alert in existing_plant_alrts:
-        existing_plant_alrts_map[existing_plant_alert.id] = existing_plant_alert
-
-    existing_plants = session.query(Plant).all()
-    for plant in existing_plants:
-        end_date = plant.watered_on + datetime.timedelta(days=plant.watering)
-        if end_date < datetime.now() and existing_plant_alrts_map.get(plant.id) is None:
-            new_plant_alert = PlantAlert(
-                plant_id = plant.id,
-                system_id = plant.system_id
-            )
-            # Create the alert in the db
-            session.add(new_plant_alert)
-            # Save it to return to the server
-            existing_plant_alrts.appned(new_plant_alert)
-
-    session.commit()
+    plant_alerts = session.query(PlantAlert).all()
     session.close()
 
-    alerts_json = [existing_plant_alrt.to_json() for existing_plant_alrt in existing_plant_alrts]
+    # Transform plant alerts to JSON format
+    plant_alerts_json = [plant_alert.to_json() for plant_alert in plant_alerts]
 
     # Return JSON response
-    return jsonify(alerts_json)
+    return jsonify(plant_alerts_json)
 
 @app.route("/todo/<int:todo_id>/resolve", methods=["POST"])
 def todo_resolve(todo_id):
@@ -508,7 +502,7 @@ def get_systems_alerts(system_id):
     logger.info("Received request to get a system's alerts")
     
     session = Session()
-    plant_alerts = session.query(PlantAlerts).filter(Plant.system_id == system_id).all()
+    plant_alerts = session.query(PlantAlert).filter(Plant.system_id == system_id).all()
     session.close()
 
     # Transform plant alerts to JSON format
@@ -516,6 +510,47 @@ def get_systems_alerts(system_id):
 
     # Return JSON response
     return jsonify(plant_alerts_json)
+
+@app.route("/system/<int:system_id>", methods=["PATCH"])
+def update_system(system_id):
+    """
+    Query the specific system.
+    """
+    # Log the request
+    logger.info(f"Received request to patch system {system_id}")
+
+    changes = request.get_json()
+
+    session = Session()
+    system = session.query(System).get(system_id)
+
+    system.name=changes["name"],
+    system.temperature=changes["temperature"],
+    system.humidity=changes["humidity"],
+    system.duration=changes["duration"],
+    system.distance=changes["distance"],
+    system.description=changes["description"]
+
+    session.flush()
+    session.commit()
+
+    # Return JSON response
+    return jsonify(system.to_json())
+
+@app.route("/system/<int:system_id>", methods=["GET"])
+def get_system(system_id):
+    """
+    Query the specific system.
+    """
+    # Log the request
+    logger.info("Received request to query the system")
+    session = Session()
+    system = session.query(System).get(system_id)
+    session.close()
+
+    # Return JSON response
+    return jsonify(system.to_json())
+
 
 if __name__ == "__main__":
     # Run the Flask app
