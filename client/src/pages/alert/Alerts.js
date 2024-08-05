@@ -1,5 +1,4 @@
-// Todos.js
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -8,90 +7,71 @@ import { CardActionArea, CardHeader } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import CardActions from '@mui/material/CardActions';
-import ReportGmailerrorredSharpIcon from '@mui/icons-material/ReportGmailerrorredSharp';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { useAlerts } from '../../hooks/useAlerts';
+import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
+// import { EditSharp } from '@mui/icons-material';
 
-const Alerts = (alerts) => {
-
-  // Passable Data
-  const [plantAlerts, setPlantAlerts] = useState(alerts && alerts.alerts ? alerts.alerts : []);
-
-  const [resolve, setResolve] = useState(null);
-
-  useEffect(() => {
-    if (resolve) {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-      };
-      const endpoint = 'http://127.0.0.1:5000/alert/plant/' + resolve.id + "/resolve"
-      fetch(endpoint, requestOptions)
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-
-          setTimeout(() => {
-            const updatePlantAlerts = plantAlerts.filter((_pa => _pa.id !== resolve.id))
-            setPlantAlerts(updatePlantAlerts);
-          }, 1000);
-
-          setResolve(null);
-        })
-        .catch(error => console.error('Error posting todo data:', error));
-    }
-  }, [resolve]);
-
-  useEffect(() => {
-    // Fetch Systems data from the server
-    fetch('http://127.0.0.1:5000/alert/check')
-      .then((response) => response.json())
-      .then((data) => setPlantAlerts(data))
-      .catch((error) => console.error('Error fetching alert data:', error));
-  }, []);
+const AlertCard = ({ alert, onResolve }) => {
 
   return (
-    <>
-      <div className="App">
-        {/* { todos.length > 0 && ( */}
-        <div>
-          <Grid item xs={12}>
-            <Grid container justifyContent="center" spacing={4}>
-              {plantAlerts.map((plantAlert) => (
-                <Grid key={plantAlert} item>
-                  <Card sx={{ maxWidth: 345 }}>
-                    <CardActionArea>
-                      <CardHeader
-                        avatar={
-                          <Avatar aria-label="recipe" sx={{backgroundColor:'inherit'}}>
-                            <ReportGmailerrorredSharpIcon className="medium_button" color='alert'/>
-                          </Avatar>
-                        }
-                        title={plantAlert.alert_type}
-                        subheader={plantAlert.created_on}
-                      />
-                      <CardContent>
-                        <Box full>
-                          {/* <Typography variant="body2" color="text.secondary">
-                            {plantAlert.description}
-                          </Typography> */}
-                        </Box>
-                      </CardContent>
-                      <CardActions disableSpacing>
-                        <IconButton color="info" onClick={() => setResolve(plantAlert)}>
-                          <CheckCircleOutlineIcon />
-                        </IconButton>
-                      </CardActions>
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          </Grid>
-        </div>
-        {/* )} */}
-      </div>
-    </>
+    <Grid item width={300}>
+      <Card sx={CARD_STYLE} borderRadius={20}>
+        <CardActionArea>
+          <CardHeader
+            avatar={
+              <Avatar sx={AVATAR_STYLE}>
+                <FormatListNumberedIcon className="small_button" color='info'/>
+              </Avatar>
+            }
+            title={alert.type}
+            // subheader={
+            //   <span style={{ color: isPastDue ? 'error.main' : 'text.secondary' }}>
+            //     {dayjs(todo.due_on).format('MMM D, YYYY')}
+            //   </span>
+            // }
+            subheaderTypographyProps={{
+              sx: { color: 'error.main' }
+            }}
+          />
+          <CardContent>
+            <Box>
+              <Typography variant="body2" color="text.secondary">
+                {alert.description}
+              </Typography>
+            </Box>
+          </CardContent>
+          <CardActions disableSpacing>
+            {/* <IconButton color="info" onClick={() => navigate(`/todo/${todo.id}`)}>
+              <EditSharp />
+            </IconButton> */}
+            <IconButton color="info" onClick={() => onResolve(alert.id)}>
+              <CheckCircleOutlineIcon />
+            </IconButton>
+          </CardActions>
+        </CardActionArea>
+      </Card>
+    </Grid>
+  )
+};
+
+const Alerts = () => {
+  const { alerts, isLoading, error, resolveAlert } = useAlerts();
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (alerts.length === 0) return <div>No Alerts!</div>;
+
+  return (
+    <div className="App">
+      <Grid container justifyContent="center" spacing={4}>
+        {alerts.map((alert) => (
+          <AlertCard key={alert.id} alert={alert} onResolve={resolveAlert} />
+        ))}
+      </Grid>
+    </div>
   );
 };
 

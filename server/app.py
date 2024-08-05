@@ -422,37 +422,20 @@ def create_todo():
 @app.route("/alert/check", methods=["GET"])
 def alert_check():
     """
-    Retrieve all alerts from the database.
-    TODO: Comvert to runnable background processor
+    Get system's alerts.
     """
-    logger.info("Received request to run all alert scans")
-
+    # Log the request
+    logger.info("Received request to get a system's alerts")
+    
     session = Session()
-    existing_plant_alrts = session.query(PlantAlert).all()
-    existing_plant_alrts_map = {}
-    for existing_plant_alert in existing_plant_alrts:
-        existing_plant_alrts_map[existing_plant_alert.id] = existing_plant_alert
-
-    existing_plants = session.query(Plant).all()
-    for plant in existing_plants:
-        end_date = plant.watered_on + datetime.timedelta(days=plant.watering)
-        if end_date < datetime.now() and existing_plant_alrts_map.get(plant.id) is None:
-            new_plant_alert = PlantAlert(
-                plant_id = plant.id,
-                system_id = plant.system_id
-            )
-            # Create the alert in the db
-            session.add(new_plant_alert)
-            # Save it to return to the server
-            existing_plant_alrts.appned(new_plant_alert)
-
-    session.commit()
+    plant_alerts = session.query(PlantAlert).all()
     session.close()
 
-    alerts_json = [existing_plant_alrt.to_json() for existing_plant_alrt in existing_plant_alrts]
+    # Transform plant alerts to JSON format
+    plant_alerts_json = [plant_alert.to_json() for plant_alert in plant_alerts]
 
     # Return JSON response
-    return jsonify(alerts_json)
+    return jsonify(plant_alerts_json)
 
 @app.route("/todo/<int:todo_id>/resolve", methods=["POST"])
 def todo_resolve(todo_id):
@@ -519,7 +502,7 @@ def get_systems_alerts(system_id):
     logger.info("Received request to get a system's alerts")
     
     session = Session()
-    plant_alerts = session.query(PlantAlerts).filter(Plant.system_id == system_id).all()
+    plant_alerts = session.query(PlantAlert).filter(Plant.system_id == system_id).all()
     session.close()
 
     # Transform plant alerts to JSON format
