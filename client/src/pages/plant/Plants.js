@@ -2,25 +2,21 @@ import React, { useState, useMemo } from 'react';
 import { DataGrid, GridToolbarContainer, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport, GridToolbarDensitySelector } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import { EditSharp, WaterDropOutlined, DeleteOutlineSharp, LunchDining, ParkSharp } from '@mui/icons-material';
+import { EditSharp, WaterDropOutlined, DeleteOutlineSharp } from '@mui/icons-material';
 import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
 import KillPlantsForm from '../../modals/plant/KillPlantsForm';
-import FertilizePlantsForm from '../../forms/update/FertilizePlantsForm';
-import RepotPlantsForm from '../../forms/update/RepotPlantsForm';
 import { PHASE_LABELS } from '../../constants';
 import { usePlants } from '../../hooks/usePlants';
 import { useNavigate } from "react-router-dom";
 
 const Plants = ({ initialPlants }) => {
   const navigate = useNavigate();
-  const { plants, setPlants, genuses, systems, types, isLoading, error } = usePlants(initialPlants);
+  const { plants, genuses, systems, types, isLoading, error } = usePlants(initialPlants);
   const [selectedPlants, setSelectedPlants] = useState([]);
   const [formStates, setFormStates] = useState({
     updatePlant: false,
     waterPlants: false,
-    killPlants: false,
-    fertilizePlants: false,
-    repotPlants: false,
+    killPlants: false
   });
 
   const columns = useMemo(() => [
@@ -75,12 +71,6 @@ const Plants = ({ initialPlants }) => {
           <IconButton size="small" color="error" onClick={() => setFormStates(prev => ({ ...prev, killPlants: true }))}>
             <DeleteOutlineSharp />
           </IconButton>
-          <IconButton size="small" color="info" onClick={() => setFormStates(prev => ({ ...prev, fertilizePlants: true }))}>
-            <LunchDining />
-          </IconButton>
-          <IconButton size="small" color="info" onClick={() => setFormStates(prev => ({ ...prev, repotPlants: true }))}>
-            <ParkSharp />
-          </IconButton>
         </>
       )}
     </GridToolbarContainer>
@@ -120,22 +110,6 @@ const Plants = ({ initialPlants }) => {
           isOpen={formStates.killPlants}
           onRequestClose={() => setFormStates(prev => ({ ...prev, killPlants: false }))}
           initialPlants={selectedPlants}
-        />
-      )}
-      {formStates.fertilizePlants && (
-        <FertilizePlantsForm
-          isOpen={formStates.fertilizePlants}
-          onRequestClose={() => setFormStates(prev => ({ ...prev, fertilizePlants: false }))}
-          setPlants={setPlants}
-          plants={selectedPlants}
-        />
-      )}
-      {formStates.repotPlants && (
-        <RepotPlantsForm
-          isOpen={formStates.repotPlants}
-          onRequestClose={() => setFormStates(prev => ({ ...prev, repotPlants: false }))}
-          setPlants={setPlants}
-          plants={selectedPlants}
         />
       )}
     </>
