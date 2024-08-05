@@ -1,5 +1,6 @@
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
+/** Fetch all alerts. */
 export const fetchAlerts = () => {
   return fetch(`${API_BASE_URL}/alert/check`)
     .then(response => {
@@ -11,7 +12,7 @@ export const fetchAlerts = () => {
     });
 };
 
-/*** Resolve the specific plant alert.  */
+/** Resolve the specific plant alert.  */
 export const resolveAlert = (alertId) => {
   return fetch(`${API_BASE_URL}/alert/plant/${alertId}/resolve`, {
     method: 'POST',

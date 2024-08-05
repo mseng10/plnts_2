@@ -1,11 +1,9 @@
-// Home.js
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
 import React from 'react';
 import IconButton from '@mui/material/IconButton';
 import {useNavigate} from "react-router-dom" 
 
 const Home = () => {
-  // Navigation
   const navigate = useNavigate();
 
   return (
