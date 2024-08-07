@@ -21,6 +21,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+init_db()
+
 def create_plant_alert():
     """
     Create different plant alerts

@@ -24,7 +24,6 @@ import logging
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
 
-# Call this when starting your application
 init_db()
 
 # Create Flask app
