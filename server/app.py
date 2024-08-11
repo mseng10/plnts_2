@@ -550,6 +550,22 @@ def get_system(system_id):
     # Return JSON response
     return jsonify(system.to_json())
 
+@app.route("/meta", methods=["GET"])
+def get_meta():
+    """
+    Get meta data of the application.
+    """
+    logger.info("Received request to query the meta")
+    session = Session()
+    meta = {
+        "alert_count" : session.query(PlantAlert).filter(PlantAlert.resolved == False).count(),
+        "todo_count" : session.query(Todo).filter(Todo.resolved == False).count()
+    }
+    session.close()
+
+    # Return JSON response
+    return jsonify(meta)
+    
 
 if __name__ == "__main__":
     # Run the Flask app
