@@ -22,6 +22,11 @@ class System(Base):
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
 
+    # Deprecated Info
+    deprecated = Column(Boolean, default=False, nullable=False)
+    deprecated_on = Column(DateTime(), default=None, nullable=True)
+    deprecated_cause = Column(String(100), nullable=False)
+
     # Controlled Factors
     humidity = Column(Integer(), default=0, nullable=False)  # %
     temperature = Column(Integer(), default=0, nullable=False)  # F

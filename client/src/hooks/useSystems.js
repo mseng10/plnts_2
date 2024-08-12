@@ -27,6 +27,25 @@ export const useSystems = () => {
     }
   };
 
+  const deprecateSystem = async(id, deprecateSystem) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/system/${id}/deprecate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(deprecateSystem),
+      });
+      const data = await response.json();
+      setSystems(prevSystems => prevSystems.filter(system => 
+        system.id !== id
+      ));
+
+      return data;
+    } catch (error) {
+      console.error('Error updating system:', error);
+      throw error;
+    }
+  }
+
   useEffect(() => {
     const fetchSystems = async () => {
       setIsLoading(true);
@@ -46,7 +65,7 @@ export const useSystems = () => {
     fetchSystems();
   }, []);
 
-  return { systems, isLoading, error, updateSystem };
+  return { systems, isLoading, error, updateSystem, deprecateSystem };
 };
 
 /** Query a system for it's respective plants. */

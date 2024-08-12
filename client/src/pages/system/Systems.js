@@ -21,6 +21,8 @@ import { useSystems } from '../../hooks/useSystems';
 import { CARD_STYLE, AVATAR_STYLE, CIRCULAR_PROGRESS_STYLE, ICON_STYLE } from '../../constants';
 import { EditSharp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import {deprecateSystem} from '../../api'
+import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 
 const SystemCard = ({ system }) => {
   const navigate = useNavigate();
@@ -80,6 +82,9 @@ const SystemCard = ({ system }) => {
             </IconButton>
             <IconButton color="info" onClick={() => setIsSystemsPlanetsOpen(true)}>
               <GrassOutlinedIcon />
+            </IconButton>
+            <IconButton color="error" onClick={() => deprecateSystem(system.id)}>
+              <DeleteOutlineSharpIcon />
             </IconButton>
           </CardActions>
         </CardActionArea>

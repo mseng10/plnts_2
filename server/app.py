@@ -567,6 +567,28 @@ def get_meta():
     return jsonify(meta)
     
 
+@app.route("/alert/plant/<int:alert_id>/deprecate", methods=["POST"])
+def system_deprecate(system_ids):
+    """
+    Deprecate the specified system.
+    """
+    logger.info("Received request to kill the specified plants")
+
+    deprecate_ids = [int(id) for id in request.get_json()["ids"]]
+
+    session = Session()
+    systems = session.query(System).filter(System.id.in_(deprecate_ids)).all()
+    now = datetime.now()
+    for system in systems:
+        system.deprecated = True
+        system.deprecated_on = now
+        system.deprecated_cause = "User Deletion"
+    
+    session.commit()
+    session.close()
+
+    return jsonify({"message": f"{len(systems)} Systems deprecated successfully:("}), 201
+
 if __name__ == "__main__":
     # Run the Flask app
     app.run(debug=True)
