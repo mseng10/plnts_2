@@ -60,16 +60,16 @@ export const useTodos = () => {
     }
   };
 
-  const updateTodo = async (id, updatedTodo) => {
+  const updateTodo = async (updatedTodo) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/todo/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/todo/${updatedTodo.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTodo),
       });
       const data = await response.json();
       setTodos(prevTodos => prevTodos.map(todo => 
-        todo.id === id ? { ...todo, ...data } : todo
+        todo.id === updatedTodo.id ? { ...todo, ...data } : todo
       ));
 
       return data;

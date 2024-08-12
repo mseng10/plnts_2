@@ -42,7 +42,7 @@ const TodoUpdate = ({ todoProp }) => {
       due_on
     };
     try {
-      await updateTodo(todoProp ? todoProp.id : id, updatedTodo);
+      await updateTodo(updatedTodo);
       navigate("/");
     } catch (error) {
       console.error('Error updating todo:', error);
