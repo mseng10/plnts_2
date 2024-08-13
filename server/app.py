@@ -565,7 +565,6 @@ def get_meta():
 
     # Return JSON response
     return jsonify(meta)
-    
 
 @app.route("/alert/plant/<int:alert_id>/deprecate", methods=["POST"])
 def system_deprecate(system_ids):
