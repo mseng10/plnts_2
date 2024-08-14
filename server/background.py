@@ -55,5 +55,5 @@ def main():
 
 if __name__ == "__main__":
     while True:
-        logger.info("Received request to retrieve all plants")
+        logger.info("Initializing background processing.")
         main()
