@@ -47,6 +47,13 @@ class Plant(Base):
     dead_on = Column(DateTime(), default=None, nullable=True)
     dead_cause = Column(String(400), nullable=True)
 
+    # Sure
+    identity = Column(String(50))
+    __mapper_args__ = {
+        'polymorphic_identity': 'plant',
+        'polymorphic_on': identity
+    }
+
     # Misc
     plant_alerts: Mapped[List["PlantAlert"]] = relationship(
         "PlantAlert", backref="type", passive_deletes=True
@@ -137,3 +144,12 @@ class Genus(Base):
             "created_on": self.created_on,
             "updated_on": self.updated_on
         }
+
+# Single Table Inheritance
+class Batch(Plant):
+    """Batch of plants."""
+    count = Column(Integer(), default=0, nullable=False) # Number of plants
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'batch'
+    }
