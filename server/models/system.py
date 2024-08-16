@@ -74,9 +74,9 @@ class Light(Base):
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System this light belongs to
 
-    # Death Info
-    dead_on = Column(DateTime(), default=None, nullable=True)
-    dead = Column(Boolean, default=False, nullable=False)
+    # Deprecate Info
+    deprecate_on = Column(DateTime(), default=None, nullable=True)
+    deprecate = Column(Boolean, default=False, nullable=False)
 
     def __repr__(self) -> str:
         return f"{self.name}"

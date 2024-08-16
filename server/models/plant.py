@@ -43,9 +43,9 @@ class Plant(Base):
 
     # Death info
     # Shared?
-    dead = Column(Boolean, default=False, nullable=False)  # Death Info
-    dead_on = Column(DateTime(), default=None, nullable=True)
-    dead_cause = Column(String(400), nullable=True)
+    deprecate = Column(Boolean, default=False, nullable=False)  # Death Info
+    deprecate_on = Column(DateTime(), default=None, nullable=True)
+    deprecate_cause = Column(String(400), nullable=True)
 
     # Sure
     identity = Column(String(50))
