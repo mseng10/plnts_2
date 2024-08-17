@@ -9,12 +9,26 @@ from typing import List
 # Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
 Base = declarative_base()
 
+class DeprecatableMixin:
+    """ In case the model is deprecated. """
+    @declared_attr
+    def deprecated(cls):
+        return Column(Boolean, default=False, nullable=False)
 
-class Plant(Base):
+    @declared_attr
+    def deprecated_on(cls):
+        return Column(DateTime(), default=None, nullable=True)
+
+    @declared_attr
+    def deprecated_cause(cls):
+        return Column(String(400), nullable=True)
+    
+
+class Plant(Base, DeprecatableMixin):
     """Plant model."""
 
     __tablename__ = "plant"
@@ -43,12 +57,6 @@ class Plant(Base):
     # Watering info
     watering = Column(Integer(), default=0, nullable=False) # Days
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
-
-    # Death info
-    # Shared?
-    deprecate = Column(Boolean, default=False, nullable=False)  # Death Info
-    deprecate_on = Column(DateTime(), default=None, nullable=True)
-    deprecate_cause = Column(String(400), nullable=True)
 
     # Sure
     identity = Column(String(50))

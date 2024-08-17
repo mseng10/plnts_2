@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Table, ForeignKey, Boo
 from sqlalchemy.orm import relationship, Mapped
 from datetime import datetime
 from typing import List
-from models.plant import Base
+from models.plant import Base, DeprecatableMixin
 
 # Association table
 mix_soil_association = Table(
@@ -10,9 +10,10 @@ mix_soil_association = Table(
     Base.metadata,
     Column('mix_id', Integer, ForeignKey('mix.id')),
     Column('soil_id', Integer, ForeignKey('soil.id'))
+    Column('percentage', Integer)
 )
 
-class Mix(Base):
+class Mix(Base, DeprecatableMixin):
     """Soil mix model."""
     __tablename__ = "mix"
 
@@ -22,13 +23,8 @@ class Mix(Base):
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
     experimental = Column(Boolean, default=False, nullable=False)
-
-    # Deprecated info
-    deprecate = Column(Boolean, default=False, nullable=False)
-    deprecate_on = Column(DateTime(), default=None, nullable=True)
-    deprecate_cause = Column(String(400), nullable=True)
     
-    # Plants belonging to this system
+    # Plants belonging to this mix
     plants: Mapped[List["Plant"]] = relationship(
         "Plant", backref="mix", passive_deletes=True
     )  # Available plants of this mix
@@ -51,7 +47,6 @@ class SoilMatter(Base):
     description = Column(String(400), nullable=True)
     group = Column(String(100), nullable=False)
     name = Column(String(100), nullable=False)
-    updated_on = Column(DateTime(), default=datetime.now)
     
     mix_ids: Mapped[List["Mix"]] = relationship(
         "Mix",
@@ -61,3 +56,11 @@ class SoilMatter(Base):
 
     def __repr__(self) -> str:
         return f"{self.name}"
+
+    @static_method
+    def from_json(json):
+        return SoilMatter(
+            name=json["name"]
+            description=json["description"]
+            group=json["group"]
+        )
