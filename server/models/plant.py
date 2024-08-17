@@ -31,6 +31,9 @@ class Plant(Base):
     system_id: Mapped[int] = mapped_column(
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System for housing the plant
+    mix_id: Mapped[int] = mapped_column(
+        ForeignKey("mix.id", ondelete="CASCADE")
+    )  # System for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     
     # Metrics
@@ -77,6 +80,16 @@ class Plant(Base):
             "watering": self.watering,
             "phase": self.phase
         }
+
+# Single Table Inheritance
+class Batch(Plant):
+    """Batch of plants."""
+     # Number of plants
+    count = Column(Integer(), default=0, nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'batch'
+    }
 
 class Type(Base):
     """Type of genus"""
@@ -144,12 +157,3 @@ class Genus(Base):
             "created_on": self.created_on,
             "updated_on": self.updated_on
         }
-
-# Single Table Inheritance
-class Batch(Plant):
-    """Batch of plants."""
-    count = Column(Integer(), default=0, nullable=False) # Number of plants
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'batch'
-    }
