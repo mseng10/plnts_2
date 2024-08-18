@@ -27,7 +27,7 @@ init_db()
 
 num_threads = 5
 
-def create_model(self, model_path, model_class):
+def create_model(model_path, model_class):
     """
     Create the provided model from the data path.
     """
@@ -50,8 +50,10 @@ def create_model(self, model_path, model_class):
     logger.info(f"Successfully created model {model_class}")
 
 
-def create_models():
-    """Create all of our packaged models on installation."""
+def create_all_models():
+    """
+    Create all of our packaged models on installation.
+    """
     logger.info("Beginning to create model.")
 
     models_to_create = [
@@ -71,7 +73,7 @@ def create_models():
 
 
 def main():
-    create_models()
+    create_all_models()
 
 if __name__ == "__main__":
     logger.info("Initializing installation processing.")
