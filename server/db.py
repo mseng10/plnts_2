@@ -62,5 +62,4 @@ def init_db():
     # Import all modules here that might define models so that
     # they will be registered properly on the metadata.
     import models  # Make sure to create this file with your SQLAlchemy models
-    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)

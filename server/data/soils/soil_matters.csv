@@ -1,19 +1,19 @@
 Name,Description,Group
-Kiryu,High-quality, well-draining volcanic soil used in bonsai and orchid cultivation,Soil Amendments
+Kiryu,High-qualitym well-draining volcanic soil used in bonsai and orchid cultivation,Soil Amendments
 Akadama,Hard-baked clay soil that provides excellent drainage and aeration for bonsai and potted plants,Soil Amendments
 Peat Moss,Organic material that helps with water retention and soil acidity,Organic Matter
 Leaf Mold,Decayed leaves that improve soil structureand fertility,Organic Matter
 Vermicompost,Compost produced by worms that enriches soil with nutrients,Organic Matter
-Bone Meal,Ground animal bones, a good source of phosphorus and calcium,Organic Matter
-Blood Meal,Dried blood, rich in nitrogen,Organic Matter
-Fish Emulsion,A liquid fertilizer made from fish, high in nitrogen and other nutrients,Organic Matter
+Bone Meal,Ground animal bones a good source of phosphorus and calcium,Organic Matter
+Blood Meal,Dried blood rich in nitrogen,Organic Matter
+Fish Emulsion,A liquid fertilizer made from fish high in nitrogen and other nutrients,Organic Matter
 Alfalfa Meal,A plant-based fertilizer high in nitrogen,Organic Matter
 Wood Ash,Adds potassium and can raise soil pH,Organic Matter
 Kelp Meal,Seaweed-based fertilizer that adds micronutrients and organic matter,Organic Matter
 Green Manure,Cover crops grown to be tilled into the soil for fertility,Organic Matter
 Chicken Manure,High-nitrogen manure that also adds other nutrients,Organic Matter
-Horse Manure,Rich in organic matter and nutrients, especially when composted,Organic Matter
-Cow Manure,A more balanced manure, good for soil conditioning,Organic Matter
+Horse Manure,Rich in organic matter and nutrients especially when composted,Organic Matter
+Cow Manure,A more balanced manure good for soil conditioning,Organic Matter
 Gypsum,Improves soil structureand drainage in clay soils,Soil Conditioners
 Lime,Raises soil pH and provides calcium,Soil Conditioners
 Sulfur,Lowers soil pH in alkaline soils,Soil Conditioners
@@ -24,15 +24,15 @@ Clay,Can be added to sandy soils to improve water retention,Soil Conditioners
 Pumice,Volcanic rock that enhances soil aeration and drainage,Soil Conditioners
 Zeolite,A natural mineral that helps with water and nutrient retention,Soil Conditioners
 Biochar,Charcoal used to improve soil fertility and carbon sequestration,Soil Conditioners
-Synthetic Fertilizers,Various formulations (e.g., 10-10-10) for balanced nutrition,Fertilizers
+Synthetic Fertilizers,Various formulations (e.g. 10-10-10) for balanced nutrition,Fertilizers
 Urea,High-nitrogen synthetic fertilizer,Fertilizers
 Ammonium Nitrate,Provides nitrogen for quick growth,Fertilizers
 Superphosphate,Phosphorus fertilizer for root development,Fertilizers
-Potassium Chloride,Provides potassium, essential for plant health,Fertilizers
+Potassium Chloride,Provides potassium essential for plant health,Fertilizers
 Calcium Carbonate,Supplies calcium and raises soil pH,Fertilizers
 Magnesium Sulfate,Supplies magnesium and sulfur,Fertilizers
 Slow-Release Fertilizers,Gradually release nutrients over time,Fertilizers
-Complete Fertilizers,Contain nitrogen, phosphorus, and potassium,Fertilizers
+Complete Fertilizers,Contain nitrogen phosphorus and potassium,Fertilizers
 Micronutrient Mixes,Provide essential trace elements,Fertilizers
 Straw,Organic mulch that suppresses weeds and retains moisture,Mulches
 Wood Chips,Long-lasting mulch that improves soil structure,Mulches
@@ -45,7 +45,7 @@ Rock Phosphate,Slow-release phosphorus source,Soil Amendments
 Greensand,Mineral source of potassium and other trace elements,Soil Amendments
 Gypsum,Improves clay soils and provides calcium,Soil Amendments
 Sulfate of Potash,Provides potassium and sulfur,Soil Amendments
-Crab Shells,Source of calcium and chitin, which can deter pests,Soil Amendments
+Crab Shells,Source of calcium and chitin which can deter pests,Soil Amendments
 Fish Bone Meal,Phosphorus and calcium source,Soil Amendments
 Seaweed Extracts,Enhances soil health and plant growth,Soil Amendments
 Humic Acid,Improves soil structureand nutrient availability,Soil Enhancers
@@ -97,5 +97,5 @@ Banana Peels,Provide potassium and compost well,Miscellaneous
 Ash from Wood Stoves,Can add potassium and lime,Miscellaneous
 Worm Castings,Provides nutrients and improves soil structure,Miscellaneous
 Silica Sand,Improves soil drainage and aeration,Miscellaneous
-Shells (e.g., Oyster Shells),Provide calcium and improve soil structure,Miscellaneous
+Shells (e.g. Oyster Shells),Provide calcium and improve soil structure,Miscellaneous
 Green Tea,Can be used in composting to add nutrients,Miscellaneous

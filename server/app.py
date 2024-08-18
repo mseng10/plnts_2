@@ -14,7 +14,7 @@ from sqlalchemy.engine import URL
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
-from models.mix import Mix, Soil
+from models.mix import Mix, Soil, mix_soil_association
 
 from db import init_db
 from db import Session
@@ -65,7 +65,7 @@ def get_plants():
     # Log the request
     logger.info("Received request to retrieve all plants")
     db = Session()
-    plants = session.query(Plant).all()
+    plants = db.query(Plant).all()
     db.close()
     # Transform plants to JSON format
     plants_json = [plant.to_json() for plant in plants]
@@ -586,7 +586,7 @@ def system_deprecate(system_id):
 
     return jsonify({"message": f"{len(systems)} Systems deprecated successfully:("}), 201
 
-@app.route("/soils", methods=["GET"])
+@app.route("/soil", methods=["GET"])
 def get_soils():
     """
     Retrieve all soils from the database.
@@ -628,21 +628,25 @@ def create_mix():
 
     new_mix_json = request.get_json()
     
+    # Create the mix
     new_mix = Mix(
-        name=new_plant_data["name"],
-        description=new_plant_data["description"],
-        experimental=new_plant_data["experimental"]
+        name=new_mix_json["name"],
+        description=new_mix_json["description"],
+        experimental=new_mix_json["experimental"]
     )
-
-    # TODO: Validation the soil ids are sound.
-    new_mix.soil_ids.extend(new_mix_json.soil_parts.keys())
-
-    for soil_id, parts in new_mix_json.soil_parts:
-        db.add(mix_soil_association.insert().values(mix_id=new_mix.id, soil_id=soil_id, parts=parts))
-
-
-    # Add the new Light object to the session
     db.add(new_mix)
+    db.flush()
+
+    # Create the mix-soil join tables
+    for soil_id, parts in new_mix_json["soils"].items():
+        soil = db.query(Soil).get(int(soil_id))
+        if soil:
+            association = mix_soil_association.insert().values(
+                mix_id=new_mix.id,
+                soil_id=soil.id,
+                parts=int(parts)
+            )
+            db.execute(association)
     db.commit()
     db.close()
 

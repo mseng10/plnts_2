@@ -16,7 +16,8 @@ import List from '@mui/material/List';
 const MixCreate = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [soilsByParts, setSoilsByParts] = useState([{"soil": "", "parts": 0}]);
+  const [experimental, setExperimental] = useState('');
+  const [soilsByParts, setSoilsByParts] = useState([{"soil": "", "parts": 1}]);
 
   const navigate = useNavigate();
   const { error, createMix , setError} = useMixes();
@@ -27,8 +28,12 @@ const MixCreate = () => {
     setError(null);
 
     try {
-      let soils_json = soilsByParts.map();
-      await createMix({ name, description, soils: soils_json });
+      let soils_json = {};
+      soilsByParts.forEach((soilByPart) => {
+        soils_json[soilByPart["soil"]["id"]] = soilByPart["parts"];
+      });
+      setExperimental(false);
+      await createMix({ name, description, experimental, soils: soils_json });
       navigate("/");
     } catch (err) {
       setError("Failed to create mix. Please try again.");
@@ -40,125 +45,152 @@ const MixCreate = () => {
   };
 
   const createSoildByPart = () => {
-    let soilByPart = {
-        "soil": "",
-        "parts": 0
-    }
-    let newIndex = soilsByParts.length;
-    updateSoilByParts(newIndex, soilByPart);
-  }
+    setSoilsByParts(prevSoilsByParts => {
+      return [
+        ...prevSoilsByParts,
+        { soil: null, parts: 1 }  // Default to 1 part, null soil
+      ];
+    });
+  };
 
   const updateSoilByPartsCount = (index, delta) => {
-    let soilByPart = soilsByParts[index];
-    console.log(soilByPart)
-    soilByPart.parts += delta;
-    updateSoilByParts(index, soilByPart)
+    setSoilsByParts(prevSoilsByParts => {
+      const newSoilsByParts = [...prevSoilsByParts];
+      const newParts = (newSoilsByParts[index].parts || 0) + delta;
+      if (newParts > 0) {
+        newSoilsByParts[index] = {
+          ...newSoilsByParts[index],
+          parts: newParts
+        };
+        return newSoilsByParts;
+      }
+      return prevSoilsByParts;
+    });
   };
 
   const updateSoilByParts = (index, soilByPart) => {
-    let newSoilByParts = soilsByParts;
-    if (index == newSoilByParts.length) {
-        newSoilByParts.push(soilByPart);
-    } else {
-        newSoilByParts[index].soil = soilByPart.soil
-        newSoilByParts[index].parts = soilByPart.parts
-    }
-    setSoilsByParts(newSoilByParts);
+    setSoilsByParts(prevSoilsByParts => {
+      const newSoilsByParts = [...prevSoilsByParts];
+      if (index === newSoilsByParts.length) {
+        return [...newSoilsByParts, soilByPart];
+      } else {
+        newSoilsByParts[index] = {
+          ...newSoilsByParts[index],
+          soil: soilByPart.soil,
+          parts: soilByPart.parts
+        };
+        return newSoilsByParts;
+      }
+    });
   };
-  
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ width: 600, bgcolor: 'background.paper', borderRadius: 2 }}>
+      <Box sx={{ width: 800, height: 312, borderRadius: 2 }} display="flex">
         <form onSubmit={handleSubmit}>
-          <div className='left'>
-            <div class="pieContainer">
-              <div class="pieBackground"></div>
-              <div id="pieSlice1" class="hold"><div class="pie"></div></div>
-              <div id="pieSlice2" class="hold"><div class="pie"></div></div>
-              <div id="pieSlice3" class="hold"><div class="pie"></div></div>
-              <div id="pieSlice4" class="hold"><div class="pie"></div></div>
-              <div id="pieSlice5" class="hold"><div class="pie"></div></div>
-              <div id="pieSlice6" class="hold"><div class="pie"></div></div>
-              <div class="innerCircle"><div class="content"><b>Data</b><br></br>from 16<sup>th</sup> April, 2014</div></div>
+          <Box sx={{ width: 512, height: 312, borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
+            <div className='left'>
+              <div class="pieContainer">
+                <div class="pieBackground"></div>
+                <div id="pieSlice1" class="hold"><div class="pie"></div></div>
+                <div id="pieSlice2" class="hold"><div class="pie"></div></div>
+                <div id="pieSlice3" class="hold"><div class="pie"></div></div>
+                <div id="pieSlice4" class="hold"><div class="pie"></div></div>
+                <div id="pieSlice5" class="hold"><div class="pie"></div></div>
+                <div id="pieSlice6" class="hold"><div class="pie"></div></div>
+                <div class="innerCircle"><div class="content"><b>Data</b><br></br>from 16<sup>th</sup> April, 2014</div></div>
+              </div>
+              <ButtonGroup>
+                <IconButton className="left_button" type="submit" color="info">
+                  <IconFactory
+                      icon={"check"}
+                      size={"xlg"}
+                  >
+                  </IconFactory>
+                </IconButton>
+                <IconButton className="left_button" color="error" onClick={handleCancel}>
+                  <IconFactory
+                      icon={"close"}
+                      size={"xlg"}
+                  >
+                  </IconFactory>
+                </IconButton>
+              </ButtonGroup>
             </div>
-            <ButtonGroup>
-              <IconButton className="left_button" type="submit" color="info">
-                <IconFactory
-                    icon={"check"}
-                    size={"xlg"}
-                >
-                </IconFactory>
+            <div className='right'>
+              <FormTextInput
+                label="Title"
+                value={name}
+                color="type"
+                setValue={setName}
+              />
+              <TextAreaInput
+                label="Description"
+                value={description}
+                color="lime"
+                setValue={setDescription}
+              />
+              {error && <p style={{ color: 'red' }}>{error}</p>}
+            </div>
+          </Box>
+          <Box sx={{ width: 256, height: 312, borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
+          <List>
+              {soilsByParts.map((soilByPart, index) => {
+                return (
+                  <Stack key={index} direction="row" alignItems="center">
+                    <Autocomplete
+                      freeSolo
+                      sx={{
+                        width:'80%'
+                      }}
+                      color="primary"
+                      disableClearable
+                      value={soilByPart.soil ? soilByPart.soil.name : ''}
+                      options={soils.map((option) => option.name)}
+                      onChange={(event, newValue) => {
+                        const selectedSoil = soils.find(soil => soil.name === newValue);
+                        updateSoilByParts(index, {
+                          ...soilByPart,
+                          soil: selectedSoil
+                        });
+                      }}
+                      renderInput={(params) => (
+                      <TextField
+                        variant="standard"
+                        {...params}
+                        label="Soil Type"
+                        InputProps={{
+                        ...params.InputProps,
+                        type: 'search',
+                      }}
+                  />
+                  )}
+                  />
+                  <ButtonGroup sx = {{ float:'right'}}>
+                    <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, -1)}>
+                      <RemoveSharpIcon/>
+                    </IconButton>
+                      <p>{soilByPart.parts}</p>
+                    <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, 1)}>
+                      <AddSharpIcon/>
+                    </IconButton>
+                  </ButtonGroup>
+                </Stack>
+              )})}
+              </List>
+              <Box
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+              <IconButton 
+                onClick={() => createSoildByPart()}>
+                <IconFactory 
+                  icon={"create"}
+                  size="md"/>
               </IconButton>
-              <IconButton className="left_button" color="error" onClick={handleCancel}>
-                <IconFactory
-                    icon={"close"}
-                    size={"xlg"}
-                >
-                </IconFactory>
-              </IconButton>
-            </ButtonGroup>
-          </div>
-          <div className='right'>
-            <FormTextInput
-              label="Title"
-              value={name}
-              color="type"
-              setValue={setName}
-            />
-            <TextAreaInput
-              label="Description"
-              value={description}
-              color="lime"
-              setValue={setDescription}
-            />
-            <List>
-            {soilsByParts.map((soilByPart, index) => {
-              return (
-                <Stack key={index} direction="row" alignItems="center">
-                  <Autocomplete
-                    freeSolo
-                    sx={{
-                      width:'80%'
-                    }}
-                    color="primary"
-                    disableClearable
-                    value={soilByPart ? soilByPart.soil : ''}
-                    options={soils.map((option) => option.name)}
-                    onChange={(event) => updateSoilByParts(soilsByParts.indexOf(soilByPart), {"soils": soils[event.target.value], "parts": soilByPart["parts"]})}
-                    renderInput={(params) => (
-                    <TextField
-                      color="light"
-                      variant="standard"
-                      {...params}
-                      label="Soil Type"
-                      InputProps={{
-                      ...params.InputProps,
-                      type: 'search',
-                    }}
-                />
-                )}
-                />
-                <ButtonGroup sx = {{ float:'right'}}>
-                  <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, -1)}>
-                    <RemoveSharpIcon/>
-                  </IconButton>
-                    <p>{soilByPart.parts}</p>
-                  <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, 1)}>
-                    <AddSharpIcon/>
-                  </IconButton>
-                </ButtonGroup>
-              </Stack>
-            )})}
-            </List>
-            <IconButton 
-              onClick={() => createSoildByPart()}>
-              <IconFactory 
-                icon={"create"}
-                size="md"/>
-            </IconButton>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-          </div>
+              </Box>
+          </Box>
         </form>
       </Box>
     </Box>

@@ -99,7 +99,7 @@ export const useSoils = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/soils`);
+        const response = await fetch(`${API_BASE_URL}/soil`);
         const data = await response.json();
         setSoils(data);
       } catch (error) {
