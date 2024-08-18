@@ -14,6 +14,7 @@ from sqlalchemy.engine import URL
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
+from models.mix import Mix, Soil
 
 from db import init_db
 from db import Session
@@ -49,10 +50,10 @@ def create_plant():
         phase = new_plant_data["phase"]
     )
     # Add the new plant object to the session
-    session = Session()
-    session.add(new_plant)
-    session.commit()
-    session.close()
+    db = Session()
+    db.add(new_plant)
+    db.commit()
+    db.close()
     # Return response
     return jsonify({"message": "Plant added successfully"}), 201
 
@@ -63,9 +64,9 @@ def get_plants():
     """
     # Log the request
     logger.info("Received request to retrieve all plants")
-    session = Session()
+    db = Session()
     plants = session.query(Plant).all()
-    session.close()
+    db.close()
     # Transform plants to JSON format
     plants_json = [plant.to_json() for plant in plants]
     # Return JSON response
@@ -78,8 +79,8 @@ def get_plant(plant_id):
     """
     # Log the request
     logger.info("Received request to query the plant")
-    session = Session()
-    plant = session.query(Plant).get(plant_id)
+    db = Session()
+    plant = db.query(Plant).get(plant_id)
     session.close()
 
     # Return JSON response
@@ -95,8 +96,8 @@ def update_plant(plant_id):
 
     changes = request.get_json()
 
-    session = Session()
-    plant = session.query(Plant).get(plant_id)
+    db = Session()
+    plant = db.query(Plant).get(plant_id)
 
     plant.cost = changes["cost"]
     plant.size = change["size"]
@@ -107,8 +108,8 @@ def update_plant(plant_id):
     plant.phase = change["phase"]
     plant.updated_on = datetime.now
 
-    session.flush()
-    session.commit()
+    db.flush()
+    db.commit()
 
     # Return JSON response
     return jsonify(plant.to_json())
@@ -123,15 +124,15 @@ def update_todo(todo_id):
 
     changes = request.get_json()
 
-    session = Session()
+    db = Session()
     todo = session.query(Todo).get(todo_id)
 
     todo.name = changes["name"]
     todo.description = changes["description"]
     todo.due_on = changes["due_on"]
 
-    session.flush()
-    session.commit()
+    db.flush()
+    db.commit()
 
     # Return JSON response
     return jsonify(todo.to_json())
@@ -143,9 +144,9 @@ def get_todo(todo_id):
     """
     # Log the request
     logger.info("Received request to query the todo")
-    session = Session()
-    todo = session.query(Todo).get(todo_id)
-    session.close()
+    db = Session()
+    todo = db.query(Todo).get(todo_id)
+    db.close()
 
     # Return JSON response
     return jsonify(todo.to_json())
@@ -157,39 +158,39 @@ def water_plants():
     """
     logger.info("Received request to water the specified plants")
     watering_ids = [int(id) for id in request.get_json()["ids"]]
-    session = Session()
+    db = Session()
     plants = session.query(Plant).filter(Plant.id.in_(watering_ids)).all()
     now = datetime.now()
     for plant in plants:
         plant.watered_on = now
         plant.updated_on = now
-    session.commit()
-    session.close()
+    db.commit()
+    db.close()
 
     return jsonify({"message": f"{len(plants)} Plants watered successfully"}), 201
 
-@app.route("/plants/kill", methods=["POST"])
-def kill_plants():
+@app.route("/plants/deprecate", methods=["POST"])
+def deprecate_plants():
     """
-    Kill the specified plants.
+    Deprecate the specified plants.
     """
-    logger.info("Received request to kill the specified plants")
+    logger.info("Received request to deprecate the specified plants")
 
-    kill_ids = [int(id) for id in request.get_json()["ids"]]
+    deprecate_ids = [int(id) for id in request.get_json()["ids"]]
     cause = request.get_json()["cause"]
 
-    session = Session()
+    db = Session()
     plants = session.query(Plant).filter(Plant.id.in_(watering_ids)).all()
     now = datetime.now()
     for plant in plants:
-        plant.dead = True
-        plant.dead_on = datetime.now()
-        plant.dead_cause = cause
+        plant.deprecated = True
+        plant.deprecated_on = datetime.now()
+        plant.deprecated_cause = cause
     
-    session.commit()
-    session.close()
+    db.commit()
+    db.close()
 
-    return jsonify({"message": f"{len(plants)} Plants killed successfully:("}), 201
+    return jsonify({"message": f"{len(plants)} Plants deprecated successfully:("}), 201
 
 @app.route("/genus", methods=["GET"])
 def get_genuses():
@@ -198,9 +199,9 @@ def get_genuses():
     """
     logger.info("Received request to retrieve all plant genuses")
 
-    session = Session()
-    genuses = session.query(Genus).all()
-    session.close()
+    db = Session()
+    genuses = db.query(Genus).all()
+    db.close()
     # Transform genuses to JSON format
     genuses_json = [genus.to_json() for genus in genuses]
     # Return JSON response
@@ -233,9 +234,9 @@ def get_types():
     """
     logger.info("Received request to retrieve all plant types")
 
-    session = Session()
-    types = session.query(Type).all()
-    session.close()
+    db = Session()
+    types = db.query(Type).all()
+    db.close()
     # Transform types to JSON format
     types_json = [_type.to_json() for _type in types]
     # Return JSON response
@@ -336,9 +337,9 @@ def get_light():
     """
     logger.info("Received request to retrieve all lights")
 
-    session = Session()
-    lights = session.query(Light).all()
-    session.close()
+    db = Session()
+    lights = db.query(Light).all()
+    db.close()
     # Transform lights to JSON format
     lights_json = [light.to_json() for light in lights]
     # Return JSON response
@@ -426,9 +427,9 @@ def alert_check():
     # Log the request
     logger.info("Received request to get a system's alerts")
     
-    session = Session()
-    plant_alerts = session.query(PlantAlert).all()
-    session.close()
+    db = Session()
+    plant_alerts = db.query(PlantAlert).all()
+    db.close()
 
     # Transform plant alerts to JSON format
     plant_alerts_json = [plant_alert.to_json() for plant_alert in plant_alerts]
@@ -443,14 +444,14 @@ def todo_resolve(todo_id):
     """
     # Log the request
     logger.info("Received request to resolve todo")
-    session = Session()
+    db = Session()
 
     todo = session.query(Todo).get(todo_id)
     todo.resolved = True
     todo.resolved_on = datetime.now()
 
-    session.flush()
-    session.commit()
+    db.flush()
+    db.commit()
 
     # Return JSON response
     return jsonify(todo.to_json())
@@ -462,14 +463,14 @@ def plant_alert_resolve(alert_id):
     """
     # Log the request
     logger.info("Received request to resolve plant alert")
-    session = Session()
+    db = Session()
 
     alert = session.query(PlantAlert).get(alert_id)
     alert.resolved = True
     alert.resolved_on = datetime.now()
 
-    session.flush()
-    session.commit()
+    db.flush()
+    db.commit()
 
     # Return JSON response
     return jsonify(alert.to_json())
@@ -482,9 +483,9 @@ def get_systems_plants(system_id):
     # Log the request
     logger.info("Received request to get a system's plants")
     
-    session = Session()
+    db = Session()
     plants = session.query(Plant).filter(Plant.system_id == system_id).all()
-    session.close()
+    db.close()
 
     # Transform plant alerts to JSON format
     plants_json = [plant.to_json() for plant in plants]
@@ -500,9 +501,9 @@ def get_systems_alerts(system_id):
     # Log the request
     logger.info("Received request to get a system's alerts")
     
-    session = Session()
-    plant_alerts = session.query(PlantAlert).filter(Plant.system_id == system_id).all()
-    session.close()
+    db = Session()
+    plant_alerts = db.query(PlantAlert).filter(Plant.system_id == system_id).all()
+    db.close()
 
     # Transform plant alerts to JSON format
     plant_alerts_json = [plant_alert.to_json() for plant_alert in plant_alerts]
@@ -520,8 +521,8 @@ def update_system(system_id):
 
     changes = request.get_json()
 
-    session = Session()
-    system = session.query(System).get(system_id)
+    db = Session()
+    system = db.query(System).get(system_id)
 
     system.name=changes["name"],
     system.temperature=changes["temperature"],
@@ -530,8 +531,8 @@ def update_system(system_id):
     system.distance=changes["distance"],
     system.description=changes["description"]
 
-    session.flush()
-    session.commit()
+    db.flush()
+    db.commit()
 
     # Return JSON response
     return jsonify(system.to_json())
@@ -543,9 +544,9 @@ def get_system(system_id):
     """
     # Log the request
     logger.info("Received request to query the system")
-    session = Session()
+    db = Session()
     system = session.query(System).get(system_id)
-    session.close()
+    db.close()
 
     # Return JSON response
     return jsonify(system.to_json())
@@ -556,37 +557,65 @@ def get_meta():
     Get meta data of the application.
     """
     logger.info("Received request to query the meta")
-    session = Session()
+    db = Session()
     meta = {
-        "alert_count" : session.query(PlantAlert).filter(PlantAlert.resolved == False).count(),
-        "todo_count" : session.query(Todo).filter(Todo.resolved == False).count()
+        "alert_count" : db.query(PlantAlert).filter(PlantAlert.resolved == False).count(),
+        "todo_count" : db.query(Todo).filter(Todo.resolved == False).count()
     }
-    session.close()
+    db.close()
 
     # Return JSON response
     return jsonify(meta)
 
-@app.route("/alert/plant/<int:alert_id>/deprecate", methods=["POST"])
-def system_deprecate(system_ids):
+@app.route("/system/<int:system_id>/deprecate", methods=["POST"])
+def system_deprecate(system_id):
     """
     Deprecate the specified system.
     """
-    logger.info("Received request to kill the specified plants")
+    logger.info("Received request to deprecate the specified plants")
+    db = Session()
 
-    deprecate_ids = [int(id) for id in request.get_json()["ids"]]
+    system = db.query(System).get(system_id)
 
-    session = Session()
-    systems = session.query(System).filter(System.id.in_(deprecate_ids)).all()
-    now = datetime.now()
-    for system in systems:
-        system.deprecated = True
-        system.deprecated_on = now
-        system.deprecated_cause = "User Deletion"
+    system.deprecated = True
+    system.deprecated_on = datetime.now()
+    system.deprecated_cause = "User Deletion"
     
-    session.commit()
-    session.close()
+    db.commit()
+    db.close()
 
     return jsonify({"message": f"{len(systems)} Systems deprecated successfully:("}), 201
+
+@app.route("/soils", methods=["GET"])
+def get_soils():
+    """
+    Retrieve all soils from the database.
+    """
+    logger.info("Received request to retrieve all soils")
+    db = Session()
+    soils = db.query(Soil).all()
+    db.close()
+
+    soils_json = [soil.to_json() for soil in soils]
+
+    logger.info("Succesfully queried all soils")
+    return jsonify(soils_json)
+
+@app.route("/mix", methods=["GET"])
+def get_mixes():
+    """
+    Retrieve all mixes from the database.
+    """
+    logger.info("Received request to retrieve all mixes")
+
+    db = Session()
+    mixes = session.query(Mix).all()
+    db.close()
+
+    mixes_json = [mix.to_json() for mix in mixes]
+    
+    logger.info("Succesfully queried all mixes")
+    return jsonify(mixes_json)
 
 @app.route("/mix", methods=["POST"])
 def create_mix():
@@ -598,18 +627,18 @@ def create_mix():
     db = Session()
 
     new_mix_json = request.get_json()
-
-    soil_matters = db.query(SoilMatter.id).filter(SoilMatter.id.in_(new_mix_json.soil_matters.keys())).all()
     
     new_mix = Mix(
         name=new_plant_data["name"],
         description=new_plant_data["description"],
         experimental=new_plant_data["experimental"]
     )
-    mix.matter_ids.extend(soil_matters)
 
-    for soil_id, parts in new_mix_json.soil_matters:
-        db.add(mix_soil_association.insert().values(mix_id=new_mix.id, soil_id=soil_id, percentage=parts))
+    # TODO: Validation the soil ids are sound.
+    new_mix.soil_ids.extend(new_mix_json.soil_parts.keys())
+
+    for soil_id, parts in new_mix_json.soil_parts:
+        db.add(mix_soil_association.insert().values(mix_id=new_mix.id, soil_id=soil_id, parts=parts))
 
 
     # Add the new Light object to the session
@@ -619,6 +648,24 @@ def create_mix():
 
     return jsonify({"message": "Mix added successfully"}), 201
 
+@app.route("/mix/<int:mix_id>/deprecate", methods=["POST"])
+def deprecate_mix(mix_id):
+    """
+    Deprecate the specified system.
+    """
+    logger.info("Received request to deprecate the specified mix")
+
+    db = Session()
+
+    mix = db.query(Mix).get(mix_id)
+    mix.deprecated = True
+    mix.deprecated_on = datetime.now()
+    # mix.deprecated_cause = ""
+    
+    db.commit()
+    db.close()
+
+    return jsonify({"message": f"Mix deprecated:("}), 201
 
 if __name__ == "__main__":
     # Run the Flask app

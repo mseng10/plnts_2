@@ -14,7 +14,7 @@ from sqlalchemy.ext.declarative import declarative_base, declared_attr
 Base = declarative_base()
 
 class DeprecatableMixin:
-    """ In case the model is deprecated. """
+    """ In case the model is deprecated."""
     @declared_attr
     def deprecated(cls):
         return Column(Boolean, default=False, nullable=False)
@@ -47,7 +47,7 @@ class Plant(Base, DeprecatableMixin):
     )  # System for housing the plant
     mix_id: Mapped[int] = mapped_column(
         ForeignKey("mix.id", ondelete="CASCADE")
-    )  # System for housing the plant
+    )  # Soil mix for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     
     # Metrics

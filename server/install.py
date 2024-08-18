@@ -6,9 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-# from models.plant import Plant, Genus, Type, Base
-# from models.system import System, Light
-from models.mix import SoilMatter, Todo
+# from models.plant import Genus, Type
+from models.mix import Soil
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -35,14 +34,14 @@ def create_model(model_path, model_class):
 
     db = Session()
 
-    existing_model_count = session.query(model_class).count()
+    existing_model_count = db.query(Soil).count()
     if existing_model_count > 0:
         logger.error(f"Models already exist for {model_class}, exiting.")
         return
 
     model_data = np.genfromtxt(model_path, delimiter=',', dtype=None, encoding=None, names=True)
     for model in model_data:
-        db.add(model_class.from_json(model))
+        db.add(model_class.from_numpy(model))
 
     db.commit()
     db.close()
@@ -57,8 +56,8 @@ def create_all_models():
     logger.info("Beginning to create model.")
 
     models_to_create = [
-        ("data/soils/soil_matters.csv", SoilMatter)
-        # Genus,Type
+        ("data/soils/soil_matters.csv", Soil)
+        # TODO: Genus,Type
     ]
 
     # Each model creator has it's own thread.

@@ -9,8 +9,8 @@ mix_soil_association = Table(
     'mix_soil_association',
     Base.metadata,
     Column('mix_id', Integer, ForeignKey('mix.id')),
-    Column('soil_id', Integer, ForeignKey('soil.id'))
-    Column('percentage', Integer)
+    Column('soil_id', Integer, ForeignKey('soil.id')),
+    Column('parts', Integer)
 )
 
 class Mix(Base, DeprecatableMixin):
@@ -29,18 +29,30 @@ class Mix(Base, DeprecatableMixin):
         "Plant", backref="mix", passive_deletes=True
     )  # Available plants of this mix
 
-    matter_ids: Mapped[List["SoilMatter"]] = relationship(
-        "SoilMatter",
+    soil_ids: Mapped[List["Soil"]] = relationship(
+        "Soil",
         secondary=mix_soil_association,
         back_populates="mix_ids"
     )
 
+    def to_json(self) -> dict:
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "created_on": self.created_on,
+            "updated_on": self.updated_on,
+            "experimental": self.experimental,
+            "soil_ids": self.soil_ids
+        }
+
     def __repr__(self) -> str:
         return f"{self.name}"
 
-class SoilMatter(Base):
+class Soil(Base):
     """Soil. Created on installation."""
-    __tablename__ = "soil_matter"
+    __tablename__ = "soil"
 
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
@@ -51,16 +63,26 @@ class SoilMatter(Base):
     mix_ids: Mapped[List["Mix"]] = relationship(
         "Mix",
         secondary=mix_soil_association,
-        back_populates="matter_ids"
+        back_populates="soil_ids"
     )
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    @static_method
-    def from_json(json) -> SoilMatter:
-        return SoilMatter(
-            name=json["name"]
-            description=json["description"]
-            group=json["group"]
+    def to_json(self) -> dict:
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "created_on": self.created_on,
+            "description": self.description,
+            "group": self.group,
+            "name": self.name
+        }
+
+    @staticmethod
+    def from_numpy(nump):
+        return Soil(
+            name=nump[0],
+            description=nump[1],
+            group=nump[2]
         )
