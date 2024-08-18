@@ -25,6 +25,7 @@ import PlantUpdate from './pages/plant/PlantUpdate';
 import SystemUpdate from './pages/system/SystemUpdate';
 import TodoUpdate from './pages/todo/TodoUpdate';
 import TodoCreate from './pages/todo/TodoCreate';
+import MixCreate from './pages/mix/MixCreate';
 
 const drawerWidth = 240;
 
@@ -152,6 +153,8 @@ function App() {
             <Route path="/type/create" element={<TypeCreate /> } />
 
             <Route path="/genus/create" element={<GenusCreate /> } />
+
+            <Route path="/mix/create" element={<MixCreate /> } />
           </Routes>
         </Box>
       </ThemeProvider>

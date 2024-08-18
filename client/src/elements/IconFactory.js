@@ -19,6 +19,7 @@ import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import EditSharp from '@mui/icons-material/Edit'
+import PieChartOutlineSharpIcon from '@mui/icons-material/PieChartOutlineSharp';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -91,6 +92,9 @@ const IconFactory = ({ icon, color, size }) => {
     break;
   case 'edit':
     IconComponent = EditSharp;
+    break;
+  case 'mix':
+    IconComponent = PieChartOutlineSharpIcon;
     break;
   // Add more cases for other icons
   default:

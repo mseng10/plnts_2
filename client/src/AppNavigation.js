@@ -30,6 +30,7 @@ function AppNavigation({ window }) {
     { id: 'home', url: '/', icon: 'home', color: 'primary' },
     { id: 'create', icon: 'create', color: 'primary', subMenu: [
       { id: 'plant', url: '/plant/create', icon: 'plant', label: 'Plant' },
+      { id: 'mix', url: '/mix/create', icon: 'mix', label: 'Mix' },
       { id: 'type', url: '/type/create', icon: 'type', label: 'Type' },
       { id: 'genus', url: '/genus/create', icon: 'genus', label: 'Genus' },
       { id: 'system', url: '/system/create', icon: 'system', label: 'System' },
