@@ -588,6 +588,38 @@ def system_deprecate(system_ids):
 
     return jsonify({"message": f"{len(systems)} Systems deprecated successfully:("}), 201
 
+@app.route("/mix", methods=["POST"])
+def create_mix():
+    """
+    Create a new mix and add it to the database.
+    """
+    logger.info("Attempting to create mix")
+
+    db = Session()
+
+    new_mix_json = request.get_json()
+
+    soil_matters = db.query(SoilMatter.id).filter(SoilMatter.id.in_(new_mix_json.soil_matters.keys())).all()
+    
+    new_mix = Mix(
+        name=new_plant_data["name"],
+        description=new_plant_data["description"],
+        experimental=new_plant_data["experimental"]
+    )
+    mix.matter_ids.extend(soil_matters)
+
+    for soil_id, parts in new_mix_json.soil_matters:
+        db.add(mix_soil_association.insert().values(mix_id=new_mix.id, soil_id=soil_id, percentage=parts))
+
+
+    # Add the new Light object to the session
+    db.add(new_mix)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "Mix added successfully"}), 201
+
+
 if __name__ == "__main__":
     # Run the Flask app
     app.run(debug=True)

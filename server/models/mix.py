@@ -58,7 +58,7 @@ class SoilMatter(Base):
         return f"{self.name}"
 
     @static_method
-    def from_json(json):
+    def from_json(json) -> SoilMatter:
         return SoilMatter(
             name=json["name"]
             description=json["description"]
