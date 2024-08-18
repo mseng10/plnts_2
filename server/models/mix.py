@@ -43,8 +43,7 @@ class Mix(Base, DeprecatableMixin):
             "description": self.description,
             "created_on": self.created_on,
             "updated_on": self.updated_on,
-            "experimental": self.experimental,
-            "soil_ids": self.soil_ids
+            "experimental": self.experimental
         }
 
     def __repr__(self) -> str:

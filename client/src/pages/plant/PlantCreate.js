@@ -4,14 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../../elements/Form';
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
+import { useMixes } from '../../hooks/useMix';
 
 const PlantCreate = () => {
   const navigate = useNavigate();
   const { genuses, systems, types, isLoading, error, addPlant } = usePlants();
+  const { mixes } = useMixes(true);
 
   const [genus, setGenus] = useState(null);
   const [type, setType] = useState(null);
   const [system, setSystem] = useState(null);
+  const [mix, setMix] = useState(null);
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
   const [watering, setWatering] = useState(0);
@@ -25,6 +28,7 @@ const PlantCreate = () => {
       genus_id: genus.id,
       system_id: system.id,
       type_id: type.id,
+      mix_id: mix.id,
       watering,
       phase
     };
@@ -74,6 +78,13 @@ const PlantCreate = () => {
               value={system}
               setValue={setSystem}
               options={systems}
+              color="primary"
+            />
+            <AutoCompleteInput
+              label="Mix"
+              value={mix}
+              setValue={setMix}
+              options={mixes}
               color="primary"
             />
             <DropdownInput

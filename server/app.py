@@ -47,7 +47,8 @@ def create_plant():
         type_id=new_plant_data["type_id"],
         system_id=new_plant_data["system_id"],
         watering=new_plant_data["watering"],
-        phase = new_plant_data["phase"]
+        phase = new_plant_data["phase"],
+        mix_id = new_genus_data["mix_id"]
     )
     # Add the new plant object to the session
     db = Session()
@@ -125,7 +126,7 @@ def update_todo(todo_id):
     changes = request.get_json()
 
     db = Session()
-    todo = session.query(Todo).get(todo_id)
+    todo = db.query(Todo).get(todo_id)
 
     todo.name = changes["name"]
     todo.description = changes["description"]
@@ -159,7 +160,7 @@ def water_plants():
     logger.info("Received request to water the specified plants")
     watering_ids = [int(id) for id in request.get_json()["ids"]]
     db = Session()
-    plants = session.query(Plant).filter(Plant.id.in_(watering_ids)).all()
+    plants = db.query(Plant).filter(Plant.id.in_(watering_ids)).all()
     now = datetime.now()
     for plant in plants:
         plant.watered_on = now
@@ -180,7 +181,7 @@ def deprecate_plants():
     cause = request.get_json()["cause"]
 
     db = Session()
-    plants = session.query(Plant).filter(Plant.id.in_(watering_ids)).all()
+    plants = db.query(Plant).filter(Plant.id.in_(watering_ids)).all()
     now = datetime.now()
     for plant in plants:
         plant.deprecated = True
@@ -340,10 +341,7 @@ def get_light():
     db = Session()
     lights = db.query(Light).all()
     db.close()
-    # Transform lights to JSON format
-    lights_json = [light.to_json() for light in lights]
-    # Return JSON response
-    return jsonify(lights_json)
+    return jsonify([light.to_json() for light in lights])
 
 @app.route("/light", methods=["POST"])
 def create_light():
@@ -375,10 +373,7 @@ def get_alerts():
     db = Session()
     plnt_alerts = db.query(PlantAlert).all()
     db.close()
-    # Transform plant alerts to JSON format
-    plnt_alerts_json = [plnt_alert.to_json() for plnt_alert in plnt_alerts]
-    # Return JSON response
-    return jsonify(plnt_alerts_json)
+    return jsonify([plnt_alert.to_json() for plnt_alert in plnt_alerts])
 
 @app.route("/todo", methods=["GET"])
 def get_todos():
@@ -446,7 +441,7 @@ def todo_resolve(todo_id):
     logger.info("Received request to resolve todo")
     db = Session()
 
-    todo = session.query(Todo).get(todo_id)
+    todo = db.query(Todo).get(todo_id)
     todo.resolved = True
     todo.resolved_on = datetime.now()
 
@@ -465,7 +460,7 @@ def plant_alert_resolve(alert_id):
     logger.info("Received request to resolve plant alert")
     db = Session()
 
-    alert = session.query(PlantAlert).get(alert_id)
+    alert = db.query(PlantAlert).get(alert_id)
     alert.resolved = True
     alert.resolved_on = datetime.now()
 
@@ -484,7 +479,7 @@ def get_systems_plants(system_id):
     logger.info("Received request to get a system's plants")
     
     db = Session()
-    plants = session.query(Plant).filter(Plant.system_id == system_id).all()
+    plants = db.query(Plant).filter(Plant.system_id == system_id).all()
     db.close()
 
     # Transform plant alerts to JSON format
@@ -545,7 +540,7 @@ def get_system(system_id):
     # Log the request
     logger.info("Received request to query the system")
     db = Session()
-    system = session.query(System).get(system_id)
+    system = db.query(System).get(system_id)
     db.close()
 
     # Return JSON response
@@ -609,7 +604,7 @@ def get_mixes():
     logger.info("Received request to retrieve all mixes")
 
     db = Session()
-    mixes = session.query(Mix).all()
+    mixes = db.query(Mix).all()
     db.close()
 
     mixes_json = [mix.to_json() for mix in mixes]
