@@ -26,6 +26,7 @@ import SystemUpdate from './pages/system/SystemUpdate';
 import TodoUpdate from './pages/todo/TodoUpdate';
 import TodoCreate from './pages/todo/TodoCreate';
 import MixCreate from './pages/mix/MixCreate';
+import Stats from './pages/stat/Stats';
 
 const drawerWidth = 240;
 
@@ -134,6 +135,7 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/stats" element={<Stats />} />
             <Route path="/alerts" element={<Alerts />} />
 
             <Route path="/todo" element={<Todos />} />

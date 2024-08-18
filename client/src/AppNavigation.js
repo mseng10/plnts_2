@@ -43,6 +43,7 @@ function AppNavigation({ window }) {
     ]},
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary', badgeCount: meta.alert_count, badgeCountColor: "error" },
     { id: 'todo', url: '/todo', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
+    { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},
   ];
 
   useEffect(() => {

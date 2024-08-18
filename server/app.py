@@ -10,6 +10,7 @@ from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
+from sqlalchemy import func
 
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
@@ -48,7 +49,7 @@ def create_plant():
         system_id=new_plant_data["system_id"],
         watering=new_plant_data["watering"],
         phase = new_plant_data["phase"],
-        mix_id = new_genus_data["mix_id"]
+        mix_id = new_plant_data["mix_id"]
     )
     # Add the new plant object to the session
     db = Session()
@@ -546,22 +547,6 @@ def get_system(system_id):
     # Return JSON response
     return jsonify(system.to_json())
 
-@app.route("/meta", methods=["GET"])
-def get_meta():
-    """
-    Get meta data of the application.
-    """
-    logger.info("Received request to query the meta")
-    db = Session()
-    meta = {
-        "alert_count" : db.query(PlantAlert).filter(PlantAlert.resolved == False).count(),
-        "todo_count" : db.query(Todo).filter(Todo.resolved == False).count()
-    }
-    db.close()
-
-    # Return JSON response
-    return jsonify(meta)
-
 @app.route("/system/<int:system_id>/deprecate", methods=["POST"])
 def system_deprecate(system_id):
     """
@@ -665,6 +650,52 @@ def deprecate_mix(mix_id):
     db.close()
 
     return jsonify({"message": f"Mix deprecated:("}), 201
+
+@app.route("/stats", methods=["GET"])
+def stats():
+    """
+    Return stats for everything
+    """
+    logger.info("Received request to query the meta")
+
+    db = Session()
+
+    total_cost = 0
+    total_cost += db.query(func.sum(Plant.cost)).scalar()
+    # total_cost += db.query(func.sum(Light.cost)).scalar()
+
+    total_active_cost = 0
+    total_active_cost += db.query(func.sum(Plant.cost)).filter(Plant.deprecated == False).scalar()
+    # total_active_cost += db.query(func.sum(Light.cost)).filter(Light.deprecated == False).scalar()
+
+    stats = {
+        "total_plants" : db.query(Plant).count(),
+        "total_active_plants" : db.query(Plant).filter(Plant.deprecated == False).count(),
+        "total_deprecated_plants": db.query(Plant).filter(Plant.deprecated == True).count(),
+        "total_active_systems": db.query(System).filter(System.deprecated == False).count(),
+        "total_cost": total_cost,
+        "total_active_cost": total_active_cost
+    }
+    db.close()
+
+    logger.info("Successfully generated stats data.")
+    return jsonify(stats)
+
+@app.route("/meta", methods=["GET"])
+def get_meta():
+    """
+    Get meta data of the application.
+    """
+    logger.info("Received request to query the meta")
+    db = Session()
+    meta = {
+        "alert_count" : db.query(PlantAlert).filter(PlantAlert.resolved == False).count(),
+        "todo_count" : db.query(Todo).filter(Todo.resolved == False).count()
+    }
+    db.close()
+
+    logger.info("Successfully generated meta data.")
+    return jsonify(meta)
 
 if __name__ == "__main__":
     # Run the Flask app

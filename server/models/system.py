@@ -64,7 +64,7 @@ class Light(Base, DeprecatableMixin):
     name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
-    cost = Column(Integer())
+    cost = Column(Integer(), nullable=False, default=0)
     system_id: Mapped[int] = mapped_column(
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System this light belongs to

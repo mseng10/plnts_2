@@ -20,6 +20,8 @@ import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import EditSharp from '@mui/icons-material/Edit'
 import PieChartOutlineSharpIcon from '@mui/icons-material/PieChartOutlineSharp';
+import InsightsSharpIcon from '@mui/icons-material/InsightsSharp';
+import AttachMoneySharpIcon from '@mui/icons-material/AttachMoneySharp';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -95,6 +97,12 @@ const IconFactory = ({ icon, color, size }) => {
     break;
   case 'mix':
     IconComponent = PieChartOutlineSharpIcon;
+    break;
+  case 'stats':
+    IconComponent = InsightsSharpIcon;
+    break;
+  case 'cost':
+    IconComponent = AttachMoneySharpIcon;
     break;
   // Add more cases for other icons
   default:
