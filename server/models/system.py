@@ -14,7 +14,7 @@ from models.plant import Base, DeprecatableMixin
 class System(Base, DeprecatableMixin):
     """System model."""
 
-    __tablename__ = "system"
+    __tablename__ = "systems"
 
     id = Column(Integer(), primary_key=True)
     name = Column(String(100), nullable=False)
@@ -58,7 +58,7 @@ class System(Base, DeprecatableMixin):
 class Light(Base, DeprecatableMixin):
     """Light model."""
 
-    __tablename__ = "light"
+    __tablename__ = "lights"
 
     id = Column(Integer(), primary_key=True)
     name = Column(String(100), nullable=False)

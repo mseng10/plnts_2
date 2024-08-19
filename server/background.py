@@ -27,7 +27,8 @@ def create_plant_alert():
     """
     Create different plant alerts
     """
-    existing_plant_alrts = session.query(PlantAlert).all()
+    db = Session()
+    existing_plant_alrts = db.query(PlantAlert).filter(PlantAlert.deprecated == False).all()
     existing_plant_alrts_map = {}
     for existing_plant_alert in existing_plant_alrts:
         existing_plant_alrts_map[existing_plant_alert.plant_id] = existing_plant_alert
@@ -40,14 +41,14 @@ def create_plant_alert():
             new_plant_alert = PlantAlert(
                 plant_id = plant.id,
                 system_id = plant.system_id,
-                alert_type = "water"
+                plant_alert_type = "water"
             )
             # Create the alert in the db
-            session.add(new_plant_alert)
+            db.add(new_plant_alert)
             existing_plant_alrts[new_plant_alert.plant_id] = new_plant_alert
 
-    session.commit()
-    session.close()
+    db.commit()
+    db.close()
 
 def main():
     create_plant_alert()

@@ -2,7 +2,7 @@ const API_BASE_URL = 'http://127.0.0.1:5000';
 
 /** Fetch all alerts. */
 export const fetchAlerts = () => {
-  return fetch(`${API_BASE_URL}/alert/check`)
+  return fetch(`${API_BASE_URL}/alerts/check`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -12,9 +12,9 @@ export const fetchAlerts = () => {
     });
 };
 
-/** Resolve the specific plant alert.  */
-export const resolveAlert = (alertId) => {
-  return fetch(`${API_BASE_URL}/alert/plant/${alertId}/resolve`, {
+/** Deprecate the specific plant alert.  */
+export const deprecateAlert = (alertId) => {
+  return fetch(`${API_BASE_URL}/alerts/${alertId}/deprecate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({})
@@ -29,7 +29,7 @@ export const resolveAlert = (alertId) => {
 };
 
 export const deprecateSystem = (id) => {
-  return fetch(`${API_BASE_URL}/system/${id}/deprecate`, {
+  return fetch(`${API_BASE_URL}/systems/${id}/deprecate`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({})
