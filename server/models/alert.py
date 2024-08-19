@@ -31,8 +31,8 @@ class Todo(Base, DeprecatableMixin):
             "id": self.id,
             "created_on": self.created_on,
             "updated_on": self.updated_on,
-            "resolved": self.resolved,
-            "resolved_on": self.resolved_on,
+            "deprecated": self.deprecated,
+            "deprecated_on": self.deprecated_on,
             "due_on": self.due_on,
             "description": self.description,
             "name": self.name

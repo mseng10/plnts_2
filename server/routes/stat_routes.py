@@ -1,9 +1,13 @@
+from sqlalchemy import func
+
 from flask import Blueprint, jsonify, request
 from db import Session
 from logger import setup_logger
 import logging
 
 from models.mix import Mix
+from models.plant import Plant
+from models.system import Light
 
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
@@ -20,11 +24,11 @@ def stats():
 
     total_cost = 0
     total_cost += db.query(func.sum(Plant.cost)).scalar()
-    # total_cost += db.query(func.sum(Light.cost)).scalar()
+    total_cost += db.query(func.sum(Light.cost)).scalar()
 
     total_active_cost = 0
     total_active_cost += db.query(func.sum(Plant.cost)).filter(Plant.deprecated == False).scalar()
-    # total_active_cost += db.query(func.sum(Light.cost)).filter(Light.deprecated == False).scalar()
+    total_active_cost += db.query(func.sum(Light.cost)).filter(Light.deprecated == False).scalar()
 
     stats = {
         "total_plants" : db.query(Plant).count(),

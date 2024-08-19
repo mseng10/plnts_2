@@ -79,7 +79,7 @@ const Plants = ({ initialPlants }) => {
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <ServerError/>;
-  if (plants.lengh == 0) return <NoData/>;
+  if (plants.length === 0) return <NoData/>;
 
   return (
     <>

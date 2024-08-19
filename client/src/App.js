@@ -146,17 +146,17 @@ function App() {
             <Route path="/systems/:id" element={<SystemUpdate />} />
             <Route path="/systems/create" element={<SystemCreate />} />
 
-            <Route path="/light/create" element={<LightCreate /> } />
+            <Route path="/lights/create" element={<LightCreate /> } />
 
             <Route path="/plants" element={<Plants />} />
             <Route path="/plants/:id" element={<PlantUpdate />} />
             <Route path="/plants/create" element={<PlantCreate />} />
 
-            <Route path="/type/create" element={<TypeCreate /> } />
+            <Route path="/types/create" element={<TypeCreate /> } />
 
-            <Route path="/genus/create" element={<GenusCreate /> } />
+            <Route path="/genuses/create" element={<GenusCreate /> } />
 
-            <Route path="/mix/create" element={<MixCreate /> } />
+            <Route path="/mixes/create" element={<MixCreate /> } />
           </Routes>
         </Box>
       </ThemeProvider>

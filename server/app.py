@@ -10,7 +10,6 @@ from flask_cors import CORS
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
-from sqlalchemy import func
 
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
@@ -101,8 +100,8 @@ def get_meta():
     logger.info("Received request to query the meta")
     db = Session()
     meta = {
-        "alert_count" : db.query(PlantAlert).filter(PlantAlert.resolved == False).count(),
-        "todo_count" : db.query(Todo).filter(Todo.resolved == False).count()
+        "alert_count" : db.query(PlantAlert).filter(PlantAlert.deprecated == False).count(),
+        "todo_count" : db.query(Todo).filter(Todo.deprecated == False).count()
     }
     db.close()
 

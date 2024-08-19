@@ -20,7 +20,7 @@ def get_todos():
     todos = db.query(Todo).all()
     db.close()
     # Transform plant alerts to JSON format
-    todos_json = [todo.to_json() for todo in todos if todo.resolved is False]
+    todos_json = [todo.to_json() for todo in todos if todo.deprecated is False]
     # Return JSON response
     return jsonify(todos_json)
 
@@ -95,8 +95,8 @@ def todo_resolve(todo_id):
     db = Session()
 
     todo = db.query(Todo).get(todo_id)
-    todo.resolved = True
-    todo.resolved_on = datetime.now()
+    todo.deprecated = True
+    todo.deprecated_on = datetime.now()
 
     db.flush()
     db.commit()

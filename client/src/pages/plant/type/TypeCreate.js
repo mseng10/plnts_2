@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import {useNavigate} from "react-router-dom" 
 import { FormButton, FormTextInput, AutoCompleteInput, TextAreaInput } from '../../../elements/Form';
+import { useTypes, useGenuses } from '../../../hooks/usePlants';
+import { ServerError } from '../../../elements/Page';
 
 /** Create a new plant type of a specified genus. */
 const TypeCreate = () => {
@@ -10,52 +12,34 @@ const TypeCreate = () => {
   const [description, setDescription] = useState('');
   const [genus, setGenus] = useState(null);
 
-  // Field Populators
-  const [allGenuses, setAllGenuses] = useState([]);
-
-  // Submitted state
-  const [submitted, setSubmitted] = useState(false); // Initialize submitted state
+  const { createType } = useTypes();
+  const { error, genuses} = useGenuses();
 
   // Navigation
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (allGenuses.length == 0) {
-      fetch('http://127.0.0.1:5000/genus')
-        .then((response) => response.json())
-        .then((data) => setAllGenuses(data))
-        .catch((error) => console.error('Error fetching genus data:', error));
-    }
-  }, [allGenuses]);
-
-  useEffect(() => {
-    if (submitted && genus) {
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name, description: description, genus_id: genus.id })
-      };
-      fetch('http://127.0.0.1:5000/type', requestOptions)
-        .then(response => response.json())
-        .then(data => {
-          // handle the response data if needed
-          // maybe update some state based on the response
-          console.log(data);
-          navigate("/");
-        })
-        .catch(error => console.error('Error posting type data:', error));
-    }
-  }, [submitted, name, description, genus]);
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setSubmitted(true); // Update submitted state
+    const newType = {
+      name,
+      description,
+      genus_id: genus.id
+    };
+
+    try {
+      await createType(newType);
+      navigate("/");
+    } catch (error) {
+      console.error('Error adding new type:', error);
+    }
   };
 
   const handleCancel = () => {
     navigate("/");
   };
 
+  if (error) return <ServerError/>;
+  
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 600, bgcolor: 'background.paper', borderRadius: 2 }}>
@@ -76,7 +60,7 @@ const TypeCreate = () => {
               label="Genus"
               color="type"
               value={genus}
-              options={allGenuses}
+              options={genuses}
               setValue={setGenus}
             />
             <TextAreaInput

@@ -11,7 +11,7 @@ export const useMixes = (query) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/mix`);
+      const response = await fetch(`${API_BASE_URL}/mixes`);
       const data = await response.json();
       setMixes(data);
     } catch (error) {
@@ -26,7 +26,7 @@ export const useMixes = (query) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/mix`, {
+      const response = await fetch(`${API_BASE_URL}/mixes`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(mixData),
@@ -46,7 +46,7 @@ export const useMixes = (query) => {
 
   const updateMix = async (updatedMix) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/mix/${updatedMix.id}`, {
+      const response = await fetch(`${API_BASE_URL}/mixes/${updatedMix.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedMix),
@@ -65,7 +65,7 @@ export const useMixes = (query) => {
 
   const deprecateMix = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/mix/${id}/deprecate`, {
+      const response = await fetch(`${API_BASE_URL}/mixes/${id}/deprecate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
@@ -99,7 +99,7 @@ export const useSoils = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/soil`);
+        const response = await fetch(`${API_BASE_URL}/soils`);
         const data = await response.json();
         setSoils(data);
       } catch (error) {

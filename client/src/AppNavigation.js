@@ -30,11 +30,11 @@ function AppNavigation({ window }) {
     { id: 'home', url: '/', icon: 'home', color: 'primary' },
     { id: 'create', icon: 'create', color: 'primary', subMenu: [
       { id: 'plants', url: '/plants/create', icon: 'plant', label: 'Plant' },
-      { id: 'mix', url: '/mix/create', icon: 'mix', label: 'Mix' },
-      { id: 'type', url: '/type/create', icon: 'type', label: 'Type' },
-      { id: 'genus', url: '/genus/create', icon: 'genus', label: 'Genus' },
+      { id: 'mix', url: '/mixes/create', icon: 'mix', label: 'Mix' },
+      { id: 'type', url: '/types/create', icon: 'type', label: 'Type' },
+      { id: 'genus', url: '/genuses/create', icon: 'genus', label: 'Genus' },
       { id: 'system', url: '/systems/create', icon: 'system', label: 'System' },
-      { id: 'light', url: '/light/create', icon: 'light', label: 'Light' },
+      { id: 'light', url: '/lights/create', icon: 'light', label: 'Light' },
       { id: 'todo', url: '/todos/create', icon: 'todo', label: 'Todo' },
     ]},
     { id: 'view', icon: 'view', color: 'primary', subMenu: [

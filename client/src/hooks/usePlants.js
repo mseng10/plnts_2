@@ -23,9 +23,9 @@ export const usePlants = (initialPlants) => {
           setPlants(initialPlants);
         }
         const [genusResponse, systemResponse, typeResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/genus`),
+          fetch(`${API_BASE_URL}/genuses`),
           fetch(`${API_BASE_URL}/systems`),
-          fetch(`${API_BASE_URL}/type`)
+          fetch(`${API_BASE_URL}/types`)
         ]);
         setGenuses(await genusResponse.json());
         setSystems(await systemResponse.json());
@@ -124,4 +124,98 @@ export const usePlants = (initialPlants) => {
     waterPlants,
     updatePlant
   };
+};
+
+/** Query a all genuses. */
+export const useGenuses = () => {
+  const [genuses, setGenuses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    const fetchGenuses = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_BASE_URL}/genuses`);
+        const data = await response.json();
+        setGenuses(data);
+      } catch (error) {
+        console.error('Error fetching genus data:', error);
+        setError('Failed to fetch genuses. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchGenuses();
+  }, []);
+
+  const createGenus = async (newPlant) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/genuses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPlant)
+      });
+      const data = await response.json();
+      setGenuses(prevGenuses => [...prevGenuses, data]);
+
+      return data;
+    } catch (error) {
+      console.error('Error posting genuses data:', error);
+      setError('Failed to add new genus. Please try again later.');
+      
+      throw error;
+    }
+  };
+  
+  return { genuses, isLoading, error, createGenus, setError };
+};
+
+/** Query a all types. */
+export const useTypes = () => {
+  const [types, setTypes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    const fetchTypes = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_BASE_URL}/genuses`);
+        const data = await response.json();
+        setTypes(data);
+      } catch (error) {
+        console.error('Error fetching genus data:', error);
+        setError('Failed to fetch genuses. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchTypes();
+  }, []);
+
+  const createType = async (newType) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/types`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newType)
+      });
+      const data = await response.json();
+      setTypes(prevTypes => [...prevTypes, data]);
+
+      return data;
+    } catch (error) {
+      console.error('Error posting types data:', error);
+      setError('Failed to add new type. Please try again later.');
+      
+      throw error;
+    }
+  };
+  
+  return { types, isLoading, error, createType, setError };
 };
