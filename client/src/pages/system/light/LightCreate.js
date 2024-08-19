@@ -21,7 +21,7 @@ const NewLightForm = ({ systems }) => {
   const [allSystems, setAllSystems] = useState([]);
   useEffect(() => {
     if (!systems) {
-      fetch('http://127.0.0.1:5000/system')
+      fetch('http://127.0.0.1:5000/systems')
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
         .catch((error) => console.error('Error fetching all system data:', error));

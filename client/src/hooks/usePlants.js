@@ -24,7 +24,7 @@ export const usePlants = (initialPlants) => {
         }
         const [genusResponse, systemResponse, typeResponse] = await Promise.all([
           fetch(`${API_BASE_URL}/genus`),
-          fetch(`${API_BASE_URL}/system`),
+          fetch(`${API_BASE_URL}/systems`),
           fetch(`${API_BASE_URL}/type`)
         ]);
         setGenuses(await genusResponse.json());

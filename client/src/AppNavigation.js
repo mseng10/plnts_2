@@ -29,20 +29,20 @@ function AppNavigation({ window }) {
     { id: 'menu', url: '/', icon: 'menu', color: 'info' },
     { id: 'home', url: '/', icon: 'home', color: 'primary' },
     { id: 'create', icon: 'create', color: 'primary', subMenu: [
-      { id: 'plant', url: '/plant/create', icon: 'plant', label: 'Plant' },
+      { id: 'plants', url: '/plants/create', icon: 'plant', label: 'Plant' },
       { id: 'mix', url: '/mix/create', icon: 'mix', label: 'Mix' },
       { id: 'type', url: '/type/create', icon: 'type', label: 'Type' },
       { id: 'genus', url: '/genus/create', icon: 'genus', label: 'Genus' },
-      { id: 'system', url: '/system/create', icon: 'system', label: 'System' },
+      { id: 'system', url: '/systems/create', icon: 'system', label: 'System' },
       { id: 'light', url: '/light/create', icon: 'light', label: 'Light' },
-      { id: 'todo', url: '/todo/create', icon: 'todo', label: 'Todo' },
+      { id: 'todo', url: '/todos/create', icon: 'todo', label: 'Todo' },
     ]},
     { id: 'view', icon: 'view', color: 'primary', subMenu: [
-      { id: 'plant', url: '/plant', icon: 'plant', label: 'Plant' },
-      { id: 'system', url: '/system', icon: 'system', label: 'System' },
+      { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },
+      { id: 'systems', url: '/systems', icon: 'system', label: 'System' },
     ]},
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary', badgeCount: meta.alert_count, badgeCountColor: "error" },
-    { id: 'todo', url: '/todo', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
+    { id: 'todo', url: '/todos', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
     { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},
   ];
 

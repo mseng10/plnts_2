@@ -49,7 +49,7 @@ const TodoCard = ({ todo, onResolve }) => {
             </Box>
           </CardContent>
           <CardActions disableSpacing>
-            <IconButton color="info" onClick={() => navigate(`/todo/${todo.id}`)}>
+            <IconButton color="info" onClick={() => navigate(`/todos/${todo.id}`)}>
               <EditSharp />
             </IconButton>
             <IconButton color="info" onClick={() => onResolve(todo.id)}>

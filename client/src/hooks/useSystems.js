@@ -10,7 +10,7 @@ export const useSystems = () => {
 
   const updateSystem = async (id, updatedSystem) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/system/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/systems/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSystem),
@@ -29,7 +29,7 @@ export const useSystems = () => {
 
   const deprecateSystem = async(id, deprecateSystem) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/system/${id}/deprecate`, {
+      const response = await fetch(`${API_BASE_URL}/systems/${id}/deprecate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(deprecateSystem),
@@ -51,7 +51,7 @@ export const useSystems = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/system`);
+        const response = await fetch(`${API_BASE_URL}/systems`);
         const data = await response.json();
         setSystems(data);
       } catch (error) {
@@ -79,7 +79,7 @@ export const useSystemsPlants = (system) => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/system/${system.id}/plants`);
+        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/plants`);
         const data = await response.json();
         setPlants(data);
       } catch (error) {
@@ -107,7 +107,7 @@ export const useSystemAlerts = (system) => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/system/${system.id}/alerts`);
+        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/alerts`);
         const data = await response.json();
         setAlerts(data);
       } catch (error) {

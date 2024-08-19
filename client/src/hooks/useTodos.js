@@ -11,7 +11,7 @@ export const useTodos = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/todo`);
+      const response = await fetch(`${API_BASE_URL}/todos`);
       const data = await response.json();
       setTodos(data);
     } catch (error) {
@@ -24,7 +24,7 @@ export const useTodos = () => {
 
   const resolveTodo = async (id) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/todo/${id}/resolve`, {
+      const response = await fetch(`${API_BASE_URL}/todos/${id}/resolve`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({}),
@@ -42,7 +42,7 @@ export const useTodos = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/todo`, {
+      const response = await fetch(`${API_BASE_URL}/todos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(todoData),
@@ -62,7 +62,7 @@ export const useTodos = () => {
 
   const updateTodo = async (updatedTodo) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/todo/${updatedTodo.id}`, {
+      const response = await fetch(`${API_BASE_URL}/todos/${updatedTodo.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTodo),

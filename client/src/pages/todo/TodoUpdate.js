@@ -52,7 +52,7 @@ const TodoUpdate = ({ todoProp }) => {
   };
 
   const handleCancel = () => {
-    navigate("/todo");
+    navigate("/todos");
   };
 
   if (isLoading) return <div>Loading...</div>;
