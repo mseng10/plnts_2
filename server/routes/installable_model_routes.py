@@ -10,7 +10,7 @@ logger = setup_logger(__name__, logging.DEBUG)
 
 types_bp = Blueprint('types', __name__, url_prefix='/types')
 genuses_bp = Blueprint('genuses', __name__, url_prefix='/genuses')
-soils_bp = Blueprint('genuses', __name__, url_prefix='/soils')
+soils_bp = Blueprint('soils', __name__, url_prefix='/soils')
 
 @genuses_bp.route("/", methods=["GET"])
 def get_genuses():

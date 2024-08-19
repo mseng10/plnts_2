@@ -13,7 +13,7 @@ from models.plant import Base, DeprecatableMixin
 class Todo(Base, DeprecatableMixin):
     """TOOO model."""
 
-    __tablename__ = "todos"
+    __tablename__ = "todo"
 
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
@@ -40,7 +40,9 @@ class Todo(Base, DeprecatableMixin):
 
 class Alert(Base, DeprecatableMixin):
     """Alert Base Class"""
-    __tablename__ = "alerts"
+    __tablename__ = "alert"
+
+    id = Column(Integer, primary_key=True)
 
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
@@ -57,15 +59,16 @@ class Alert(Base, DeprecatableMixin):
             "id": self.id,
             "created_on": self.created_on,
             "updated_on": self.updated_on,
-            "alert_type": self.alert_type        }
+            "alert_type": self.alert_type        
+        }
 
 
 class PlantAlert(Alert):
     """Plant alert model."""
 
-    __tablename__ = "plant_alerts"
+    __tablename__ = "plant_alert"
 
-    id = Column(Integer(), ForeignKey('alerts.id'), primary_key=True)
+    id = Column(Integer(), ForeignKey('alert.id'), primary_key=True)
     plant_alert_type = Column(String(50))
 
     plant_id: Mapped[int] = mapped_column(
