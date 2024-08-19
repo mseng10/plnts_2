@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { FormButton, FormTextInput, DateSelector, TextAreaInput } from '../../elements/Form';
 import { useTodos } from '../../hooks/useTodos';
 import dayjs from 'dayjs';
+import { ServerError } from '../../elements/Page';
 
 const TodoUpdate = ({ todoProp }) => {
   const { id } = useParams();
@@ -55,7 +56,7 @@ const TodoUpdate = ({ todoProp }) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
 
   return (
     <Box sx={{ height: '100%', width: '100%'}}>

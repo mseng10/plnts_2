@@ -23,7 +23,7 @@ const AlertCard = ({ alert, onResolve }) => {
           <CardHeader
             avatar={
               <Avatar sx={AVATAR_STYLE}>
-                <FormatListNumberedIcon className="small_button" color='error'/>
+                <FormatListNumberedIcon className="small_button" color='info'/>
               </Avatar>
             }
             title={alert.type}

@@ -9,6 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Modal from '@mui/material/Modal';
 import { MODAL_STYLE } from '../../constants';
+import { ServerError } from '../../elements/Page';
 
 const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
   const { plants, isLoading, error, setPlants, waterPlants } = usePlants(initialPlants);
@@ -85,7 +86,7 @@ const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
     setFormError(null);  };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
 
   return (
     <Modal

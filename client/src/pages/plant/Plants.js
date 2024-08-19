@@ -8,6 +8,7 @@ import KillPlantsForm from '../../modals/plant/KillPlantsForm';
 import { PHASE_LABELS } from '../../constants';
 import { usePlants } from '../../hooks/usePlants';
 import { useNavigate } from "react-router-dom";
+import { ServerError, NoData} from '../../elements/Page';
 
 const Plants = ({ initialPlants }) => {
   const navigate = useNavigate();
@@ -77,7 +78,8 @@ const Plants = ({ initialPlants }) => {
   );
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
+  if (plants.lengh == 0) return <NoData/>;
 
   return (
     <>

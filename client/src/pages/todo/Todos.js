@@ -15,6 +15,7 @@ import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { EditSharp } from '@mui/icons-material';
+import { NoData, ServerError } from '../../elements/Page';
 
 const TodoCard = ({ todo, onResolve }) => {
   const navigate = useNavigate();
@@ -65,8 +66,8 @@ const Todos = () => {
   const { todos, isLoading, error, resolveTodo } = useTodos();
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (todos.length === 0) return <div>No TODOs!</div>;
+  if (error) return <ServerError/>;
+  if (todos.length === 0) return <NoData/>;
 
   return (
     <div className="App">

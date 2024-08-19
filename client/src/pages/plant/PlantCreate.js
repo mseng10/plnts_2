@@ -5,6 +5,7 @@ import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../..
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
 import { useMixes } from '../../hooks/useMix';
+import { ServerError } from '../../elements/Page';
 
 const PlantCreate = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const PlantCreate = () => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
 
   return (
     <Box sx={{ height: '100%', width: '100%'}}>

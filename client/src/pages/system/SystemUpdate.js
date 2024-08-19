@@ -10,6 +10,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import CloseSharpIcon from '@mui/icons-material/CloseSharp';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import TextField from '@mui/material/TextField';
+import { ServerError } from '../../elements/Page';
 
 const SystemUpdate = ({ systemProp }) => {
   const { id } = useParams();
@@ -79,7 +80,7 @@ const SystemUpdate = ({ systemProp }) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
 
   return (
     <Box sx={{ height: '100%', width: '100%'}}>

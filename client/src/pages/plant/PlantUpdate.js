@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../../elements/Form';
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
+import { ServerError } from '../../elements/Page';
 
 const PlantUpdate = ({ plantProp }) => {
   const { id } = useParams();
@@ -66,7 +67,7 @@ const PlantUpdate = ({ plantProp }) => {
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
 
   return (
     <Box sx={{ height: '100%', width: '100%'}}>

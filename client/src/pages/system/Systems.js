@@ -23,6 +23,7 @@ import { EditSharp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import {deprecateSystem} from '../../api'
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
+import { NoData, ServerError, Loading } from '../../elements/Page';
 
 const SystemCard = ({ system }) => {
   const navigate = useNavigate();
@@ -110,9 +111,9 @@ const SystemCard = ({ system }) => {
 const Systems = () => {
   const { systems, isLoading, error } = useSystems();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (systems.length === 0) return <div>No Systems!</div>;
+  if (isLoading) return <Loading/>;
+  if (error) return <ServerError/>;
+  if (systems.length == 0) return <NoData/>;
 
   return (
     <Grid container justifyContent="center" spacing={4}>
