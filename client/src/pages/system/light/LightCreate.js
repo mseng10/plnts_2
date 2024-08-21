@@ -36,7 +36,7 @@ const NewLightForm = ({ systems }) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({name: name, cost: cost, system_id: system.id })
       };
-      fetch('http://127.0.0.1:5000/light', requestOptions)
+      fetch('http://127.0.0.1:5000/lights', requestOptions)
         .then(response => response.json())
         .then(data => {
           // handle the response data if needed

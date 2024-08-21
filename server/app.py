@@ -50,48 +50,6 @@ app.register_blueprint(soils_bp)
 
 CORS(app)
 
-def create_light_from_json(light):
-    """
-    Utiltity method to create multiple lights
-    """
-    return Light(
-        name=light["name"],
-        cost=light["cost"],
-        system_id=light["system_id"]
-    )
-
-@app.route("/light", methods=["GET"])
-def get_light():
-    """
-    Retrieve all lights from the database.
-    """
-    logger.info("Received request to retrieve all lights")
-
-    db = Session()
-    lights = db.query(Light).all()
-    db.close()
-    return jsonify([light.to_json() for light in lights])
-
-@app.route("/light", methods=["POST"])
-def create_light():
-    """
-    Create a new light and add it to the database.
-    """
-    logger.info("Attempting to create light")
-
-    new_light_json = request.get_json()
-
-    # Create a new Light object
-    new_light = create_light_from_json(new_light_json)
-
-    # Add the new Light object to the session
-    db = Session()
-    db.add(new_light)
-    db.commit()
-    db.close()
-
-    return jsonify({"message": "Light added successfully"}), 201
-
 @app.route("/meta", methods=["GET"])
 def get_meta():
     """

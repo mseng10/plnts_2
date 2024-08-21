@@ -8,6 +8,7 @@ from models.system import System
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
 bp = Blueprint('systems', __name__, url_prefix='/systems')
+bp = Blueprint('lights', __name__, url_prefix='/lights')
 
 @bp.route("/", methods=["GET"])
 def get_systems():
@@ -157,3 +158,45 @@ def get_systems_alerts(system_id):
 
     # Return JSON response
     return jsonify(plant_alerts_json)
+
+def create_light_from_json(light):
+    """
+    Utiltity method to create multiple lights
+    """
+    return Light(
+        name=light["name"],
+        cost=light["cost"],
+        system_id=light["system_id"]
+    )
+
+@bp.route("/", methods=["GET"])
+def get_light():
+    """
+    Retrieve all lights from the database.
+    """
+    logger.info("Received request to retrieve all lights")
+
+    db = Session()
+    lights = db.query(Light).all()
+    db.close()
+    return jsonify([light.to_json() for light in lights])
+
+@bp.route("/", methods=["POST"])
+def create_light():
+    """
+    Create a new light and add it to the database.
+    """
+    logger.info("Attempting to create light")
+
+    new_light_json = request.get_json()
+
+    # Create a new Light object
+    new_light = create_light_from_json(new_light_json)
+
+    # Add the new Light object to the session
+    db = Session()
+    db.add(new_light)
+    db.commit()
+    db.close()
+
+    return jsonify({"message": "Light added successfully"}), 201

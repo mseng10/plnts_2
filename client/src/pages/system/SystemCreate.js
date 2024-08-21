@@ -43,7 +43,7 @@ const NewSystemForm = ({ systems }) => {
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
         .catch((error) => console.error('Error fetching genus data:', error));
-      fetch('http://127.0.0.1:5000/light')
+      fetch('http://127.0.0.1:5000/lights')
         .then((response) => response.json())
         .then((data) => setAllLights(data))
         .catch((error) => console.error('Error fetching lights data:', error));
