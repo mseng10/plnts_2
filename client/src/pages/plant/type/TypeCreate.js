@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import {useNavigate} from "react-router-dom" 
 import { FormButton, FormTextInput, AutoCompleteInput, TextAreaInput } from '../../../elements/Form';
 import { useTypes, useGenuses } from '../../../hooks/usePlants';
-import { ServerError } from '../../../elements/Page';
+import { ServerError, Loading } from '../../../elements/Page';
 
 /** Create a new plant type of a specified genus. */
 const TypeCreate = () => {
@@ -13,7 +13,7 @@ const TypeCreate = () => {
   const [genus, setGenus] = useState(null);
 
   const { createType } = useTypes();
-  const { error, genuses} = useGenuses();
+  const { isLoading, error, genuses} = useGenuses();
 
   // Navigation
   const navigate = useNavigate();
@@ -38,6 +38,7 @@ const TypeCreate = () => {
     navigate("/");
   };
 
+  if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
   
   return (

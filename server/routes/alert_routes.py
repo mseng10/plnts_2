@@ -3,7 +3,7 @@ from db import Session
 from logger import setup_logger
 import logging
 
-from models.mix import PlantAlert, Alert
+from models.alert import PlantAlert, Alert
 
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)

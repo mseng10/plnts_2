@@ -8,7 +8,7 @@ import KillPlantsForm from '../../modals/plant/KillPlantsForm';
 import { PHASE_LABELS } from '../../constants';
 import { usePlants } from '../../hooks/usePlants';
 import { useNavigate } from "react-router-dom";
-import { ServerError, NoData} from '../../elements/Page';
+import { ServerError, NoData, Loading} from '../../elements/Page';
 
 const Plants = ({ initialPlants }) => {
   const navigate = useNavigate();
@@ -77,7 +77,7 @@ const Plants = ({ initialPlants }) => {
     </GridToolbarContainer>
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
   if (plants.length === 0) return <NoData/>;
 

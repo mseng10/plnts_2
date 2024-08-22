@@ -12,6 +12,7 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 import TextField from '@mui/material/TextField';
 import List from '@mui/material/List';
+import { Loading, ServerError } from '../../elements/Page';
 
 const MixCreate = () => {
   const [name, setName] = useState('');
@@ -20,7 +21,7 @@ const MixCreate = () => {
   const [soilsByParts, setSoilsByParts] = useState([{"soil": "", "parts": 1}]);
 
   const navigate = useNavigate();
-  const { error, createMix , setError} = useMixes();
+  const { isLoading, error, createMix , setError} = useMixes();
   const { soils } = useSoils();
 
   const handleSubmit = async (event) => {
@@ -83,6 +84,7 @@ const MixCreate = () => {
       }
     });
   };
+  if (error) return <ServerError/>;
 
   return (
     <Box sx={{ height: '100%', width: '100%' }}>

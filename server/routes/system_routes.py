@@ -3,14 +3,14 @@ from db import Session
 from logger import setup_logger
 import logging
 
-from models.system import System
+from models.system import System, Light
 
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
-bp = Blueprint('systems', __name__, url_prefix='/systems')
-bp = Blueprint('lights', __name__, url_prefix='/lights')
+system_bp = Blueprint('systems', __name__, url_prefix='/systems')
+light_bp = Blueprint('lights', __name__, url_prefix='/lights')
 
-@bp.route("/", methods=["GET"])
+@system_bp.route("/", methods=["GET"])
 def get_systems():
     """
     Retrieve all systems from the database.
@@ -25,7 +25,7 @@ def get_systems():
     # Return JSON response
     return jsonify(systems_json)
 
-@bp.route("/", methods=["POST"])
+@system_bp.route("/", methods=["POST"])
 def create_system():
     """
     Create a new system and add it to the database.
@@ -64,7 +64,7 @@ def create_system():
 
     return jsonify({"message": "System added successfully"}), 201
 
-@bp.route("/<int:system_id>", methods=["GET"])
+@system_bp.route("/<int:system_id>", methods=["GET"])
 def get_system(system_id):
     """
     Query the specific system.
@@ -78,7 +78,7 @@ def get_system(system_id):
     # Return JSON response
     return jsonify(system.to_json())
 
-@bp.route("/<int:system_id>", methods=["PATCH"])
+@system_bp.route("/<int:system_id>", methods=["PATCH"])
 def update_system(system_id):
     """
     Query the specific system.
@@ -104,7 +104,7 @@ def update_system(system_id):
     # Return JSON response
     return jsonify(system.to_json())
 
-@bp.route("/<int:system_id>/deprecate", methods=["POST"])
+@system_bp.route("/<int:system_id>/deprecate", methods=["POST"])
 def system_deprecate(system_id):
     """
     Deprecate the specified system.
@@ -123,7 +123,7 @@ def system_deprecate(system_id):
 
     return jsonify({"message": f"{len(systems)} Systems deprecated successfully:("}), 201
 
-@bp.route("/<int:system_id>/plants", methods=["GET"])
+@system_bp.route("/<int:system_id>/plants", methods=["GET"])
 def get_systems_plants(system_id):
     """
     Get system's plants.
@@ -141,7 +141,7 @@ def get_systems_plants(system_id):
     # Return JSON response
     return jsonify(plants_json)
 
-@bp.route("/<int:system_id>/alerts", methods=["GET"])
+@system_bp.route("/<int:system_id>/alerts", methods=["GET"])
 def get_systems_alerts(system_id):
     """
     Get system's alerts.
@@ -169,7 +169,7 @@ def create_light_from_json(light):
         system_id=light["system_id"]
     )
 
-@bp.route("/", methods=["GET"])
+@light_bp.route("/", methods=["GET"])
 def get_light():
     """
     Retrieve all lights from the database.
@@ -181,7 +181,7 @@ def get_light():
     db.close()
     return jsonify([light.to_json() for light in lights])
 
-@bp.route("/", methods=["POST"])
+@light_bp.route("/", methods=["POST"])
 def create_light():
     """
     Create a new light and add it to the database.

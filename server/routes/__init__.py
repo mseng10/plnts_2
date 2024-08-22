@@ -1,1 +1,0 @@
-from .system_routes import bp as system_bp

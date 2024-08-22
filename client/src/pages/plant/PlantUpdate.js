@@ -4,7 +4,7 @@ import Box from '@mui/material/Box';
 import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../../elements/Form';
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
-import { ServerError } from '../../elements/Page';
+import { ServerError, Loading } from '../../elements/Page';
 
 const PlantUpdate = ({ plantProp }) => {
   const { id } = useParams();
@@ -66,7 +66,7 @@ const PlantUpdate = ({ plantProp }) => {
     navigate("/");
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
 
   return (

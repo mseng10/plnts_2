@@ -5,7 +5,7 @@ import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../..
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
 import { useMixes } from '../../hooks/useMix';
-import { ServerError } from '../../elements/Page';
+import { ServerError, Loading } from '../../elements/Page';
 
 const PlantCreate = () => {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const PlantCreate = () => {
     navigate("/");
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
 
   return (

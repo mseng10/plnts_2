@@ -30,18 +30,22 @@ init_db()
 # Create Flask app
 app = Flask(__name__)
 
-from routes.system_routes import bp as system_bp
+from routes.system_routes import system_bp, light_bp
 from routes.plant_routes import bp as plant_bp
 from routes.todo_routes import bp as todo_bp
 from routes.mix_routes import bp as mix_bp
 from routes.stat_routes import bp as stat_bp
 from routes.installable_model_routes import types_bp, genuses_bp, soils_bp
+from routes.alert_routes import bp as alert_bp
 
 app.register_blueprint(system_bp)
+app.register_blueprint(light_bp)
 app.register_blueprint(plant_bp)
 app.register_blueprint(todo_bp)
 app.register_blueprint(mix_bp)
 app.register_blueprint(stat_bp)
+app.register_blueprint(alert_bp)
+
 
 app.register_blueprint(types_bp)
 app.register_blueprint(genuses_bp)

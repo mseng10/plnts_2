@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import {useNavigate} from "react-router-dom" 
 import { FormTextInput, NumberInput, FormButton} from '../../../elements/Form';
 import { useGenuses } from '../../../hooks/usePlants';
-import { ServerError } from '../../../elements/Page';
+import { ServerError, Loading } from '../../../elements/Page';
 
 /** Create a genus. Ideally not really used. */
 const GenusCreate = () => {
@@ -11,7 +11,7 @@ const GenusCreate = () => {
   const [name, setName] = useState('');
   const [watering, setWatering] = useState(0);
   
-  const { error, createGenus} = useGenuses();
+  const { isLoading, error, createGenus} = useGenuses();
 
   const navigate = useNavigate();
 
@@ -34,8 +34,9 @@ const GenusCreate = () => {
     navigate("/");
   };
 
+  if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
-
+  
   return (
     <Box sx={{ height: '100%', width: '100%' }}>
       <Box sx={{ width: 512, bgcolor: 'background.paper', borderRadius: 2 }}>

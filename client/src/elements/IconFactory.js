@@ -24,6 +24,7 @@ import InsightsSharpIcon from '@mui/icons-material/InsightsSharp';
 import AttachMoneySharpIcon from '@mui/icons-material/AttachMoneySharp';
 import SentimentVeryDissatisfiedSharpIcon from '@mui/icons-material/SentimentVeryDissatisfiedSharp';
 import SentimentNeutralSharpIcon from '@mui/icons-material/SentimentNeutralSharp';
+import SentimentVerySatisfiedSharpIcon from '@mui/icons-material/SentimentVerySatisfiedSharp';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -111,6 +112,9 @@ const IconFactory = ({ icon, color, size }) => {
     break;
   case 'noData':
     IconComponent = SentimentNeutralSharpIcon;
+    break;
+  case 'happy':
+    IconComponent = SentimentVerySatisfiedSharpIcon;
     break;
     
   // Add more cases for other icons

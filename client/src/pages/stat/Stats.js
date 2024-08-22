@@ -3,13 +3,12 @@ import { useStats } from '../../hooks/useStats';
 import Grid from '@mui/material/Grid';
 import { Stack } from '@mui/system';
 import IconFactory from '../../elements/IconFactory';
-import { Loading, NoData, ServerError } from '../../elements/Page';
+import { NoData, ServerError } from '../../elements/Page';
 
 /** Stats Page. */
 const Stats = () => {
-    const { stats, isLoading, error } = useStats();
+    const { stats, error } = useStats();
   
-    if (isLoading) return <Loading/>;
     if (error) return <ServerError/>;
     if (!stats) return <NoData/>
   

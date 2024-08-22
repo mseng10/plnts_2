@@ -39,7 +39,7 @@ const NewSystemForm = ({ systems }) => {
   useEffect(() => {
     if (!allSystems) {
       setLightCount(1);
-      fetch('http://127.0.0.1:5000/system')
+      fetch('http://127.0.0.1:5000/systems')
         .then((response) => response.json())
         .then((data) => setAllSystems(data))
         .catch((error) => console.error('Error fetching genus data:', error));
@@ -68,7 +68,7 @@ const NewSystemForm = ({ systems }) => {
           light: lightModel
         })
       };
-      fetch('http://127.0.0.1:5000/system', requestOptions)
+      fetch('http://127.0.0.1:5000/systems', requestOptions)
         .then(response => response.json())
         .then(data => {
           // handle the response data if needed
