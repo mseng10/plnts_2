@@ -25,7 +25,7 @@ init_db()
 
 def create_plant_alert():
     """
-    Create different plant alerts
+    Create different plant alerts. Right now just supports creating watering alerts.
     """
     db = Session()
     existing_plant_alrts = db.query(PlantAlert).filter(PlantAlert.deprecated == False).all()
