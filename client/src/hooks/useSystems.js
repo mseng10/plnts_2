@@ -8,9 +8,28 @@ export const useSystems = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const createSystem = async (system) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/systems/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(system)
+      });
+      const data = await response.json();
+      setSystems(prevSystems => [...prevSystems, data]);
+
+      return data;
+    } catch (error) {
+      console.error('Error posting system data:', error);
+      setError('Failed to add new system. Please try again later.');
+      
+      throw error;
+    }
+  };
+
   const updateSystem = async (id, updatedSystem) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/systems/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/systems/${id}/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedSystem),
@@ -29,7 +48,7 @@ export const useSystems = () => {
 
   const deprecateSystem = async(id, deprecateSystem) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/systems/${id}/deprecate`, {
+      const response = await fetch(`${API_BASE_URL}/systems/${id}/deprecate/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(deprecateSystem),
@@ -65,7 +84,7 @@ export const useSystems = () => {
     fetchSystems();
   }, []);
 
-  return { systems, isLoading, error, updateSystem, deprecateSystem };
+  return { systems, isLoading, error, createSystem, updateSystem, deprecateSystem };
 };
 
 /** Query a system for it's respective plants. */
@@ -79,7 +98,7 @@ export const useSystemsPlants = (system) => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/plants`);
+        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/plants/`);
         const data = await response.json();
         setPlants(data);
       } catch (error) {
@@ -107,7 +126,7 @@ export const useSystemAlerts = (system) => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/alerts`);
+        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/alerts/`);
         const data = await response.json();
         setAlerts(data);
       } catch (error) {
@@ -122,6 +141,54 @@ export const useSystemAlerts = (system) => {
   }, []);
 
   return { alerts, isLoading, error };
+};
+
+/** Query all lights.  */
+export const useLights = () => {
+  const [lights, setLights] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const createLight = async (newLight) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/plants/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newLight)
+      });
+      const data = await response.json();
+      setLights(prevLights => [...prevLights, data]);
+
+      return data;
+    } catch (error) {
+      console.error('Error posting light data:', error);
+      setError('Failed to add new light. Please try again later.');
+      
+      throw error;
+    }
+  };
+
+
+  useEffect(() => {
+    const fetchSystems = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const response = await fetch(`${API_BASE_URL}/lights/`);
+        const data = await response.json();
+        setLights(data);
+      } catch (error) {
+        console.error('Error fetching light data:', error);
+        setError('Failed to fetch lights. Please try again later.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSystems();
+  }, []);
+
+  return { lights, isLoading, error, createLight};
 };
 
 // Target temperature marks

@@ -33,7 +33,7 @@ def create_plant_alert():
     for existing_plant_alert in existing_plant_alrts:
         existing_plant_alrts_map[existing_plant_alert.plant_id] = existing_plant_alert
 
-    existing_plants = session.query(Plant).filter(Plant.dead == False).all()
+    existing_plants = session.query(Plant).filter(Plant.deprecated == False).all()
     now = datetime.now()
     for plant in existing_plants:
         end_date = plant.watered_on + datetime.timedelta(days=float(plant.watering))
@@ -56,5 +56,5 @@ def main():
 
 if __name__ == "__main__":
     while True:
-        logger.info("Initializing background processing.")
+        logger.info("Starting background processing.")
         main()

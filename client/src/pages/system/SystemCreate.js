@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
@@ -8,12 +8,12 @@ import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Autocomplete from '@mui/material/Autocomplete';
 import {useNavigate} from "react-router-dom" 
 import { SliderInput, TextAreaInput, FormTextInput, FormButton } from '../../elements/Form';
-import { temperatureMarks, humidityMarks, durationMarks, distanceMarks } from '../../hooks/useSystems';
+import { temperatureMarks, humidityMarks, durationMarks, distanceMarks, useLights, useSystems } from '../../hooks/useSystems';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 
 /** Create a system that houses plants */
-const NewSystemForm = ({ systems }) => {
+const NewSystemForm = () => {
   // Form Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('')
@@ -25,64 +25,29 @@ const NewSystemForm = ({ systems }) => {
   // Light Count
   const [lightModel, setLightModel] = useState(null);
   const [lightCount, setLightCount] = useState(1);
-  const [allLights, setAllLights] = useState([]); 
+  const { lights } = useLights();
 
-  // Background Information
-  const [allSystems, setAllSystems] = useState(systems);
+  const { createSystem } = useSystems();
   
-  // Submitted State
-  const [submitted, setSubmitted] = useState(false);
-
   // Navigation
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
 
-  useEffect(() => {
-    if (!allSystems) {
-      setLightCount(1);
-      fetch('http://127.0.0.1:5000/systems')
-        .then((response) => response.json())
-        .then((data) => setAllSystems(data))
-        .catch((error) => console.error('Error fetching genus data:', error));
-      fetch('http://127.0.0.1:5000/lights')
-        .then((response) => response.json())
-        .then((data) => setAllLights(data))
-        .catch((error) => console.error('Error fetching lights data:', error));
-    }
-  }, [allSystems]);
-
-  useEffect(() => {
-    if (submitted) {
-      if (lightModel) {
-        lightModel.count = lightCount;
-      }
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          name: name,
-          description: description,
-          humidity: humidity,
-          temperature: temperature,
-          distance: distance,
-          duration: duration,
-          light: lightModel
-        })
-      };
-      fetch('http://127.0.0.1:5000/systems', requestOptions)
-        .then(response => response.json())
-        .then(data => {
-          // handle the response data if needed
-          // maybe update some state based on the response
-          console.log(data);
-        })
-        .catch(error => console.error('Error posting genus data:', error));
-      navigate("/")
-    }
-  }, [submitted, name, description, temperature, humidity, distance, duration,lightModel, lightCount ]);
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    setSubmitted(true); // Update submitted state
+    try {
+      await createSystem({
+        name: name,
+        description: description,
+        humidity: humidity,
+        temperature: temperature,
+        distance: distance,
+        duration: duration,
+        light: lightModel
+      });
+      navigate("/");
+    } catch (error) {
+      console.error('Error adding new light:', error);
+    }
   };
 
   const updateLightCount = (increment) => {
@@ -94,7 +59,7 @@ const NewSystemForm = ({ systems }) => {
   };
 
   const handleCancel = () => {
-    navigate("/create");
+    navigate("/");
   };
 
   return (
@@ -178,8 +143,8 @@ const NewSystemForm = ({ systems }) => {
                 color="light"
                 disableClearable
                 value={lightModel ? lightModel.name : ''}
-                options={allLights.map((option) => option.name)}
-                onChange={(event) => setLightModel(allLights[event.target.value])}
+                options={lights.map((option) => option.name)}
+                onChange={(event) => setLightModel(lights[event.target.value])}
                 renderInput={(params) => (
                   <TextField
                     color="light"

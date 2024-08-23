@@ -84,6 +84,7 @@ const MixCreate = () => {
       }
     });
   };
+  if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
 
   return (

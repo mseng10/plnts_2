@@ -6,10 +6,11 @@ import Alert from '@mui/material/Alert';
 
 const opacity = 0.7;
 
-const PageButton = (icon, color, text) => {
+/*** Full Page Button with alert. */
+export const PageButton = (icon, color, text, onClick) => {
   return (
     <Stack sx={{opacity: opacity}} direction="column" alignItems="center" height={52}>
-     <IconButton>
+     <IconButton onClick={onClick}>
         <IconFactory
           icon={icon}
           color={color}

@@ -77,3 +77,4 @@ def main():
 if __name__ == "__main__":
     logger.info("Initializing installation processing.")
     main()
+    logger.info("Successfully completed installation process.")

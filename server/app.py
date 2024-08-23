@@ -1,5 +1,5 @@
 """
-This is the main module of the application.
+Running webserver.
 """
 
 import logging
@@ -25,6 +25,7 @@ import logging
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
 
+# Initialize DB connection
 init_db()
 
 # Create Flask app
@@ -38,6 +39,7 @@ from routes.stat_routes import bp as stat_bp
 from routes.installable_model_routes import types_bp, genuses_bp, soils_bp
 from routes.alert_routes import bp as alert_bp
 
+# Models
 app.register_blueprint(system_bp)
 app.register_blueprint(light_bp)
 app.register_blueprint(plant_bp)
@@ -46,7 +48,7 @@ app.register_blueprint(mix_bp)
 app.register_blueprint(stat_bp)
 app.register_blueprint(alert_bp)
 
-
+# Installables
 app.register_blueprint(types_bp)
 app.register_blueprint(genuses_bp)
 app.register_blueprint(soils_bp)
@@ -54,7 +56,7 @@ app.register_blueprint(soils_bp)
 
 CORS(app)
 
-@app.route("/meta", methods=["GET"])
+@app.route("/meta/", methods=["GET"])
 def get_meta():
     """
     Get meta data of the application.

@@ -9,7 +9,7 @@ import { ServerError, Loading } from '../../elements/Page';
 
 const PlantCreate = () => {
   const navigate = useNavigate();
-  const { genuses, systems, types, isLoading, error, addPlant } = usePlants();
+  const { genuses, systems, types, isLoading, error, createPlant } = usePlants();
   const { mixes } = useMixes(true);
 
   const [genus, setGenus] = useState(null);
@@ -35,7 +35,7 @@ const PlantCreate = () => {
     };
 
     try {
-      await addPlant(newPlant);
+      await createPlant(newPlant);
       navigate("/");
     } catch (error) {
       console.error('Error adding new plant:', error);

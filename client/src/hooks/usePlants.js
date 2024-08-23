@@ -17,7 +17,7 @@ export const usePlants = (initialPlants) => {
       try {
         console.log(initialPlants);
         if (!initialPlants) {
-          const plantsResponse = await fetch(`${API_BASE_URL}/plants`);
+          const plantsResponse = await fetch(`${API_BASE_URL}/plants/`);
           setPlants(await plantsResponse.json());
         } else {
           setPlants(initialPlants);
@@ -40,9 +40,9 @@ export const usePlants = (initialPlants) => {
     fetchData();
   }, [initialPlants]);
 
-  const addPlant = async (newPlant) => {
+  const createPlant = async (newPlant) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/plants`, {
+      const response = await fetch(`${API_BASE_URL}/plants/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPlant)
@@ -61,7 +61,7 @@ export const usePlants = (initialPlants) => {
 
   const killPlant = async (cause, when) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/plants/kill`, {
+      const response = await fetch(`${API_BASE_URL}/plants/kill/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ids:  plants.map((plant) => plant.id), cause: cause, killed_on: when})
@@ -78,7 +78,7 @@ export const usePlants = (initialPlants) => {
 
   const waterPlants = async (when) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/plants/water`, {
+      const response = await fetch(`${API_BASE_URL}/plants/water/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ids:  plants.map((plant) => plant.id), watered_on: when})
@@ -95,7 +95,7 @@ export const usePlants = (initialPlants) => {
 
   const updatePlant = async (id, updatedPlant) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/plants/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/plants/${id}/`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedPlant),
@@ -119,7 +119,7 @@ export const usePlants = (initialPlants) => {
     types,
     isLoading,
     error,
-    addPlant,
+    createPlant,
     killPlant,
     waterPlants,
     updatePlant
@@ -137,7 +137,7 @@ export const useGenuses = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/genuses`);
+        const response = await fetch(`${API_BASE_URL}/genuses/`);
         const data = await response.json();
         setGenuses(data);
       } catch (error) {
@@ -153,7 +153,7 @@ export const useGenuses = () => {
 
   const createGenus = async (newPlant) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/genuses`, {
+      const response = await fetch(`${API_BASE_URL}/genuses/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newPlant)
@@ -184,7 +184,7 @@ export const useTypes = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch(`${API_BASE_URL}/genuses`);
+        const response = await fetch(`${API_BASE_URL}/types/`);
         const data = await response.json();
         setTypes(data);
       } catch (error) {
@@ -200,7 +200,7 @@ export const useTypes = () => {
 
   const createType = async (newType) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/types`, {
+      const response = await fetch(`${API_BASE_URL}/types/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newType)

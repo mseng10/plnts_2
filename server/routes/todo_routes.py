@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from db import Session
 from logger import setup_logger
 import logging
+from datetime import datetime
 
 from models.alert import Todo
 
@@ -48,7 +49,7 @@ def create_todo():
 
     return jsonify({"message": "TODO added successfully"}), 201
 
-@bp.route("/<int:todo_id>", methods=["PATCH"])
+@bp.route("/<int:todo_id>/", methods=["PATCH"])
 def update_todo(todo_id):
     """
     Query the specific todo.
@@ -85,7 +86,7 @@ def get_todo(todo_id):
     # Return JSON response
     return jsonify(todo.to_json())
 
-@bp.route("/todo/<int:todo_id>/resolve", methods=["POST"])
+@bp.route("/<int:todo_id>/resolve/", methods=["POST"])
 def todo_resolve(todo_id):
     """
     Resolves the todo.

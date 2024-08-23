@@ -1,6 +1,6 @@
 // useAlerts.js
 import { useState, useEffect } from 'react';
-import { fetchAlerts } from '../api';
+import { simpleFetch } from '../api';
 
 export const useAlerts = (initialAlerts = []) => {
   const [alerts, setAlerts] = useState(initialAlerts);
@@ -8,9 +8,10 @@ export const useAlerts = (initialAlerts = []) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchAlerts()
+    simpleFetch('/alerts/check/')
       .then(setAlerts)
-      .catch(error => console.error('Error fetching alert data:', error));
+      .catch(error => 
+        console.error('Error fetching alert data:', error));
     setIsLoading(false);
   }, []);
 

@@ -11,7 +11,7 @@ export const useStats = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_BASE_URL}/stats`);
+      const response = await fetch(`${API_BASE_URL}/stats/`);
       const data = await response.json();
       setStats(data);
     } catch (error) {
