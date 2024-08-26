@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { simpleFetch, simplePost } from '../api';
 
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
@@ -7,83 +8,63 @@ export const useMixes = (query) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchMixes = async () => {
+  useEffect(() => {
+    if (!query) return;
+
     setIsLoading(true);
     setError(null);
-    try {
-      const response = await fetch(`${API_BASE_URL}/mixes/`);
-      const data = await response.json();
-      setMixes(data);
-    } catch (error) {
-      console.error('Error fetching mix data:', error);
-      setError('Failed to fetch mixes. Please try again later.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    simpleFetch('/mixes/')
+      .then(setMixes)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
+  }, [query]);
 
-  const createMix = async (mixData) => {
+  const createMix = async (newMix) => {
     setIsLoading(true);
     setError(null);
-    try {
-      const response = await fetch(`${API_BASE_URL}/mixes/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(mixData),
-      });
-      const data = await response.json();
-      setMixes(prevMixes => [...prevMixes, data]);
-
-      return data;
-    } catch (error) {
-      console.error('Error creating mix:', error);
-      setError('Failed to create mix. Please try again.');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    simplePost("/mixes/", newMix)
+      .then(data => 
+        setMixes(prevMixes => [...prevMixes, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
   const updateMix = async (updatedMix) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/mixes/${updatedMix.id}/`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedMix),
-      });
-      const data = await response.json();
-      setMixes(prevMixes => prevMixes.map(mix => 
-        mix.id === updatedMix.id ? { ...mix, ...data } : mix
-      ));
-
-      return data;
-    } catch (error) {
-      console.error('Error updating todo:', error);
-      throw error;
-    }
+    setIsLoading(true);
+    setError(null);
+    simplePost(`/mixes/${updatedMix.id}/`, updatedMix)
+      .then(data => 
+        setMixes(prevMixes => prevMixes.map(mix => 
+          mix.id === updatedMix.id ? { ...mix, ...data } : mix
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
+  /** Deprecate the mix */
   const deprecateMix = async (id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/mixes/${id}/deprecate/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
-      });
-      const data = await response.json();
-      console.log(data);
-      setMixes(preMixes => preMixes.filter(mix => mix.id !== id));
-    } catch (error) {
-      console.error('Error deprecating mix:', error);
-      setError('Failed to deprecate mix. Please try again.');
-    }
+    setIsLoading(true);
+    setError(null);
+    simplePost(`${API_BASE_URL}/mixes/${id}/deprecate/`)
+      .then(() => 
+        setMixes(prevMixes => prevMixes.filter(mix => 
+          mix.id !== id
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
-
-  useEffect(() => {
-    if (query) {
-      fetchMixes();
-    }
-  }, [query]);
 
   return { mixes, isLoading, error, setError, createMix, updateMix, deprecateMix };
 };
@@ -95,22 +76,15 @@ export const useSoils = () => {
   const [error, setError] = useState(null);
   
   useEffect(() => {
-    const fetchSoils = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/soils/`);
-        const data = await response.json();
-        setSoils(data);
-      } catch (error) {
-        console.error('Error fetching soil data:', error);
-        setError('Failed to fetch soil. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    fetchSoils();
+    setIsLoading(true);
+    setError(null);
+    simpleFetch('/soils/')
+      .then(setSoils)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
   
   return { soils, isLoading, error };

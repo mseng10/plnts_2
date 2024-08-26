@@ -1,6 +1,8 @@
 // useAlerts.js
 import { useState, useEffect } from 'react';
-import { simpleFetch } from '../api';
+import { simpleFetch, simplePost } from '../api';
+
+const API_BASE_URL = 'http://127.0.0.1:5000';
 
 export const useAlerts = (initialAlerts = []) => {
   const [alerts, setAlerts] = useState(initialAlerts);
@@ -15,15 +17,21 @@ export const useAlerts = (initialAlerts = []) => {
     setIsLoading(false);
   }, []);
 
-  const resolveAlert = async (alert) => {
-    try {
-      resolveAlert(alert.id);
-      setAlerts(prevAlerts => prevAlerts.filter(_a => _a.id !== alert.id));
-    } catch (error) {
-      console.error('Error resolving alert:', error);
-      setError('Failed to resolve alert. Please try again.');
-    }
-  };
+  /** Resolve the todo. */
+  const resolveAlert = async (id) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(`${API_BASE_URL}/alerts/${id}/deprecate/`)
+      .then(() => 
+      setAlerts(prevAlerts => prevAlerts.filter(alert => 
+        alert.id !== id
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+    };
 
   return { alerts, isLoading, error, resolveAlert };
 };

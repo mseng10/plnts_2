@@ -1,8 +1,8 @@
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
-/** Fetch all alerts. */
-export const fetchAlerts = () => {
-  return fetch(`${API_BASE_URL}/alerts/check`)
+/** Wrapper for fetch with error handling and jsonifying. */
+export const simpleFetch = (url) => {
+  return fetch(`${API_BASE_URL}${url}`)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -12,33 +12,34 @@ export const fetchAlerts = () => {
     });
 };
 
-/** Deprecate the specific plant alert.  */
-export const deprecateAlert = (alertId) => {
-  return fetch(`${API_BASE_URL}/alerts/${alertId}/deprecate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({})
-  })
+/** Wrapper for fetch with error handling and jsonifying. */
+export const simplePost = (url, model) => {
+  return fetch(`${API_BASE_URL}${url}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(model)
+    })
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      
+
       return response.json();
     });
 };
 
-export const deprecateSystem = (id) => {
-  return fetch(`${API_BASE_URL}/systems/${id}/deprecate`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({})
-  })
+/** Wrapper for fetch with error handling and jsonifying. */
+export const simplePatch = (url, patchModel) => {
+  return fetch(`${API_BASE_URL}${url}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patchModel)
+    })
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      
+
       return response.json();
     });
 };

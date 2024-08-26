@@ -67,7 +67,7 @@ const SystemUpdate = ({ systemProp }) => {
       light
     };
     try {
-      await updateSystem(systemProp ? systemProp.id : id, updatedSystem);
+      await updateSystem(updatedSystem);
       navigate("/systems");
     } catch (error) {
       console.error('Error updating system:', error);

@@ -1,87 +1,71 @@
 import { useState, useEffect } from 'react';
+import { simpleFetch, simplePost, simplePatch } from '../api';
 
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
-/** Query for all systems. */
+/** Query and api functionality for all systems. */
 export const useSystems = () => {
   const [systems, setSystems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const createSystem = async (system) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/systems/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(system)
-      });
-      const data = await response.json();
-      setSystems(prevSystems => [...prevSystems, data]);
-
-      return data;
-    } catch (error) {
-      console.error('Error posting system data:', error);
-      setError('Failed to add new system. Please try again later.');
-      
-      throw error;
-    }
+  /** Create the provided system. */
+  const createSystem = async (newSystem) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost("/systems/", newSystem)
+      .then(data => 
+        setSystems(prevSystems => [...prevSystems, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
-  const updateSystem = async (id, updatedSystem) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/systems/${id}/`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedSystem),
-      });
-      const data = await response.json();
-      setSystems(prevSystems => prevSystems.map(system => 
-        system.id === id ? { ...system, ...data } : system
-      ));
-
-      return data;
-    } catch (error) {
-      console.error('Error updating system:', error);
-      throw error;
-    }
+  /** Update a system with a new version.  */
+  const updateSystem = async (updatedSystem) => {
+    const id = updatedSystem.id;
+    setIsLoading(true);
+    setError(null);
+    simplePatch(`/systems/${id}/`, updatedSystem)
+      .then(data => 
+        setSystems(prevSystems => prevSystems.map(system => 
+          system.id === id ? { ...system, ...data } : system
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
-  const deprecateSystem = async(id, deprecateSystem) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/systems/${id}/deprecate/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(deprecateSystem),
-      });
-      const data = await response.json();
-      setSystems(prevSystems => prevSystems.filter(system => 
-        system.id !== id
-      ));
-
-      return data;
-    } catch (error) {
-      console.error('Error updating system:', error);
-      throw error;
-    }
-  }
-
-  useEffect(() => {
-    const fetchSystems = async () => {
+    /** Deprecate the system */
+    const deprecateSystem = async (id) => {
       setIsLoading(true);
       setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/systems`);
-        const data = await response.json();
-        setSystems(data);
-      } catch (error) {
-        console.error('Error fetching system data:', error);
-        setError('Failed to fetch systems. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
+      simplePost(`${API_BASE_URL}/systems/${id}/deprecate/`)
+        .then(() => 
+          setSystems(prevSystems => prevSystems.filter(system => 
+            system.id !== id
+        )))
+        .catch(error => {
+          setError(error);
+        })
+        .finally(() => 
+          setIsLoading(false))
     };
 
-    fetchSystems();
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(`/systems/`)
+      .then(setSystems)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
 
   return { systems, isLoading, error, createSystem, updateSystem, deprecateSystem };
@@ -94,22 +78,15 @@ export const useSystemsPlants = (system) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSystems = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/plants/`);
-        const data = await response.json();
-        setPlants(data);
-      } catch (error) {
-        console.error('Error fetching system data:', error);
-        setError('Failed to fetch systems. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSystems();
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(`/systems/${system.id}/plants/`)
+      .then(setPlants)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
 
   return { plants, isLoading, error };
@@ -122,22 +99,15 @@ export const useSystemAlerts = (system) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSystems = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/systems/${system.id}/alerts/`);
-        const data = await response.json();
-        setAlerts(data);
-      } catch (error) {
-        console.error('Error fetching system data:', error);
-        setError('Failed to fetch systems. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSystems();
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(`/systems/${system.id}/alerts/`)
+      .then(setAlerts)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
 
   return { alerts, isLoading, error };
@@ -149,44 +119,32 @@ export const useLights = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const createLight = async (newLight) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/plants/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newLight)
-      });
-      const data = await response.json();
-      setLights(prevLights => [...prevLights, data]);
-
-      return data;
-    } catch (error) {
-      console.error('Error posting light data:', error);
-      setError('Failed to add new light. Please try again later.');
-      
-      throw error;
-    }
-  };
-
-
+  /** Initialize the lights. */
   useEffect(() => {
-    const fetchSystems = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/lights/`);
-        const data = await response.json();
-        setLights(data);
-      } catch (error) {
-        console.error('Error fetching light data:', error);
-        setError('Failed to fetch lights. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSystems();
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(`/lights/`)
+      .then(setLights)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
+
+  /** Create the provided light. */
+  const createLight = async (newLight) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(/lights/, newLight)
+      .then(data => 
+        setLights(prevLights => [...prevLights, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
 
   return { lights, isLoading, error, createLight};
 };

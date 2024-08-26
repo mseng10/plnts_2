@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { simplePatch, simplePost, simpleFetch } from '../api';
 
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
@@ -7,81 +8,62 @@ export const useTodos = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const fetchTodos = async () => {
+  useEffect(() => {
     setIsLoading(true);
     setError(null);
-    try {
-      const response = await fetch(`${API_BASE_URL}/todos/`);
-      const data = await response.json();
-      setTodos(data);
-    } catch (error) {
-      console.error('Error fetching todo data:', error);
-      setError('Failed to fetch todos. Please try again later.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    simpleFetch(`/todos/`)
+      .then(setTodos)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
+  }, []);
 
+  /** Resolve the todo. */
   const resolveTodo = async (id) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/todos/${id}/resolve/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({}),
-      });
-      const data = await response.json();
-      console.log(data);
-      setTodos(prevTodos => prevTodos.filter(todo => todo.id !== id));
-    } catch (error) {
-      console.error('Error resolving todo:', error);
-      setError('Failed to resolve todo. Please try again.');
-    }
+    setIsLoading(true);
+    setError(null);
+    simplePost(`${API_BASE_URL}/todos/${id}/deprecate/`)
+      .then(() => 
+        setTodos(prevTodos => prevTodos.filter(todo => 
+          todo.id !== id
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
   const createTodo = async (todoData) => {
     setIsLoading(true);
     setError(null);
-    try {
-      const response = await fetch(`${API_BASE_URL}/todos/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(todoData),
-      });
-      const data = await response.json();
-      setTodos(prevTodos => [...prevTodos, data]);
-
-      return data;
-    } catch (error) {
-      console.error('Error creating todo:', error);
-      setError('Failed to create todo. Please try again.');
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+    simplePost('/todos/', todoData)
+      .then(data => 
+        setTodos(prevTodos => [...prevTodos, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
   const updateTodo = async (updatedTodo) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/todos/${updatedTodo.id}/`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedTodo),
-      });
-      const data = await response.json();
-      setTodos(prevTodos => prevTodos.map(todo => 
-        todo.id === updatedTodo.id ? { ...todo, ...data } : todo
-      ));
-
-      return data;
-    } catch (error) {
-      console.error('Error updating todo:', error);
-      throw error;
-    }
+    const id = updatedTodo.id;
+    setIsLoading(true);
+    setError(null);
+    simplePatch(`/todos/${id}/`, updatedTodo)
+      .then(data => 
+        setTodos(prevTodos => prevTodos.map(todo => 
+          todo.id === id ? { ...todo, ...data } : todo
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
-
-  useEffect(() => {
-    fetchTodos();
-  }, []);
 
   return { todos, isLoading, error, resolveTodo, createTodo, updateTodo };
 };
