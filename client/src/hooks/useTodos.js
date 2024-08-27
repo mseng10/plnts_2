@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simplePatch, simplePost, simpleFetch } from '../api';
-
-const API_BASE_URL = 'http://127.0.0.1:5000';
+import { simplePatch, simplePost, simpleFetch, APIS, apiBuilder} from '../api';
 
 export const useTodos = () => {
   const [todos, setTodos] = useState([]);
@@ -11,7 +9,7 @@ export const useTodos = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(`/todos/`)
+    simpleFetch(apiBuilder(APIS.todo.getAll).get())
       .then(setTodos)
       .catch(error => {
         setError(error);
@@ -24,7 +22,7 @@ export const useTodos = () => {
   const resolveTodo = async (id) => {
     setIsLoading(true);
     setError(null);
-    simplePost(`${API_BASE_URL}/todos/${id}/deprecate/`)
+    simplePost(apiBuilder(APIS.todo.deprecateOne).setId(id).get())
       .then(() => 
         setTodos(prevTodos => prevTodos.filter(todo => 
           todo.id !== id
@@ -39,7 +37,7 @@ export const useTodos = () => {
   const createTodo = async (todoData) => {
     setIsLoading(true);
     setError(null);
-    simplePost('/todos/', todoData)
+    simplePost(apiBuilder(APIS.todo.create).get(), todoData)
       .then(data => 
         setTodos(prevTodos => [...prevTodos, data]))
       .catch(error => {
@@ -53,7 +51,7 @@ export const useTodos = () => {
     const id = updatedTodo.id;
     setIsLoading(true);
     setError(null);
-    simplePatch(`/todos/${id}/`, updatedTodo)
+    simplePatch(apiBuilder(APIS.todo.updateOne).setId(id).get(), updatedTodo)
       .then(data => 
         setTodos(prevTodos => prevTodos.map(todo => 
           todo.id === id ? { ...todo, ...data } : todo

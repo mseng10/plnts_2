@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simplePost, simpleFetch, simplePatch } from '../api';
-
-const API_BASE_URL = 'http://127.0.0.1:5000';
+import { simplePost, simpleFetch, simplePatch, APIS, apiBuilder } from '../api';
 
 export const usePlants = (initialPlants) => {
   const [plants, setPlants] = useState([]);
@@ -18,15 +16,15 @@ export const usePlants = (initialPlants) => {
       try {
         console.log(initialPlants);
         if (!initialPlants) {
-          const plantsResponse = await fetch(`${API_BASE_URL}/plants/`);
+          const plantsResponse = await fetch(apiBuilder(APIS.plant.getAll).get());
           setPlants(await plantsResponse.json());
         } else {
           setPlants(initialPlants);
         }
         const [genusResponse, systemResponse, typeResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/genuses`),
-          fetch(`${API_BASE_URL}/systems`),
-          fetch(`${API_BASE_URL}/types`)
+          fetch(apiBuilder(APIS.genus.getAll).get()),
+          fetch(apiBuilder(APIS.system.getAll).get()),
+          fetch(apiBuilder(APIS.type.getAll).get())
         ]);
         setGenuses(await genusResponse.json());
         setSystems(await systemResponse.json());
@@ -44,7 +42,7 @@ export const usePlants = (initialPlants) => {
   const createPlant = async (newPlant) => {
     setIsLoading(true);
     setError(null);
-    simplePost('/plants/', newPlant)
+    simplePost(apiBuilder(APIS.plant.create).get(), newPlant)
       .then(data => 
         setSystems(prevPlants => [...prevPlants, data]))
       .catch(error => {
@@ -54,38 +52,32 @@ export const usePlants = (initialPlants) => {
         setIsLoading(false))
   };
 
-  const killPlant = async (cause, when) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/plants/kill/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ids:  plants.map((plant) => plant.id), cause: cause, killed_on: when})
-      });
-      const data = await response.json();
-
-      return data;
-    } catch (error) {
-      console.error('Error killing plant:', error);
-      setError('Failed to kill plant. Please try again later.');
-      throw error;
-    }
+  const deprecatePlants = async (cause, when) => {
+    const request = {ids:  plants.map((plant) => plant.id), cause: cause, killed_on: when};
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.plant.deprecateMany).get(), request)
+      .then(data => 
+        setSystems(prevPlants => [...prevPlants, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
   const waterPlants = async (when) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/plants/water/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ids:  plants.map((plant) => plant.id), watered_on: when})
-      });
-      const data = await response.json();
-      
-      return data;
-    } catch (error) {
-      console.error('Error watering plants:', error);
-      setError('Failed to water plants. Please try again later.');
-      throw error;
-    }
+    const request = {ids:  plants.map((plant) => plant.id), watered_on: when};
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.plant.w).get(), request)
+      .then(data => 
+        setSystems(prevPlants => [...prevPlants, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
   /** Update a system with a new version.  */
@@ -93,7 +85,7 @@ export const usePlants = (initialPlants) => {
     const id = updatedPlant.id;
     setIsLoading(true);
     setError(null);
-    simplePatch(`/plants/${id}/`, updatedPlant)
+    simplePatch(apiBuilder(APIS.plant.updateOne).setId(id).get(), updatedPlant)
       .then(data => 
         setSystems(prevPlants => prevPlants.map(plant => 
           plant.id === id ? { ...plant, ...data } : plant
@@ -113,7 +105,7 @@ export const usePlants = (initialPlants) => {
     isLoading,
     error,
     createPlant,
-    killPlant,
+    deprecatePlants,
     waterPlants,
     updatePlant
   };
@@ -129,7 +121,7 @@ export const useGenuses = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(`/genuses/`)
+    simpleFetch(apiBuilder(APIS.genus.getAll).get())
       .then(setGenuses)
       .catch(error => {
         setError(error);
@@ -142,7 +134,7 @@ export const useGenuses = () => {
   const createGenus = async (newGenus) => {
     setIsLoading(true);
     setError(null);
-    simplePost(/genuses/, newGenus)
+    simplePost(apiBuilder(APIS.genus.getAll).get(), newGenus)
       .then(data => 
         setGenuses(prevGenuses => [...prevGenuses, data]))
       .catch(error => {
@@ -165,7 +157,7 @@ export const useTypes = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(`/types/`)
+    simpleFetch(apiBuilder(APIS.type.getAll).get())
       .then(setTypes)
       .catch(error => {
         setError(error);
@@ -178,7 +170,7 @@ export const useTypes = () => {
   const createType = async (newType) => {
     setIsLoading(true);
     setError(null);
-    simplePost(/types/, newType)
+    simplePost(apiBuilder(APIS.type.create).get(), newType)
       .then(data => 
         setTypes(prevGenuses => [...prevGenuses, data]))
       .catch(error => {

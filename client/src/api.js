@@ -1,8 +1,83 @@
 const API_BASE_URL = 'http://127.0.0.1:5000';
 
+export const APIS = {
+  plant: {
+    getAll: "/plants/",
+    create: "/plants/",
+    getOne: "/plants/{id}",
+    updateOne: "/plants/{id}",
+    deprecateOne: "/plants/{id}/deprecate/",
+    waterMany: "/plants/water",
+    deprecateMany: "/plants/deprecate/"
+  },
+  system: {
+    getAll: "/systems/",
+    create: "/systems/",
+    getOne: "/systems/{id}/",
+    updateOne: "/systems/{id}/",
+    deprecateOne: "/systems/{id}/deprecate/",
+    plants: "/systems/{id}/plants/",
+    alerts: "/systems/{id}/alerts/"
+  },
+  todo: {
+    getAll: "/todos/",
+    create: "/todos/",
+    getOne: "/todos/{id}/",
+    updateOne: "/todos/{id}/",
+    deprecateOne: "/todos/{id}/deprecate/",
+  },
+  alert: {
+    getAll: "/alerts/check/",
+    deprecateOne: "/alerts/{id}/deprecate"
+  },
+  light: {
+    getAll: "/lights/",
+    create: "/lights/"
+  },
+  meta: {
+    getOne: "/meta/"
+  },
+  stats: {
+    getOne: "/stats/"
+  },
+  mix: {
+    getAll: "/mixes/",
+    create: "/mixes/",
+    updateOne: "/mixes/{id}/",
+    deprecateOne: "/mixes/{id}/deprecate/"
+  },
+  soil: {
+    getAll: "/soils/"
+  },
+  type: {
+    getAll: "/types/",
+    create: "/types/"
+  },
+  genus: {
+    getAll: "/genuses/",
+    create: "/genuses/"
+  }
+}
+
+export const apiBuilder = (url) => {
+
+  return {
+    fullUrl: API_BASE_URL + url,
+    setId(id) {
+      this.fullUrl = this.fullUrl.replace('{id}', id);
+
+      return this;
+    },
+    get() {
+
+      return this.fullUrl;
+    }
+  };
+};
+
 /** Wrapper for fetch with error handling and jsonifying. */
 export const simpleFetch = (url) => {
-  return fetch(`${API_BASE_URL}${url}`)
+  return fetch(url)
     .then(response => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -14,7 +89,7 @@ export const simpleFetch = (url) => {
 
 /** Wrapper for fetch with error handling and jsonifying. */
 export const simplePost = (url, model) => {
-  return fetch(`${API_BASE_URL}${url}`, {
+  return fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(model)
@@ -30,7 +105,7 @@ export const simplePost = (url, model) => {
 
 /** Wrapper for fetch with error handling and jsonifying. */
 export const simplePatch = (url, patchModel) => {
-  return fetch(`${API_BASE_URL}${url}`, {
+  return fetch(url, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patchModel)

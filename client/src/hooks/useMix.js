@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost } from '../api';
-
-const API_BASE_URL = 'http://127.0.0.1:5000';
+import { simpleFetch, simplePost, apiBuilder, APIS } from '../api';
 
 export const useMixes = (query) => {
   const [mixes, setMixes] = useState([]);
@@ -13,7 +11,7 @@ export const useMixes = (query) => {
 
     setIsLoading(true);
     setError(null);
-    simpleFetch('/mixes/')
+    simpleFetch(apiBuilder(APIS.mix.getAll).get())
       .then(setMixes)
       .catch(error => {
         setError(error);
@@ -38,7 +36,7 @@ export const useMixes = (query) => {
   const updateMix = async (updatedMix) => {
     setIsLoading(true);
     setError(null);
-    simplePost(`/mixes/${updatedMix.id}/`, updatedMix)
+    simplePost(apiBuilder(APIS.mix.updateOne).setId(updatedMix.id).get(), updatedMix)
       .then(data => 
         setMixes(prevMixes => prevMixes.map(mix => 
           mix.id === updatedMix.id ? { ...mix, ...data } : mix
@@ -54,7 +52,7 @@ export const useMixes = (query) => {
   const deprecateMix = async (id) => {
     setIsLoading(true);
     setError(null);
-    simplePost(`${API_BASE_URL}/mixes/${id}/deprecate/`)
+    simplePost(apiBuilder(APIS.plant.deprecateOne).setId(id).get())
       .then(() => 
         setMixes(prevMixes => prevMixes.filter(mix => 
           mix.id !== id
@@ -78,7 +76,7 @@ export const useSoils = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch('/soils/')
+    simpleFetch(apiBuilder(APIS.soil.getAll).get())
       .then(setSoils)
       .catch(error => {
         setError(error);

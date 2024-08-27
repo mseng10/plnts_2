@@ -22,8 +22,8 @@ const CauseOfDeath = Object.freeze({
   UNKNOWN: 'Unknown'
 });
 
-const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
-  const { plants, isLoading, error, setPlants, killPlant } = usePlants(initialPlants);
+const DeprecatePlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
+  const { plants, isLoading, error, setPlants, deprecatePlants } = usePlants(initialPlants);
   const [checkedPlants, setCheckedPlants] = useState([]);
   const [allChecked, setAllChecked] = useState(true);
 
@@ -76,7 +76,7 @@ const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
 
     try {
       const killDate = new Date().toISOString().split('T')[0]; // Current date
-      await killPlant(killDate, causeOfDeath);
+      await deprecatePlants(killDate, causeOfDeath);
 
       setPlants(prevPlants => prevPlants.map(plant => 
         checkedPlants.some(checkedPlant => checkedPlant.id === plant.id)
@@ -166,4 +166,4 @@ const KillPlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
   );
 };
 
-export default KillPlantsForm;
+export default DeprecatePlantsForm;

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch } from '../api';
+import { simpleFetch, APIS, apiBuilder } from '../api';
 
 /** Query for all meta. */
 export const useMeta = () => {
@@ -10,7 +10,7 @@ export const useMeta = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch('/meta/')
+    simpleFetch(apiBuilder(APIS.meta.getOne).get())
       .then(setMeta)
       .catch(error => {
         setError(error);

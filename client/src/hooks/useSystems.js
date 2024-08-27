@@ -1,7 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost, simplePatch } from '../api';
-
-const API_BASE_URL = 'http://127.0.0.1:5000';
+import { simpleFetch, simplePost, simplePatch, apiBuilder, APIS } from '../api';
 
 /** Query and api functionality for all systems. */
 export const useSystems = () => {
@@ -28,7 +26,7 @@ export const useSystems = () => {
     const id = updatedSystem.id;
     setIsLoading(true);
     setError(null);
-    simplePatch(`/systems/${id}/`, updatedSystem)
+    simplePatch(apiBuilder(APIS.system.updateOne).setId(id).get(), updatedSystem)
       .then(data => 
         setSystems(prevSystems => prevSystems.map(system => 
           system.id === id ? { ...system, ...data } : system
@@ -44,7 +42,7 @@ export const useSystems = () => {
     const deprecateSystem = async (id) => {
       setIsLoading(true);
       setError(null);
-      simplePost(`${API_BASE_URL}/systems/${id}/deprecate/`)
+      simplePost(apiBuilder(APIS.system.deprecateOne).setId(id).get())
         .then(() => 
           setSystems(prevSystems => prevSystems.filter(system => 
             system.id !== id
@@ -59,9 +57,10 @@ export const useSystems = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(`/systems/`)
+    simpleFetch(apiBuilder(APIS.system.getAll).get())
       .then(setSystems)
       .catch(error => {
+        console.log(error);
         setError(error);
       })
       .finally(() => 
@@ -80,7 +79,7 @@ export const useSystemsPlants = (system) => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(`/systems/${system.id}/plants/`)
+    simpleFetch(apiBuilder(APIS.system.plants).setId(system.id).get())
       .then(setPlants)
       .catch(error => {
         setError(error);
@@ -101,7 +100,7 @@ export const useSystemAlerts = (system) => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(`/systems/${system.id}/alerts/`)
+    simpleFetch(apiBuilder(APIS.system.alerts).setId(system.id).get())
       .then(setAlerts)
       .catch(error => {
         setError(error);
@@ -123,7 +122,7 @@ export const useLights = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(`/lights/`)
+    simpleFetch(apiBuilder(APIS.light.getAll).get())
       .then(setLights)
       .catch(error => {
         setError(error);
@@ -136,7 +135,7 @@ export const useLights = () => {
   const createLight = async (newLight) => {
     setIsLoading(true);
     setError(null);
-    simplePost(/lights/, newLight)
+    simplePost(apiBuilder(APIS.light.create).get(), newLight)
       .then(data => 
         setLights(prevLights => [...prevLights, data]))
       .catch(error => {

@@ -1,8 +1,6 @@
 // useAlerts.js
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost } from '../api';
-
-const API_BASE_URL = 'http://127.0.0.1:5000';
+import { simpleFetch, simplePost, APIS, apiBuilder } from '../api';
 
 export const useAlerts = (initialAlerts = []) => {
   const [alerts, setAlerts] = useState(initialAlerts);
@@ -10,7 +8,7 @@ export const useAlerts = (initialAlerts = []) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    simpleFetch('/alerts/check/')
+    simpleFetch(apiBuilder(APIS.alert.getAll).get())
       .then(setAlerts)
       .catch(error => 
         console.error('Error fetching alert data:', error));
@@ -21,7 +19,7 @@ export const useAlerts = (initialAlerts = []) => {
   const resolveAlert = async (id) => {
     setIsLoading(true);
     setError(null);
-    simplePost(`${API_BASE_URL}/alerts/${id}/deprecate/`)
+    simplePost(apiBuilder(APIS.alert.deprecateOne).setId(id).get())
       .then(() => 
       setAlerts(prevAlerts => prevAlerts.filter(alert => 
         alert.id !== id

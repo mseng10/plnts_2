@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch } from '../api';
+import { simpleFetch, APIS, apiBuilder } from '../api';
 
 export const useStats = () => {
   const [stats, setStats] = useState(null);
@@ -9,7 +9,7 @@ export const useStats = () => {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch('/stats/')
+    simpleFetch(apiBuilder(APIS.stats.getOne).get())
       .then(setStats)
       .catch(error => {
         setError(error);
