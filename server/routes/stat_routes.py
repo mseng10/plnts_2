@@ -2,15 +2,12 @@ from sqlalchemy import func
 
 from flask import Blueprint, jsonify, request
 from db import Session
-from logger import setup_logger
-import logging
+from logger import logger
 
 from models.mix import Mix
 from models.plant import Plant
 from models.system import Light
 
-# Create a logger for this specific module
-logger = setup_logger(__name__, logging.DEBUG)
 bp = Blueprint('stats', __name__, url_prefix='/stats')
 
 @bp.route("/", methods=["GET"])

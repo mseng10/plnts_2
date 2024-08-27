@@ -1,12 +1,9 @@
 from flask import Blueprint, jsonify, request
 from db import Session
-from logger import setup_logger
-import logging
+from logger import logger
 
 from models.system import System, Light
 
-# Create a logger for this specific module
-logger = setup_logger(__name__, logging.DEBUG)
 system_bp = Blueprint('systems', __name__, url_prefix='/systems')
 light_bp = Blueprint('lights', __name__, url_prefix='/lights')
 

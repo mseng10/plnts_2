@@ -26,7 +26,6 @@ class DeprecatableMixin:
     @declared_attr
     def deprecated_cause(cls):
         return Column(String(400), nullable=True)
-    
 
 class Plant(Base, DeprecatableMixin):
     """Plant model."""

@@ -1,12 +1,9 @@
 from flask import Blueprint, jsonify, request
 from db import Session
-from logger import setup_logger
-import logging
+from logger import logger
 
 from models.alert import PlantAlert, Alert
 
-# Create a logger for this specific module
-logger = setup_logger(__name__, logging.DEBUG)
 bp = Blueprint('alerts', __name__, url_prefix='/alerts')
 
 @bp.route("/", methods=["GET"])
@@ -47,7 +44,7 @@ def alert_deprecate(alert_id):
 
     alert = db.query(Alert).get(alert_id)
     alert.deprecated = True
-    alert.deprecate_on = datetime.now()
+    alert.deprecated_on = datetime.now()
 
     db.flush()
     db.commit()

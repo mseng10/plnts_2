@@ -1,12 +1,9 @@
 from flask import Blueprint, jsonify, request
 from db import Session
-from logger import setup_logger
-import logging
+from logger import logger
 
 from models.plant import Genus, Type
 from models.mix import Soil
-
-logger = setup_logger(__name__, logging.DEBUG)
 
 types_bp = Blueprint('types', __name__, url_prefix='/types')
 genuses_bp = Blueprint('genuses', __name__, url_prefix='/genuses')
