@@ -75,19 +75,19 @@ const DeprecatePlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
     }
 
     try {
-      const killDate = new Date().toISOString().split('T')[0]; // Current date
-      await deprecatePlants(killDate, causeOfDeath);
+      const deprecateDate = new Date().toISOString().split('T')[0]; // Current date
+      await deprecatePlants(deprecateDate, causeOfDeath);
 
       setPlants(prevPlants => prevPlants.map(plant => 
         checkedPlants.some(checkedPlant => checkedPlant.id === plant.id)
-          ? { ...plant, kill_date: killDate, cause_of_death: causeOfDeath }
+          ? { ...plant, deprecate_date: deprecateDate, cause_of_death: causeOfDeath }
           : plant
       ));
       clearForm();
       onRequestClose();
     } catch (error) {
-      console.error('Error killing plants:', error);
-      setFormError("Failed to kill plants. Please try again.");
+      console.error('Error deprecating plants:', error);
+      setFormError("Failed to deprecate plants. Please try again.");
     }
   };
 
@@ -116,7 +116,7 @@ const DeprecatePlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
       <Box sx={{ width: 756, height: 512, bgcolor: 'background.paper', borderRadius: 2 }}>
         <form onSubmit={handleSubmit}>
           <FormButton
-            icon="kill"
+            icon="deprecate"
             color="error"
             handleCancel={handleCancel}
           />

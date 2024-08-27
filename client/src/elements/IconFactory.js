@@ -92,7 +92,7 @@ const IconFactory = ({ icon, color, size }) => {
   case 'water':
     IconComponent = WaterDropOutlinedIcon;
     break;
-  case 'kill':
+  case 'deprecate':
     IconComponent = DeleteOutlineSharpIcon;
     break;
   case 'edit':

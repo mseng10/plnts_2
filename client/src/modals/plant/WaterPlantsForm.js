@@ -70,8 +70,8 @@ const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
       clearForm();
       onRequestClose();
     } catch (error) {
-      console.error('Error killing plants:', error);
-      setFormError("Failed to kill plants. Please try again.");
+      console.error('Error deprecating plants:', error);
+      setFormError("Failed to deprecate plants. Please try again.");
     }
   };
 

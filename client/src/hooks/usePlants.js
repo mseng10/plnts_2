@@ -53,7 +53,7 @@ export const usePlants = (initialPlants) => {
   };
 
   const deprecatePlants = async (cause, when) => {
-    const request = {ids:  plants.map((plant) => plant.id), cause: cause, killed_on: when};
+    const request = {ids:  plants.map((plant) => plant.id), cause: cause, deprecated_on: when};
     setIsLoading(true);
     setError(null);
     simplePost(apiBuilder(APIS.plant.deprecateMany).get(), request)
