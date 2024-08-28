@@ -147,7 +147,6 @@ export const useGenuses = () => {
   return { genuses, isLoading, error, createGenus, setError };
 };
 
-/** Query a all types. */
 export const useTypes = () => {
   const [types, setTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
