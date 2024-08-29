@@ -25,6 +25,8 @@ import PlantUpdate from './pages/plant/PlantUpdate';
 import SystemUpdate from './pages/system/SystemUpdate';
 import TodoUpdate from './pages/todo/TodoUpdate';
 import TodoCreate from './pages/todo/TodoCreate';
+import MixCreate from './pages/mix/MixCreate';
+import Stats from './pages/stat/Stats';
 
 const drawerWidth = 240;
 
@@ -133,25 +135,28 @@ function App() {
         >
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/stats" element={<Stats />} />
             <Route path="/alerts" element={<Alerts />} />
 
-            <Route path="/todo" element={<Todos />} />
-            <Route path="/todo/:id" element={<TodoUpdate />} />
-            <Route path="/todo/create" element={<TodoCreate /> } />
+            <Route path="/todos" element={<Todos />} />
+            <Route path="/todos/:id" element={<TodoUpdate />} />
+            <Route path="/todos/create" element={<TodoCreate /> } />
 
-            <Route path="/system" element={<Systems />} />
-            <Route path="/system/:id" element={<SystemUpdate />} />
-            <Route path="/system/create" element={<SystemCreate />} />
+            <Route path="/systems" element={<Systems />} />
+            <Route path="/systems/:id" element={<SystemUpdate />} />
+            <Route path="/systems/create" element={<SystemCreate />} />
 
-            <Route path="/light/create" element={<LightCreate /> } />
+            <Route path="/lights/create" element={<LightCreate /> } />
 
-            <Route path="/plant" element={<Plants />} />
+            <Route path="/plants" element={<Plants />} />
             <Route path="/plants/:id" element={<PlantUpdate />} />
-            <Route path="/plant/create" element={<PlantCreate />} />
+            <Route path="/plants/create" element={<PlantCreate />} />
 
-            <Route path="/type/create" element={<TypeCreate /> } />
+            <Route path="/types/create" element={<TypeCreate /> } />
 
-            <Route path="/genus/create" element={<GenusCreate /> } />
+            <Route path="/genuses/create" element={<GenusCreate /> } />
+
+            <Route path="/mixes/create" element={<MixCreate /> } />
           </Routes>
         </Box>
       </ThemeProvider>

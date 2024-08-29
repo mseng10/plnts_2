@@ -15,6 +15,7 @@ import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
 import { EditSharp } from '@mui/icons-material';
+import { NoData, ServerError, Loading } from '../../elements/Page';
 
 const TodoCard = ({ todo, onResolve }) => {
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ const TodoCard = ({ todo, onResolve }) => {
             </Box>
           </CardContent>
           <CardActions disableSpacing>
-            <IconButton color="info" onClick={() => navigate(`/todo/${todo.id}`)}>
+            <IconButton color="info" onClick={() => navigate(`/todos/${todo.id}`)}>
               <EditSharp />
             </IconButton>
             <IconButton color="info" onClick={() => onResolve(todo.id)}>
@@ -64,9 +65,9 @@ const TodoCard = ({ todo, onResolve }) => {
 const Todos = () => {
   const { todos, isLoading, error, resolveTodo } = useTodos();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (todos.length === 0) return <div>No TODOs!</div>;
+  if (isLoading) return <Loading/>;
+  if (error) return <ServerError/>;
+  if (todos.length === 0) return <NoData/>;
 
   return (
     <div className="App">

@@ -63,12 +63,6 @@ export const TextAreaInput = (fieldInfo) => {
 };
 
 export const AutoCompleteInput = (fieldInfo) => {
-  const test = (value, newInputValue) => {
-    
-    console.log(value);
-    console.log(newInputValue);
-  };
-
   if (!fieldInfo) {
     return <div></div>
   }
@@ -81,7 +75,6 @@ export const AutoCompleteInput = (fieldInfo) => {
         disableClearable
         value={fieldInfo.value ? fieldInfo.value.name : ''}
         options={fieldInfo.options.map((option) => option.name)}
-        onInputChange={test}
         onChange={(event) => fieldInfo.setValue(fieldInfo.options[event.target.value])}
         renderInput={(params) => (
           <TextField
@@ -99,6 +92,7 @@ export const AutoCompleteInput = (fieldInfo) => {
     </div>)
 };
 
+/** Returns a  */
 export const FormTextInput = (fieldInfo) => {
   if (!fieldInfo) {
     return <div></div>
@@ -179,9 +173,6 @@ export const DropdownInput = (fieldInfo) => {
     <div>
       <TextField
         margin="normal"
-        // sx={{
-        //   width: "75%"
-        // }}
         required
         select
         fullWidth

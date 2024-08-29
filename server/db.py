@@ -10,6 +10,7 @@ from sqlalchemy.engine import URL
 from models.plant import Plant, Genus, Type, Base
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
+from models.mix import Soil, Mix
 
 import json
 
@@ -41,8 +42,6 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 # Create a scoped session
 Session = scoped_session(SessionLocal)
 
-# Create a base class for declarative models
-Base = declarative_base()
 
 # This allows you to query the database directly using the Base class
 Base.query = Session.query_property()

@@ -4,14 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../../elements/Form';
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
+import { useMixes } from '../../hooks/useMix';
+import { ServerError, Loading } from '../../elements/Page';
 
 const PlantCreate = () => {
   const navigate = useNavigate();
-  const { genuses, systems, types, isLoading, error, addPlant } = usePlants();
+  const { genuses, systems, types, isLoading, error, createPlant } = usePlants();
+  const { mixes } = useMixes(true);
 
   const [genus, setGenus] = useState(null);
   const [type, setType] = useState(null);
   const [system, setSystem] = useState(null);
+  const [mix, setMix] = useState(null);
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
   const [watering, setWatering] = useState(0);
@@ -25,12 +29,13 @@ const PlantCreate = () => {
       genus_id: genus.id,
       system_id: system.id,
       type_id: type.id,
+      mix_id: mix.id,
       watering,
       phase
     };
 
     try {
-      await addPlant(newPlant);
+      await createPlant(newPlant);
       navigate("/");
     } catch (error) {
       console.error('Error adding new plant:', error);
@@ -42,8 +47,8 @@ const PlantCreate = () => {
     navigate("/");
   };
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <Loading/>;
+  if (error) return <ServerError/>;
 
   return (
     <Box sx={{ height: '100%', width: '100%'}}>
@@ -74,6 +79,13 @@ const PlantCreate = () => {
               value={system}
               setValue={setSystem}
               options={systems}
+              color="primary"
+            />
+            <AutoCompleteInput
+              label="Mix"
+              value={mix}
+              setValue={setMix}
+              options={mixes}
               color="primary"
             />
             <DropdownInput

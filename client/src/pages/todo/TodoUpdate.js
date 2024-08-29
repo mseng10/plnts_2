@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import { FormButton, FormTextInput, DateSelector, TextAreaInput } from '../../elements/Form';
 import { useTodos } from '../../hooks/useTodos';
 import dayjs from 'dayjs';
+import { ServerError } from '../../elements/Page';
 
 const TodoUpdate = ({ todoProp }) => {
   const { id } = useParams();
@@ -42,7 +43,7 @@ const TodoUpdate = ({ todoProp }) => {
       due_on
     };
     try {
-      await updateTodo(todoProp ? todoProp.id : id, updatedTodo);
+      await updateTodo(updatedTodo);
       navigate("/");
     } catch (error) {
       console.error('Error updating todo:', error);
@@ -51,11 +52,11 @@ const TodoUpdate = ({ todoProp }) => {
   };
 
   const handleCancel = () => {
-    navigate("/todo");
+    navigate("/todos");
   };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
 
   return (
     <Box sx={{ height: '100%', width: '100%'}}>

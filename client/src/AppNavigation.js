@@ -9,28 +9,11 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import IconFactory from './elements/IconFactory';
+import Badge from '@mui/material/Badge';
+import { useMeta } from './hooks/useMeta';
 
 const drawerWidth = 70;
 const expandedDrawerWidth = 280;
-
-const navigationOptions = [
-  { id: 'menu', url: '/', icon: 'menu', color: 'info' },
-  { id: 'home', url: '/', icon: 'home', color: 'primary' },
-  { id: 'create', icon: 'create', color: 'primary', subMenu: [
-    { id: 'plant', url: '/plant/create', icon: 'plant', label: 'Plant' },
-    { id: 'type', url: '/type/create', icon: 'type', label: 'Type' },
-    { id: 'genus', url: '/genus/create', icon: 'genus', label: 'Genus' },
-    { id: 'system', url: '/system/create', icon: 'system', label: 'System' },
-    { id: 'light', url: '/light/create', icon: 'light', label: 'Light' },
-    { id: 'todo', url: '/todo/create', icon: 'todo', label: 'Todo' },
-  ]},
-  { id: 'view', icon: 'view', color: 'primary', subMenu: [
-    { id: 'plant', url: '/plant', icon: 'plant', label: 'Plant' },
-    { id: 'system', url: '/system', icon: 'system', label: 'System' },
-  ]},
-  { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary' },
-  { id: 'todo', url: '/todo', icon: 'todo', color: 'primary' },
-];
 
 function AppNavigation({ window }) {
   const navigate = useNavigate();
@@ -39,6 +22,29 @@ function AppNavigation({ window }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSubOption, setSelectedSubOption] = useState(null);
+
+  const { meta } = useMeta();
+
+  const navigationOptions = [
+    { id: 'menu', url: '/', icon: 'menu', color: 'info' },
+    { id: 'home', url: '/', icon: 'home', color: 'primary' },
+    { id: 'create', icon: 'create', color: 'primary', subMenu: [
+      { id: 'plants', url: '/plants/create', icon: 'plant', label: 'Plant' },
+      { id: 'mix', url: '/mixes/create', icon: 'mix', label: 'Mix' },
+      { id: 'type', url: '/types/create', icon: 'type', label: 'Type' },
+      { id: 'genus', url: '/genuses/create', icon: 'genus', label: 'Genus' },
+      { id: 'system', url: '/systems/create', icon: 'system', label: 'System' },
+      { id: 'light', url: '/lights/create', icon: 'light', label: 'Light' },
+      { id: 'todo', url: '/todos/create', icon: 'todo', label: 'Todo' },
+    ]},
+    { id: 'view', icon: 'view', color: 'primary', subMenu: [
+      { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },
+      { id: 'systems', url: '/systems', icon: 'system', label: 'System' },
+    ]},
+    { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary', badgeCount: meta.alert_count, badgeCountColor: "error" },
+    { id: 'todo', url: '/todos', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
+    { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},
+  ];
 
   useEffect(() => {
     const currentPath = location.pathname;
@@ -84,11 +90,13 @@ function AppNavigation({ window }) {
                 color={option.color}
                 onClick={() => handleNavigation(option)}
               >
-                <IconFactory
-                  icon={option.icon}
-                  color={option.color}
-                  size="md"
-                />
+                <Badge badgeContent={"badgeCount" in option ? option.badgeCount : null} color={"badgeCountColor" in option ? option.badgeCountColor : "primary"}>
+                  <IconFactory
+                    icon={option.icon}
+                    color={option.color}
+                    size="md"
+                  />
+                </Badge>
               </IconButton>
             </ListItem>
           ))}

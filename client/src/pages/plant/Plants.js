@@ -4,10 +4,11 @@ import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { EditSharp, WaterDropOutlined, DeleteOutlineSharp } from '@mui/icons-material';
 import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
-import KillPlantsForm from '../../modals/plant/KillPlantsForm';
+import DeprecatePlantsForm from '../../modals/plant/DeprecatePlantsForm';
 import { PHASE_LABELS } from '../../constants';
 import { usePlants } from '../../hooks/usePlants';
 import { useNavigate } from "react-router-dom";
+import { ServerError, NoData, Loading} from '../../elements/Page';
 
 const Plants = ({ initialPlants }) => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Plants = ({ initialPlants }) => {
   const [formStates, setFormStates] = useState({
     updatePlant: false,
     waterPlants: false,
-    killPlants: false
+    deprecatePlants: false
   });
 
   const columns = useMemo(() => [
@@ -68,7 +69,7 @@ const Plants = ({ initialPlants }) => {
           <IconButton size="small" color="info" onClick={() => setFormStates(prev => ({ ...prev, waterPlants: true }))}>
             <WaterDropOutlined />
           </IconButton>
-          <IconButton size="small" color="error" onClick={() => setFormStates(prev => ({ ...prev, killPlants: true }))}>
+          <IconButton size="small" color="error" onClick={() => setFormStates(prev => ({ ...prev, deprecatePlants: true }))}>
             <DeleteOutlineSharp />
           </IconButton>
         </>
@@ -76,8 +77,9 @@ const Plants = ({ initialPlants }) => {
     </GridToolbarContainer>
   );
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (isLoading) return <Loading/>;
+  if (error) return <ServerError/>;
+  if (plants.length === 0) return <NoData/>;
 
   return (
     <>
@@ -105,10 +107,10 @@ const Plants = ({ initialPlants }) => {
           initialPlants={selectedPlants}
         />
       )}
-      {formStates.killPlants && (
-        <KillPlantsForm
-          isOpen={formStates.killPlants}
-          onRequestClose={() => setFormStates(prev => ({ ...prev, killPlants: false }))}
+      {formStates.deprecatePlants && (
+        <DeprecatePlantsForm
+          isOpen={formStates.deprecatePlants}
+          onRequestClose={() => setFormStates(prev => ({ ...prev, deprecatePlants: false }))}
           initialPlants={selectedPlants}
         />
       )}

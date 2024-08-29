@@ -21,8 +21,10 @@ import { useSystems } from '../../hooks/useSystems';
 import { CARD_STYLE, AVATAR_STYLE, CIRCULAR_PROGRESS_STYLE, ICON_STYLE } from '../../constants';
 import { EditSharp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
+import { NoData, ServerError, Loading } from '../../elements/Page';
 
-const SystemCard = ({ system }) => {
+const SystemCard = ({ system, deprecateSystem }) => {
   const navigate = useNavigate();
   const [isSystemsPlanetsOpen, setIsSystemsPlanetsOpen] = useState(false);
   const [isSystemAlertsOpen, setIsSystemsAlertsOpen] = useState(false);
@@ -81,6 +83,9 @@ const SystemCard = ({ system }) => {
             <IconButton color="info" onClick={() => setIsSystemsPlanetsOpen(true)}>
               <GrassOutlinedIcon />
             </IconButton>
+            <IconButton color="error" onClick={() => deprecateSystem(system.id)}>
+              <DeleteOutlineSharpIcon />
+            </IconButton>
           </CardActions>
         </CardActionArea>
       </Card>
@@ -103,17 +108,17 @@ const SystemCard = ({ system }) => {
 };
 
 const Systems = () => {
-  const { systems, isLoading, error } = useSystems();
+  const { systems, isLoading, error, deprecateSystem } = useSystems();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (systems.length === 0) return <div>No Systems!</div>;
+  if (isLoading) return <Loading/>;
+  if (error) return <ServerError/>;
+  if (systems.length == 0) return <NoData/>;
 
   return (
     <Grid container justifyContent="center" spacing={4}>
       {systems.map((system) => (
         <Grid key={system.id} item>
-          <SystemCard system={system} />
+          <SystemCard system={system} deprecateSystem={deprecateSystem}/>
         </Grid>
       ))}
     </Grid>

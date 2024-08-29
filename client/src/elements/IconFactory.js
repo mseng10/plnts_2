@@ -19,6 +19,12 @@ import StraightenSharpIcon from '@mui/icons-material/StraightenSharp';
 import WaterDropOutlinedIcon from '@mui/icons-material/WaterDropOutlined';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import EditSharp from '@mui/icons-material/Edit'
+import PieChartOutlineSharpIcon from '@mui/icons-material/PieChartOutlineSharp';
+import InsightsSharpIcon from '@mui/icons-material/InsightsSharp';
+import AttachMoneySharpIcon from '@mui/icons-material/AttachMoneySharp';
+import SentimentVeryDissatisfiedSharpIcon from '@mui/icons-material/SentimentVeryDissatisfiedSharp';
+import SentimentNeutralSharpIcon from '@mui/icons-material/SentimentNeutralSharp';
+import SentimentVerySatisfiedSharpIcon from '@mui/icons-material/SentimentVerySatisfiedSharp';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -86,12 +92,31 @@ const IconFactory = ({ icon, color, size }) => {
   case 'water':
     IconComponent = WaterDropOutlinedIcon;
     break;
-  case 'kill':
+  case 'deprecate':
     IconComponent = DeleteOutlineSharpIcon;
     break;
   case 'edit':
     IconComponent = EditSharp;
     break;
+  case 'mix':
+    IconComponent = PieChartOutlineSharpIcon;
+    break;
+  case 'stats':
+    IconComponent = InsightsSharpIcon;
+    break;
+  case 'cost':
+    IconComponent = AttachMoneySharpIcon;
+    break;
+  case 'serverError':
+    IconComponent = SentimentVeryDissatisfiedSharpIcon;
+    break;
+  case 'noData':
+    IconComponent = SentimentNeutralSharpIcon;
+    break;
+  case 'happy':
+    IconComponent = SentimentVerySatisfiedSharpIcon;
+    break;
+    
   // Add more cases for other icons
   default:
     IconComponent = VisibilitySharpIcon; // Default to VisibilitySharpIcon if no valid 'icon' prop is provided
@@ -99,7 +124,7 @@ const IconFactory = ({ icon, color, size }) => {
 
   return (
     <div>
-      <IconComponent color={color} className={sizeChart[size]} />
+      <IconComponent color={color} className={sizeChart[size] ? sizeChart[size] : size} />
     </div>
   );
 };

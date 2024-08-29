@@ -1,39 +1,87 @@
-# from sqlalchemy import Column, Integer, String, DateTime
-# from sqlalchemy.orm import relationship, Mapped
-# from datetime import datetime
-# from models import Base
-# from typing import List
+from sqlalchemy import Column, Integer, String, DateTime, Table, ForeignKey, Boolean
+from sqlalchemy.orm import relationship, Mapped
+from datetime import datetime
+from typing import List
+from models.plant import Base, DeprecatableMixin
 
+# Association table
+mix_soil_association = Table(
+    'mix_soil_association',
+    Base.metadata,
+    Column('mix_id', Integer, ForeignKey('mix.id')),
+    Column('soil_id', Integer, ForeignKey('soil.id')),
+    Column('parts', Integer)
+)
 
-# class Mix(Base):
-#     """Soil model."""
+class Mix(Base, DeprecatableMixin):
+    """Soil mix model."""
+    __tablename__ = "mix"
 
-#     __tablename__ = "mix"
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(String(400), nullable=True)
+    created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now)
+    experimental = Column(Boolean, default=False, nullable=False)
+    
+    # Plants belonging to this mix
+    plants: Mapped[List["Plant"]] = relationship(
+        "Plant", backref="mix", passive_deletes=True
+    )  # Available plants of this mix
 
-#     id = Column(Integer(), primary_key=True)
-#     name = Column(String(100), nullable=False)
-#     created_on = Column(DateTime(), default=datetime.now)
+    soil_ids: Mapped[List["Soil"]] = relationship(
+        "Soil",
+        secondary=mix_soil_association,
+        back_populates="mix_ids"
+    )
 
-#     components: Mapped[List["Soil"]] = relationship()  # 1 way
-#     details = Column(String(100), nullable=False)
+    def to_json(self) -> dict:
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "created_on": self.created_on,
+            "updated_on": self.updated_on,
+            "experimental": self.experimental
+        }
 
-#     def __repr__(self) -> str:
-#         return f"{self.name}"
+    def __repr__(self) -> str:
+        return f"{self.name}"
 
+class Soil(Base):
+    """Soil. Created on installation."""
+    __tablename__ = "soil"
 
-# class Soil(Base):
-#     """Soil."""
+    id = Column(Integer(), primary_key=True)
+    created_on = Column(DateTime(), default=datetime.now)
+    description = Column(String(400), nullable=True)
+    group = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False)
+    
+    mix_ids: Mapped[List["Mix"]] = relationship(
+        "Mix",
+        secondary=mix_soil_association,
+        back_populates="soil_ids"
+    )
 
-#     __tablename__ = "soil"
+    def __repr__(self) -> str:
+        return f"{self.name}"
 
-#     # Created at stuff
-#     id = Column(Integer(), primary_key=True)
-#     name = Column(String(100), nullable=False)
-#     created_on = Column(DateTime(), default=datetime.now)
-#     cost = Column(Integer())
-#     size = Column(Integer())  # kgs?
+    def to_json(self) -> dict:
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "created_on": self.created_on,
+            "description": self.description,
+            "group": self.group,
+            "name": self.name
+        }
 
-#     parent_id: Mapped[int] = mapped_column(ForeignKey("mix.id"))
-
-#     def __repr__(self) -> str:
-#         return f"{self.name}"
+    @staticmethod
+    def from_numpy(nump):
+        return Soil(
+            name=nump[0],
+            description=nump[1],
+            group=nump[2]
+        )

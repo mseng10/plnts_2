@@ -9,6 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Modal from '@mui/material/Modal';
 import { MODAL_STYLE } from '../../constants';
+import { ServerError } from '../../elements/Page';
 
 const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
   const { plants, isLoading, error, setPlants, waterPlants } = usePlants(initialPlants);
@@ -69,8 +70,8 @@ const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
       clearForm();
       onRequestClose();
     } catch (error) {
-      console.error('Error killing plants:', error);
-      setFormError("Failed to kill plants. Please try again.");
+      console.error('Error deprecating plants:', error);
+      setFormError("Failed to deprecate plants. Please try again.");
     }
   };
 
@@ -85,7 +86,7 @@ const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
     setFormError(null);  };
 
   if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (error) return <ServerError/>;
 
   return (
     <Modal

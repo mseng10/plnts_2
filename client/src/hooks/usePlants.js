@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-
-const API_BASE_URL = 'http://127.0.0.1:5000';
+import { simplePost, simpleFetch, simplePatch, APIS, apiBuilder } from '../api';
 
 export const usePlants = (initialPlants) => {
   const [plants, setPlants] = useState([]);
@@ -17,15 +16,15 @@ export const usePlants = (initialPlants) => {
       try {
         console.log(initialPlants);
         if (!initialPlants) {
-          const plantsResponse = await fetch(`${API_BASE_URL}/plants`);
+          const plantsResponse = await fetch(apiBuilder(APIS.plant.getAll).get());
           setPlants(await plantsResponse.json());
         } else {
           setPlants(initialPlants);
         }
         const [genusResponse, systemResponse, typeResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/genus`),
-          fetch(`${API_BASE_URL}/system`),
-          fetch(`${API_BASE_URL}/type`)
+          fetch(apiBuilder(APIS.genus.getAll).get()),
+          fetch(apiBuilder(APIS.system.getAll).get()),
+          fetch(apiBuilder(APIS.type.getAll).get())
         ]);
         setGenuses(await genusResponse.json());
         setSystems(await systemResponse.json());
@@ -40,76 +39,62 @@ export const usePlants = (initialPlants) => {
     fetchData();
   }, [initialPlants]);
 
-  const addPlant = async (newPlant) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/plants`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newPlant)
-      });
-      const data = await response.json();
-      setPlants(prevPlants => [...prevPlants, data]);
-
-      return data;
-    } catch (error) {
-      console.error('Error posting plant data:', error);
-      setError('Failed to add new plant. Please try again later.');
-      
-      throw error;
-    }
+  const createPlant = async (newPlant) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.plant.create).get(), newPlant)
+      .then(data => 
+        setSystems(prevPlants => [...prevPlants, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
-  const killPlant = async (cause, when) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/plants/kill`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ids:  plants.map((plant) => plant.id), cause: cause, killed_on: when})
-      });
-      const data = await response.json();
-
-      return data;
-    } catch (error) {
-      console.error('Error killing plant:', error);
-      setError('Failed to kill plant. Please try again later.');
-      throw error;
-    }
+  const deprecatePlants = async (cause, when) => {
+    const request = {ids:  plants.map((plant) => plant.id), cause: cause, deprecated_on: when};
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.plant.deprecateMany).get(), request)
+      .then(data => 
+        setSystems(prevPlants => [...prevPlants, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
   const waterPlants = async (when) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/plants/water`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ids:  plants.map((plant) => plant.id), watered_on: when})
-      });
-      const data = await response.json();
-      
-      return data;
-    } catch (error) {
-      console.error('Error watering plants:', error);
-      setError('Failed to water plants. Please try again later.');
-      throw error;
-    }
+    const request = {ids:  plants.map((plant) => plant.id), watered_on: when};
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.plant.w).get(), request)
+      .then(data => 
+        setSystems(prevPlants => [...prevPlants, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
-  const updatePlant = async (id, updatedPlant) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/plants/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedPlant),
-      });
-      const data = await response.json();
-      setPlants(prevPlants => prevPlants.map(plant => 
-        plant.id === id ? { ...plant, ...data } : plant
-      ));
-
-      return data;
-    } catch (error) {
-      console.error('Error updating plant:', error);
-      throw error;
-    }
+  /** Update a system with a new version.  */
+  const updatePlant = async (updatedPlant) => {
+    const id = updatedPlant.id;
+    setIsLoading(true);
+    setError(null);
+    simplePatch(apiBuilder(APIS.plant.updateOne).setId(id).get(), updatedPlant)
+      .then(data => 
+        setSystems(prevPlants => prevPlants.map(plant => 
+          plant.id === id ? { ...plant, ...data } : plant
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
   return { plants,
@@ -119,9 +104,80 @@ export const usePlants = (initialPlants) => {
     types,
     isLoading,
     error,
-    addPlant,
-    killPlant,
+    createPlant,
+    deprecatePlants,
     waterPlants,
     updatePlant
   };
+};
+
+/** Query a all genuses. */
+export const useGenuses = () => {
+  const [genuses, setGenuses] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  /** Initialize the genuses. */
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(apiBuilder(APIS.genus.getAll).get())
+      .then(setGenuses)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
+  }, []);
+
+  /** Create the provided genus. */
+  const createGenus = async (newGenus) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.genus.getAll).get(), newGenus)
+      .then(data => 
+        setGenuses(prevGenuses => [...prevGenuses, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+  
+  return { genuses, isLoading, error, createGenus, setError };
+};
+
+export const useTypes = () => {
+  const [types, setTypes] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  /** Initialize the types. */
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(apiBuilder(APIS.type.getAll).get())
+      .then(setTypes)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
+  }, []);
+
+  /** Create the provided type. */
+  const createType = async (newType) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.type.create).get(), newType)
+      .then(data => 
+        setTypes(prevGenuses => [...prevGenuses, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+  
+  return { types, isLoading, error, createType, setError };
 };

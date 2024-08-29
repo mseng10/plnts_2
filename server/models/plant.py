@@ -9,12 +9,25 @@ from typing import List
 # Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.ext.declarative import declarative_base, declared_attr
 
 Base = declarative_base()
 
+class DeprecatableMixin:
+    """ In case the model is deprecated."""
+    @declared_attr
+    def deprecated(cls):
+        return Column(Boolean, default=False, nullable=False)
 
-class Plant(Base):
+    @declared_attr
+    def deprecated_on(cls):
+        return Column(DateTime(), default=None, nullable=True)
+
+    @declared_attr
+    def deprecated_cause(cls):
+        return Column(String(400), nullable=True)
+
+class Plant(Base, DeprecatableMixin):
     """Plant model."""
 
     __tablename__ = "plant"
@@ -31,6 +44,9 @@ class Plant(Base):
     system_id: Mapped[int] = mapped_column(
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System for housing the plant
+    mix_id: Mapped[int] = mapped_column(
+        ForeignKey("mix.id", ondelete="CASCADE")
+    )  # Soil mix for housing the plant
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     
     # Metrics
@@ -41,11 +57,12 @@ class Plant(Base):
     watering = Column(Integer(), default=0, nullable=False) # Days
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
 
-    # Death info
-    # Shared?
-    dead = Column(Boolean, default=False, nullable=False)  # Death Info
-    dead_on = Column(DateTime(), default=None, nullable=True)
-    dead_cause = Column(String(400), nullable=True)
+    # Sure
+    identity = Column(String(50))
+    __mapper_args__ = {
+        'polymorphic_identity': 'plant',
+        'polymorphic_on': identity
+    }
 
     # Misc
     plant_alerts: Mapped[List["PlantAlert"]] = relationship(
@@ -70,6 +87,16 @@ class Plant(Base):
             "watering": self.watering,
             "phase": self.phase
         }
+
+# Single Table Inheritance
+class Batch(Plant):
+    """Batch of plants."""
+     # Number of plants
+    count = Column(Integer(), default=0, nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'batch'
+    }
 
 class Type(Base):
     """Type of genus"""

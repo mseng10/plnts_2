@@ -1,52 +1,73 @@
 import { useState, useEffect } from 'react';
+import { simpleFetch, simplePost, simplePatch, apiBuilder, APIS } from '../api';
 
-const API_BASE_URL = 'http://127.0.0.1:5000';
-
-/** Query for all systems. */
+/** Query and api functionality for all systems. */
 export const useSystems = () => {
   const [systems, setSystems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const updateSystem = async (id, updatedSystem) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/system/${id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedSystem),
-      });
-      const data = await response.json();
-      setSystems(prevSystems => prevSystems.map(system => 
-        system.id === id ? { ...system, ...data } : system
-      ));
-
-      return data;
-    } catch (error) {
-      console.error('Error updating system:', error);
-      throw error;
-    }
+  /** Create the provided system. */
+  const createSystem = async (newSystem) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost("/systems/", newSystem)
+      .then(data => 
+        setSystems(prevSystems => [...prevSystems, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
   };
 
-  useEffect(() => {
-    const fetchSystems = async () => {
+  /** Update a system with a new version.  */
+  const updateSystem = async (updatedSystem) => {
+    const id = updatedSystem.id;
+    setIsLoading(true);
+    setError(null);
+    simplePatch(apiBuilder(APIS.system.updateOne).setId(id).get(), updatedSystem)
+      .then(data => 
+        setSystems(prevSystems => prevSystems.map(system => 
+          system.id === id ? { ...system, ...data } : system
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+
+    /** Deprecate the system */
+    const deprecateSystem = async (id) => {
       setIsLoading(true);
       setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/system`);
-        const data = await response.json();
-        setSystems(data);
-      } catch (error) {
-        console.error('Error fetching system data:', error);
-        setError('Failed to fetch systems. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
+      simplePost(apiBuilder(APIS.system.deprecateOne).setId(id).get())
+        .then(() => 
+          setSystems(prevSystems => prevSystems.filter(system => 
+            system.id !== id
+        )))
+        .catch(error => {
+          setError(error);
+        })
+        .finally(() => 
+          setIsLoading(false))
     };
 
-    fetchSystems();
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(apiBuilder(APIS.system.getAll).get())
+      .then(setSystems)
+      .catch(error => {
+        console.log(error);
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
 
-  return { systems, isLoading, error, updateSystem };
+  return { systems, isLoading, error, createSystem, updateSystem, deprecateSystem };
 };
 
 /** Query a system for it's respective plants. */
@@ -56,22 +77,15 @@ export const useSystemsPlants = (system) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSystems = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/system/${system.id}/plants`);
-        const data = await response.json();
-        setPlants(data);
-      } catch (error) {
-        console.error('Error fetching system data:', error);
-        setError('Failed to fetch systems. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSystems();
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(apiBuilder(APIS.system.plants).setId(system.id).get())
+      .then(setPlants)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
 
   return { plants, isLoading, error };
@@ -84,25 +98,54 @@ export const useSystemAlerts = (system) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchSystems = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const response = await fetch(`${API_BASE_URL}/system/${system.id}/alerts`);
-        const data = await response.json();
-        setAlerts(data);
-      } catch (error) {
-        console.error('Error fetching system data:', error);
-        setError('Failed to fetch systems. Please try again later.');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSystems();
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(apiBuilder(APIS.system.alerts).setId(system.id).get())
+      .then(setAlerts)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
   }, []);
 
   return { alerts, isLoading, error };
+};
+
+/** Query all lights.  */
+export const useLights = () => {
+  const [lights, setLights] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  /** Initialize the lights. */
+  useEffect(() => {
+    setIsLoading(true);
+    setError(null);
+    simpleFetch(apiBuilder(APIS.light.getAll).get())
+      .then(setLights)
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false));
+  }, []);
+
+  /** Create the provided light. */
+  const createLight = async (newLight) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.light.create).get(), newLight)
+      .then(data => 
+        setLights(prevLights => [...prevLights, data]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+
+  return { lights, isLoading, error, createLight};
 };
 
 // Target temperature marks

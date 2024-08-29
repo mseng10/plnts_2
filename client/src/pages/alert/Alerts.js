@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useAlerts } from '../../hooks/useAlerts';
 import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
+import { ServerError, Loading, NoDataHappy } from '../../elements/Page';
 // import { EditSharp } from '@mui/icons-material';
 
 const AlertCard = ({ alert, onResolve }) => {
@@ -23,7 +24,7 @@ const AlertCard = ({ alert, onResolve }) => {
           <CardHeader
             avatar={
               <Avatar sx={AVATAR_STYLE}>
-                <FormatListNumberedIcon className="small_button" color='error'/>
+                <FormatListNumberedIcon className="small_button" color='info'/>
               </Avatar>
             }
             title={alert.type}
@@ -60,9 +61,9 @@ const AlertCard = ({ alert, onResolve }) => {
 const Alerts = () => {
   const { alerts, isLoading, error, resolveAlert } = useAlerts();
 
-  if (isLoading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (alerts.length === 0) return <div>No Alerts!</div>;
+  if (isLoading) return <Loading/>;
+  if (error) return <ServerError/>;
+  if (alerts.length == 0) return <NoDataHappy/>;
 
   return (
     <div className="App">

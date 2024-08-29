@@ -8,10 +8,10 @@ from typing import List
 # Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from models.plant import Base
+from models.plant import Base, DeprecatableMixin
 
 
-class System(Base):
+class System(Base, DeprecatableMixin):
     """System model."""
 
     __tablename__ = "system"
@@ -55,7 +55,7 @@ class System(Base):
         }
 
 
-class Light(Base):
+class Light(Base, DeprecatableMixin):
     """Light model."""
 
     __tablename__ = "light"
@@ -64,14 +64,10 @@ class Light(Base):
     name = Column(String(100), nullable=False)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
-    cost = Column(Integer())
+    cost = Column(Integer(), nullable=False, default=0)
     system_id: Mapped[int] = mapped_column(
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System this light belongs to
-
-    # Death Info
-    dead_on = Column(DateTime(), default=None, nullable=True)
-    dead = Column(Boolean, default=False, nullable=False)
 
     def __repr__(self) -> str:
         return f"{self.name}"
