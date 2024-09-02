@@ -2,7 +2,7 @@
 This is the main source for anything db related.
 """
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine import URL
@@ -28,6 +28,9 @@ Session = scoped_session(SessionLocal)
 # This allows you to query the database directly using the Base class
 Base.query = Session.query_property()
 
+def safe_sum(column):
+    return func.coalesce(func.sum(column), 0)
+
 def get_db():
     """
     Generator function to create and yield a database session.
@@ -39,7 +42,6 @@ def get_db():
     finally:
         db.close()
 
-# Function to initialize the database (create tables)
 def init_db():
     # Import all modules here that might define models so that
     # they will be registered properly on the metadata.
