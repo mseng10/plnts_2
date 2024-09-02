@@ -13,35 +13,18 @@ from models.alert import PlantAlert, Todo
 from models.mix import Soil, Mix
 
 import json
+import os
 
-# TODO FOR DIFFERENT MODES
-# DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/dbname")
-# Create the SQLAlchemy engine
-# engine = create_engine(DATABASE_URL)
-
-# Replace this with your actual database URL
-with open("db.json", encoding="utf-8") as json_data_file:
-    db_config = json.load(json_data_file)
-
-# Create SQLAlchemy engine
-url = URL.create(
-    drivername=db_config["drivername"],
-    username=db_config["username"],
-    password=db_config["password"],
-    host=db_config["host"],
-    database=db_config["database"],
-    port=db_config["port"],
-)
 
 # Create the SQLAlchemy engine
-engine = create_engine(url)
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin@localhost:5432/postgres")
+engine = create_engine(DATABASE_URL)
 
 # Create a configured "Session" class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Create a scoped session
 Session = scoped_session(SessionLocal)
-
 
 # This allows you to query the database directly using the Base class
 Base.query = Session.query_property()
