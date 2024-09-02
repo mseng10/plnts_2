@@ -56,7 +56,7 @@ def create_all_models():
     logger.info("Beginning to create model.")
 
     models_to_create = [
-        ("data/soils/soil_matters.csv", Soil)
+        ("data/installable/soils/soil_matters.csv", Soil)
         # TODO: Genus,Type
     ]
 
