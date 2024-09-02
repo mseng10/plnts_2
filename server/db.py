@@ -15,7 +15,6 @@ from models.mix import Soil, Mix
 import json
 import os
 
-
 # Create the SQLAlchemy engine
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin@localhost:5432/postgres")
 engine = create_engine(DATABASE_URL)
