@@ -4,10 +4,11 @@ Module defining models for plants.
 
 # Standard library imports
 from datetime import datetime
+from typing import List
 
 # Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.plant import Base, DeprecatableMixin
 
 class Todo(Base, DeprecatableMixin):
@@ -21,6 +22,10 @@ class Todo(Base, DeprecatableMixin):
     due_on = Column(DateTime(), default=None, nullable=True)
     name = Column(String(100), nullable=False)
     description = Column(String(400), nullable=True)
+
+    tasks: Mapped[List["Task"]] = relationship(
+        "Task", backref="todo", passive_deletes=True
+    )  # Available tasks of this todo
 
     def __repr__(self):
         return f"{self.name}"
@@ -36,6 +41,38 @@ class Todo(Base, DeprecatableMixin):
             "due_on": self.due_on,
             "description": self.description,
             "name": self.name
+        }
+
+class Task(Base, DeprecatableMixin):
+    """Task model."""
+
+    __tablename__ = "task"
+
+    id = Column(Integer(), primary_key=True)
+    created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    description = Column(String(100), nullable=False)
+    todo_id: Mapped[int] = mapped_column(
+        ForeignKey("todo.id", ondelete="CASCADE")
+    )  # Todo this task belongs to
+        
+    resolved = Column(Boolean, default=False, nullable=False)
+    resolved_on = Column(DateTime(), nullable=True)
+
+    def __repr__(self):
+        return f"{self.description}"
+
+    def to_json(self):
+        """Convert to json."""
+        return {
+            "id": self.id,
+            "created_on": self.created_on,
+            "updated_on": self.updated_on,
+            "deprecated": self.deprecated,
+            "deprecated_on": self.deprecated_on,
+            "resolved": self.resolved,
+            "resolved_on": self.resolved_on,
+            "description": self.description
         }
 
 class Alert(Base, DeprecatableMixin):

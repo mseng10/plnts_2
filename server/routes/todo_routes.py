@@ -1,9 +1,9 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, make_response
 from db import Session
 from logger import logger
 from datetime import datetime
 
-from models.alert import Todo
+from models.alert import Todo, Task
 
 bp = Blueprint('todos', __name__, url_prefix='/todos')
 
@@ -41,7 +41,23 @@ def create_todo():
     # Add the new TODO object to the session
     db = Session()
     db.add(new_todo)
-    db.commit()
+    db.flush()
+
+    # Create Tasks
+    potentially_new_tasks = new_todo_data["tasks"]
+    if potentially_new_tasks is not None:
+        logger.info(f"Attempting to create {len(potentially_new_tasks)} embedded tasks from todo creation request")
+
+        for new_task in potentially_new_tasks:
+            new_task = Task(
+                description=new_task["description"],
+                todo_id=new_todo.id,
+            )
+            db.add(new_task)
+        db.commit()
+
+        logger.info(f"Successfully created {len(potentially_new_tasks)} tasks from todo creation request")
+
     db.close()
 
     return jsonify({"message": "TODO added successfully"}), 201
@@ -83,12 +99,11 @@ def get_todo(todo_id):
     # Return JSON response
     return jsonify(todo.to_json())
 
-@bp.route("/<int:todo_id>/resolve/", methods=["POST"])
-def todo_resolve(todo_id):
+@bp.route("/<int:todo_id>/deprecate/", methods=["POST"])
+def todo_deprecate(todo_id):
     """
     Resolves the todo.
     """
-    # Log the request
     logger.info("Received request to resolve todo")
     db = Session()
 
@@ -99,5 +114,24 @@ def todo_resolve(todo_id):
     db.flush()
     db.commit()
 
-    # Return JSON response
     return jsonify(todo.to_json())
+
+@bp.route("/<int:todo_id>/tasks/<int:task_id>/", methods=["PATCH"])
+def todo_task_update(todo_id, task_id):
+    """
+    Update the todo's task.
+    """
+    logger.info("Received request to resolve a todo's task")
+    db = Session()
+
+    changes = request.get_json()
+
+    task = db.query(Task).get(task_id)
+    task.description = changes["description"]
+    task.resolved_on = changes["resolved_on"]
+    task.resolved = change["resolved"]
+
+    db.flush()
+    db.commit()
+
+    return jsonify(task.to_json())
