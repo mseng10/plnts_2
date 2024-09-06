@@ -55,7 +55,8 @@ class Task(Base, DeprecatableMixin):
     todo_id: Mapped[int] = mapped_column(
         ForeignKey("todo.id", ondelete="CASCADE")
     )  # Todo this task belongs to
-        
+    
+    
     resolved = Column(Boolean, default=False, nullable=False)
     resolved_on = Column(DateTime(), nullable=True)
 
@@ -80,7 +81,6 @@ class Alert(Base, DeprecatableMixin):
     __tablename__ = "alert"
 
     id = Column(Integer, primary_key=True)
-
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     alert_type = Column(String(50))
