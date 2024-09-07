@@ -19,6 +19,9 @@ import os
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin@localhost:5432/postgres")
 engine = create_engine(DATABASE_URL)
 
+# Base.metadata.drop_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
+
 # Create a configured "Session" class
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

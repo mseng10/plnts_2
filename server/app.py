@@ -53,7 +53,6 @@ app.register_blueprint(types_bp)
 app.register_blueprint(genuses_bp)
 app.register_blueprint(soils_bp)
 
-
 CORS(app)
 
 @app.route("/meta/", methods=["GET"])
