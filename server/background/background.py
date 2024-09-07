@@ -6,7 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-from models.plant import Plant, Genus, Type, Base
+from models.model import Base
+from models.plant import Plant, Genus, Type
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
 from models.background.background import Ba

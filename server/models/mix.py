@@ -2,7 +2,8 @@ from sqlalchemy import Column, Integer, String, DateTime, Table, ForeignKey, Boo
 from sqlalchemy.orm import relationship, Mapped
 from datetime import datetime
 from typing import List
-from models.plant import Base, DeprecatableMixin
+from models.plant import DeprecatableMixin
+from models.model import Base
 
 # Association table
 mix_soil_association = Table(

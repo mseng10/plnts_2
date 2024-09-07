@@ -9,9 +9,9 @@ from typing import List
 # Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.ext.declarative import declared_attr
 
-Base = declarative_base()
+from models.model import FlexibleModel, ModelConfig, FieldConfig, Base
 
 class DeprecatableMixin:
     """ In case the model is deprecated."""

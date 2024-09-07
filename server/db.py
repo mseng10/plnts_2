@@ -7,7 +7,8 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine import URL
 
-from models.plant import Plant, Genus, Type, Base
+from models.model import Base
+from models.plant import Plant, Genus, Type
 from models.system import System, Light
 from models.alert import PlantAlert, Todo
 from models.mix import Soil, Mix

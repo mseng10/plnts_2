@@ -6,6 +6,9 @@ from dataclasses import dataclass
 import datetime
 import numpy as np
 
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 @dataclass
 class FieldConfig:
