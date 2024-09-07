@@ -78,11 +78,3 @@ class Soil(Base, FlexibleModel):
         'group': FieldConfig(read_only=True),
         # 'mix_ids': FieldConfig(),
     })
-
-    @staticmethod
-    def from_numpy(nump):
-        return Soil(
-            name=nump[0],
-            description=nump[1],
-            group=nump[2]
-        )

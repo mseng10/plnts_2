@@ -66,7 +66,9 @@ class FlexibleModel:
         return cls(**data)
 
     @classmethod
-    def from_numpy(cls, array: np.ndarray, columns: List[str]) -> List['FlexibleModel']:
+    def from_numpy(cls, data: np.ndarray) -> List['FlexibleModel']:
+        columns = data[0]
+        rows = data[1:]
         if len(array.shape) != 2 or array.shape[1] != len(columns):
             raise ValueError("Array shape does not match column count")
         return [cls(**dict(zip(columns, row))) for row in array]
@@ -75,3 +77,9 @@ class FlexibleModel:
     def from_request(cls, req: Any) -> 'FlexibleModel':
         data = req.json if req.is_json else req.form.to_dict()
         return cls.from_dict(data)
+
+    @classmethod
+    def from_csv(cls, file_path: str) -> List['FlexibleModel']:
+        with open(file_path, 'r', newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            return [cls.from_dict(row) for row in reader]

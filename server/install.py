@@ -17,6 +17,7 @@ from db import Session
 from logger import setup_logger
 import logging
 
+import csv
 import numpy as np
 
 logging.basicConfig(level=logging.INFO)
@@ -39,9 +40,10 @@ def create_model(model_path, model_class):
         logger.error(f"Models already exist for {model_class}, exiting.")
         return
 
-    model_data = np.genfromtxt(model_path, delimiter=',', dtype=None, encoding=None, names=True)
-    for model in model_data:
-        db.add(model_class.from_numpy(model))
+    with open(model_path, 'r', newline='') as csvfile:
+        reader = csv.reader(csvfile)
+        for model in model_class.from_numpy(np.array(list(reader))):
+            db.add(model)
 
     db.commit()
     db.close()
