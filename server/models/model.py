@@ -20,13 +20,14 @@ class FieldConfig:
     nested: Optional['ModelConfig'] = None
     include_nested: bool = False
     delete_with_parent: bool = False  # New attribute
+    association: bool = False  # New field to indicate association table relationship
 
 class ModelConfig:
-    """ Standard plnts_2 model:) """
+    """ Standard plnts_2 model serializer:) """
     def __init__(self, fields: Dict[str, FieldConfig]):
         self.fields = fields
 
-    def serialize(self, obj, depth=0, include_nested=False):
+    def serialize(self, obj, depth=0, include_nested=False) -> Dict[str, Any]:
         if depth > 5:  # Prevent infinite recursion
             return {}
         result = {}
@@ -38,11 +39,13 @@ class ModelConfig:
                         result[k] = [v.nested.serialize(item, depth+1, include_nested) for item in value]
                     elif value is not None:
                         result[k] = v.nested.serialize(value, depth+1, include_nested)
+                elif v.association:
+                    result[k] = [item.id for item in value]
                 else:
                     result[k] = value
         return result
 
-    def deserialize(self, data, is_create=False, depth=0):
+    def deserialize(self, data, is_create=False, depth=0) -> Dict[str, Any]:
         if depth > 5:  # Prevent infinite recursion
             return {}
         result = {}
@@ -55,6 +58,8 @@ class ModelConfig:
                             result[k] = [field_config.nested.deserialize(item, is_create, depth+1) for item in v]
                         elif v is not None:
                             result[k] = field_config.nested.deserialize(v, is_create, depth+1)
+                    elif field_config.association:
+                        result[k] = v
                     else:
                         result[k] = v
         return result

@@ -94,6 +94,11 @@ class GenericCRUD:
                                 for nested_key, nested_value in value.items():
                                     setattr(nested_item, nested_key, nested_value)
                                 setattr(item, key, nested_item)
+                        elif field_config.association:
+                            # Handle association table
+                            associated_model = getattr(self.model, key).property.mapper.class_
+                            associated_items = sess.query(associated_model).filter(associated_model.id.in_(value)).all()
+                            setattr(item, key, associated_items)
                         else:
                             setattr(item, key, value)
                 

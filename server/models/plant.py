@@ -122,9 +122,9 @@ class Type(Base):
     type_schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
-        'name': FieldConfig(read_only=True),
-        'description': FieldConfig(read_only=True),
-        'genus_id': FieldConfig(read_only=True),
+        'name': FieldConfig(write_only=True),
+        'description': FieldConfig(write_only=True),
+        'genus_id': FieldConfig(write_only=True),
         # 'plants': FieldConfig(nested=Task.task_schema) 
     })
 
@@ -135,6 +135,7 @@ class Genus(Base):
 
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     name = Column(String(100), nullable=False, unique=True)
     description = Column(String(400), nullable=True)
     watering = Column(Integer(), nullable=False)  # days
@@ -153,9 +154,10 @@ class Genus(Base):
     genus_schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
-        'name': FieldConfig(read_only=True),
-        'description': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'name': FieldConfig(write_only=True),
+        'description': FieldConfig(write_only=True),
         'watering': FieldConfig(),
-        'types': FieldConfig(nested=Type.type_schema),
+        # 'types': FieldConfig(nested=Type.type_schema),
         # 'plants': FieldConfig(nested=Plant.plant_schema)
     })
