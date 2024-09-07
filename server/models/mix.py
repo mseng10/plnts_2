@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship, Mapped
 from datetime import datetime
 from typing import List
 from models.plant import DeprecatableMixin
-from models.model import Base
+from models.model import Base, FieldConfig, ModelConfig, FlexibleModel
 
 # Association table
 mix_soil_association = Table(
@@ -50,7 +50,7 @@ class Mix(Base, DeprecatableMixin):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-class Soil(Base):
+class Soil(Base, FlexibleModel):
     """Soil. Created on installation."""
     __tablename__ = "soil"
 
@@ -69,15 +69,15 @@ class Soil(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    def to_json(self) -> dict:
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "created_on": self.created_on,
-            "description": self.description,
-            "group": self.group,
-            "name": self.name
-        }
+
+    soil_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'group': FieldConfig(read_only=True),
+        # 'mix_ids': FieldConfig(),
+    })
 
     @staticmethod
     def from_numpy(nump):

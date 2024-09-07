@@ -107,7 +107,6 @@ class Type(Base):
     created_on = Column(DateTime(), default=datetime.now)
     name = Column(String(100), nullable=False)
     description = Column(String(400), nullable=True)
-    updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
     genus_id: Mapped[int] = mapped_column(
         ForeignKey("genus.id", ondelete="CASCADE")
@@ -120,16 +119,14 @@ class Type(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on,
-            "genus_id": self.genus_id
-        }
+    type_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'genus_id': FieldConfig(read_only=True),
+        # 'plants': FieldConfig(nested=Task.task_schema) 
+    })
 
 class Genus(Base):
     """Genus of plant."""
@@ -141,7 +138,6 @@ class Genus(Base):
     name = Column(String(100), nullable=False, unique=True)
     description = Column(String(400), nullable=True)
     watering = Column(Integer(), nullable=False)  # days
-    updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
 
     types: Mapped[List["Type"]] = relationship(
         "Type", backref="genus", passive_deletes=True
@@ -154,13 +150,12 @@ class Genus(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "watering": self.watering,
-            "description": self.description,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on
-        }
+    genus_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'watering': FieldConfig(),
+        'types': FieldConfig(nested=Type.type_schema),
+        # 'plants': FieldConfig(nested=Plant.plant_schema)
+    })
