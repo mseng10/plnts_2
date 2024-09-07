@@ -64,7 +64,7 @@ class Todo(Base, DeprecatableMixin, FlexibleModel):
         'due_on': FieldConfig(),
         'name': FieldConfig(),
         'description': FieldConfig(),
-        'tasks': FieldConfig(nested=Task.task_schema, include_nested=True) 
+        'tasks': FieldConfig(nested=Task.task_schema, include_nested=True, delete_with_parent=True) 
     })
 
     def __repr__(self):
@@ -92,7 +92,6 @@ class Alert(Base, DeprecatableMixin):
             "updated_on": self.updated_on,
             "alert_type": self.alert_type        
         }
-
 
 class PlantAlert(Alert):
     """Plant alert model."""

@@ -9,7 +9,6 @@ import numpy as np
 
 @dataclass
 class FieldConfig:
-    """Define how our model fields can behave."""
     read_only: bool = False
     write_only: bool = False
     create_only: bool = False
@@ -17,6 +16,7 @@ class FieldConfig:
     sortable: bool = False
     nested: Optional['ModelConfig'] = None
     include_nested: bool = False
+    delete_with_parent: bool = False  # New attribute
 
 class ModelConfig:
     """ Standard plnts_2 model:) """

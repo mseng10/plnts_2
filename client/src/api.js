@@ -24,7 +24,7 @@ export const APIS = {
     create: "/todos/",
     getOne: "/todos/{id}/",
     updateOne: "/todos/{id}/",
-    deprecateOne: "/todos/{id}/deprecate/",
+    deleteOne: "/todos/{id}/",
   },
   alert: {
     getAll: "/alerts/check/",
@@ -56,7 +56,12 @@ export const APIS = {
   genus: {
     getAll: "/genuses/",
     create: "/genuses/"
-  }
+  },
+  task: {
+    updateOne: "/tasks/{id}/",
+    deprecateOne: "/todos/{id}/tasks/{eid}/",
+    undeprecateOne: "/todos/{id}/tasks/{eid}/"
+  },
 }
 
 export const apiBuilder = (url) => {
@@ -65,6 +70,11 @@ export const apiBuilder = (url) => {
     fullUrl: API_BASE_URL + url,
     setId(id) {
       this.fullUrl = this.fullUrl.replace('{id}', id);
+
+      return this;
+    },
+    setEmbedId(id) {
+      this.fullUrl = this.fullUrl.replace('{eid}', id);
 
       return this;
     },
@@ -109,6 +119,21 @@ export const simplePatch = (url, patchModel) => {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(patchModel)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      return response.json();
+    });
+};
+
+/** Wrapper for fetch with error handling and jsonifying. */
+export const simpleDelete = (url) => {
+  return fetch(url, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }    
     })
     .then(response => {
       if (!response.ok) {

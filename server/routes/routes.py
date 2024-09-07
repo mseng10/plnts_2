@@ -68,12 +68,44 @@ class GenericCRUD:
 
     def create(self):
         try:
-            item = self.model.from_request(request)
+            # Deserialize the input data
+            data = self.config.deserialize(request.json, is_create=True)
+            
             with Session() as sess:
+                # Create the main object
+                item = self.model()
+                
+                for key, value in data.items():
+                    if key in self.config.fields:
+                        field_config = self.config.fields[key]
+                        if field_config.nested:
+                            if isinstance(value, list):
+                                # Handle list of nested objects
+                                nested_items = []
+                                for nested_data in value:
+                                    nested_item = field_config.nested.model()
+                                    for nested_key, nested_value in nested_data.items():
+                                        setattr(nested_item, nested_key, nested_value)
+                                    nested_items.append(nested_item)
+                                setattr(item, key, nested_items)
+                            elif isinstance(value, dict):
+                                # Handle single nested object
+                                nested_item = field_config.nested.model()
+                                for nested_key, nested_value in value.items():
+                                    setattr(nested_item, nested_key, nested_value)
+                                setattr(item, key, nested_item)
+                        else:
+                            setattr(item, key, value)
+                
                 sess.add(item)
                 sess.commit()
-                return jsonify(self.config.serialize(item)), 201
+                
+                # Refresh the item to ensure all relationships are loaded
+                sess.refresh(item)
+                
+                return jsonify(self.config.serialize(item, include_nested=True)), 201
         except Exception as e:
+            print(f"Error in create: {str(e)}")
             return jsonify({"error": str(e)}), 400
 
     def update(self, id: Any):
@@ -96,6 +128,18 @@ class GenericCRUD:
             item = sess.query(self.model).get(id)
             if item is None:
                 return jsonify({"error": "Not found"}), 404
+
+            # Handle nested deletions
+            for field_name, field_config in self.config.fields.items():
+                if field_config.nested and field_config.delete_with_parent:
+                    nested_items = getattr(item, field_name)
+                    if nested_items is not None:
+                        if isinstance(nested_items, list):
+                            for nested_item in nested_items:
+                                sess.delete(nested_item)
+                        else:
+                            sess.delete(nested_items)
+
             sess.delete(item)
             sess.commit()
             return '', 204
