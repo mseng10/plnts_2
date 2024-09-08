@@ -6,7 +6,7 @@ from models.system import System, Light
 from routes.routes import GenericCRUD, APIBuilder
 
 system_bp = Blueprint('systems', __name__)
-system_crud = GenericCRUD(System, System.system_schema)
+system_crud = GenericCRUD(System, System.schema)
 APIBuilder.register_resource(system_bp, 'systems', system_crud)
 
 @APIBuilder.register_custom_route(system_bp, '<int:system_id>/plants/', ['GET'])
@@ -46,7 +46,7 @@ def get_systems_alerts(system_id):
     return jsonify(plant_alerts_json)
 
 light_bp = Blueprint('lights', __name__)
-light_crud = GenericCRUD(Light, Light.light_schema)
+light_crud = GenericCRUD(Light, Light.schema)
 APIBuilder.register_resource(light_bp, 'lights', light_crud, ["GET", "GET_MANY", "POST"])
 
 # TODO: Fix when I have more strength

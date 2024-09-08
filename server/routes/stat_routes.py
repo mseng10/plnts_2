@@ -32,7 +32,7 @@ def stats():
         "total_plants" : db.query(Plant).count(),
         "total_active_plants" : db.query(Plant).filter(Plant.deprecated == False).count(),
         "total_deprecated_plants": db.query(Plant).filter(Plant.deprecated == True).count(),
-        "total_active_systems": db.query(System).filter(System.deprecated == False).count(),
+        "total_active_systems": db.query(System).filter(System.deprecated == False).scalar(),
         "total_cost": total_cost,
         "total_active_cost": total_active_cost
     }

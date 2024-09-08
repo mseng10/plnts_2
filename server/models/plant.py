@@ -72,7 +72,7 @@ class Plant(Base, DeprecatableMixin):
     def __repr__(self) -> str:
         return f"{self.id}"
 
-    plant_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
@@ -85,7 +85,7 @@ class Plant(Base, DeprecatableMixin):
         'phase': FieldConfig(),
         'size': FieldConfig(),
         # TODO:
-        # 'type': FieldConfig(nested=Type.type_schema)
+        # 'type': FieldConfig(nested=Type.schema)
         # plant_alerts: FieldConfig(nested=PlantAlert.schema)
     })
 
@@ -120,13 +120,13 @@ class Type(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    type_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'name': FieldConfig(write_only=True),
         'description': FieldConfig(write_only=True),
         'genus_id': FieldConfig(write_only=True),
-        # 'plants': FieldConfig(nested=Task.task_schema) 
+        # 'plants': FieldConfig(nested=Task.schema) 
     })
 
 class Genus(Base):
@@ -152,13 +152,13 @@ class Genus(Base):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    genus_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
         'name': FieldConfig(write_only=True),
         'description': FieldConfig(write_only=True),
         'watering': FieldConfig(),
-        # 'types': FieldConfig(nested=Type.type_schema),
-        # 'plants': FieldConfig(nested=Plant.plant_schema)
+        # 'types': FieldConfig(nested=Type.schema),
+        # 'plants': FieldConfig(nested=Plant.schema)
     })

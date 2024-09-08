@@ -6,7 +6,7 @@ from models.plant import Plant
 from routes.routes import GenericCRUD, APIBuilder
 
 bp = Blueprint('plants', __name__)
-plant_crud = GenericCRUD(Plant, Plant.plant_schema)
+plant_crud = GenericCRUD(Plant, Plant.schema)
 APIBuilder.register_resource(bp, 'plants', plant_crud)
 
 @APIBuilder.register_custom_route(bp, 'deprecate/', ['GET'])

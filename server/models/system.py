@@ -29,7 +29,7 @@ class Light(Base, DeprecatableMixin, FlexibleModel):
     def __repr__(self) -> str:
         return f"{self.name}"
     
-    light_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
@@ -69,7 +69,7 @@ class System(Base, DeprecatableMixin, FlexibleModel):
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    system_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
@@ -79,6 +79,6 @@ class System(Base, DeprecatableMixin, FlexibleModel):
         'temperature': FieldConfig(),
         'duration': FieldConfig(),
         'distance': FieldConfig(),
-        # 'plants': FieldConfig(nested=Plant.task_schema, include_nested=True, delete_with_parent=True) 
-        # 'lights': FieldConfig(nested=Light.light_schema, include_nested=True, delete_with_parent=True) 
+        # 'plants': FieldConfig(nested=Plant.schema, include_nested=True, delete_with_parent=True) 
+        # 'lights': FieldConfig(nested=Light.schema, include_nested=True, delete_with_parent=True) 
     })

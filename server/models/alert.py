@@ -31,7 +31,7 @@ class Task(Base, DeprecatableMixin, FlexibleModel):
     def __repr__(self):
         return f"{self.description}"
 
-    task_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
@@ -57,14 +57,14 @@ class Todo(Base, DeprecatableMixin, FlexibleModel):
         "Task", backref="todo", passive_deletes=True
     )  # Available tasks of this todo
 
-    todo_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
         'due_on': FieldConfig(),
         'name': FieldConfig(),
         'description': FieldConfig(),
-        'tasks': FieldConfig(nested=Task.task_schema, include_nested=True, delete_with_parent=True) 
+        'tasks': FieldConfig(nested=Task.schema, include_nested=True, delete_with_parent=True) 
     })
 
     def __repr__(self):
@@ -84,7 +84,7 @@ class Alert(Base, DeprecatableMixin):
         'polymorphic_on': alert_type
     }
 
-    alert_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
@@ -113,7 +113,7 @@ class PlantAlert(Alert):
     def __repr__(self):
         return "plant_alert"
 
-    plant_alert_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'plant_alert_type': FieldConfig(read_only=True),
         'plant_id': FieldConfig(read_only=True),
