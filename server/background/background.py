@@ -8,7 +8,8 @@ from sqlalchemy.engine import URL
 
 from models.plant import Plant, Genus, Type
 from models.system import System, Light
-from models.alert import PlantAlert, Todo
+from models.alert import PlantAlert
+from models.todo import Todo, Task
 from models.background.background import Ba
 
 from db import init_db

@@ -14,7 +14,8 @@ from sqlalchemy.engine import URL
 from models import Base
 from models.plant import Plant, Genus, Type
 from models.system import System, Light
-from models.alert import PlantAlert, Todo
+from models.alert import PlantAlert
+from models.todo import Todo
 from models.mix import Mix, Soil, SoilPart
 
 from db import init_db
