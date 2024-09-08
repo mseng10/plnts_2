@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
-from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload, contains_eager
+from sqlalchemy.orm import sessionmaker, declarative_base, joinedload, contains_eager
 from typing import Type, List, Callable, Any, Dict, Optional
 
 from db import Session

@@ -24,8 +24,9 @@ class FieldConfig:
 
 class ModelConfig:
     """ Standard plnts_2 model serializer:) """
-    def __init__(self, fields: Dict[str, FieldConfig]):
+    def __init__(self, fields: Dict[str, FieldConfig], archivable=True):
         self.fields = fields
+        self.archivable = archivable
 
     def serialize(self, obj, depth=0, include_nested=False) -> Dict[str, Any]:
         if depth > 5:  # Prevent infinite recursion

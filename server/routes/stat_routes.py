@@ -14,7 +14,7 @@ bp = Blueprint('stats', __name__, url_prefix='/stats')
 @bp.route("/", methods=["GET"])
 def stats():
     """
-    Return stats for everything
+    Return stats for everything.
     """
     logger.info("Received request to query the stats")
 
@@ -38,5 +38,5 @@ def stats():
     }
     db.close()
 
-    logger.info("Successfully generated stats data.")
+    logger.info("Successfully generated statistical data.")
     return jsonify(stats)
