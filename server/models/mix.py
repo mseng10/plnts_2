@@ -5,14 +5,51 @@ from typing import List
 from models.plant import DeprecatableMixin
 from models.model import Base, FieldConfig, ModelConfig, FlexibleModel
 
-# Association table
-mix_soil_association = Table(
-    'mix_soil_association',
-    Base.metadata,
-    Column('mix_id', Integer, ForeignKey('mix.id')),
-    Column('soil_id', Integer, ForeignKey('soil.id')),
-    Column('parts', Integer)
-)
+class Soil(Base, FlexibleModel):
+    """Soil. Created on installation."""
+    __tablename__ = "soil"
+
+    id = Column(Integer(), primary_key=True)
+    created_on = Column(DateTime(), default=datetime.now)
+    description = Column(String(400), nullable=True)
+    group = Column(String(100), nullable=False)
+    name = Column(String(100), nullable=False)
+    
+    mix_soil_parts: Mapped[List["SoilPart"]] = relationship(
+        "SoilPart", backref="soil", passive_deletes=True
+    )
+
+    def __repr__(self) -> str:
+        return f"{self.name}"
+
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'group': FieldConfig(read_only=True)
+    })
+
+class SoilPart(Base, FlexibleModel):
+    __tablename__ = 'mix_soil_part'
+
+    id = Column(Integer(), primary_key=True)
+    created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    mix_id = Column(Integer, ForeignKey('mix.id'), primary_key=True)
+    # mix = relationship("Mix", back_populates="soils")
+    soil_id = Column(Integer, ForeignKey('soil.id'), primary_key=True)
+    # soil = relationship("Soil", back_populates="mixes")
+    parts = Column(Integer)
+
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'mix_id': FieldConfig(),
+        'soil_id': FieldConfig(),
+        'parts': FieldConfig()
+    })
 
 class Mix(Base, DeprecatableMixin):
     """Soil mix model."""
@@ -30,51 +67,21 @@ class Mix(Base, DeprecatableMixin):
         "Plant", backref="mix", passive_deletes=True
     )  # Available plants of this mix
 
-    soil_ids: Mapped[List["Soil"]] = relationship(
-        "Soil",
-        secondary=mix_soil_association,
-        back_populates="mix_ids"
-    )
+    soil_parts: Mapped[List["SoilPart"]] = relationship(
+        "SoilPart", backref="mix", passive_deletes=True
+    )  # Available tasks of this todo
 
-    def to_json(self) -> dict:
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on,
-            "experimental": self.experimental
-        }
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
-class Soil(Base, FlexibleModel):
-    """Soil. Created on installation."""
-    __tablename__ = "soil"
-
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    description = Column(String(400), nullable=True)
-    group = Column(String(100), nullable=False)
-    name = Column(String(100), nullable=False)
-    
-    mix_ids: Mapped[List["Mix"]] = relationship(
-        "Mix",
-        secondary=mix_soil_association,
-        back_populates="soil_ids"
-    )
-
-    def __repr__(self) -> str:
-        return f"{self.name}"
-
-
-    soil_schema = ModelConfig({
+    schema = ModelConfig({
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
-        'name': FieldConfig(read_only=True),
-        'description': FieldConfig(read_only=True),
-        'group': FieldConfig(read_only=True),
-        # 'mix_ids': FieldConfig(),
+        'updated_on': FieldConfig(read_only=True),
+        'name': FieldConfig(),
+        'description': FieldConfig(),
+        'experimental': FieldConfig(),
+        'soil_parts': FieldConfig(nested=SoilPart.schema, include_nested=True, delete_with_parent=True),
+        # parts: Fieldconfig ?
     })
