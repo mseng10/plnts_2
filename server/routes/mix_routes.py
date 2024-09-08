@@ -1,6 +1,4 @@
 from flask import Blueprint, jsonify, request
-from db import Session
-from logger import logger
 
 from models.mix import Mix
 from routes import GenericCRUD, APIBuilder

@@ -1,6 +1,4 @@
 from flask import Blueprint, jsonify, request
-from db import Session
-from logger import logger
 
 from models.alert import PlantAlert, Alert
 from routes import GenericCRUD, APIBuilder

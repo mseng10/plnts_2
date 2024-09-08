@@ -1,7 +1,4 @@
 from flask import Blueprint, jsonify, request, make_response
-from db import Session
-from logger import logger
-from datetime import datetime
 
 from routes import GenericCRUD, APIBuilder
 from models.todo import Todo, Task
