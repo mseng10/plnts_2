@@ -10,7 +10,7 @@ from typing import List
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.plant import DeprecatableMixin
-from models.model import FlexibleModel, ModelConfig, FieldConfig, Base
+from models import FlexibleModel, ModelConfig, FieldConfig, Base
 
 class Task(Base, DeprecatableMixin, FlexibleModel):
     """Task of a Todo."""

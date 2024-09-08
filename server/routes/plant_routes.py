@@ -3,7 +3,7 @@ from db import Session
 from logger import logger
 
 from models.plant import Plant
-from routes.routes import GenericCRUD, APIBuilder
+from routes import GenericCRUD, APIBuilder
 
 bp = Blueprint('plants', __name__)
 plant_crud = GenericCRUD(Plant, Plant.schema)

@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship, Mapped
 from datetime import datetime
 from typing import List
 from models.plant import DeprecatableMixin
-from models.model import Base, FieldConfig, ModelConfig, FlexibleModel
+from models import Base, FieldConfig, ModelConfig, FlexibleModel
 
 class Soil(Base, FlexibleModel):
     """Soil. Created on installation."""

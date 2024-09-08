@@ -11,7 +11,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 
-from models.model import FlexibleModel, ModelConfig, FieldConfig, Base
+from models import FlexibleModel, ModelConfig, FieldConfig, Base
 
 class DeprecatableMixin:
     """ In case the model is deprecated."""

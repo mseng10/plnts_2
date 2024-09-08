@@ -3,7 +3,7 @@ from db import Session
 from logger import logger
 
 from models.mix import Mix
-from routes.routes import GenericCRUD, APIBuilder
+from routes import GenericCRUD, APIBuilder
 
 bp = Blueprint('mixes', __name__)
 mix_crud = GenericCRUD(Mix, Mix.schema)

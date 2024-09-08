@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from db import Session
 from logger import logger
-from routes.routes import GenericCRUD, APIBuilder
+from routes import GenericCRUD, APIBuilder
 
 from models.plant import Genus, Type
 from models.mix import Soil

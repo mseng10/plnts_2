@@ -3,7 +3,7 @@ from db import Session
 from logger import logger
 
 from models.alert import PlantAlert, Alert
-from routes.routes import GenericCRUD, APIBuilder
+from routes import GenericCRUD, APIBuilder
 
 bp = Blueprint('alerts', __name__)
 alert_crud = GenericCRUD(Alert, Alert.schema)

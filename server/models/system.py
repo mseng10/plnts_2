@@ -9,7 +9,7 @@ from typing import List
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from models.plant import DeprecatableMixin
-from models.model import FlexibleModel, ModelConfig, FieldConfig, Base
+from models import FlexibleModel, ModelConfig, FieldConfig, Base
 
 
 class Light(Base, DeprecatableMixin, FlexibleModel):

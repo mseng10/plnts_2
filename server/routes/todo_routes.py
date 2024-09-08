@@ -3,7 +3,7 @@ from db import Session
 from logger import logger
 from datetime import datetime
 
-from routes.routes import GenericCRUD, APIBuilder
+from routes import GenericCRUD, APIBuilder
 from models.alert import Todo, Task
 
 bp = Blueprint('todos', __name__)
