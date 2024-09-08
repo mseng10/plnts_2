@@ -72,21 +72,22 @@ class Plant(Base, DeprecatableMixin):
     def __repr__(self) -> str:
         return f"{self.id}"
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "cost": self.cost,
-            "size": self.size,
-            "created_on": self.created_on,
-            "watered_on": self.watered_on,
-            "updated_on": self.updated_on,
-            "genus_id": self.genus_id,
-            "system_id": self.system_id,
-            "type_id": self.type_id,
-            "watering": self.watering,
-            "phase": self.phase
-        }
+    plant_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'cost': FieldConfig(),
+        'type_id': FieldConfig(),
+        'genus_id': FieldConfig(),
+        'watered_on': FieldConfig(),
+        'watering': FieldConfig(),
+        'identity': FieldConfig(),
+        'phase': FieldConfig(),
+        'size': FieldConfig(),
+        # TODO:
+        # 'type': FieldConfig(nested=Type.type_schema)
+        # plant_alerts: FieldConfig(nested=PlantAlert.schema)
+    })
 
 # Single Table Inheritance
 class Batch(Plant):
