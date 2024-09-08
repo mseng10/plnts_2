@@ -1,13 +1,12 @@
 """
 Module defining models for system.
 """
-# Standard library imports
 from datetime import datetime
 from typing import List
 
-# Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
+
 from models.plant import DeprecatableMixin
 from models import FlexibleModel, ModelConfig, FieldConfig, Base
 

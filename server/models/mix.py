@@ -1,7 +1,9 @@
 from sqlalchemy import Column, Integer, String, DateTime, Table, ForeignKey, Boolean
 from sqlalchemy.orm import relationship, Mapped
+
 from datetime import datetime
 from typing import List
+
 from models.plant import DeprecatableMixin
 from models import Base, FieldConfig, ModelConfig, FlexibleModel
 
@@ -11,7 +13,7 @@ class Soil(Base, FlexibleModel):
 
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
-    description = Column(String(400), nullable=True)
+    description = Column(String(400), nullable=False)
     group = Column(String(100), nullable=False)
     name = Column(String(100), nullable=False)
     
@@ -40,7 +42,7 @@ class SoilPart(Base, FlexibleModel):
     # mix = relationship("Mix", back_populates="soils")
     soil_id = Column(Integer, ForeignKey('soil.id'), primary_key=True)
     # soil = relationship("Soil", back_populates="mixes")
-    parts = Column(Integer)
+    parts = Column(Integer, default=1, nullable=False)
 
     schema = ModelConfig({
         'id': FieldConfig(read_only=True),
