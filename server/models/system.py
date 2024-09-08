@@ -12,7 +12,7 @@ from models.plant import DeprecatableMixin
 from models.model import FlexibleModel, ModelConfig, FieldConfig, Base
 
 
-class Light(Base, DeprecatableMixin):
+class Light(Base, DeprecatableMixin, FlexibleModel):
     """Light model."""
 
     __tablename__ = "light"
@@ -28,16 +28,57 @@ class Light(Base, DeprecatableMixin):
 
     def __repr__(self) -> str:
         return f"{self.name}"
+    
+    light_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'name': FieldConfig(),
+        'cost': FieldConfig(),
+        'system_id': FieldConfig()
+    })
+    
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "cost": self.cost,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on,
-            "system_id": self.system_id,
-            "dead": self.dead,
-            "dead_on": self.dead_on
-        }
+class System(Base, DeprecatableMixin, FlexibleModel):
+    """System model."""
+
+    __tablename__ = "system"
+
+    id = Column(Integer(), primary_key=True)
+    name = Column(String(100), nullable=False)
+    description = Column(String(400), nullable=False)
+    created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now)
+
+    # Controlled Factors
+    humidity = Column(Integer(), default=0, nullable=False)  # %
+    temperature = Column(Integer(), default=0, nullable=False)  # F
+
+    # Plants belonging to this system
+    plants: Mapped[List["Plant"]] = relationship(
+        "Plant", backref="system", passive_deletes=True
+    )  # Available plants of this system
+
+    # Lighting
+    duration = Column(Integer(), nullable=False)  # hours
+    distance = Column(Integer(), nullable=False)  # inches
+    lights: Mapped[List["Light"]] = relationship(
+        "Light", backref="system", passive_deletes=True
+    )  # Available plants of this system
+
+    def __repr__(self) -> str:
+        return f"{self.name}"
+
+    system_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'name': FieldConfig(),
+        'description': FieldConfig(),
+        'humidity': FieldConfig(),
+        'temperature': FieldConfig(),
+        'duration': FieldConfig(),
+        'distance': FieldConfig(),
+        # 'plants': FieldConfig(nested=Plant.task_schema, include_nested=True, delete_with_parent=True) 
+        # 'lights': FieldConfig(nested=Light.light_schema, include_nested=True, delete_with_parent=True) 
+    })

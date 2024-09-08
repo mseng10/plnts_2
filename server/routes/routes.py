@@ -179,5 +179,10 @@ class APIBuilder:
             blueprint.route(f'/{resource_name}/<int:id>/', methods=['DELETE'])(create_wrapper('delete'))
 
     @staticmethod
-    def register_custom_route(blueprint: Blueprint, route: str, methods: List[str], handler: Callable):
-        blueprint.route(f'/{route}', methods=methods)(handler)
+    def register_custom_route(blueprint: Blueprint, route: str, methods: List[str]):
+        def decorator(handler: Callable):
+            blueprint.route(f'/{route}', methods=methods)(handler)
+            return handler
+        
+        # This allows the method to be used both as a decorator and a regular method
+        return decorator

@@ -11,7 +11,7 @@ export const useSystems = () => {
   const createSystem = async (newSystem) => {
     setIsLoading(true);
     setError(null);
-    simplePost("/systems/", newSystem)
+    simplePost(apiBuilder(APIS.system.create).get(), newSystem)
       .then(data => 
         setSystems(prevSystems => [...prevSystems, data]))
       .catch(error => {
@@ -58,7 +58,7 @@ export const useSystems = () => {
     setIsLoading(true);
     setError(null);
     simpleFetch(apiBuilder(APIS.system.getAll).get())
-      .then(setSystems)
+      .then(resp => setSystems(resp["items"]))
       .catch(error => {
         console.log(error);
         setError(error);
@@ -123,7 +123,7 @@ export const useLights = () => {
     setIsLoading(true);
     setError(null);
     simpleFetch(apiBuilder(APIS.light.getAll).get())
-      .then(setLights)
+      .then(resp => setLights(resp["items"]))
       .catch(error => {
         setError(error);
       })
