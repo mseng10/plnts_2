@@ -84,14 +84,12 @@ class Alert(Base, DeprecatableMixin):
         'polymorphic_on': alert_type
     }
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on,
-            "alert_type": self.alert_type        
-        }
+    alert_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'alert_type': FieldConfig(read_only=True)
+    })
 
 class PlantAlert(Alert):
     """Plant alert model."""
@@ -115,10 +113,9 @@ class PlantAlert(Alert):
     def __repr__(self):
         return "plant_alert"
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "plant_id": self.plant_id,
-            "system_id": self.system_id,
-        }
+    plant_alert_schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'plant_alert_type': FieldConfig(read_only=True),
+        'plant_id': FieldConfig(read_only=True),
+        'system_id': FieldConfig(read_only=True)
+    })
