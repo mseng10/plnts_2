@@ -143,13 +143,59 @@ class GenericCRUD:
             sess.commit()
             return '', 204
 
+    def delete_many(self, ids: List[Any], cause: str):
+        with Session() as sess:
+            deleted_count = 0
+            for id in ids:
+                item = sess.query(self.model).get(id)
+                if item is None:
+                    logger.info(f"Could not find {self.model} with id: {id}")
+                    continue  # Skip if item not found
+
+                # Handle nested deletions
+                for field_name, field_config in self.config.fields.items():
+                    if field_config.nested and field_config.delete_with_parent:
+                        nested_items = getattr(item, field_name)
+                        if nested_items is not None:
+                            if isinstance(nested_items, list):
+                                for nested_item in nested_items:
+                                    sess.delete(nested_item)
+                            else:
+                                sess.delete(nested_items)
+
+                sess.delete(item)
+                deleted_count += 1
+
+            sess.commit()
+        return deleted_count
+
+    def delete_many(self):
+        data = request.json
+        ids = data.get('ids', [])
+        cause = data.get('cause', '')
+
+        if not ids:
+            return jsonify({'error': 'No ids provided'}), 400
+        
+        if not cause:
+            logger.info("No cause specified for delete many")
+
+        try:
+            model_instance = YourModelClass()  # Replace with your actual model instance
+            deleted_count = model_instance.delete_many(ids, cause)
+            return jsonify({'message': f'Successfully deleted {deleted_count} items', 'cause': cause}), 200
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
+
+
 class APIBuilder:
     @staticmethod
     def register_resource(
         blueprint: Blueprint, 
         resource_name: str, 
         crud: GenericCRUD,
-        methods: List[str] = ['GET', 'GET_MANY', 'POST', 'PATCH', 'DELETE']
+        methods: List[str] = ['GET', 'GET_MANY', 'POST', 'PATCH', 'DELETE', 'DELETE_MANY']
     ):
         def create_wrapper(operation):
             if operation in ['get', 'update', 'delete']:
@@ -171,9 +217,12 @@ class APIBuilder:
             blueprint.route(f'/{resource_name}/<int:id>/', methods=['PATCH'])(create_wrapper('update'))
         if 'DELETE' in methods:
             blueprint.route(f'/{resource_name}/<int:id>/', methods=['DELETE'])(create_wrapper('delete'))
+        if 'DELETE_MANY' in methods:
+            blueprint.route(f'/{resource_name}/<int:id>/', methods=['DELETE'])(create_wrapper('delete_many'))
 
     @staticmethod
     def register_custom_route(blueprint: Blueprint, route: str, methods: List[str]):
+        """Custom route on this bp. """
         def decorator(handler: Callable):
             blueprint.route(f'/{route}', methods=methods)(handler)
             return handler
