@@ -1,0 +1,61 @@
+id,scientific_name,common_name,description,genus_id
+1,Echeveria elegans,Mexican Snowball,Forms pale green-blue rosettes,1
+2,Echeveria agavoides,Molded Wax Agave,Forms rosettes with pointed leaves,1
+3,Sedum morganianum,Burro's Tail,Trailing succulent with tear-drop shaped leaves,2
+4,Haworthia fasciata,Zebra Plant,Small succulent with white striped leaves,3
+5,Crassula ovata,Jade Plant,Succulent shrub with oval leaves,4
+6,Kalanchoe blossfeldiana,Flaming Katy,Succulent with clusters of small flowers,5
+7,Sempervivum tectorum,Common Houseleek,Forms rosettes that produce offsets,6
+8,Mammillaria crinita,Pincushion Cactus,Small spherical cactus with fine spines,7
+9,Opuntia microdasys,Bunny Ears Cactus,Paddle-shaped stems with small glochids,8
+10,Schlumbergera truncata,Christmas Cactus,Tropical cactus with flattened stems and colorful flowers,9
+11,Rhipsalis baccifera,Mistletoe Cactus,Epiphytic cactus with thin cylindrical stems,10
+12,Monstera deliciosa,Swiss Cheese Plant,Large-leaved tropical plant with natural leaf holes,11
+13,Monstera adansonii,Swiss Cheese Vine,Smaller version with more holes in leaves,11
+14,Monstera obliqua,Mexican Bread Plant,Rare Monstera with very large leaf holes,11
+15,Philodendron hederaceum,Heartleaf Philodendron,Vining plant with heart-shaped leaves,12
+16,Philodendron bipinnatifidum,Tree Philodendron,Large philodendron with deeply lobed leaves,12
+17,Ficus lyrata,Fiddle Leaf Fig,Popular indoor tree with large violin-shaped leaves,13
+18,Ficus elastica,Rubber Plant,Tree-like plant with large glossy leaves,13
+19,Dracaena marginata,Dragon Tree,Tree-like plant with slender stems and strap-like leaves,14
+20,Dracaena fragrans,Corn Plant,Tropical plant with long strap-like leaves,14
+21,Dieffenbachia seguine,Dumb Cane,Tropical plant with large variegated leaves,15
+22,Calathea ornata,Pinstripe Plant,Tropical plant with pink striped oval leaves,16
+23,Calathea makoyana,Peacock Plant,Tropical plant with oval leaves marked like peacock feathers,16
+24,Maranta leuconeura,Prayer Plant,Low-growing plant with oval leaves that fold at night,17
+25,Stromanthe sanguinea,Triostar,Colorful plant with pink and green variegated leaves,18
+26,Nephrolepis exaltata,Boston Fern,Popular houseplant with arching fronds,19
+27,Asplenium nidus,Bird's Nest Fern,Fern with wide simple fronds growing from a central point,20
+28,Adiantum raddianum,Delta Maidenhair Fern,Delicate fern with small leaflets on black stems,21
+29,Platycerium bifurcatum,Staghorn Fern,Epiphytic fern with distinctive antler-like fronds,22
+30,Aglaonema commutatum,Chinese Evergreen,Low-maintenance plant with variegated leaves,23
+31,Spathiphyllum wallisii,Peace Lily,Tropical plant with white spathe flowers,24
+32,Anthurium andraeanum,Flamingo Flower,Tropical plant with heart-shaped leaves and colorful spathes,25
+33,Alocasia polly,African Mask Plant,Compact alocasia with arrow-shaped leaves,26
+34,Syngonium podophyllum,Arrowhead Plant,Vining plant with arrow-shaped leaves,27
+35,Phalaenopsis amabilis,Moth Orchid,Popular orchid with long-lasting flowers,28
+36,Saintpaulia ionantha,African Violet,Small plant with fuzzy leaves and purple flowers,29
+37,Begonia rex,Rex Begonia,Begonia grown for its colorful foliage,30
+38,Hoya carnosa,Wax Plant,Vining plant with thick waxy leaves and fragrant flowers,31
+39,Epipremnum aureum,Golden Pothos,Vining plant with heart-shaped variegated leaves,32
+40,Hedera helix,English Ivy,Classic vining plant with lobed leaves,33
+41,Cissus discolor,Rex Begonia Vine,Climbing vine with colorful leaves,34
+42,Tradescantia zebrina,Wandering Jew,Trailing plant with purple and silver striped leaves,35
+43,Neoregelia carolinae,Blushing Bromeliad,Bromeliad with red center leaves when blooming,36
+44,Guzmania lingulata,Scarlet Star,Bromeliad with bright red flower spike,37
+45,Vriesea splendens,Flaming Sword,Bromeliad with a bright red paddle-shaped inflorescence,38
+46,Chamaedorea elegans,Parlor Palm,Small palm suitable for indoor spaces,39
+47,Rhapis excelsa,Lady Palm,Multi-stemmed palm with fan-shaped leaves,40
+48,Phoenix roebelenii,Pygmy Date Palm,Small palm with feather-like fronds,41
+49,Tillandsia ionantha,Sky Plant,Small air plant that turns red when blooming,42
+50,Dionaea muscipula,Venus Flytrap,Carnivorous plant with hinged trapping leaves,43
+51,Nepenthes alata,Pitcher Plant,Carnivorous plant with pitcher-shaped traps,44
+52,Paphiopedilum insigne,Slipper Orchid,Orchid with slipper-shaped pouch,45
+53,Cattleya labiata,Corsage Orchid,Large-flowered orchid often used in corsages,46
+54,Echeveria 'Perle von Nürnberg',Pearl of Nurnberg,Echeveria with pale purple-pink leaves,1
+55,Sedum rubrotinctum,Jelly Bean Plant,Succulent with small jelly bean-shaped leaves,2
+56,Haworthia cooperi,Cooper's Haworthia,Small succulent with translucent fleshy leaves,3
+57,Crassula perforata,String of Buttons,Succulent with stacked gray-green leaves,4
+58,Kalanchoe tomentosa,Panda Plant,Succulent with fuzzy silver-green leaves,5
+59,Sempervivum arachnoideum,Cobweb Houseleek,Forms rosettes with fine white hairs resembling a cobweb,6
+60,Mammillaria hahniana,Old Lady Cactus,Cactus covered in soft white hair-like spines,7

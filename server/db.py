@@ -8,7 +8,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine import URL
 
 from models import Base
-from models.plant import Plant, Genus, Type
+from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies
 from models.system import System, Light
 from models.alert import PlantAlert, Alert
 from models.todo import Todo, Task

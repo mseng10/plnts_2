@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-# from models.plant import Genus, Type
+from models.plant import PlantGenusType, PlantGenus, PlantSpecies
 from models.mix import Soil
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -17,7 +17,6 @@ from db import Session
 from logger import setup_logger
 import logging
 
-import csv
 import numpy as np
 
 logging.basicConfig(level=logging.INFO)
@@ -58,8 +57,10 @@ def create_all_models():
     logger.info("Beginning to create model.")
 
     models_to_create = [
-        ("data/installable/soils/soil_matters.csv", Soil)
-        # TODO: Genus,Type
+        ("data/installable/soils/soils.csv", Soil)
+        ("data/installable/plants/genera.csv", PlantGenus)
+        ("data/installable/plants/genus_types.csv", PlantGenusType)
+        ("data/installable/plants/species.csv", PlantSpecies)
     ]
 
     # Each model creator has it's own thread.
