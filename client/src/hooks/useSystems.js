@@ -58,7 +58,7 @@ export const useSystems = () => {
     setIsLoading(true);
     setError(null);
     simpleFetch(apiBuilder(APIS.system.getAll).get())
-      .then(resp => setSystems(resp["items"]))
+      .then(setSystems)
       .catch(error => {
         console.log(error);
         setError(error);
@@ -123,7 +123,7 @@ export const useLights = () => {
     setIsLoading(true);
     setError(null);
     simpleFetch(apiBuilder(APIS.light.getAll).get())
-      .then(resp => setLights(resp["items"]))
+      .then(setLights)
       .catch(error => {
         setError(error);
       })

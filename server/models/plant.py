@@ -103,7 +103,7 @@ class PlantGenusType(Base, FlexibleModel):
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     name = Column(String(50), nullable=False, unique=True)
     description = Column(String(200))
-    watering = Column(Integer(), nullable=False)  # days
+    watering = Column(Integer(), nullable=True)  # days
 
     # Relationship to PlantGenus
     genera = relationship("PlantGenus", back_populates="genus_type")
@@ -112,10 +112,10 @@ class PlantGenusType(Base, FlexibleModel):
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
-        'name': FieldConfig(write_only=True),
-        'description': FieldConfig(write_only=True),
-        'watering': FieldConfig()
-        # 'genera': FieldConfig(nested=PlantGenus.schema, include_nested=True),
+        'name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'watering': FieldConfig(),
+        # 'genera': FieldConfig(nested=PlantGenus.schema, include_nested=True)
     })
 
 class PlantGenus(Base, FlexibleModel):
@@ -127,7 +127,7 @@ class PlantGenus(Base, FlexibleModel):
     name = Column(String(50), nullable=False, unique=True)
     common_name = Column(String(100))
     description = Column(String(200))
-    watering = Column(Integer(), nullable=False)  # days
+    watering = Column(Integer(), nullable=True)  # days
 
     # Relationship to PlantGenusType
     genus_type_id = Column(Integer, ForeignKey('plant_genus_type.id'), nullable=False)
@@ -140,11 +140,11 @@ class PlantGenus(Base, FlexibleModel):
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
-        'name': FieldConfig(write_only=True),
-        'common_name': FieldConfig(write_only=True),
-        'description': FieldConfig(write_only=True),
+        'name': FieldConfig(read_only=True),
+        'common_name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
         'watering': FieldConfig(),
-        'genus_type_id': FieldConfig(write_only=True),
+        'genus_type_id': FieldConfig(read_only=True),
         'genus_type': FieldConfig(nested=PlantGenusType.schema, include_nested=True),
         # 'species': FieldConfig(nested=Plant.schema)
     })
@@ -155,7 +155,7 @@ class PlantSpecies(Base, FlexibleModel):
     id = Column(Integer, primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    scientific_name = Column(String(100), nullable=False, unique=True)
+    name = Column(String(100), nullable=False, unique=True)
     common_name = Column(String(100))
     description = Column(String(500))
 
@@ -170,10 +170,10 @@ class PlantSpecies(Base, FlexibleModel):
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
-        'scientific_name': FieldConfig(write_only=True),
-        'common_name': FieldConfig(write_only=True),
-        'description': FieldConfig(write_only=True),
-        'genus_id':  FieldConfig(write_only=True),
-        'genus': FieldConfig(nested=PlantGenus.schema, include_nested=True)
+        'name': FieldConfig(read_only=True),
+        'common_name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'genus_id':  FieldConfig(read_only=True),
+        # 'genus': FieldConfig(nested=PlantGenus.schema, include_nested=True)
         # 'plants': FieldConfig(nested=Plant.schema)
     })

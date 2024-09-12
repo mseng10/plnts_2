@@ -18,6 +18,7 @@ from logger import setup_logger
 import logging
 
 import numpy as np
+import csv
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,15 +35,13 @@ def create_model(model_path, model_class):
 
     db = Session()
 
-    existing_model_count = db.query(Soil).count()
+    existing_model_count = db.query(model_class).count()
     if existing_model_count > 0:
         logger.error(f"Models already exist for {model_class}, exiting.")
         return
 
-    with open(model_path, 'r', newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        for model in model_class.from_numpy(np.array(list(reader))):
-            db.add(model)
+    for model in model_class.from_csv(model_path):
+        db.add(model)
 
     db.commit()
     db.close()
@@ -57,19 +56,14 @@ def create_all_models():
     logger.info("Beginning to create model.")
 
     models_to_create = [
-        ("data/installable/soils/soils.csv", Soil)
-        ("data/installable/plants/genera.csv", PlantGenus)
-        ("data/installable/plants/genus_types.csv", PlantGenusType)
-        ("data/installable/plants/species.csv", PlantSpecies)
+        ("data/installable/soils/soils.csv", Soil),
+        ("data/installable/plants/genus_types.csv", PlantGenusType),
+        ("data/installable/plants/genera.csv", PlantGenus),
+        ("data/installable/plants/species.csv", PlantSpecies),
     ]
 
-    # Each model creator has it's own thread.
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
-        futures = [executor.submit(create_model, model_path, model_class) for model_path, model_class in models_to_create]
-        
-        # Wait for all creations to complete
-        for future in as_completed(futures):
-            result = future.result()
+    for model_path, model_class in models_to_create:
+        create_model(model_path, model_class)
 
     logger.info("All models have been created.")
 

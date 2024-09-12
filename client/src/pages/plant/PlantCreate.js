@@ -2,18 +2,18 @@ import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import { useNavigate } from "react-router-dom";
 import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../../elements/Form';
-import { usePlants } from '../../hooks/usePlants';
+import { usePlants, useSpecies } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
 import { useMixes } from '../../hooks/useMix';
 import { ServerError, Loading } from '../../elements/Page';
 
 const PlantCreate = () => {
   const navigate = useNavigate();
-  const { genuses, systems, types, isLoading, error, createPlant } = usePlants();
+  const { systems, isLoading, error, createPlant } = usePlants();
+  const { species } = useSpecies();
   const { mixes } = useMixes(true);
 
-  const [genus, setGenus] = useState(null);
-  const [type, setType] = useState(null);
+  const [selectedSpecies, setSelectedSpecies] = useState(null);
   const [system, setSystem] = useState(null);
   const [mix, setMix] = useState(null);
   const [size, setSize] = useState(0);
@@ -26,9 +26,8 @@ const PlantCreate = () => {
     const newPlant = {
       size,
       cost,
-      genus_id: genus.id,
+      species_id: selectedSpecies.id,
       system_id: system.id,
-      type_id: type.id,
       mix_id: mix.id,
       watering,
       phase
@@ -61,17 +60,10 @@ const PlantCreate = () => {
           />
           <div className='right'>
             <AutoCompleteInput
-              label="Genus"
-              value={genus}
-              setValue={setGenus}
-              options={genuses}
-              color="primary"
-            />
-            <AutoCompleteInput
-              label="Type"
-              value={type}
-              setValue={setType}
-              options={types}
+              label="Species"
+              value={selectedSpecies}
+              setValue={setSelectedSpecies}
+              options={species}
               color="primary"
             />
             <AutoCompleteInput

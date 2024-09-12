@@ -8,6 +8,7 @@ from typing import Type, List, Callable, Any, Dict, Optional
 from dataclasses import dataclass
 
 import numpy as np
+import csv
 
 Base = declarative_base()
 
@@ -15,7 +16,6 @@ Base = declarative_base()
 class FieldConfig:
     """ Configuration for each field stored on a model."""
     read_only: bool = False
-    write_only: bool = False
     create_only: bool = False
     filterable: bool = False
     sortable: bool = False
@@ -34,7 +34,7 @@ class ModelConfig:
             return {}
         result = {}
         for k, v in self.fields.items():
-            if not v.write_only and hasattr(obj, k):
+            if hasattr(obj, k):
                 value = getattr(obj, k)
                 if v.nested and (include_nested or v.include_nested):
                     if isinstance(value, list):
@@ -66,15 +66,19 @@ class FlexibleModel:
     """ A model that can be created from various sources. """
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'FlexibleModel':
-        return cls(**data)
+        ret = cls(**data)
+        return ret
 
     @classmethod
     def from_numpy(cls, data: np.ndarray) -> List['FlexibleModel']:
-        columns = data[0]
-        rows = data[1:]
-        if len(array.shape) != 2 or array.shape[1] != len(columns):
-            raise ValueError("Array shape does not match column count")
-        return [cls(**dict(zip(columns, row))) for row in array]
+        if len(data.shape) != 2:
+            raise ValueError("Array must be 2-dimensional")
+    
+        columns = data.dtype.names
+        if columns is None:
+            raise ValueError("Array must have named fields")
+    
+        return [cls(**dict(zip(columns, row))) for row in data]
 
     @classmethod
     def from_request(cls, req: Any) -> 'FlexibleModel':

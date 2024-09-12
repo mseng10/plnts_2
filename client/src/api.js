@@ -49,13 +49,15 @@ export const APIS = {
   soil: {
     getAll: "/soils/"
   },
-  type: {
-    getAll: "/types/",
-    create: "/types/"
+  species: {
+    getAll: "/species/",
+    create: "/species/"
   },
-  genus: {
-    getAll: "/genuses/",
-    create: "/genuses/"
+  generaTypes: {
+    getAll: "/genus_types/",
+    create: "/genus_types/",
+    genera: "/genus_types/{id}/tasks/{eid}/",
+    generaCreate: "/genus_types/{id}/tasks/{eid}/"
   },
   task: {
     updateOne: "/tasks/{id}/",
