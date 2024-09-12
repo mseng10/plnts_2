@@ -38,9 +38,9 @@ class SoilPart(Base, FlexibleModel):
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    mix_id = Column(Integer, ForeignKey('mix.id'), primary_key=True)
+    mix_id = Column(Integer, ForeignKey('mix.id'), nullable=False)
     # mix = relationship("Mix", back_populates="soils")
-    soil_id = Column(Integer, ForeignKey('soil.id'), primary_key=True)
+    soil_id = Column(Integer, ForeignKey('soil.id'), nullable=False)
     # soil = relationship("Soil", back_populates="mixes")
     parts = Column(Integer, default=1, nullable=False)
 
@@ -84,6 +84,6 @@ class Mix(Base, DeprecatableMixin):
         'name': FieldConfig(),
         'description': FieldConfig(),
         'experimental': FieldConfig(),
-        'soil_parts': FieldConfig(nested=SoilPart.schema, include_nested=True, delete_with_parent=True),
+        'soil_parts': FieldConfig(nested=SoilPart.schema, nested_class=SoilPart, include_nested=True, delete_with_parent=True, nested_identifier='mix_id'),
         # parts: Fieldconfig ?
     })

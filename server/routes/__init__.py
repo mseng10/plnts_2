@@ -59,29 +59,34 @@ class GenericCRUD:
                 # Create the main object
                 item = self.model()
                 
+                nested_creations = []
                 for key, value in data.items():
                     if key in self.config.fields:
                         field_config = self.config.fields[key]
                         if field_config.nested:
-                            if isinstance(value, list):
-                                # Handle list of nested objects
-                                nested_items = []
-                                for nested_data in value:
-                                    nested_item = field_config.nested.model()
-                                    for nested_key, nested_value in nested_data.items():
-                                        setattr(nested_item, nested_key, nested_value)
-                                    nested_items.append(nested_item)
-                                setattr(item, key, nested_items)
-                            elif isinstance(value, dict):
-                                # Handle single nested object
-                                nested_item = field_config.nested.model()
-                                for nested_key, nested_value in value.items():
-                                    setattr(nested_item, nested_key, nested_value)
-                                setattr(item, key, nested_item)
+                            nested_creations.append((field_config, value))
                         else:
                             setattr(item, key, value)
                 
                 sess.add(item)
+                sess.commit()
+                for field_config, nested_creation in nested_creations:
+                    if isinstance(nested_creation, list):
+                        # Handle list of nested objects
+                        for nested_data in value:
+                            nested_item = field_config.nested_class()
+                            for nested_key, nested_value in nested_data.items():
+                                setattr(nested_item, nested_key, nested_value)
+                            setattr(nested_item, field_config.nested_identifier, item.id)
+                            sess.add(nested_item)
+                    elif isinstance(nested_creation, dict):
+                        nested_item = field_config.nested_class()
+                        for nested_key, nested_value in nested_creation.items():
+                            setattr(nested_item, nested_key, nested_value)
+                        setattr(nested_item, field_config.nested_identifier, item.id)
+                        sess.add(nested_item)
+
+
                 sess.commit()
                 
                 # Refresh the item to ensure all relationships are loaded

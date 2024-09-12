@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { simpleFetch, simplePost, apiBuilder, APIS } from '../api';
 
-export const useMixes = (query) => {
+export const useMixes = () => {
   const [mixes, setMixes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!query) return;
 
     setIsLoading(true);
     setError(null);
@@ -18,12 +17,12 @@ export const useMixes = (query) => {
       })
       .finally(() => 
         setIsLoading(false));
-  }, [query]);
+  }, []);
 
   const createMix = async (newMix) => {
     setIsLoading(true);
     setError(null);
-    simplePost("/mixes/", newMix)
+    simplePost(apiBuilder(APIS.mix.create).get(), newMix)
       .then(data => 
         setMixes(prevMixes => [...prevMixes, data]))
       .catch(error => {

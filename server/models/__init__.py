@@ -20,6 +20,8 @@ class FieldConfig:
     filterable: bool = False
     sortable: bool = False
     nested: Optional['ModelConfig'] = None
+    nested_class:Any = None
+    nested_identifier: str = None
     include_nested: bool = False
     delete_with_parent: bool = False  # New attribute
 
