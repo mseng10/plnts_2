@@ -4,10 +4,10 @@ export const APIS = {
   plant: {
     getAll: "/plants/",
     create: "/plants/",
-    getOne: "/plants/{id}",
-    updateOne: "/plants/{id}",
+    getOne: "/plants/{id}/",
+    updateOne: "/plants/{id}/",
     deprecateOne: "/plants/{id}/deprecate/",
-    waterMany: "/plants/water",
+    waterMany: "/plants/water/",
     deprecateMany: "/plants/deprecate/"
   },
   system: {
@@ -60,9 +60,7 @@ export const APIS = {
     generaCreate: "/genus_types/{id}/tasks/{eid}/"
   },
   task: {
-    updateOne: "/tasks/{id}/",
-    deprecateOne: "/todos/{id}/tasks/{eid}/",
-    undeprecateOne: "/todos/{id}/tasks/{eid}/"
+    updateOne: "/todos/{id}/tasks/{eid}/"
   },
 }
 

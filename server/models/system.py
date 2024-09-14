@@ -59,7 +59,6 @@ class System(Base, DeprecatableMixin, FlexibleModel):
 
     # Internal
     container_id = Column(String(64), unique=True, nullable=False)
-    is_local = Column(Boolean, default=False)
     url = Column(String(200), nullable=False)
 
     # Plants belonging to this system
