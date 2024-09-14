@@ -18,12 +18,12 @@ from models.alert import PlantAlert
 from models.todo import Todo
 from models.mix import Mix, Soil, SoilPart
 
-from db import init_db, Session
+from shared.db import init_db, Session
 
-from logger import setup_logger
+from shared.logger import setup_logger
 import logging
 
-from discover import discover_systems
+from shared.discover import discover_systems
 
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)

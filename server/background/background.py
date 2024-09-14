@@ -12,10 +12,10 @@ from models.alert import PlantAlert
 from models.todo import Todo, Task
 from models.background.background import Ba
 
-from db import init_db
-from db import Session
+from shared.db import init_db
+from shared.db import Session
 
-from logger import setup_logger
+from shared.logger import setup_logger
 import logging
 
 

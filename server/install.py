@@ -11,10 +11,10 @@ from models.mix import Soil
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from db import init_db
-from db import Session
+from shared.db import init_db
+from shared.db import Session
 
-from logger import setup_logger
+from shared.logger import setup_logger
 import logging
 
 import numpy as np

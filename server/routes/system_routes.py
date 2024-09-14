@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from db import Session
-from logger import logger
+from shared.db import Session
+from shared.logger import logger
 
 from models.system import System, Light
 from routes import GenericCRUD, APIBuilder
