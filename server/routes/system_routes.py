@@ -45,6 +45,56 @@ def get_systems_alerts(system_id):
     # Return JSON response
     return jsonify(plant_alerts_json)
 
+@APIBuilder.register_custom_route(system_bp, "<int:system_id/video_feed/", ["GET"])
+def get_video_feed(system_id):
+    session = Session()
+    system = session.query(System).get(system_id)
+    session.close()
+    
+    if not system:
+        return "Invalid adaptor ID", 400
+    
+    if system.url == 'local':
+        return Response(generate_frames(),
+                        mimetype='multipart/x-mixed-replace; boundary=frame')
+    
+    # Essentially a proxy
+    def generate():
+        resp = requests.get(f"{system.url}/video_feed", stream=True)
+        for chunk in resp.iter_content(chunk_size=1024):
+            yield chunk
+
+    return Response(generate(), 
+                    mimetype='multipart/x-mixed-replace; boundary=frame') 
+
+@APIBuilder.register_custom_route(system_bp, "<int:system_id/sensor_data/", ["GET"])
+def get_sensor_data(system_id):
+    session = Session()
+    system = session.query(System).get(system_id)
+    
+    if not system:
+        session.close()
+        return "Invalid camera ID", 400
+    
+    try:
+        if system.url == 'local':
+            data = read_sensor()
+        else:
+            resp = requests.get(f"{system.url}/sensor_data")
+            data = resp.json()
+        
+        system.last_temperature = data['temperature']
+        system.last_humidity = data['humidity']
+        system.updated_on = datetime.utcnow()
+        
+        session.commit()
+        session.close()
+        
+        return jsonify(data)
+    except Exception as e:
+        session.close()
+        return jsonify({"error": str(e)}), 500
+
 light_bp = Blueprint('lights', __name__)
 light_crud = GenericCRUD(Light, Light.schema)
 APIBuilder.register_resource(light_bp, 'lights', light_crud, ["GET", "GET_MANY", "POST"])

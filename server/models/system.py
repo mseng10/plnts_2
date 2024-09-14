@@ -49,9 +49,18 @@ class System(Base, DeprecatableMixin, FlexibleModel):
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now)
 
-    # Controlled Factors
-    humidity = Column(Integer(), default=0, nullable=False)  # %
-    temperature = Column(Integer(), default=0, nullable=False)  # F
+    # Controlled Factors - maybe move to a 
+    target_humidity = Column(Integer(), default=0, nullable=False)  # %
+    target_temperature = Column(Integer(), default=0, nullable=False)  # F
+
+    # Latest updates (might break out at some point..)
+    last_humidity = Column(Integer(), nullable=True)  # %
+    last_temperature = Column(Integer(), nullable=True)  # F
+
+    # Internal
+    container_id = Column(String(64), unique=True, nullable=False)
+    is_local = Column(Boolean, default=False)
+    url = Column(String(200), nullable=False)
 
     # Plants belonging to this system
     plants: Mapped[List["Plant"]] = relationship(
@@ -72,10 +81,15 @@ class System(Base, DeprecatableMixin, FlexibleModel):
         'id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
+        'last_humidity': FieldConfig(read_only=True),
+        'last_temperature': FieldConfig(read_only=True),
+        'container_id': FieldConfig(interal_only=True),
+        'is_local': FieldConfig(interal_only=True),
+        'url': FieldConfig(interal_only=True),
         'name': FieldConfig(),
         'description': FieldConfig(),
-        'humidity': FieldConfig(),
-        'temperature': FieldConfig(),
+        'target_humidity': FieldConfig(),
+        'target_temperature': FieldConfig(),
         'duration': FieldConfig(),
         'distance': FieldConfig(),
         # 'plants': FieldConfig(nested=Plant.schema, include_nested=True, delete_with_parent=True) 

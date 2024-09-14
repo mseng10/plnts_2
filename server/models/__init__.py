@@ -17,8 +17,8 @@ class FieldConfig:
     """ Configuration for each field stored on a model."""
     read_only: bool = False
     create_only: bool = False
-    filterable: bool = False
-    sortable: bool = False
+    interal_only: bool = False
+    # Probably add these to NestedFieldConfig object?
     nested: Optional['ModelConfig'] = None
     nested_class:Any = None
     nested_identifier: str = None
@@ -43,7 +43,7 @@ class ModelConfig:
                         result[k] = [v.nested.serialize(item, depth+1, include_nested) for item in value]
                     elif value is not None:
                         result[k] = v.nested.serialize(value, depth+1, include_nested)
-                else:
+                elif not v.interal_only:
                     result[k] = value
         return result
 
@@ -60,7 +60,7 @@ class ModelConfig:
                             result[k] = [field_config.nested.deserialize(item, is_create, depth+1) for item in v]
                         elif v is not None:
                             result[k] = field_config.nested.deserialize(v, is_create, depth+1)
-                    else:
+                    elif not v.interal_only:
                         result[k] = v
         return result
 
