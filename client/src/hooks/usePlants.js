@@ -75,6 +75,7 @@ export const usePlants = (initialPlants) => {
 
   /** Update a system with a new version.  */
   const updatePlant = async (updatedPlant) => {
+    console.log(updatedPlant);
     const id = updatedPlant.id;
     setIsLoading(true);
     setError(null);

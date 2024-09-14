@@ -5,14 +5,21 @@ import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../..
 import { usePlants } from '../../hooks/usePlants';
 import { PHASE_LABELS } from '../../constants';
 import { ServerError, Loading } from '../../elements/Page';
+import { useMixes } from '../../hooks/useMix';
+import { useSpecies } from '../../hooks/usePlants';
 
 const PlantUpdate = ({ plantProp }) => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { plants, genuses, systems, types, isLoading, error, updatePlant } = usePlants();
+  const { plants, systems, isLoading, error, updatePlant } = usePlants();
 
-  const [genus, setGenus] = useState(null);
-  const [type, setType] = useState(null);
+  // Associated Models
+  const {mixes} = useMixes();
+  const {species} = useSpecies();
+
+  // Fields
+  const [selectedSpecies, setSelectedSpecies] = useState(null);
+  const [mix, setMix] = useState(null);
   const [system, setSystem] = useState(null);
   const [size, setSize] = useState(0);
   const [cost, setCost] = useState(0);
@@ -21,9 +28,10 @@ const PlantUpdate = ({ plantProp }) => {
 
   useEffect(() => {
     const initializeForm = (plant) => {
+      console.log(plant.system_id);
       if (plant) {
-        setGenus(genuses.find(_g => _g.id === plant.genus_id));
-        setType(types.find(_t => _t.id === plant.type_id));
+        setMix(mixes.find(_m => _m.id === plant.mix_id));
+        setSelectedSpecies(species.find(_s => _s.id === plant.species_id));
         setSystem(systems.find(_s => _s.id === plant.system_id));
         setSize(plant.size);
         setCost(plant.cost);
@@ -40,21 +48,24 @@ const PlantUpdate = ({ plantProp }) => {
         initializeForm(plant);
       }
     }
-  }, [plantProp, plants, id, genuses, types, systems]);
+  }, [plantProp, plants, id, species, mixes, systems]);
 
   const handleSubmit = async (event) => {
+    console.log(system);
     event.preventDefault();
     const updatedPlant = {
+      id,
       size,
       cost,
-      genus_id: genus.id,
+      mix_id: mix.id,
       system_id: system.id,
-      type_id: type.id,
+      species_id: selectedSpecies.id,
       watering,
       phase
     };
+    console.log(updatedPlant.system_id);
     try {
-      await updatePlant(plantProp ? plantProp.id : id, updatedPlant);
+      await updatePlant(updatedPlant);
       navigate("/");
     } catch (error) {
       console.error('Error updating plant:', error);
@@ -80,17 +91,17 @@ const PlantUpdate = ({ plantProp }) => {
           />
           <div className='right'>
             <AutoCompleteInput
-              label="Genus"
-              value={genus}
-              setValue={setGenus}
-              options={genuses}
+              label="Species"
+              value={selectedSpecies}
+              setValue={setSelectedSpecies}
+              options={species}
               color="primary"
             />
             <AutoCompleteInput
-              label="Type"
-              value={type}
-              setValue={setType}
-              options={types}
+              label="Mix"
+              value={mix}
+              setValue={setMix}
+              options={mixes}
               color="primary"
             />
             <AutoCompleteInput

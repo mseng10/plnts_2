@@ -80,6 +80,8 @@ class Plant(Base, DeprecatableMixin, FlexibleModel):
         'identity': FieldConfig(),
         'phase': FieldConfig(),
         'size': FieldConfig(),
+        'system_id': FieldConfig(),
+        'mix_id': FieldConfig()
         # TODO:
         # 'species': FieldConfig(nested=Type.schema)
         # plant_alerts: FieldConfig(nested=PlantAlert.schema)
