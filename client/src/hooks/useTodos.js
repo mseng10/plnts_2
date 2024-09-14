@@ -88,10 +88,11 @@ export const useTasks = (initialTasks) => {
   };
 
   /** Un-resolve the todo's task. */
-  const updateTask = async (id, eid) => {
+  const updateTask = async (todo_id, task) => {
+    const id = task.id;
     setIsLoading(true);
     setError(null);
-    simplePost(apiBuilder(APIS.task.updateOne).setId(id).setEmbedId(eid).get())
+    simplePatch(apiBuilder(APIS.task.updateOne).setId(todo_id).setEmbedId(id).get(), task)
       .then(data => 
         setTasks(prevTasks => prevTasks.map(task => 
           task.id === id ? { ...task, ...data } : task
