@@ -10,7 +10,7 @@ export const useTodos = () => {
     setIsLoading(true);
     setError(null);
     simpleFetch(apiBuilder(APIS.todo.getAll).get())
-      .then(resp => setTodos(resp["items"]))
+      .then(setTodos)
       .catch(error => {
         setError(error);
       })

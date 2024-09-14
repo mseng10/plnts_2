@@ -63,7 +63,7 @@ class Todo(Base, DeprecatableMixin, FlexibleModel):
         'due_on': FieldConfig(),
         'name': FieldConfig(),
         'description': FieldConfig(),
-        'tasks': FieldConfig(nested=Task.schema, include_nested=True, delete_with_parent=True) 
+        'tasks': FieldConfig(nested=Task.schema, nested_class=Task, include_nested=True, delete_with_parent=True, nested_identifier='todo_id'),
     })
 
     def __repr__(self):
