@@ -31,7 +31,7 @@ logger = setup_logger(__name__, logging.DEBUG)
 # Initialize DB connection
 init_db()
 
-#
+# Probably abstract this out to a Role class and have this be in the master role class
 discover_systems() # Maybe put this into the installable?
 
 # Create Flask app
@@ -44,7 +44,6 @@ from routes.mix_routes import bp as mix_bp
 from routes.stat_routes import bp as stat_bp
 from routes.installable_model_routes import genus_types_bp, species_bp, soils_bp, genus_bp
 from routes.alert_routes import bp as alert_bp
-# from routes.hardware_routes import camera_bp, sensore_data_bp, live_bp
 
 # Models
 app.register_blueprint(system_bp)
@@ -55,11 +54,6 @@ app.register_blueprint(mix_bp)
 app.register_blueprint(stat_bp)
 app.register_blueprint(alert_bp)
 
-# Hardware Routes
-# app.register_blueprint(camera_bp)
-# app.register_blueprint(sensore_data_bp)
-# app.register_blueprint(live_bp)
-
 # Installables
 app.register_blueprint(genus_types_bp)
 app.register_blueprint(genus_bp)
@@ -67,8 +61,6 @@ app.register_blueprint(species_bp)
 app.register_blueprint(soils_bp)
 
 CORS(app)
-
-
 
 @app.route("/meta/", methods=["GET"])
 def get_meta():

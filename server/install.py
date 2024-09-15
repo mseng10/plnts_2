@@ -1,6 +1,6 @@
 """
-Process dedicated to doing background processing on this application.
-This creates alerts, manages connections to active systems, etc.
+Process dedicated to installing static data (e.g. genuses, species, etc).
+Could eventually see this moving to cloud.
 """
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -37,6 +37,7 @@ def create_model(model_path, model_class):
 
     existing_model_count = db.query(model_class).count()
     if existing_model_count > 0:
+        # NOTE: Probably make this more flexible in the future, but rn, just 1 time install (e.g. no rolling upgrades - upgrade.py?)
         logger.error(f"Models already exist for {model_class}, exiting.")
         return
 

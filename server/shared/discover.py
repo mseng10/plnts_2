@@ -1,6 +1,7 @@
 import os
-import docker
+# import docker
 
+from shared.db import Session
 from models.system import System
 
 
@@ -8,6 +9,9 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'docker')
 USE_LOCAL_HARDWARE = os.getenv('USE_LOCAL_HARDWARE', 'false').lower() == 'true'
 
 def discover_systems():
+    """
+    Meant to be ran from the master roled node (system) in a cluster of nodes (systems).
+    """
     session = Session()
     
     if USE_LOCAL_HARDWARE:
@@ -17,7 +21,11 @@ def discover_systems():
                 name='Local System', 
                 description='System created by service. Please update accordingly', 
                 url='local', 
-                container_id='local'
+                container_id='local',
+                target_humidity=-1,
+                target_temperature=-1,
+                duration=-1,
+                distance=-1
             )
             session.add(local_system)
     
@@ -41,7 +49,7 @@ def discover_systems():
     #             camera.url = url
     #             camera.container_id = pod.metadata.uid
     
-    elif ENVIRONMENT == 'docker':
+    # elif ENVIRONMENT == 'docker':
         # TODO: First
         # client = docker.from_env()
         

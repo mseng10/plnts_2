@@ -1,24 +1,14 @@
 """
-Process dedicated to doing background processing on this application.
-This creates alerts, manages connections to active systems, etc.
+General utility methods
 """
 import cv2
-
 import time
 import adafruit_dht
 
-
-# Set up the camera
-# camera = cv2.VideoCapture(0)  # Use 0 for the first camera
-
-# Set up the DHT22 sensor
-# dht_device = adafruit_dht.DHT22(board.D4)
-# if dht_device == None:
-#     dht_device = adafruit_dht.DHT22(pin.D4)
-
-def generate_frames():
+def generate_frames(id=0):
+    """ Access the camera of this application. """
     try:
-        camera = cv2.VideoCapture(0)  # Use 0 for the first camera
+        camera = cv2.VideoCapture(id)
         if not camera.isOpened():
             logger.error("Failed to open camera")
             return
@@ -46,6 +36,8 @@ def generate_frames():
             camera.release()
 
 def read_sensor(retries=5, delay_seconds=2):
+    """ Read a DHT22 sensor's data (humidity and temperature). """
+    # NOTE: Should make this a normal import.
     import board
     dht_device = adafruit_dht.DHT22(board.D4)
     if dht_device == None:

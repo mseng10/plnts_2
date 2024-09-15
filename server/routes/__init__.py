@@ -42,7 +42,7 @@ class GenericCRUD:
                         query = query.outerjoin(relationship_attr).options(contains_eager(relationship_attr))
 
             for field, config in self.config.fields.items():
-                if config.filterable and field in request.args:
+                if field in request.args:
                     query = query.filter(getattr(self.model, field) == request.args[field])
 
             items = query.all()
@@ -212,7 +212,7 @@ class APIBuilder:
 
     @staticmethod
     def register_custom_route(blueprint: Blueprint, route: str, methods: List[str]):
-        """Custom route on this bp. """
+        """ Custom route on this bp. """
         def decorator(handler: Callable):
             blueprint.route(f'/{route}', methods=methods)(handler)
             return handler

@@ -1,5 +1,5 @@
 """
-The purpose of running this api server. 
+Adaptor server.
 """
 
 import os
@@ -18,13 +18,19 @@ app = Flask(__name__)
 
 @app.route('/video_feed')
 def video_feed():
+    """
+    Return this server's camera (defaulting to single camera support for now).
+    """
     logger.info("Received request to read local camera")
     return Response(generate_frames(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/sensor_data')
 def sensor_data():
-    logger.info("Received request to read dht sensor")
+    """
+    Return this server's dht sensor data (defaulting to single dht support for now).
+    """
+    logger.info("Received request to read local dht sensor")
     return jsonify(read_sensor())
 
 CORS(app)

@@ -45,16 +45,16 @@ def get_systems_alerts(system_id):
     # Return JSON response
     return jsonify(plant_alerts_json)
 
-@APIBuilder.register_custom_route(system_bp, "<int:system_id/video_feed/", ["GET"])
+@APIBuilder.register_custom_route(system_bp, "<int:system_id>/video_feed/", ["GET"])
 def get_video_feed(system_id):
     session = Session()
     system = session.query(System).get(system_id)
     session.close()
     
     if not system:
-        return "Invalid adaptor ID", 400
+        return "Invalid system ID", 400
     
-    if system.url == 'local':
+    if system.container_id == 'local':
         return Response(generate_frames(),
                         mimetype='multipart/x-mixed-replace; boundary=frame')
     
@@ -67,7 +67,7 @@ def get_video_feed(system_id):
     return Response(generate(), 
                     mimetype='multipart/x-mixed-replace; boundary=frame') 
 
-@APIBuilder.register_custom_route(system_bp, "<int:system_id/sensor_data/", ["GET"])
+@APIBuilder.register_custom_route(system_bp, "<int:system_id>/sensor_data/", ["GET"])
 def get_sensor_data(system_id):
     session = Session()
     system = session.query(System).get(system_id)
