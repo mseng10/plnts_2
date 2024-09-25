@@ -6,13 +6,16 @@ import { EditSharp, WaterDropOutlined, DeleteOutlineSharp } from '@mui/icons-mat
 import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
 import DeprecatePlantsForm from '../../modals/plant/DeprecatePlantsForm';
 import { PHASE_LABELS } from '../../constants';
-import { usePlants } from '../../hooks/usePlants';
+import { usePlants, useSpecies } from '../../hooks/usePlants';
 import { useNavigate } from "react-router-dom";
 import { ServerError, NoData, Loading} from '../../elements/Page';
+import { useMixes } from '../../hooks/useMix';
 
 const Plants = ({ initialPlants }) => {
   const navigate = useNavigate();
-  const { plants, genuses, systems, types, isLoading, error } = usePlants(initialPlants);
+  const { plants, systems, isLoading, error } = usePlants(initialPlants);
+  const {species} = useSpecies();
+  const {mixes} = useMixes();
   const [selectedPlants, setSelectedPlants] = useState([]);
   const [formStates, setFormStates] = useState({
     updatePlant: false,
@@ -22,22 +25,22 @@ const Plants = ({ initialPlants }) => {
 
   const columns = useMemo(() => [
     {
-      field: 'type_id',
+      field: 'species_id',
       headerName: 'Type',
       width: 150,
-      valueGetter: ({ value }) => types.find(_t => _t.id === value)?.name || 'N/A',
-    },
-    {
-      field: 'genus_id',
-      headerName: 'Genus',
-      width: 150,
-      valueGetter: ({ value }) => genuses.find(_g => _g.id === value)?.name || 'N/A',
+      valueGetter: ({ value }) => species.find(_s => _s.id === value)?.name || 'N/A',
     },
     {
       field: 'system_id',
       headerName: 'System',
       width: 150,
       valueGetter: ({ value }) => systems.find(_s => _s.id === value)?.name || 'N/A',
+    },
+    {
+      field: 'mix_id',
+      headerName: 'Mix',
+      width: 150,
+      valueGetter: ({ value }) => mixes.find(_m => _m.id === value)?.name || 'N/A',
     },
     { field: 'size', headerName: 'Size', width: 20 },
     { field: 'cost', headerName: 'Cost', type: 'number', width: 20 },
@@ -50,7 +53,7 @@ const Plants = ({ initialPlants }) => {
       width: 120,
       valueGetter: ({ value }) => PHASE_LABELS[value] || 'N/A',
     },
-  ], [types, genuses, systems]);
+  ], [species, mixes, systems]);
 
   const CustomToolbar = () => (
     <GridToolbarContainer>
@@ -94,7 +97,9 @@ const Plants = ({ initialPlants }) => {
           checkboxSelection
           disableRowSelectionOnClick
           onRowSelectionModelChange={(newSelectionModel) => {
-            const newSelectedPlants = newSelectionModel.map(index => plants[index - 1]);
+            console.log(newSelectionModel);
+            const newSelectedPlants = newSelectionModel.map(index => plants[index - 2]); // why
+            console.log(newSelectedPlants)
             setSelectedPlants(newSelectedPlants);
           }}
           slots={{ toolbar: CustomToolbar }}

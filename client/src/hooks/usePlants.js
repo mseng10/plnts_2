@@ -3,9 +3,7 @@ import { simplePost, simpleFetch, simplePatch, APIS, apiBuilder } from '../api';
 
 export const usePlants = (initialPlants) => {
   const [plants, setPlants] = useState([]);
-  const [genuses, setGenuses] = useState([]);
   const [systems, setSystems] = useState([]);
-  const [types, setTypes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -14,21 +12,16 @@ export const usePlants = (initialPlants) => {
       setIsLoading(true);
       setError(null);
       try {
-        console.log(initialPlants);
         if (!initialPlants) {
           const plantsResponse = await fetch(apiBuilder(APIS.plant.getAll).get());
           setPlants(await plantsResponse.json());
         } else {
           setPlants(initialPlants);
         }
-        const [genusResponse, systemResponse, typeResponse] = await Promise.all([
-          fetch(apiBuilder(APIS.genus.getAll).get()),
-          fetch(apiBuilder(APIS.system.getAll).get()),
-          fetch(apiBuilder(APIS.type.getAll).get())
+        const [systemResponse] = await Promise.all([
+          fetch(apiBuilder(APIS.system.getAll).get())
         ]);
-        setGenuses(await genusResponse.json());
         setSystems(await systemResponse.json());
-        setTypes(await typeResponse.json());
       } catch (error) {
         console.error('Error fetching data:', error);
         setError('Failed to fetch data. Please try again later.');
@@ -82,6 +75,7 @@ export const usePlants = (initialPlants) => {
 
   /** Update a system with a new version.  */
   const updatePlant = async (updatedPlant) => {
+    console.log(updatedPlant);
     const id = updatedPlant.id;
     setIsLoading(true);
     setError(null);
@@ -99,9 +93,7 @@ export const usePlants = (initialPlants) => {
 
   return { plants,
     setPlants,
-    genuses,
     systems, 
-    types,
     isLoading,
     error,
     createPlant,
@@ -112,8 +104,8 @@ export const usePlants = (initialPlants) => {
 };
 
 /** Query a all genuses. */
-export const useGenuses = () => {
-  const [genuses, setGenuses] = useState([]);
+export const useGeneraTypes = () => {
+  const [genera, setGenera] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -122,7 +114,7 @@ export const useGenuses = () => {
     setIsLoading(true);
     setError(null);
     simpleFetch(apiBuilder(APIS.genus.getAll).get())
-      .then(setGenuses)
+      .then(setGenera)
       .catch(error => {
         setError(error);
       })
@@ -131,12 +123,12 @@ export const useGenuses = () => {
   }, []);
 
   /** Create the provided genus. */
-  const createGenus = async (newGenus) => {
+  const createGenera = async (newGenus) => {
     setIsLoading(true);
     setError(null);
     simplePost(apiBuilder(APIS.genus.getAll).get(), newGenus)
       .then(data => 
-        setGenuses(prevGenuses => [...prevGenuses, data]))
+        setGenera(prevGenuses => [...prevGenuses, data]))
       .catch(error => {
         setError(error);
       })
@@ -144,20 +136,19 @@ export const useGenuses = () => {
         setIsLoading(false))
   };
   
-  return { genuses, isLoading, error, createGenus, setError };
+  return { genera, isLoading, error, createGenera, setError };
 };
 
-export const useTypes = () => {
-  const [types, setTypes] = useState([]);
+export const useSpecies = () => {
+  const [species, setSpecies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   
-  /** Initialize the types. */
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    simpleFetch(apiBuilder(APIS.type.getAll).get())
-      .then(setTypes)
+    simpleFetch(apiBuilder(APIS.species.getAll).get())
+      .then(setSpecies)
       .catch(error => {
         setError(error);
       })
@@ -166,12 +157,12 @@ export const useTypes = () => {
   }, []);
 
   /** Create the provided type. */
-  const createType = async (newType) => {
+  const createSpecies = async (newType) => {
     setIsLoading(true);
     setError(null);
-    simplePost(apiBuilder(APIS.type.create).get(), newType)
+    simplePost(apiBuilder(APIS.species.create).get(), newType)
       .then(data => 
-        setTypes(prevGenuses => [...prevGenuses, data]))
+        setSpecies(prevSpecies => [...prevSpecies, data]))
       .catch(error => {
         setError(error);
       })
@@ -179,5 +170,5 @@ export const useTypes = () => {
         setIsLoading(false))
   };
   
-  return { types, isLoading, error, createType, setError };
+  return { species, isLoading, error, createSpecies, setError };
 };

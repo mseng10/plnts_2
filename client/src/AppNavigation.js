@@ -31,8 +31,8 @@ function AppNavigation({ window }) {
     { id: 'create', icon: 'create', color: 'primary', subMenu: [
       { id: 'plants', url: '/plants/create', icon: 'plant', label: 'Plant' },
       { id: 'mix', url: '/mixes/create', icon: 'mix', label: 'Mix' },
-      { id: 'type', url: '/types/create', icon: 'type', label: 'Type' },
-      { id: 'genus', url: '/genuses/create', icon: 'genus', label: 'Genus' },
+      // { id: 'type', url: '/types/create', icon: 'type', label: 'Type' },
+      // { id: 'genus', url: '/genuses/create', icon: 'genus', label: 'Genus' },
       { id: 'system', url: '/systems/create', icon: 'system', label: 'System' },
       { id: 'light', url: '/lights/create', icon: 'light', label: 'Light' },
       { id: 'todo', url: '/todos/create', icon: 'todo', label: 'Todo' },

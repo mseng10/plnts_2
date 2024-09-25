@@ -12,7 +12,7 @@ def setup_logger(name=__name__, level=logging.INFO):
     Returns:
     logging.Logger: A configured logger instance.
     """
-    # Create a custom logger
+    # Custom logger
     logger = logging.getLogger(name)
 
     # Set the logging level
@@ -35,5 +35,5 @@ def setup_logger(name=__name__, level=logging.INFO):
 
     return logger
 
-# Create a default logger
+# Default logger
 logger = setup_logger()

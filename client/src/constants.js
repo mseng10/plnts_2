@@ -35,3 +35,8 @@ export const ICON_STYLE = {
   transform: 'translate(-50%, -50%)',
   fontSize: '32px',
 };
+
+export const PANEL_TYPES = {
+  small: { width: 256, height: 312, borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  },
+  medium: { width: 512, height: 312, borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }
+}

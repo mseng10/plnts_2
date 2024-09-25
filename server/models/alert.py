@@ -2,48 +2,20 @@
 Module defining models for plants.
 """
 
-# Standard library imports
 from datetime import datetime
+from typing import List
 
-# Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
-from models.plant import Base, DeprecatableMixin
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-class Todo(Base, DeprecatableMixin):
-    """TOOO model."""
-
-    __tablename__ = "todo"
-
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    due_on = Column(DateTime(), default=None, nullable=True)
-    name = Column(String(100), nullable=False)
-    description = Column(String(400), nullable=True)
-
-    def __repr__(self):
-        return f"{self.name}"
-
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on,
-            "deprecated": self.deprecated,
-            "deprecated_on": self.deprecated_on,
-            "due_on": self.due_on,
-            "description": self.description,
-            "name": self.name
-        }
+from models.plant import DeprecatableMixin
+from models import FlexibleModel, ModelConfig, FieldConfig, Base
 
 class Alert(Base, DeprecatableMixin):
     """Alert Base Class"""
     __tablename__ = "alert"
 
     id = Column(Integer, primary_key=True)
-
     created_on = Column(DateTime(), default=datetime.now)
     updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     alert_type = Column(String(50))
@@ -53,15 +25,12 @@ class Alert(Base, DeprecatableMixin):
         'polymorphic_on': alert_type
     }
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on,
-            "alert_type": self.alert_type        
-        }
-
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'alert_type': FieldConfig(read_only=True)
+    })
 
 class PlantAlert(Alert):
     """Plant alert model."""
@@ -85,10 +54,9 @@ class PlantAlert(Alert):
     def __repr__(self):
         return "plant_alert"
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "plant_id": self.plant_id,
-            "system_id": self.system_id,
-        }
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'plant_alert_type': FieldConfig(read_only=True),
+        'plant_id': FieldConfig(read_only=True),
+        'system_id': FieldConfig(read_only=True)
+    })

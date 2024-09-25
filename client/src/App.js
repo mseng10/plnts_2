@@ -18,13 +18,13 @@ import Box from '@mui/material/Box';
 import AppNavigation from './AppNavigation';
 import PlantCreate from './pages/plant/PlantCreate';
 import SystemCreate from './pages/system/SystemCreate';
-import TypeCreate from './pages/plant/type/TypeCreate';
+// import TypeCreate from './pages/plant/type/TypeCreate';
 import LightCreate from './pages/system/light/LightCreate';
-import GenusCreate from './pages/plant/genus/GenusCreate';
+// import GenusCreate from './pages/plant/genus/GenusCreate';
 import PlantUpdate from './pages/plant/PlantUpdate';
 import SystemUpdate from './pages/system/SystemUpdate';
-import TodoUpdate from './pages/todo/TodoUpdate';
 import TodoCreate from './pages/todo/TodoCreate';
+import TodoUpdate from './pages/todo/TodoUpdate';
 import MixCreate from './pages/mix/MixCreate';
 import Stats from './pages/stat/Stats';
 
@@ -152,9 +152,9 @@ function App() {
             <Route path="/plants/:id" element={<PlantUpdate />} />
             <Route path="/plants/create" element={<PlantCreate />} />
 
-            <Route path="/types/create" element={<TypeCreate /> } />
+            {/* <Route path="/species/create" element={<SpeciesCreate /> } /> */}
 
-            <Route path="/genuses/create" element={<GenusCreate /> } />
+            {/* <Route path="/genera/create" element={<GeneraCreate /> } /> */}
 
             <Route path="/mixes/create" element={<MixCreate /> } />
           </Routes>

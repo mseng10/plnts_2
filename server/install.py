@@ -1,23 +1,24 @@
 """
-Process dedicated to doing background processing on this application.
-This creates alerts, manages connections to active systems, etc.
+Process dedicated to installing static data (e.g. genuses, species, etc).
+Could eventually see this moving to cloud.
 """
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-# from models.plant import Genus, Type
+from models.plant import PlantGenusType, PlantGenus, PlantSpecies
 from models.mix import Soil
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from db import init_db
-from db import Session
+from shared.db import init_db
+from shared.db import Session
 
-from logger import setup_logger
+from shared.logger import setup_logger
 import logging
 
 import numpy as np
+import csv
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,14 +35,14 @@ def create_model(model_path, model_class):
 
     db = Session()
 
-    existing_model_count = db.query(Soil).count()
+    existing_model_count = db.query(model_class).count()
     if existing_model_count > 0:
+        # NOTE: Probably make this more flexible in the future, but rn, just 1 time install (e.g. no rolling upgrades - upgrade.py?)
         logger.error(f"Models already exist for {model_class}, exiting.")
         return
 
-    model_data = np.genfromtxt(model_path, delimiter=',', dtype=None, encoding=None, names=True)
-    for model in model_data:
-        db.add(model_class.from_numpy(model))
+    for model in model_class.from_csv(model_path):
+        db.add(model)
 
     db.commit()
     db.close()
@@ -56,17 +57,14 @@ def create_all_models():
     logger.info("Beginning to create model.")
 
     models_to_create = [
-        ("data/soils/soil_matters.csv", Soil)
-        # TODO: Genus,Type
+        ("data/installable/soils/soils.csv", Soil),
+        ("data/installable/plants/genus_types.csv", PlantGenusType),
+        ("data/installable/plants/genera.csv", PlantGenus),
+        ("data/installable/plants/species.csv", PlantSpecies),
     ]
 
-    # Each model creator has it's own thread.
-    with ThreadPoolExecutor(max_workers=num_threads) as executor:
-        futures = [executor.submit(create_model, model_path, model_class) for model_path, model_class in models_to_create]
-        
-        # Wait for all creations to complete
-        for future in as_completed(futures):
-            result = future.result()
+    for model_path, model_class in models_to_create:
+        create_model(model_path, model_class)
 
     logger.info("All models have been created.")
 

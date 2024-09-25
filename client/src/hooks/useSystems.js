@@ -11,7 +11,7 @@ export const useSystems = () => {
   const createSystem = async (newSystem) => {
     setIsLoading(true);
     setError(null);
-    simplePost("/systems/", newSystem)
+    simplePost(apiBuilder(APIS.system.create).get(), newSystem)
       .then(data => 
         setSystems(prevSystems => [...prevSystems, data]))
       .catch(error => {

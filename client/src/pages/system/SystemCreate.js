@@ -17,8 +17,8 @@ const NewSystemForm = () => {
   // Form Fields
   const [name, setName] = useState('');
   const [description, setDescription] = useState('')
-  const [humidity, setHumidity] = useState(60);
-  const [temperature, setTempurature] = useState(68);
+  const [target_humidity, setHumidity] = useState(60);
+  const [target_temperature, setTempurature] = useState(68);
   const [duration, setDuration] = useState(12);
   const [distance, setDistance] = useState(24);
 
@@ -36,12 +36,12 @@ const NewSystemForm = () => {
     event.preventDefault();
     try {
       await createSystem({
-        name: name,
-        description: description,
-        humidity: humidity,
-        temperature: temperature,
-        distance: distance,
-        duration: duration,
+        name,
+        description,
+        target_humidity,
+        target_temperature,
+        distance,
+        duration,
         light: lightModel
       });
       navigate("/");
@@ -91,7 +91,7 @@ const NewSystemForm = () => {
             <SliderInput
               icon="humidity"
               label={"Humidity"}
-              value={humidity}
+              value={target_humidity}
               setValue={setHumidity}
               defaultValue={12}
               step={1}
@@ -102,7 +102,7 @@ const NewSystemForm = () => {
             <SliderInput
               icon="temperature"
               label={"Temperature"}
-              value={temperature}
+              value={target_temperature}
               setValue={setTempurature}
               marks={temperatureMarks}
               step={2}

@@ -1,4 +1,3 @@
-// useAlerts.js
 import { useState, useEffect } from 'react';
 import { simpleFetch, simplePost, APIS, apiBuilder } from '../api';
 
@@ -21,9 +20,9 @@ export const useAlerts = (initialAlerts = []) => {
     setError(null);
     simplePost(apiBuilder(APIS.alert.deprecateOne).setId(id).get())
       .then(() => 
-      setAlerts(prevAlerts => prevAlerts.filter(alert => 
-        alert.id !== id
-      )))
+        setAlerts(prevAlerts => prevAlerts.filter(alert => 
+          alert.id !== id
+        )))
       .catch(error => {
         setError(error);
       })

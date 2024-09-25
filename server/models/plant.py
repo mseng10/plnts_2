@@ -9,9 +9,9 @@ from typing import List
 # Third-party imports
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy.ext.declarative import declarative_base, declared_attr
+from sqlalchemy.ext.declarative import declared_attr
 
-Base = declarative_base()
+from models import FlexibleModel, ModelConfig, FieldConfig, Base
 
 class DeprecatableMixin:
     """ In case the model is deprecated."""
@@ -27,7 +27,7 @@ class DeprecatableMixin:
     def deprecated_cause(cls):
         return Column(String(400), nullable=True)
 
-class Plant(Base, DeprecatableMixin):
+class Plant(Base, DeprecatableMixin, FlexibleModel):
     """Plant model."""
 
     __tablename__ = "plant"
@@ -35,12 +35,6 @@ class Plant(Base, DeprecatableMixin):
     id = Column(Integer(), primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
     cost = Column(Integer(), default=0, nullable=False)
-    type_id: Mapped[int] = mapped_column(
-        ForeignKey("type.id", ondelete="CASCADE")
-    )  # Type of Genus
-    genus_id: Mapped[int] = mapped_column(
-        ForeignKey("genus.id", ondelete="CASCADE")
-    )  # Genus of Plant
     system_id: Mapped[int] = mapped_column(
         ForeignKey("system.id", ondelete="CASCADE")
     )  # System for housing the plant
@@ -57,6 +51,9 @@ class Plant(Base, DeprecatableMixin):
     watering = Column(Integer(), default=0, nullable=False) # Days
     watered_on = Column(DateTime(), default=datetime.now)  # Water Info
 
+    species_id = Column(Integer, ForeignKey('plant_species.id'), nullable=False)
+    species = relationship("PlantSpecies", back_populates="plants")
+
     # Sure
     identity = Column(String(50))
     __mapper_args__ = {
@@ -72,21 +69,23 @@ class Plant(Base, DeprecatableMixin):
     def __repr__(self) -> str:
         return f"{self.id}"
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "cost": self.cost,
-            "size": self.size,
-            "created_on": self.created_on,
-            "watered_on": self.watered_on,
-            "updated_on": self.updated_on,
-            "genus_id": self.genus_id,
-            "system_id": self.system_id,
-            "type_id": self.type_id,
-            "watering": self.watering,
-            "phase": self.phase
-        }
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'cost': FieldConfig(),
+        'species_id': FieldConfig(),
+        'watered_on': FieldConfig(),
+        'watering': FieldConfig(),
+        'identity': FieldConfig(),
+        'phase': FieldConfig(),
+        'size': FieldConfig(),
+        'system_id': FieldConfig(),
+        'mix_id': FieldConfig()
+        # TODO:
+        # 'species': FieldConfig(nested=Type.schema)
+        # plant_alerts: FieldConfig(nested=PlantAlert.schema)
+    })
 
 # Single Table Inheritance
 class Batch(Plant):
@@ -98,69 +97,85 @@ class Batch(Plant):
         'polymorphic_identity': 'batch'
     }
 
-class Type(Base):
-    """Type of genus"""
+class PlantGenusType(Base, FlexibleModel):
+    __tablename__ = 'plant_genus_type'
 
-    __tablename__ = "type"
-
-    id = Column(Integer(), primary_key=True)
+    id = Column(Integer, primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
-    name = Column(String(100), nullable=False)
-    description = Column(String(400), nullable=True)
-    updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    name = Column(String(50), nullable=False, unique=True)
+    description = Column(String(200))
+    watering = Column(Integer(), nullable=True)  # days
 
-    genus_id: Mapped[int] = mapped_column(
-        ForeignKey("genus.id", ondelete="CASCADE")
-    )  # Genus of Plant
+    # Relationship to PlantGenus
+    genera = relationship("PlantGenus", back_populates="genus_type")
 
-    plants: Mapped[List["Plant"]] = relationship(
-        "Plant", backref="type", passive_deletes=True
-    )  # Available plants of this type
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'watering': FieldConfig(),
+        # 'genera': FieldConfig(nested=PlantGenus.schema, include_nested=True)
+    })
 
-    def __repr__(self) -> str:
-        return f"{self.name}"
+class PlantGenus(Base, FlexibleModel):
+    __tablename__ = 'plant_genus'
 
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on,
-            "genus_id": self.genus_id
-        }
-
-class Genus(Base):
-    """Genus of plant."""
-
-    __tablename__ = "genus"
-
-    id = Column(Integer(), primary_key=True)
+    id = Column(Integer, primary_key=True)
     created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
+    name = Column(String(50), nullable=False, unique=True)
+    common_name = Column(String(100))
+    description = Column(String(200))
+    watering = Column(Integer(), nullable=True)  # days
+
+    # Relationship to PlantGenusType
+    genus_type_id = Column(Integer, ForeignKey('plant_genus_type.id'), nullable=False)
+    genus_type = relationship("PlantGenusType", back_populates="genera")
+
+    # Relationship to PlantSpecies
+    species = relationship("PlantSpecies", back_populates="genus")
+
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'name': FieldConfig(read_only=True),
+        'common_name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'watering': FieldConfig(),
+        'genus_type_id': FieldConfig(read_only=True),
+        'genus_type': FieldConfig(nested=PlantGenusType.schema, include_nested=True),
+        # 'species': FieldConfig(nested=Plant.schema)
+    })
+
+class PlantSpecies(Base, FlexibleModel):
+    __tablename__ = 'plant_species'
+
+    id = Column(Integer, primary_key=True)
+    created_on = Column(DateTime(), default=datetime.now)
+    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
     name = Column(String(100), nullable=False, unique=True)
-    description = Column(String(400), nullable=True)
-    watering = Column(Integer(), nullable=False)  # days
-    updated_on = Column(DateTime(), nullable=True, onupdate=datetime.now)
+    common_name = Column(String(100))
+    description = Column(String(500))
 
-    types: Mapped[List["Type"]] = relationship(
-        "Type", backref="genus", passive_deletes=True
-    )  # Available types of this genus
+    # Relationship to PlantGenus
+    genus_id = Column(Integer, ForeignKey('plant_genus.id'), nullable=False)
+    genus = relationship("PlantGenus", back_populates="species")
 
-    plants: Mapped[List["Plant"]] = relationship(
-        "Plant", backref="genus", passive_deletes=True
-    )  # Available plants of this type
+    # Relationship to alive plants
+    plants = relationship("Plant", back_populates="species")
 
-    def __repr__(self) -> str:
-        return f"{self.name}"
-
-    def to_json(self):
-        """Convert to json."""
-        return {
-            "id": self.id,
-            "name": self.name,
-            "watering": self.watering,
-            "description": self.description,
-            "created_on": self.created_on,
-            "updated_on": self.updated_on
-        }
+    schema = ModelConfig({
+        'id': FieldConfig(read_only=True),
+        'created_on': FieldConfig(read_only=True),
+        'updated_on': FieldConfig(read_only=True),
+        'name': FieldConfig(read_only=True),
+        'common_name': FieldConfig(read_only=True),
+        'description': FieldConfig(read_only=True),
+        'genus_id':  FieldConfig(read_only=True),
+        # 'genus': FieldConfig(nested=PlantGenus.schema, include_nested=True)
+        # 'plants': FieldConfig(nested=Plant.schema)
+    })

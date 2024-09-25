@@ -11,22 +11,28 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-from models.plant import Plant, Genus, Type, Base
+from models import Base
+from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies
 from models.system import System, Light
-from models.alert import PlantAlert, Todo
-from models.mix import Mix, Soil, mix_soil_association
+from models.alert import PlantAlert
+from models.todo import Todo
+from models.mix import Mix, Soil, SoilPart
 
-from db import init_db
-from db import Session
+from shared.db import init_db, Session
 
-from logger import setup_logger
+from shared.logger import setup_logger
 import logging
+
+from shared.discover import discover_systems
 
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
 
 # Initialize DB connection
 init_db()
+
+# Probably abstract this out to a Role class and have this be in the master role class
+discover_systems() # Maybe put this into the installable?
 
 # Create Flask app
 app = Flask(__name__)
@@ -36,7 +42,7 @@ from routes.plant_routes import bp as plant_bp
 from routes.todo_routes import bp as todo_bp
 from routes.mix_routes import bp as mix_bp
 from routes.stat_routes import bp as stat_bp
-from routes.installable_model_routes import types_bp, genuses_bp, soils_bp
+from routes.installable_model_routes import genus_types_bp, species_bp, soils_bp, genus_bp
 from routes.alert_routes import bp as alert_bp
 
 # Models
@@ -49,10 +55,10 @@ app.register_blueprint(stat_bp)
 app.register_blueprint(alert_bp)
 
 # Installables
-app.register_blueprint(types_bp)
-app.register_blueprint(genuses_bp)
+app.register_blueprint(genus_types_bp)
+app.register_blueprint(genus_bp)
+app.register_blueprint(species_bp)
 app.register_blueprint(soils_bp)
-
 
 CORS(app)
 

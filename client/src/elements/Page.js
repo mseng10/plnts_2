@@ -34,7 +34,7 @@ export const NoData = () => {
   return PageButton("noData", "primary", "No Data :0");
 };
 
-/** No data happy page view (good we don't have any:). */
+/** No data happy page view (good we don't have any:)). */
 export const NoDataHappy = () => {
   return PageButton("happy", "primary", "No Data :)");
 }

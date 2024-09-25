@@ -12,16 +12,16 @@ import AddSharpIcon from '@mui/icons-material/AddSharp';
 import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 import TextField from '@mui/material/TextField';
 import List from '@mui/material/List';
-import { Loading, ServerError } from '../../elements/Page';
+import { ServerError } from '../../elements/Page';
 
 const MixCreate = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [experimental, setExperimental] = useState('');
+  const [experimental, setExperimental] = useState(false);
   const [soilsByParts, setSoilsByParts] = useState([{"soil": "", "parts": 1}]);
 
   const navigate = useNavigate();
-  const { isLoading, error, createMix , setError} = useMixes();
+  const { error, createMix , setError} = useMixes();
   const { soils } = useSoils();
 
   const handleSubmit = async (event) => {
@@ -29,12 +29,18 @@ const MixCreate = () => {
     setError(null);
 
     try {
-      let soils_json = {};
+      const soils_json = [];
       soilsByParts.forEach((soilByPart) => {
-        soils_json[soilByPart["soil"]["id"]] = soilByPart["parts"];
+        if (soilByPart.soil !== "") {
+          soils_json.push({
+            soil_id: soilByPart.soil.id,
+            parts: soilByPart.parts
+          });
+        }
       });
+      console.log(soils_json)
       setExperimental(false);
-      await createMix({ name, description, experimental, soils: soils_json });
+      await createMix({ name, description, experimental, soil_parts: soils_json });
       navigate("/");
     } catch (err) {
       setError("Failed to create mix. Please try again.");
@@ -63,8 +69,10 @@ const MixCreate = () => {
           ...newSoilsByParts[index],
           parts: newParts
         };
+
         return newSoilsByParts;
       }
+
       return prevSoilsByParts;
     });
   };
@@ -80,11 +88,12 @@ const MixCreate = () => {
           soil: soilByPart.soil,
           parts: soilByPart.parts
         };
+
         return newSoilsByParts;
       }
     });
   };
-  if (isLoading) return <Loading/>;
+  // if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
 
   return (
@@ -93,15 +102,15 @@ const MixCreate = () => {
         <form onSubmit={handleSubmit}>
           <Box sx={{ width: 512, height: 312, borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
             <div className='left'>
-              <div class="pieContainer">
-                <div class="pieBackground"></div>
-                <div id="pieSlice1" class="hold"><div class="pie"></div></div>
-                <div id="pieSlice2" class="hold"><div class="pie"></div></div>
-                <div id="pieSlice3" class="hold"><div class="pie"></div></div>
-                <div id="pieSlice4" class="hold"><div class="pie"></div></div>
-                <div id="pieSlice5" class="hold"><div class="pie"></div></div>
-                <div id="pieSlice6" class="hold"><div class="pie"></div></div>
-                <div class="innerCircle"><div class="content"><b>Data</b><br></br>from 16<sup>th</sup> April, 2014</div></div>
+              <div className="pieContainer">
+                <div className="pieBackground"></div>
+                <div id="pieSlice1" className="hold"><div className="pie"></div></div>
+                <div id="pieSlice2" className="hold"><div className="pie"></div></div>
+                <div id="pieSlice3" className="hold"><div className="pie"></div></div>
+                <div id="pieSlice4" className="hold"><div className="pie"></div></div>
+                <div id="pieSlice5" className="hold"><div className="pie"></div></div>
+                <div id="pieSlice6" className="hold"><div className="pie"></div></div>
+                <div className="innerCircle"><div className="content"><b>Data</b><br></br>from 16<sup>th</sup> April, 2014</div></div>
               </div>
               <ButtonGroup>
                 <IconButton className="left_button" type="submit" color="info">

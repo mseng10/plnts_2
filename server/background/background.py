@@ -6,15 +6,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-from models.plant import Plant, Genus, Type, Base
+from models.plant import Plant, Genus, Type
 from models.system import System, Light
-from models.alert import PlantAlert, Todo
+from models.alert import PlantAlert
+from models.todo import Todo, Task
 from models.background.background import Ba
 
-from db import init_db
-from db import Session
+from shared.db import init_db
+from shared.db import Session
 
-from logger import setup_logger
+from shared.logger import setup_logger
 import logging
 
 
@@ -28,6 +29,7 @@ def create_plant_alert():
     Create different plant alerts. Right now just supports creating watering alerts.
     """
     db = Session()
+
     existing_plant_alrts = db.query(PlantAlert).filter(PlantAlert.deprecated == False).all()
     existing_plant_alrts_map = {}
     for existing_plant_alert in existing_plant_alrts:
