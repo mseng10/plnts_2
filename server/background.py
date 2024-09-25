@@ -2,35 +2,32 @@
 Process dedicated to doing background processing on this application.
 This creates alerts, manages connections to active systems, etc.
 """
+from datetime import datetime
+import logging
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine import URL
 
-from models.plant import Plant, Genus, Type
-from models.system import System, Light
+from models.plant import Plant
 from models.alert import PlantAlert
-from models.todo import Todo, Task
-from models.background.background import Ba
 
-from shared.db import init_db
-from shared.db import Session
-
+from shared.db import init_db, Session
 from shared.logger import setup_logger
-import logging
 
+# Create a logger for this specific module
+logger = setup_logger(__name__, logging.DEBUG)
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
+# Initialize DB connection
 init_db()
 
 def create_plant_alert():
     """
     Create different plant alerts. Right now just supports creating watering alerts.
     """
-    db = Session()
+    session = Session()
 
-    existing_plant_alrts = db.query(PlantAlert).filter(PlantAlert.deprecated == False).all()
+    existing_plant_alrts = session.query(PlantAlert).filter(PlantAlert.deprecated == False).all()
     existing_plant_alrts_map = {}
     for existing_plant_alert in existing_plant_alrts:
         existing_plant_alrts_map[existing_plant_alert.plant_id] = existing_plant_alert
@@ -46,17 +43,16 @@ def create_plant_alert():
                 plant_alert_type = "water"
             )
             # Create the alert in the db
-            db.add(new_plant_alert)
+            session.add(new_plant_alert)
             existing_plant_alrts[new_plant_alert.plant_id] = new_plant_alert
 
-    db.commit()
-    db.close()
+    session.commit()
+    session.close()
 
 def main():
     create_plant_alert()
 
-
 if __name__ == "__main__":
+    logger.info("Starting background processing.")
     while True:
-        logger.info("Starting background processing.")
         main()
