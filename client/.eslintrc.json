@@ -29,11 +29,7 @@
     "newline-before-return": "error",
     "space-before-blocks": "error",
     "no-alert": "error",
-    "react/prop-types": 0,
-    "indent": [
-      "error",
-      2
-    ]
+    "react/prop-types": 0
   },
   "settings": {
     "react": {
