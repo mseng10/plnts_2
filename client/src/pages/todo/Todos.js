@@ -22,7 +22,6 @@ import { useNavigate } from 'react-router-dom';
 import { EditSharp } from '@mui/icons-material';
 import { NoData, ServerError, Loading } from '../../elements/Page';
 
-
 const TodoCard = ({ todo, onResolve }) => {
   const navigate = useNavigate();
   const isPastDue = dayjs(todo.due_on).isBefore(dayjs(), 'day');

@@ -7,7 +7,6 @@ export const useMixes = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-
     setIsLoading(true);
     setError(null);
     simpleFetch(apiBuilder(APIS.mix.getAll).get())

@@ -27,7 +27,7 @@ export const APIS = {
     deleteOne: "/todos/{id}/",
   },
   alert: {
-    getAll: "/alerts/check/",
+    getAll: "/alerts/",
     deprecateOne: "/alerts/{id}/deprecate"
   },
   light: {

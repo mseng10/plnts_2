@@ -7,6 +7,7 @@ from shared.logger import logger
 
 from models import ModelConfig
 
+from shared.logger import logger
 
 class GenericCRUD:
     def __init__(self, model, config: ModelConfig):
@@ -24,6 +25,7 @@ class GenericCRUD:
                         query = query.options(joinedload(relationship_attr))
             item = query.get(id)
             if item is None:
+                logger.error(f"Could not find {id}?")
                 return jsonify({"error": "Not found"}), 404
             return jsonify(self.config.serialize(item, include_nested=include_nested))
 
@@ -32,9 +34,6 @@ class GenericCRUD:
 
         with Session() as sess:
             query = sess.query(self.model)
-
-            print(query)
-
             if include_nested:
                 for field, config in self.config.fields.items():
                     if config.nested and config.include_nested:
@@ -46,7 +45,6 @@ class GenericCRUD:
                     query = query.filter(getattr(self.model, field) == request.args[field])
 
             items = query.all()
-            print(f"matttt - {len(items)}")
             ret = [self.config.serialize(item, include_nested=include_nested) for item in items]
             return jsonify(ret)
 

@@ -23,8 +23,8 @@ import LightCreate from './pages/system/light/LightCreate';
 // import GenusCreate from './pages/plant/genus/GenusCreate';
 import PlantUpdate from './pages/plant/PlantUpdate';
 import SystemUpdate from './pages/system/SystemUpdate';
-import TodoUpdate from './pages/todo/TodoUpdate';
 import TodoCreate from './pages/todo/TodoCreate';
+import TodoUpdate from './pages/todo/TodoUpdate';
 import MixCreate from './pages/mix/MixCreate';
 import Stats from './pages/stat/Stats';
 

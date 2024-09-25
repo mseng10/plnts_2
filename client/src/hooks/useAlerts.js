@@ -1,4 +1,3 @@
-// useAlerts.js
 import { useState, useEffect } from 'react';
 import { simpleFetch, simplePost, APIS, apiBuilder } from '../api';
 

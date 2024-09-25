@@ -31,11 +31,12 @@ const MixCreate = () => {
     try {
       const soils_json = [];
       soilsByParts.forEach((soilByPart) => {
-        console.log(soilByPart)
-        soils_json.push({
-          soil_id: soilByPart.soil.id,
-          parts: soilByPart.parts
-        });
+        if (soilByPart.soil !== "") {
+          soils_json.push({
+            soil_id: soilByPart.soil.id,
+            parts: soilByPart.parts
+          });
+        }
       });
       console.log(soils_json)
       setExperimental(false);
