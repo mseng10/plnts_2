@@ -97,8 +97,8 @@ const Plants = ({ initialPlants }) => {
           checkboxSelection
           disableRowSelectionOnClick
           onRowSelectionModelChange={(newSelectionModel) => {
-            console.log(newSelectionModel);
-            const newSelectedPlants = newSelectionModel.map(index => plants[index - 2]); // why
+          const newSelectedPlants = newSelectionModel.map(index => plants[index-1]);
+
             console.log(newSelectedPlants)
             setSelectedPlants(newSelectedPlants);
           }}

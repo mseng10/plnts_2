@@ -1,16 +1,14 @@
 """
 Adaptor server.
 """
-
 import os
+import logging
 
 from flask import Flask, request, jsonify, Response
 from flask_cors import CORS
 
 from shared.adaptor import generate_frames, read_sensor
-
 from shared.logger import setup_logger
-import logging
 
 logger = setup_logger(__name__, logging.DEBUG)
 
