@@ -74,7 +74,7 @@ const SystemCard = ({ system, deprecateSystem }) => {
             </Box>
           </CardContent>
           <CardActions disableSpacing>
-            <IconButton color="info" onClick={() => navigate(`/system/${system.id}`)}>
+            <IconButton color="info" onClick={() => navigate(`/systems/${system.id}`)}>
               <EditSharp />
             </IconButton>
             <IconButton color="info" onClick={() => setIsSystemsAlertsOpen(true)}>
