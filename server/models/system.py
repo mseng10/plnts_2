@@ -58,7 +58,7 @@ class System(Base, DeprecatableMixin, FlexibleModel):
     last_temperature = Column(Integer(), nullable=True)  # F
 
     # Internal
-    container_id = Column(String(64), unique=True, nullable=False)
+    container_id = Column(String(64), unique=True, nullable=True)
     url = Column(String(200), nullable=False)
 
     # Plants belonging to this system
