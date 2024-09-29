@@ -27,6 +27,7 @@ import TodoCreate from './pages/todo/TodoCreate';
 import TodoUpdate from './pages/todo/TodoUpdate';
 import MixCreate from './pages/mix/MixCreate';
 import Stats from './pages/stat/Stats';
+import Mixes from './pages/mix/Mixes';
 
 const drawerWidth = 240;
 
@@ -156,6 +157,7 @@ function App() {
 
             {/* <Route path="/genera/create" element={<GeneraCreate /> } /> */}
 
+            <Route path="/mixes" element={<Mixes />} />
             <Route path="/mixes/create" element={<MixCreate /> } />
           </Routes>
         </Box>

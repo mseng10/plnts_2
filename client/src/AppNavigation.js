@@ -39,6 +39,7 @@ function AppNavigation({ window }) {
     ]},
     { id: 'view', icon: 'view', color: 'primary', subMenu: [
       { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },
+      { id: 'mixes', url: '/mixes', icon: 'mix', label: 'Mix' },
       { id: 'systems', url: '/systems', icon: 'system', label: 'System' },
     ]},
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'error', badgeCount: meta.alert_count, badgeCountColor: "error" },
