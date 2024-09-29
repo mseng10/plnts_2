@@ -41,7 +41,7 @@ function AppNavigation({ window }) {
       { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },
       { id: 'systems', url: '/systems', icon: 'system', label: 'System' },
     ]},
-    { id: 'alert', url: '/alerts', icon: 'alert', color: 'primary', badgeCount: meta.alert_count, badgeCountColor: "error" },
+    { id: 'alert', url: '/alerts', icon: 'alert', color: 'error', badgeCount: meta.alert_count, badgeCountColor: "error" },
     { id: 'todo', url: '/todos', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
     { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},
   ];

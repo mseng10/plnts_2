@@ -1,9 +1,10 @@
 // Plant Phases
 export const PHASE_LABELS = {
-  cutting: "Cutting",
-  seed: "Seed",
-  juvy: "Juvy",
   adult: "Adult",
+  cutting: "Cutting",
+  juvy: "Juvy",
+  leaf: "Leaf",
+  seed: "Seed",
 };
 
 export const CARD_STYLE = {

@@ -51,7 +51,6 @@ const PlantUpdate = ({ plantProp }) => {
   }, [plantProp, plants, id, species, mixes, systems]);
 
   const handleSubmit = async (event) => {
-    console.log(system);
     event.preventDefault();
     const updatedPlant = {
       id,
@@ -63,10 +62,9 @@ const PlantUpdate = ({ plantProp }) => {
       watering,
       phase
     };
-    console.log(updatedPlant.system_id);
     try {
       await updatePlant(updatedPlant);
-      navigate("/");
+      navigate("/plants");
     } catch (error) {
       console.error('Error updating plant:', error);
       // You might want to show an error message to the user here
@@ -74,7 +72,7 @@ const PlantUpdate = ({ plantProp }) => {
   };
 
   const handleCancel = () => {
-    navigate("/");
+    navigate("/plants");
   };
 
   if (isLoading) return <Loading/>;

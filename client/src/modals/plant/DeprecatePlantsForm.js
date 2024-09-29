@@ -9,6 +9,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Divider from '@mui/material/Divider';
 import Modal from '@mui/material/Modal';
 import { MODAL_STYLE } from '../../constants';
+import { useSpecies } from '../../hooks/usePlants';
 
 // Enum for cause of death
 const CauseOfDeath = Object.freeze({
@@ -26,6 +27,7 @@ const DeprecatePlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
   const { plants, isLoading, error, setPlants, deprecatePlants } = usePlants(initialPlants);
   const [checkedPlants, setCheckedPlants] = useState([]);
   const [allChecked, setAllChecked] = useState(true);
+  const {species} = useSpecies();
 
   const [causeOfDeath, setCauseOfDeath] = useState('');
   const [formError, setFormError] = useState(null);
@@ -152,7 +154,7 @@ const DeprecatePlantsForm = ({isOpen, initialPlants, onRequestClose}) => {
                       />
                     }
                   >
-                    <ListItemText primary={plant.name} style={{ color: "black" }}/>
+                    <ListItemText primary={species.find(_s => _s.id === plant.species_id)?.name || 'N/A'} style={{ color: "black" }}/>
                   </ListItem>
                   <Divider sx={{width: '100%' }}  component="li" />
                 </div>
