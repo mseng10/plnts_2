@@ -38,7 +38,6 @@ def stats():
         "total_cost": total_cost,
         "total_active_cost": total_active_cost
     }
-    print(stats)
     db.close()
 
     logger.info("Successfully generated statistical data.")

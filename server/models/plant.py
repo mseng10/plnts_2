@@ -5,9 +5,10 @@ Module defining models for plants.
 # Standard library imports
 from datetime import datetime
 from typing import List
+import enum
 
 # Third-party imports
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Enum
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 
@@ -26,6 +27,13 @@ class DeprecatableMixin:
     @declared_attr
     def deprecated_cause(cls):
         return Column(String(400), nullable=True)
+
+class PHASES(enum.Enum):
+    ADULT = "Adult"
+    CUTTING = "Cutting"
+    JUVY = "Juvy"
+    LEAD = "Leaf"
+    SEED = "Seed"
 
 class Plant(Base, DeprecatableMixin, FlexibleModel):
     """Plant model."""

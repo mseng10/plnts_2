@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 from shared.db import Session
 from shared.logger import logger
 
+from models.plant import Plant
+from models.alert import PlantAlert
 from models.system import System, Light
 from routes import GenericCRUD, APIBuilder
 
@@ -9,43 +11,33 @@ system_bp = Blueprint('systems', __name__)
 system_crud = GenericCRUD(System, System.schema)
 APIBuilder.register_resource(system_bp, 'systems', system_crud)
 
-@APIBuilder.register_custom_route(system_bp, '<int:system_id>/plants/', ['GET'])
+@APIBuilder.register_custom_route(system_bp, '/systems/<int:system_id>/plants/', ['GET'])
 def get_systems_plants(system_id):
     """
     Get system's plants.
     """
-    # Log the request
     logger.info("Received request to get a system's plants")
     
     db = Session()
     plants = db.query(Plant).filter(Plant.system_id == system_id).all()
     db.close()
 
-    # Transform plant alerts to JSON format
-    plants_json = [plant.to_json() for plant in plants]
+    return jsonify([Plant.schema.serialize(plant) for plant in plants])
 
-    # Return JSON response
-    return jsonify(plants_json)
-
-@APIBuilder.register_custom_route(system_bp, "<int:system_id>/alerts/", ["GET"])
+@APIBuilder.register_custom_route(system_bp, "/systems/<int:system_id>/alerts/", ["GET"])
 def get_systems_alerts(system_id):
     """
     Get system's alerts.
     """
-    # Log the request
     logger.info("Received request to get a system's alerts")
     
     db = Session()
-    plant_alerts = db.query(PlantAlert).filter(Plant.system_id == system_id).all()
+    plant_alerts = db.query(PlantAlert).filter(PlantAlert.system_id == system_id).all()
     db.close()
 
-    # Transform plant alerts to JSON format
-    plant_alerts_json = [plant_alert.to_json() for plant_alert in plant_alerts]
+    return jsonify([PlantAlert.schema.serialize(plant_alert) for plant_alert in plant_alerts])
 
-    # Return JSON response
-    return jsonify(plant_alerts_json)
-
-@APIBuilder.register_custom_route(system_bp, "<int:system_id>/video_feed/", ["GET"])
+@APIBuilder.register_custom_route(system_bp, "/systems/<int:system_id>/video_feed/", ["GET"])
 def get_video_feed(system_id):
     session = Session()
     system = session.query(System).get(system_id)
@@ -67,7 +59,7 @@ def get_video_feed(system_id):
     return Response(generate(), 
                     mimetype='multipart/x-mixed-replace; boundary=frame') 
 
-@APIBuilder.register_custom_route(system_bp, "<int:system_id>/sensor_data/", ["GET"])
+@APIBuilder.register_custom_route(system_bp, "/systems/<int:system_id>/sensor_data/", ["GET"])
 def get_sensor_data(system_id):
     session = Session()
     system = session.query(System).get(system_id)
