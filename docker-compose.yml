@@ -1,16 +1,19 @@
 version: '3.8'
-
 services:
   backend:
     build: ./server
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - DATABASE_URL=postgresql://postgres:admin@db:5432/plnts
       - USE_LOCAL_HARDWARE=true
       - ENVIRONMENT=docker
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=plnts
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   client:
     build: ./client
@@ -18,6 +21,7 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+
   db:
     image: postgres:13
     volumes:
@@ -26,6 +30,11 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=plnts
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:

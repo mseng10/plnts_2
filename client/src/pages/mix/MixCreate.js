@@ -110,7 +110,6 @@ const MixCreate = () => {
                 <div id="pieSlice4" className="hold"><div className="pie"></div></div>
                 <div id="pieSlice5" className="hold"><div className="pie"></div></div>
                 <div id="pieSlice6" className="hold"><div className="pie"></div></div>
-                <div className="innerCircle"><div className="content"><b>Data</b><br></br>from 16<sup>th</sup> April, 2014</div></div>
               </div>
               <ButtonGroup>
                 <IconButton className="left_button" type="submit" color="info">

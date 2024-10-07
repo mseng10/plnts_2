@@ -90,27 +90,3 @@ def get_sensor_data(system_id):
 light_bp = Blueprint('lights', __name__)
 light_crud = GenericCRUD(Light, Light.schema)
 APIBuilder.register_resource(light_bp, 'lights', light_crud, ["GET", "GET_MANY", "POST"])
-
-# TODO: Fix when I have more strength
-# # Potentially create lights that were created alongside the system
-# potentially_new_light = new_system_json["light"]
-# if potentially_new_light is not None:
-#     count = potentially_new_light["count"] if potentially_new_light["count"] else 1
-#     logger.info(f"Attempting to create {count} embedded lights from system request")
-    
-#     potentially_new_light["system_id"] = new_system.id
-#     new_lights = [create_light_from_json(potentially_new_light) for i in range(count)]
-#     db.add_all(new_lights)
-#     db.commit()
-
-# db.close()
-
-# def create_light_from_json(light):
-#     """
-#     Utiltity method to create multiple lights
-#     """
-#     return Light(
-#         name=light["name"],
-#         cost=light["cost"],
-#         system_id=light["system_id"]
-#     )
