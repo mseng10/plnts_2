@@ -3,7 +3,7 @@ services:
   backend:
     build: ./server
     ports:
-      - "5001:5000"
+      - "8002:5000"
     environment:
       - DATABASE_URL=postgresql://postgres:admin@db:5432/plnts
       - USE_LOCAL_HARDWARE=true
@@ -11,16 +11,13 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=plnts
+    volumes:
+      - ./server:/app
     depends_on:
       db:
         condition: service_healthy
-
-  client:
-    build: ./client
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
+    networks:
+      - app-network
 
   db:
     image: postgres:13
@@ -35,6 +32,25 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    ports:
+      - "8001:5432"
+    networks:
+      - app-network
+
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8002
+    depends_on:
+      - backend
+    networks:
+      - app-network
 
 volumes:
   postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

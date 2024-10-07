@@ -60,7 +60,7 @@ app.register_blueprint(genus_bp)
 app.register_blueprint(species_bp)
 app.register_blueprint(soils_bp)
 
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
 
 @app.route("/meta/", methods=["GET"])
 def get_meta():
@@ -98,4 +98,5 @@ def get_notebook():
 if __name__ == "__main__":
 
     # Run the Flask app
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8002)
+
