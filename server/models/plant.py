@@ -8,7 +8,7 @@ from typing import List
 import enum
 
 # Third-party imports
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, Enum
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from sqlalchemy.ext.declarative import declared_attr
 

@@ -4,7 +4,7 @@ Module defining models for system.
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 
 from models.plant import DeprecatableMixin

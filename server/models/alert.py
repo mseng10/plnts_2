@@ -3,13 +3,12 @@ Module defining models for plants.
 """
 
 from datetime import datetime
-from typing import List
 
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column
 
 from models.plant import DeprecatableMixin
-from models import FlexibleModel, ModelConfig, FieldConfig, Base
+from models import ModelConfig, FieldConfig, Base
 
 class Alert(Base, DeprecatableMixin):
     """Alert Base Class"""
