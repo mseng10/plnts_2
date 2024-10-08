@@ -5,10 +5,6 @@ This creates alerts, manages connections to active systems, etc.
 from datetime import datetime
 import logging
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.engine import URL
-
 from models.plant import Plant
 from models.alert import PlantAlert
 

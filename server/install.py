@@ -2,14 +2,8 @@
 Process dedicated to installing static data (e.g. genuses, species, etc).
 Could eventually see this moving to cloud.
 """
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.engine import URL
-
 from models.plant import PlantGenusType, PlantGenus, PlantSpecies
 from models.mix import Soil
-
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from shared.db import init_db
 from shared.db import Session
@@ -17,11 +11,8 @@ from shared.db import Session
 from shared.logger import setup_logger
 import logging
 
-import numpy as np
-import csv
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Create a logger for this specific module
+logger = setup_logger(__name__, logging.DEBUG)
 
 init_db()
 

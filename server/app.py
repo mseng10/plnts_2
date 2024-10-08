@@ -3,26 +3,15 @@ Running webserver.
 """
 
 import logging
-from datetime import datetime
 
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.engine import URL
 
-from models import Base
-from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies
-from models.system import System, Light
 from models.alert import PlantAlert
 from models.todo import Todo
-from models.mix import Mix, Soil, SoilPart
 
 from shared.db import init_db, Session
-
 from shared.logger import setup_logger
-import logging
-
 from shared.discover import discover_systems
 
 # Create a logger for this specific module
