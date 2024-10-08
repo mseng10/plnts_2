@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from shared.db import Session
 from shared.logger import logger
 

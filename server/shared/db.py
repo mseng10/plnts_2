@@ -1,21 +1,12 @@
 """
 This is the main source for anything db related.
 """
+import os
 
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.engine import URL
 
 from models import Base
-from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies
-from models.system import System, Light
-from models.alert import PlantAlert, Alert
-from models.todo import Todo, Task
-from models.mix import Soil, Mix
-
-import json
-import os
 
 # Create the SQLAlchemy engine
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin@localhost:5432/postgres")

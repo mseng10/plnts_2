@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint
 
 from routes import GenericCRUD, APIBuilder
 from models.plant import PlantGenusType, PlantGenus, PlantSpecies

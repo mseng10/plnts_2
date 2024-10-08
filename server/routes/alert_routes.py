@@ -1,6 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint
 
-from models.alert import PlantAlert, Alert
+from models.alert import Alert
 from routes import GenericCRUD, APIBuilder
 
 bp = Blueprint('alerts', __name__)

@@ -1,13 +1,11 @@
 from flask import Blueprint, request, jsonify
-from sqlalchemy.orm import sessionmaker, declarative_base, joinedload, contains_eager
-from typing import Type, List, Callable, Any, Dict, Optional
+from sqlalchemy.orm import joinedload, contains_eager
+from typing import List, Callable, Any
 
 from shared.db import Session
 from shared.logger import logger
 
 from models import ModelConfig
-
-from shared.logger import logger
 
 class GenericCRUD:
     def __init__(self, model, config: ModelConfig):
