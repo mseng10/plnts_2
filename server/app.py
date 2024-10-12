@@ -11,6 +11,7 @@ from models.alert import PlantAlert
 from models.todo import Todo
 
 from shared.db import init_db, Session
+
 from shared.logger import setup_logger
 from shared.discover import discover_systems
 
@@ -49,7 +50,7 @@ app.register_blueprint(genus_bp)
 app.register_blueprint(species_bp)
 app.register_blueprint(soils_bp)
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app)
 
 @app.route("/meta/", methods=["GET"])
 def get_meta():
@@ -89,3 +90,4 @@ if __name__ == "__main__":
     # Run the Flask app
     app.run(host='0.0.0.0', port=8002)
 
+    #app.run(debug=True)

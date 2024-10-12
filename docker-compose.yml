@@ -11,6 +11,9 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=plnts
+      - START_PLANT_API=true
+      - START_BACKGROUND_PROCESS=false
+      - START_SYSTEM_ADAPTOR=false
     volumes:
       - ./server:/app
     depends_on:
