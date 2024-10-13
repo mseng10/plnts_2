@@ -2,8 +2,11 @@
 Process dedicated to doing background processing on this application.
 This creates alerts, manages connections to active systems, etc.
 """
-from datetime import datetime
+from datetime import datetime, timedelta
 import logging
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models.plant import Plant
 from models.alert import PlantAlert
@@ -31,7 +34,7 @@ def create_plant_alert():
     existing_plants = session.query(Plant).filter(Plant.deprecated == False).all()
     now = datetime.now()
     for plant in existing_plants:
-        end_date = plant.watered_on + datetime.timedelta(days=float(plant.watering))
+        end_date = plant.watered_on + timedelta(days=float(plant.watering))
         if end_date < datetime.now() and existing_plant_alrts_map.get(plant.id) is None:
             new_plant_alert = PlantAlert(
                 plant_id = plant.id,
@@ -40,7 +43,7 @@ def create_plant_alert():
             )
             # Create the alert in the db
             session.add(new_plant_alert)
-            existing_plant_alrts[new_plant_alert.plant_id] = new_plant_alert
+            existing_plant_alrts_map[new_plant_alert.plant_id] = new_plant_alert
 
     session.commit()
     session.close()
