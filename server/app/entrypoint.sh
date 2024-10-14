@@ -23,4 +23,4 @@ fi
 
 # Start the Flask application
 echo "Starting Flask app..."
-exec gunicorn -b 0.0.0.0:5000 app:app
+exec gunicorn -b 0.0.0.0:5000 app.app:app
