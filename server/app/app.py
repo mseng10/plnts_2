@@ -5,10 +5,12 @@ Running webserver.
 import logging
 import sys
 import os
+import datetime
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from flask import Flask, jsonify
 from flask_cors import CORS
+from flask_apscheduler import APScheduler
 
 from models.alert import PlantAlert
 from models.todo import Todo
@@ -87,6 +89,39 @@ def get_notebook():
     
     # Serve the HTML
     return body
+
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
+@scheduler.task('cron', id='nightly', minute='*')
+def create_plant_alert():
+    """
+    Create different plant alerts. Right now just supports creating watering alerts.
+    """
+    session = Session()
+
+    existing_plant_alrts = session.query(PlantAlert).filter(PlantAlert.deprecated == False).all()
+    existing_plant_alrts_map = {}
+    for existing_plant_alert in existing_plant_alrts:
+        existing_plant_alrts_map[existing_plant_alert.plant_id] = existing_plant_alert
+
+    existing_plants = session.query(Plant).filter(Plant.deprecated == False).all()
+    now = datetime.now()
+    for plant in existing_plants:
+        end_date = plant.watered_on + timedelta(days=float(plant.watering))
+        if end_date < datetime.now() and existing_plant_alrts_map.get(plant.id) is None:
+            new_plant_alert = PlantAlert(
+                plant_id = plant.id,
+                system_id = plant.system_id,
+                plant_alert_type = "water"
+            )
+            # Create the alert in the db
+            session.add(new_plant_alert)
+            existing_plant_alrts_map[new_plant_alert.plant_id] = new_plant_alert
+
+    session.commit()
+    session.close()
 
 if __name__ == "__main__":
 
