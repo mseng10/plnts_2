@@ -5,7 +5,7 @@ from shared.logger import logger
 from models.plant import Plant
 from models.alert import PlantAlert
 from models.system import System, Light
-from routes import GenericCRUD, APIBuilder
+from app.routes import GenericCRUD, APIBuilder
 
 system_bp = Blueprint('systems', __name__)
 system_crud = GenericCRUD(System, System.schema)

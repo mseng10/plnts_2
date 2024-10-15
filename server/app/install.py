@@ -2,6 +2,10 @@
 Process dedicated to installing static data (e.g. genuses, species, etc).
 Could eventually see this moving to cloud.
 """
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from models.plant import PlantGenusType, PlantGenus, PlantSpecies
 from models.mix import Soil
 

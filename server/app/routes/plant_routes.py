@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 
 from models.plant import Plant
-from routes import GenericCRUD, APIBuilder
+from app.routes import GenericCRUD, APIBuilder
 
 bp = Blueprint('plants', __name__)
 plant_crud = GenericCRUD(Plant, Plant.schema)

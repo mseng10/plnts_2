@@ -14,9 +14,6 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=plnts
-      - START_PLANT_API=true
-      - START_BACKGROUND_PROCESS=false
-      - START_SYSTEM_ADAPTOR=false
     volumes:
       - ./server/shared:/app/shared
       - ./server/app:/app/app
@@ -26,7 +23,7 @@ services:
     networks:
       - app-network
 
-adaptor:
+  adaptor:
     build:
       context: ./server
       dockerfile: adaptor/Dockerfile
@@ -86,7 +83,7 @@ adaptor:
       - NODE_ENV=${NODE_ENV:-development}
     depends_on:
       - client
-      - backend
+      - app
     networks:
       - app-network
 

@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from routes import GenericCRUD, APIBuilder
+from app.routes import GenericCRUD, APIBuilder
 from models.todo import Todo, Task
 
 bp = Blueprint('todos', __name__)

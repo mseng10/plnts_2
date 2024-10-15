@@ -4,7 +4,7 @@ General utility methods
 import cv2
 import time
 import adafruit_dht
-import logger
+from shared.logger import logger
 
 def generate_frames(id=0):
     """ Access the camera of this application. """
