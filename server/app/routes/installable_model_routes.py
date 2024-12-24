@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from app.routes import GenericCRUD, APIBuilder
+from routes import GenericCRUD, APIBuilder
 from models.plant import PlantGenusType, PlantGenus, PlantSpecies
 from models.mix import Soil
 

@@ -1,7 +1,7 @@
 from flask import Blueprint
 
 from models.mix import Mix
-from app.routes import GenericCRUD, APIBuilder
+from routes import GenericCRUD, APIBuilder
 
 bp = Blueprint('mixes', __name__)
 mix_crud = GenericCRUD(Mix, Mix.schema)

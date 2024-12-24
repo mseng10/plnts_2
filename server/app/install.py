@@ -64,10 +64,10 @@ def create_all_models():
     logger.info("All models have been created.")
 
 
-def main():
+def install():
     create_all_models()
 
 if __name__ == "__main__":
     logger.info("Initializing installation processing.")
-    main()
+    install()
     logger.info("Successfully completed installation process.")
