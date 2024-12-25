@@ -113,7 +113,7 @@ export const simplePost = (url, model) => {
     });
 };
 
-/** Wrapper for fetch with error handling and jsonifying. */
+/** Wrapper for update handling and jsonifying. */
 export const simplePatch = (url, patchModel) => {
   return fetch(url, {
       method: 'PATCH',
@@ -129,7 +129,7 @@ export const simplePatch = (url, patchModel) => {
     });
 };
 
-/** Wrapper for fetch with error handling and jsonifying. */
+/** Wrapper for delete handling and jsonifying. */
 export const simpleDelete = (url) => {
   return fetch(url, {
       method: 'DELETE',
