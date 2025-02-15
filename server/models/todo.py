@@ -2,14 +2,15 @@
 Module defining models for todos.
 """
 from datetime import datetime
-from typing import List, Dict, Any
+from typing import Dict, Any
 from bson import ObjectId
 from models.plant import DeprecatableMixin
-from models import FlexibleModel, ModelConfig, FieldConfig
+from models import FlexibleModel
+from shared.db import Table
 
 class Todo(DeprecatableMixin, FlexibleModel):
     """TODO model with embedded tasks."""
-    collection_name = "todo"
+    table = Table.TODO
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -69,19 +70,6 @@ class Todo(DeprecatableMixin, FlexibleModel):
         if 0 <= task_index < len(self.tasks):
             self.tasks[task_index]['description'] = description
             self.tasks[task_index]['updated_on'] = datetime.now()
-
-    schema = ModelConfig({
-        '_id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'due_on': FieldConfig(),
-        'name': FieldConfig(),
-        'description': FieldConfig(),
-        'tasks': FieldConfig(read_only=False),
-        'deprecated': FieldConfig(),
-        'deprecated_on': FieldConfig(),
-        'deprecated_cause': FieldConfig()
-    })
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to MongoDB document format"""

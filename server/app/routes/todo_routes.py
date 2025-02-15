@@ -1,13 +1,8 @@
 from flask import Blueprint
 
 from routes import GenericCRUD, APIBuilder
-from models.todo import Todo, Task
+from models.todo import Todo
 
 bp = Blueprint('todos', __name__)
-tasks_bp = Blueprint('tasks', __name__)
-
-todo_crud = GenericCRUD(Todo, Todo.schema)
-task_crud = GenericCRUD(Task, Task.schema)
-
+todo_crud = GenericCRUD(Todo)
 APIBuilder.register_resource(bp, 'todos', todo_crud)
-APIBuilder.register_resource(tasks_bp, 'tasks', task_crud)

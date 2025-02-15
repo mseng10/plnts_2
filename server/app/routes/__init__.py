@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
-from typing import List, Callable, Any, Type, Dict, Optional
-from bson import ObjectId
+from typing import List, Callable, Type
 from shared.logger import logger
 from models import FlexibleModel
 from enum import Enum
@@ -162,57 +161,32 @@ class GenericCRUD:
             logger.error(f"Error in get_many: {str(e)}")
             return jsonify({"error": str(e)}), 500
 
-    # def create(self):
-    #     try:
-    #         data = self.config.deserialize(request.json, is_create=True)
+    def create(self):
+        try:
+            item = self.model(**request.json)
+            result = self.model.table.create(item.to_dict())
+            item._id = result
+
+            return jsonify(item.to_dict()), 201
+
+        except Exception as e:
+            logger.error(f"Error in create: {str(e)}")
+            return jsonify({"error": str(e)}), 400
+
+    def update(self, id: str):
+        try:
+            item = self.model(**request.json)
+            result = self.model.table.update(id, item.to_dict()) # should probably be to flattened json
             
-    #         with get_db() as db:
-    #             # Create main document
-    #             item = self.model(**data)
-    #             result = db[self.collection_name].insert_one(item.to_dict())
-    #             item._id = result.inserted_id
+            if not result:
+                return jsonify({"error": "Not found"}), 404
 
-    #             # Handle nested documents
-    #             for field, config in self.config.fields.items():
-    #                 if config.nested and field in data:
-    #                     nested_data = data[field]
-    #                     if isinstance(nested_data, list):
-    #                         nested_ids = []
-    #                         for nested_item in nested_data:
-    #                             nested_obj = config.nested_class(**nested_item)
-    #                             nested_obj.parent_id = item._id
-    #                             nested_result = db[config.nested_class.collection_name].insert_one(nested_obj.to_dict())
-    #                             nested_ids.append(nested_result.inserted_id)
-    #                         # Update main document with nested references
-    #                         db[self.collection_name].update_one(
-    #                             {'_id': item._id},
-    #                             {'$set': {field: nested_ids}}
-    #                         )
+            updated_item = self.model.table.get_one(id)
+            return jsonify(self.model(**updated_item).to_dict())
 
-    #             return jsonify(self.config.serialize(item, include_nested=True)), 201
-
-    #     except Exception as e:
-    #         logger.error(f"Error in create: {str(e)}")
-    #         return jsonify({"error": str(e)}), 400
-
-    # def update(self, id: str):
-    #     with get_db() as db:
-    #         try:
-    #             update_data = self.config.deserialize(request.json)
-    #             result = db[self.collection_name].update_one(
-    #                 {'_id': ObjectId(id)},
-    #                 {'$set': update_data}
-    #             )
-                
-    #             if result.matched_count == 0:
-    #                 return jsonify({"error": "Not found"}), 404
-
-    #             updated_item = db[self.collection_name].find_one({'_id': ObjectId(id)})
-    #             return jsonify(self.config.serialize(self.model(**updated_item)))
-
-    #         except Exception as e:
-    #             logger.error(f"Error in update: {str(e)}")
-    #             return jsonify({"error": str(e)}), 400
+        except Exception as e:
+            logger.error(f"Error in update: {str(e)}")
+            return jsonify({"error": str(e)}), 400
 
     def delete(self, id: str):
         try:
@@ -228,44 +202,25 @@ class GenericCRUD:
             logger.error(f"Error in delete: {str(e)}")
             return jsonify({"error": str(e)}), 500
 
-    # def delete_many(self):
-    #     data = request.json
-    #     ids = data.get('ids', [])
-    #     cause = data.get('cause', '')
+    def delete_many(self):
+        data = request.json
+        ids = data.get('ids', [])
 
-    #     if not ids:
-    #         return jsonify({'error': 'No ids provided'}), 400
+        if not ids:
+            return jsonify({'error': 'No ids provided'}), 400
 
-    #     with get_db() as db:
-    #         try:
-    #             object_ids = [ObjectId(id) for id in ids]
-                
-    #             # Find all items first to handle nested deletions
-    #             items = list(db[self.collection_name].find({'_id': {'$in': object_ids}}))
-                
-    #             deleted_count = 0
-    #             for item in items:
-    #                 # Handle nested deletions
-    #                 for field, config in self.config.fields.items():
-    #                     if config.nested and config.delete_with_parent and field in item:
-    #                         nested_ids = item[field]
-    #                         if nested_ids:
-    #                             db[config.nested_class.collection_name].delete_many(
-    #                                 {'_id': {'$in': [ObjectId(nid) for nid in nested_ids]}}
-    #                             )
-    #                 deleted_count += 1
+        try:            
+            deleted_count = 0
+            for id in ids:
+                result = self.model.table.delete(id)
+                if result:
+                    deleted_count+=1
+            return jsonify({
+                'message': f'Successfully deleted {deleted_count} items'}), 200
 
-    #             # Delete main documents
-    #             db[self.collection_name].delete_many({'_id': {'$in': object_ids}})
-                
-    #             return jsonify({
-    #                 'message': f'Successfully deleted {deleted_count} items',
-    #                 'cause': cause
-    #             }), 200
-
-    #         except Exception as e:
-    #             logger.error(f"Error in delete_many: {str(e)}")
-    #             return jsonify({'error': str(e)}), 500
+        except Exception as e:
+            logger.error(f"Error in delete_many: {str(e)}")
+            return jsonify({'error': str(e)}), 500
 
 
 class APIBuilder:
@@ -290,14 +245,14 @@ class APIBuilder:
             blueprint.route(f'/{resource_name}/<id>/', methods=['GET'])(create_wrapper('get'))
         if 'GET_MANY' in methods:
             blueprint.route(f'/{resource_name}/', methods=['GET'])(create_wrapper('get_many'))
-        # if 'POST' in methods:
-        #     blueprint.route(f'/{resource_name}/', methods=['POST'])(create_wrapper('create'))
-        # if 'PATCH' in methods:
-        #     blueprint.route(f'/{resource_name}/<id>/', methods=['PATCH'])(create_wrapper('update'))
+        if 'POST' in methods:
+            blueprint.route(f'/{resource_name}/', methods=['POST'])(create_wrapper('create'))
+        if 'PATCH' in methods:
+            blueprint.route(f'/{resource_name}/<id>/', methods=['PATCH'])(create_wrapper('update'))
         if 'DELETE' in methods:
             blueprint.route(f'/{resource_name}/<id>/', methods=['DELETE'])(create_wrapper('delete'))
-        # if 'DELETE_MANY' in methods:
-        #     blueprint.route(f'/{resource_name}/', methods=['DELETE'])(create_wrapper('delete_many'))
+        if 'DELETE_MANY' in methods:
+            blueprint.route(f'/{resource_name}/', methods=['DELETE'])(create_wrapper('delete_many'))
 
     @staticmethod
     def register_custom_route(blueprint: Blueprint, route: str, methods: List[str]):

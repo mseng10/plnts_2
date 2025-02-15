@@ -5,7 +5,7 @@ from datetime import datetime
 from typing import List, Dict, Any
 from bson import ObjectId
 from models.plant import DeprecatableMixin
-from models import FlexibleModel, ModelConfig, FieldConfig
+from models import FlexibleModel
 from shared.db import Table
 
 class Soil(FlexibleModel):
@@ -22,14 +22,6 @@ class Soil(FlexibleModel):
 
    def __repr__(self) -> str:
        return f"{self.name}"
-
-   schema = ModelConfig({
-       '_id': FieldConfig(read_only=True),
-       'created_on': FieldConfig(read_only=True),
-       'name': FieldConfig(read_only=True),
-       'description': FieldConfig(read_only=True),
-       'group': FieldConfig(read_only=True)
-   })
 
 class Mix(DeprecatableMixin, FlexibleModel):
    """Soil mix model with embedded soil parts."""
@@ -79,18 +71,18 @@ class Mix(DeprecatableMixin, FlexibleModel):
                part['updated_on'] = datetime.now()
                break
 
-   schema = ModelConfig({
-       '_id': FieldConfig(read_only=True),
-       'created_on': FieldConfig(read_only=True),
-       'updated_on': FieldConfig(read_only=True),
-       'name': FieldConfig(),
-       'description': FieldConfig(),
-       'experimental': FieldConfig(),
-       'soil_parts': FieldConfig(read_only=False),
-       'deprecated': FieldConfig(),
-       'deprecated_on': FieldConfig(),
-       'deprecated_cause': FieldConfig()
-   })
+#    schema = ModelConfig({
+#        '_id': FieldConfig(read_only=True),
+#        'created_on': FieldConfig(read_only=True),
+#        'updated_on': FieldConfig(read_only=True),
+#        'name': FieldConfig(),
+#        'description': FieldConfig(),
+#        'experimental': FieldConfig(),
+#        'soil_parts': FieldConfig(read_only=False),
+#        'deprecated': FieldConfig(),
+#        'deprecated_on': FieldConfig(),
+#        'deprecated_cause': FieldConfig()
+#    })
 
    def to_dict(self) -> Dict[str, Any]:
        """Convert to MongoDB document format"""
