@@ -38,7 +38,7 @@ class Table(str, Enum):
     def get_one(self, id: str) -> Optional[Dict[str, Any]]:
         return DB[self.value].find_one({"_id": ObjectId(id)})
 
-    def get_many(self, query: Dict[str, Any], limit: int = 100) -> List[Dict[str, Any]]:
+    def get_many(self, query: Dict[str, Any]={}, limit: int = 100) -> List[Dict[str, Any]]:
         return list(DB[self.value].find(query).limit(limit))
 
     def update(self, id: str, data: Dict[str, Any]) -> bool:

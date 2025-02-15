@@ -34,7 +34,7 @@ app = Flask(__name__)
 # from routes.todo_routes import bp as todo_bp
 # from routes.mix_routes import bp as mix_bp
 # from routes.stat_routes import bp as stat_bp
-# from routes.installable_model_routes import genus_types_bp, species_bp, soils_bp, genus_bp
+from routes.installable_model_routes import soils_bp, genus_types_bp, species_bp, genus_bp
 # from routes.alert_routes import bp as alert_bp
 
 # Models
@@ -47,10 +47,10 @@ app = Flask(__name__)
 # app.register_blueprint(alert_bp)
 
 # Installables
-# app.register_blueprint(genus_types_bp)
-# app.register_blueprint(genus_bp)
-# app.register_blueprint(species_bp)
-# app.register_blueprint(soils_bp)
+app.register_blueprint(genus_types_bp)
+app.register_blueprint(genus_bp)
+app.register_blueprint(species_bp)
+app.register_blueprint(soils_bp)
 
 CORS(app)
 
