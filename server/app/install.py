@@ -4,70 +4,70 @@ Could eventually see this moving to cloud.
 """
 import sys
 import os
+from typing import Type, List, Tuple
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from models.plant import PlantGenusType, PlantGenus, PlantSpecies
 from models.mix import Soil
-
-from shared.db import init_db
-from shared.db import Session
-
+from models import FlexibleModel
+from shared.db import DB, Table
 from shared.logger import setup_logger
 import logging
 
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
 
-init_db()
-
-num_threads = 5
-
-def create_model(model_path, model_class):
+def create_model(model_path: str, model_class: Type[FlexibleModel]):
     """
     Create the provided model from the data path.
     """
-    logger.info(f"Beginning to create model {model_class}")
+    table: Table = model_class.table
 
-    db = Session()
-
-    existing_model_count = db.query(model_class).count()
-    if existing_model_count > 0:
-        # NOTE: Probably make this more flexible in the future, but rn, just 1 time install (e.g. no rolling upgrades - upgrade.py?)
-        logger.error(f"Models already exist for {model_class}, exiting.")
+    logger.info(f"Beginning to create model {table.value}")
+    
+    # All or nothing for now
+    existing_count = table.count()
+    if existing_count > 0:
+        logger.error(f"Documents already exist for {table.value}, exiting.")
         return
 
-    for model in model_class.from_csv(model_path):
-        db.add(model)
-
-    db.commit()
-    db.close()
-
-    logger.info(f"Successfully created model {model_class}")
-
+    # Load models from CSV and insert them
+    # Doing this way to create null values in the db in the event some fields get updated
+    models = model_class.from_csv(model_path)
+    documents = [model.to_dict() for model in models]
+    
+    if documents:
+        for doc in documents:
+            table.create(doc)
+        logger.info(f"Successfully created {len(documents)} documents for {table.value}")
+    else:
+        logger.error(f"No documents to create for {table.value}")
 
 def create_all_models():
-    """
-    Create all of our packaged models on installation.
-    """
-    logger.info("Beginning to create model.")
+   """
+   Create all of our packaged models on installation.
+   """
+   logger.info("Beginning to create models.")
+   
+   models_to_create: List[Tuple[str, Type[FlexibleModel]]] = [
+       ("data/installable/soils/soils.csv", Soil),
+       ("data/installable/plants/genus_types.csv", PlantGenusType),
+       ("data/installable/plants/genera.csv", PlantGenus),
+       ("data/installable/plants/species.csv", PlantSpecies),
+   ]
 
-    models_to_create = [
-        ("data/installable/soils/soils.csv", Soil),
-        ("data/installable/plants/genus_types.csv", PlantGenusType),
-        ("data/installable/plants/genera.csv", PlantGenus),
-        ("data/installable/plants/species.csv", PlantSpecies),
-    ]
-
-    for model_path, model_class in models_to_create:
-        create_model(model_path, model_class)
-
-    logger.info("All models have been created.")
-
+   for model_path, model_class in models_to_create:
+       create_model(model_path, model_class)
+   
+   logger.info("All models have been created.")
 
 def install():
-    create_all_models()
+   """
+   Initialize the database with required data
+   """
+   logger.info("Installation starting")
+   create_all_models()
+   logger.info("Installation complete")
 
 if __name__ == "__main__":
-    logger.info("Initializing installation processing.")
-    install()
-    logger.info("Successfully completed installation process.")
+   install()
