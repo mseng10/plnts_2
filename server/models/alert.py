@@ -5,10 +5,10 @@ from datetime import datetime
 from bson import ObjectId
 from models.plant import DeprecatableMixin
 from models import FlexibleModel, ModelConfig, FieldConfig
+from shared.db import Table
 
 class Alert(DeprecatableMixin, FlexibleModel):
    """Alert Base Class"""
-   collection_name = "alert"
 
    def __init__(self, **kwargs):
        super().__init__(**kwargs)
@@ -29,11 +29,11 @@ class Alert(DeprecatableMixin, FlexibleModel):
 
 class PlantAlert(Alert):
    """Plant alert model."""
-   collection_name = "alert"  # Same collection as Alert
+   table = Table.PLANT_ALERT  # Same collection as Alert
 
    def __init__(self, **kwargs):
        super().__init__(**kwargs)
-       self.alert_type = 'plant_alert'  # Override alert_type
+       self.alert_type = 'plant_alert'
        self.plant_alert_type = kwargs.get('plant_alert_type')
        self.plant_id = kwargs.get('plant_id')
        self.system_id = kwargs.get('system_id')
@@ -53,19 +53,3 @@ class PlantAlert(Alert):
        'deprecated_on': FieldConfig(),
        'deprecated_cause': FieldConfig()
    })
-
-   @classmethod
-   def find_by_plant(cls, db, plant_id: ObjectId):
-       """Find all alerts for a specific plant"""
-       return db[cls.collection_name].find({
-           'alert_type': 'plant_alert',
-           'plant_id': plant_id
-       })
-
-   @classmethod
-   def find_by_system(cls, db, system_id: ObjectId):
-       """Find all alerts for a specific system"""
-       return db[cls.collection_name].find({
-           'alert_type': 'plant_alert',
-           'system_id': system_id
-       })

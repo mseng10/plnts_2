@@ -5,17 +5,17 @@ Running webserver.
 import logging
 import sys
 import os
-import datetime
+from datetime import datetime, timedelta
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from flask import Flask, jsonify
 from flask_cors import CORS
 from flask_apscheduler import APScheduler
 
+from models.plant import Plant
 from models.alert import PlantAlert
-from models.todo import Todo
 
-from shared.db import init_db, Session
+from shared.db import Table
 
 from shared.logger import setup_logger
 from shared.discover import discover_systems
@@ -23,37 +23,34 @@ from shared.discover import discover_systems
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
 
-# Initialize DB connection
-init_db()
-
 # Probably abstract this out to a Role class and have this be in the master role class
 discover_systems() # Maybe put this into the installable?
 
 # Create Flask app
 app = Flask(__name__)
 
-from routes.system_routes import system_bp, light_bp
-from routes.plant_routes import bp as plant_bp
-from routes.todo_routes import bp as todo_bp
-from routes.mix_routes import bp as mix_bp
-from routes.stat_routes import bp as stat_bp
-from routes.installable_model_routes import genus_types_bp, species_bp, soils_bp, genus_bp
-from routes.alert_routes import bp as alert_bp
+# from routes.system_routes import system_bp, light_bp
+# from routes.plant_routes import bp as plant_bp
+# from routes.todo_routes import bp as todo_bp
+# from routes.mix_routes import bp as mix_bp
+# from routes.stat_routes import bp as stat_bp
+# from routes.installable_model_routes import genus_types_bp, species_bp, soils_bp, genus_bp
+# from routes.alert_routes import bp as alert_bp
 
 # Models
-app.register_blueprint(system_bp)
-app.register_blueprint(light_bp)
-app.register_blueprint(plant_bp)
-app.register_blueprint(todo_bp)
-app.register_blueprint(mix_bp)
-app.register_blueprint(stat_bp)
-app.register_blueprint(alert_bp)
+# app.register_blueprint(system_bp)
+# app.register_blueprint(light_bp)
+# app.register_blueprint(plant_bp)
+# app.register_blueprint(todo_bp)
+# app.register_blueprint(mix_bp)
+# app.register_blueprint(stat_bp)
+# app.register_blueprint(alert_bp)
 
 # Installables
-app.register_blueprint(genus_types_bp)
-app.register_blueprint(genus_bp)
-app.register_blueprint(species_bp)
-app.register_blueprint(soils_bp)
+# app.register_blueprint(genus_types_bp)
+# app.register_blueprint(genus_bp)
+# app.register_blueprint(species_bp)
+# app.register_blueprint(soils_bp)
 
 CORS(app)
 
@@ -63,12 +60,11 @@ def get_meta():
     Get meta data of the application.
     """
     logger.info("Received request to query the meta")
-    db = Session()
+
     meta = {
-        "alert_count" : db.query(PlantAlert).filter(PlantAlert.deprecated == False).count(),
-        "todo_count" : db.query(Todo).filter(Todo.deprecated == False).count()
+        # "alert_count": db.plant_alerts.count_documents({"deprecated": False}),
+        "todo_count": Table.TODO.count({"deprecated": False})
     }
-    db.close()
 
     logger.info("Successfully generated meta data.")
     return jsonify(meta)
@@ -99,29 +95,25 @@ def manage_plant_alerts():
     """
     Create different plant alerts. Right now just supports creating watering alerts.
     """
-    session = Session()
 
-    existing_plant_alrts = session.query(PlantAlert).filter(PlantAlert.deprecated == False).all()
+    existing_plant_alrts: PlantAlert = Table.PLANT_ALERT.get_many({"deprecated": False})
     existing_plant_alrts_map = {}
     for existing_plant_alert in existing_plant_alrts:
         existing_plant_alrts_map[existing_plant_alert.plant_id] = existing_plant_alert
 
-    existing_plants = session.query(Plant).filter(Plant.deprecated == False).all()
+    existing_plants: Plant = Table.PLANT.get_many({"deprecated": False})
     now = datetime.now()
     for plant in existing_plants:
         end_date = plant.watered_on + timedelta(days=float(plant.watering))
-        if end_date < datetime.now() and existing_plant_alrts_map.get(plant.id) is None:
+        if end_date < now and existing_plant_alrts_map.get(plant.id) is None:
             new_plant_alert = PlantAlert(
                 plant_id = plant.id,
                 system_id = plant.system_id,
                 plant_alert_type = "water"
             )
             # Create the alert in the db
-            session.add(new_plant_alert)
+            Table.PLANT.create(new_plant_alert)
             existing_plant_alrts_map[new_plant_alert.plant_id] = new_plant_alert
-
-    session.commit()
-    session.close()
 
 if __name__ == "__main__":
 

@@ -25,6 +25,8 @@ class Table(str, Enum):
     GENUS = "genus"
     SPECIES = "species"
     SOIL = "soil"
+    TODO = "todo"
+    PLANT_ALERT = "plant_alert"
 
     def count(self, filter: Dict={})-> int:
         return DB[self.value].count_documents(filter)
