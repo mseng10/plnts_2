@@ -1,41 +1,42 @@
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.ext.declarative import declarative_base
-
+# models/__init__.py
 from typing import List, Any, Dict, Optional
 from dataclasses import dataclass
-
 import numpy as np
 import csv
-
-Base = declarative_base()
+from datetime import datetime
+from shared.db import Table
+from bson import ObjectId
 
 @dataclass
 class FieldConfig:
-    """ Configuration for each field stored on a model."""
+    """Configuration for each field stored on a model."""
     read_only: bool = False
     create_only: bool = False
     internal_only: bool = False
-    # NOTE: Probably add these to NestedFieldConfig object?
     nested: Optional['ModelConfig'] = None
-    nested_class:Any = None
+    nested_class: Any = None
     nested_identifier: str = None
     include_nested: bool = False
-    delete_with_parent: bool = False  # New attribute
+    delete_with_parent: bool = False
 
 class ModelConfig:
-    """ Standard plnts_2 model serializer:) Expected to grow with shared util."""
+    """Standard model serializer with MongoDB support"""
     def __init__(self, fields: Dict[str, FieldConfig], archivable=True):
         self.fields = fields
         self.archivable = archivable
 
     def serialize(self, obj, depth=0, include_nested=False) -> Dict[str, Any]:
-        if depth > 5:  # Prevent infinite recursion
+        if depth > 5:
             return {}
+        
         result = {}
         for k, v in self.fields.items():
             if hasattr(obj, k):
                 value = getattr(obj, k)
-                if v.nested and (include_nested or v.include_nested):
+                # Handle ObjectId conversion
+                if isinstance(value, ObjectId):
+                    result[k] = str(value)
+                elif v.nested and (include_nested or v.include_nested):
                     if isinstance(value, list):
                         result[k] = [v.nested.serialize(item, depth+1, include_nested) for item in value]
                     elif value is not None:
@@ -45,8 +46,9 @@ class ModelConfig:
         return result
 
     def deserialize(self, data, is_create=False, depth=0) -> Dict[str, Any]:
-        if depth > 5:  # Prevent infinite recursion
+        if depth > 5:
             return {}
+        
         result = {}
         for k, v in data.items():
             if k in self.fields:
@@ -62,21 +64,25 @@ class ModelConfig:
         return result
 
 class FlexibleModel:
-    """ A model that can be created from various sources. """
+    """Base model with MongoDB support"""
+    table: Table = None  # Override in subclasses
+    
+    def __init__(self, **kwargs):
+        self._id = kwargs.get('_id', ObjectId())  # MongoDB ID
+        for key, value in kwargs.items():
+            setattr(self, key, value)
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'FlexibleModel':
-        ret = cls(**data)
-        return ret
+        return cls(**data)
 
     @classmethod
     def from_numpy(cls, data: np.ndarray) -> List['FlexibleModel']:
         if len(data.shape) != 2:
             raise ValueError("Array must be 2-dimensional")
-    
         columns = data.dtype.names
         if columns is None:
             raise ValueError("Array must have named fields")
-    
         return [cls(**dict(zip(columns, row))) for row in data]
 
     @classmethod
@@ -89,3 +95,7 @@ class FlexibleModel:
         with open(file_path, 'r', newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             return [cls.from_dict(row) for row in reader]
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert model to dictionary for MongoDB storage"""
+        return {k: v for k, v in self.__dict__.items() if not k.startswith('_')}

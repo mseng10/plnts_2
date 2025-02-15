@@ -1,32 +1,20 @@
 """
 Module defining models for plants.
 """
-
-# Standard library imports
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 import enum
+from bson import ObjectId
+from shared.db import Table
 
-# Third-party imports
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, relationship, mapped_column
-from sqlalchemy.ext.declarative import declared_attr
-
-from models import FlexibleModel, ModelConfig, FieldConfig, Base
+from models import FlexibleModel, ModelConfig, FieldConfig
 
 class DeprecatableMixin:
     """ In case the model is deprecated."""
-    @declared_attr
-    def deprecated(cls):
-        return Column(Boolean, default=False, nullable=False)
-
-    @declared_attr
-    def deprecated_on(cls):
-        return Column(DateTime(), default=None, nullable=True)
-
-    @declared_attr
-    def deprecated_cause(cls):
-        return Column(String(400), nullable=True)
+    def __init__(self, **kwargs):
+        self.deprecated = kwargs.get('deprecated', False)
+        self.deprecated_on = kwargs.get('deprecated_on')
+        self.deprecated_cause = kwargs.get('deprecated_cause')
 
 class PHASES(enum.Enum):
     ADULT = "Adult"
@@ -35,50 +23,35 @@ class PHASES(enum.Enum):
     LEAD = "Leaf"
     SEED = "Seed"
 
-class Plant(Base, DeprecatableMixin, FlexibleModel):
+class Plant(DeprecatableMixin, FlexibleModel):
     """Plant model."""
+    collection_name = "plant"
 
-    __tablename__ = "plant"
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._id = kwargs.get('_id', ObjectId())
+        self.created_on = kwargs.get('created_on', datetime.now())
+        self.cost = kwargs.get('cost', 0)
+        self.system_id = kwargs.get('system_id')
+        self.mix_id = kwargs.get('mix_id')
+        self.updated_on = kwargs.get('updated_on', datetime.now())
+        
+        # Metrics
+        self.phase = kwargs.get('phase')
+        self.size = kwargs.get('size', 0)  # inches
 
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    cost = Column(Integer(), default=0, nullable=False)
-    system_id: Mapped[int] = mapped_column(
-        ForeignKey("system.id", ondelete="CASCADE")
-    )  # System for housing the plant
-    mix_id: Mapped[int] = mapped_column(
-        ForeignKey("mix.id", ondelete="CASCADE")
-    )  # Soil mix for housing the plant
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    
-    # Metrics
-    phase = Column(String(400), nullable=True)
-    size = Column(Integer(), default=0, nullable=False)  # inches
+        # Watering info
+        self.watering = kwargs.get('watering', 0)  # Days
+        self.watered_on = kwargs.get('watered_on', datetime.now())
 
-    # Watering info
-    watering = Column(Integer(), default=0, nullable=False) # Days
-    watered_on = Column(DateTime(), default=datetime.now)  # Water Info
-
-    species_id = Column(Integer, ForeignKey('plant_species.id'), nullable=False)
-    species = relationship("PlantSpecies", back_populates="plants")
-
-    # Sure
-    identity = Column(String(50))
-    __mapper_args__ = {
-        'polymorphic_identity': 'plant',
-        'polymorphic_on': identity
-    }
-
-    # Misc
-    plant_alerts: Mapped[List["PlantAlert"]] = relationship(
-        "PlantAlert", backref="type", passive_deletes=True
-    )  # Available plants of this type
+        self.species_id = kwargs.get('species_id')
+        self.identity = kwargs.get('identity', 'plant')
 
     def __repr__(self) -> str:
-        return f"{self.id}"
+        return f"{self._id}"
 
     schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
+        '_id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
         'cost': FieldConfig(),
@@ -89,65 +62,56 @@ class Plant(Base, DeprecatableMixin, FlexibleModel):
         'phase': FieldConfig(),
         'size': FieldConfig(),
         'system_id': FieldConfig(),
-        'mix_id': FieldConfig()
-        # TODO:
-        # 'species': FieldConfig(nested=Type.schema)
-        # plant_alerts: FieldConfig(nested=PlantAlert.schema)
+        'mix_id': FieldConfig(),
+        'deprecated': FieldConfig(),
+        'deprecated_on': FieldConfig(),
+        'deprecated_cause': FieldConfig()
     })
 
-# Single Table Inheritance
 class Batch(Plant):
     """Batch of plants."""
-     # Number of plants
-    count = Column(Integer(), default=0, nullable=False)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.count = kwargs.get('count', 0)
+        self.identity = 'batch'
 
-    __mapper_args__ = {
-        'polymorphic_identity': 'batch'
-    }
+class PlantGenusType(FlexibleModel):
+    table = Table.GENUS_TYPE
 
-class PlantGenusType(Base, FlexibleModel):
-    __tablename__ = 'plant_genus_type'
-
-    id = Column(Integer, primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    name = Column(String(50), nullable=False, unique=True)
-    description = Column(String(200))
-    watering = Column(Integer(), nullable=True)  # days
-
-    # Relationship to PlantGenus
-    genera = relationship("PlantGenus", back_populates="genus_type")
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._id = kwargs.get('_id', ObjectId())
+        self.created_on = kwargs.get('created_on', datetime.now())
+        self.updated_on = kwargs.get('updated_on', datetime.now())
+        self.name = kwargs.get('name')
+        self.description = kwargs.get('description')
+        self.watering = kwargs.get('watering')
 
     schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
+        '_id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
         'name': FieldConfig(read_only=True),
         'description': FieldConfig(read_only=True),
-        'watering': FieldConfig(),
-        # 'genera': FieldConfig(nested=PlantGenus.schema, include_nested=True)
+        'watering': FieldConfig()
     })
 
-class PlantGenus(Base, FlexibleModel):
-    __tablename__ = 'plant_genus'
+class PlantGenus(FlexibleModel):
+    table = Table.GENUS
 
-    id = Column(Integer, primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    name = Column(String(50), nullable=False, unique=True)
-    common_name = Column(String(100))
-    description = Column(String(200))
-    watering = Column(Integer(), nullable=True)  # days
-
-    # Relationship to PlantGenusType
-    genus_type_id = Column(Integer, ForeignKey('plant_genus_type.id'), nullable=False)
-    genus_type = relationship("PlantGenusType", back_populates="genera")
-
-    # Relationship to PlantSpecies
-    species = relationship("PlantSpecies", back_populates="genus")
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._id = kwargs.get('_id', ObjectId())
+        self.created_on = kwargs.get('created_on', datetime.now())
+        self.updated_on = kwargs.get('updated_on', datetime.now())
+        self.name = kwargs.get('name')
+        self.common_name = kwargs.get('common_name')
+        self.description = kwargs.get('description')
+        self.watering = kwargs.get('watering')
+        self.genus_type_id = kwargs.get('genus_type_id')
 
     schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
+        '_id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
         'name': FieldConfig(read_only=True),
@@ -155,35 +119,28 @@ class PlantGenus(Base, FlexibleModel):
         'description': FieldConfig(read_only=True),
         'watering': FieldConfig(),
         'genus_type_id': FieldConfig(read_only=True),
-        'genus_type': FieldConfig(nested=PlantGenusType.schema, include_nested=True),
-        # 'species': FieldConfig(nested=Plant.schema)
+        'genus_type': FieldConfig(nested=PlantGenusType.schema, include_nested=True)
     })
 
-class PlantSpecies(Base, FlexibleModel):
-    __tablename__ = 'plant_species'
+class PlantSpecies(FlexibleModel):
+    table = Table.SPECIES
 
-    id = Column(Integer, primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    name = Column(String(100), nullable=False, unique=True)
-    common_name = Column(String(100))
-    description = Column(String(500))
-
-    # Relationship to PlantGenus
-    genus_id = Column(Integer, ForeignKey('plant_genus.id'), nullable=False)
-    genus = relationship("PlantGenus", back_populates="species")
-
-    # Relationship to alive plants
-    plants = relationship("Plant", back_populates="species")
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self._id = kwargs.get('_id', ObjectId())
+        self.created_on = kwargs.get('created_on', datetime.now())
+        self.updated_on = kwargs.get('updated_on', datetime.now())
+        self.name = kwargs.get('name')
+        self.common_name = kwargs.get('common_name')
+        self.description = kwargs.get('description')
+        self.genus_id = kwargs.get('genus_id')
 
     schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
+        '_id': FieldConfig(read_only=True),
         'created_on': FieldConfig(read_only=True),
         'updated_on': FieldConfig(read_only=True),
         'name': FieldConfig(read_only=True),
         'common_name': FieldConfig(read_only=True),
         'description': FieldConfig(read_only=True),
-        'genus_id':  FieldConfig(read_only=True),
-        # 'genus': FieldConfig(nested=PlantGenus.schema, include_nested=True)
-        # 'plants': FieldConfig(nested=Plant.schema)
+        'genus_id': FieldConfig(read_only=True)
     })

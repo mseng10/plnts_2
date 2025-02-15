@@ -1,61 +1,71 @@
 """
-Module defining models for plants.
+Module defining models for alerts.
 """
-
 from datetime import datetime
-
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
-
+from bson import ObjectId
 from models.plant import DeprecatableMixin
-from models import ModelConfig, FieldConfig, Base
+from models import FlexibleModel, ModelConfig, FieldConfig
 
-class Alert(Base, DeprecatableMixin):
-    """Alert Base Class"""
-    __tablename__ = "alert"
+class Alert(DeprecatableMixin, FlexibleModel):
+   """Alert Base Class"""
+   collection_name = "alert"
 
-    id = Column(Integer, primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    alert_type = Column(String(50))
-    
-    __mapper_args__ = {
-        'polymorphic_identity': 'alert',
-        'polymorphic_on': alert_type
-    }
+   def __init__(self, **kwargs):
+       super().__init__(**kwargs)
+       self._id = kwargs.get('_id', ObjectId())
+       self.created_on = kwargs.get('created_on', datetime.now())
+       self.updated_on = kwargs.get('updated_on', datetime.now())
+       self.alert_type = kwargs.get('alert_type', 'alert')
 
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'alert_type': FieldConfig(read_only=True)
-    })
+   schema = ModelConfig({
+       '_id': FieldConfig(read_only=True),
+       'created_on': FieldConfig(read_only=True),
+       'updated_on': FieldConfig(read_only=True),
+       'alert_type': FieldConfig(read_only=True),
+       'deprecated': FieldConfig(),
+       'deprecated_on': FieldConfig(),
+       'deprecated_cause': FieldConfig()
+   })
 
 class PlantAlert(Alert):
-    """Plant alert model."""
+   """Plant alert model."""
+   collection_name = "alert"  # Same collection as Alert
 
-    __tablename__ = "plant_alert"
+   def __init__(self, **kwargs):
+       super().__init__(**kwargs)
+       self.alert_type = 'plant_alert'  # Override alert_type
+       self.plant_alert_type = kwargs.get('plant_alert_type')
+       self.plant_id = kwargs.get('plant_id')
+       self.system_id = kwargs.get('system_id')
 
-    id = Column(Integer(), ForeignKey('alert.id'), primary_key=True)
-    plant_alert_type = Column(String(50))
+   def __repr__(self):
+       return "plant_alert"
 
-    plant_id: Mapped[int] = mapped_column(
-        ForeignKey("plant.id", ondelete="CASCADE")
-    )  # plant this plant belongs to
-    system_id: Mapped[int] = mapped_column(
-        ForeignKey("system.id", ondelete="CASCADE")
-    )  # System this light belongs to
+   schema = ModelConfig({
+       '_id': FieldConfig(read_only=True),
+       'created_on': FieldConfig(read_only=True),
+       'updated_on': FieldConfig(read_only=True),
+       'alert_type': FieldConfig(read_only=True),
+       'plant_alert_type': FieldConfig(read_only=True),
+       'plant_id': FieldConfig(read_only=True),
+       'system_id': FieldConfig(read_only=True),
+       'deprecated': FieldConfig(),
+       'deprecated_on': FieldConfig(),
+       'deprecated_cause': FieldConfig()
+   })
 
-    __mapper_args__ = {
-        'polymorphic_identity': 'plant_alert'
-    }
+   @classmethod
+   def find_by_plant(cls, db, plant_id: ObjectId):
+       """Find all alerts for a specific plant"""
+       return db[cls.collection_name].find({
+           'alert_type': 'plant_alert',
+           'plant_id': plant_id
+       })
 
-    def __repr__(self):
-        return "plant_alert"
-
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'plant_alert_type': FieldConfig(read_only=True),
-        'plant_id': FieldConfig(read_only=True),
-        'system_id': FieldConfig(read_only=True)
-    })
+   @classmethod
+   def find_by_system(cls, db, system_id: ObjectId):
+       """Find all alerts for a specific system"""
+       return db[cls.collection_name].find({
+           'alert_type': 'plant_alert',
+           'system_id': system_id
+       })
