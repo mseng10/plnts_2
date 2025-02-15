@@ -214,30 +214,19 @@ class GenericCRUD:
     #             logger.error(f"Error in update: {str(e)}")
     #             return jsonify({"error": str(e)}), 400
 
-    # def delete(self, id: str):
-    #     with get_db() as db:
-    #         try:
-    #             # Find the item first to handle nested deletions
-    #             item = db[self.collection_name].find_one({'_id': ObjectId(id)})
-    #             if not item:
-    #                 return jsonify({"error": "Not found"}), 404
+    def delete(self, id: str):
+        try:
+            # TODO: Double dipping here
+            item = self.model.table.get_one(id)
+            if not item:
+                return jsonify({"error": "Not found"}), 404
+            
+            self.model.table.delete(id)
+            return '', 204
 
-    #             # Handle nested deletions
-    #             for field, config in self.config.fields.items():
-    #                 if config.nested and config.delete_with_parent and field in item:
-    #                     nested_ids = item[field]
-    #                     if nested_ids:
-    #                         db[config.nested_class.collection_name].delete_many(
-    #                             {'_id': {'$in': [ObjectId(nid) for nid in nested_ids]}}
-    #                         )
-
-    #             # Delete main document
-    #             db[self.collection_name].delete_one({'_id': ObjectId(id)})
-    #             return '', 204
-
-    #         except Exception as e:
-    #             logger.error(f"Error in delete: {str(e)}")
-    #             return jsonify({"error": str(e)}), 500
+        except Exception as e:
+            logger.error(f"Error in delete: {str(e)}")
+            return jsonify({"error": str(e)}), 500
 
     # def delete_many(self):
     #     data = request.json
@@ -305,8 +294,8 @@ class APIBuilder:
         #     blueprint.route(f'/{resource_name}/', methods=['POST'])(create_wrapper('create'))
         # if 'PATCH' in methods:
         #     blueprint.route(f'/{resource_name}/<id>/', methods=['PATCH'])(create_wrapper('update'))
-        # if 'DELETE' in methods:
-        #     blueprint.route(f'/{resource_name}/<id>/', methods=['DELETE'])(create_wrapper('delete'))
+        if 'DELETE' in methods:
+            blueprint.route(f'/{resource_name}/<id>/', methods=['DELETE'])(create_wrapper('delete'))
         # if 'DELETE_MANY' in methods:
         #     blueprint.route(f'/{resource_name}/', methods=['DELETE'])(create_wrapper('delete_many'))
 

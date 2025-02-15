@@ -6,9 +6,7 @@ from enum import Enum
 from typing import Dict, Any, Optional, List
 from bson import ObjectId
 from pymongo import MongoClient
-from pymongo.collection import Collection
 from pymongo.database import Database
-from contextlib import contextmanager
 
 # Create the MongoDB client
 MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
@@ -26,7 +24,7 @@ class Table(str, Enum):
     SPECIES = "species"
     SOIL = "soil"
     TODO = "todo"
-    PLANT_ALERT = "plant_alert"
+    ALERT = "alert"
 
     def count(self, filter: Dict={})-> int:
         return DB[self.value].count_documents(filter)
