@@ -2,44 +2,50 @@
 This is the main source for anything db related.
 """
 import os
+from enum import Enum
+from typing import Dict, Any, Optional, List
+from bson import ObjectId
+from pymongo import MongoClient
+from pymongo.collection import Collection
+from pymongo.database import Database
+from contextlib import contextmanager
 
-from sqlalchemy import create_engine, func
-from sqlalchemy.orm import sessionmaker, scoped_session
+# Create the MongoDB client
+MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+CLIENT: MongoClient = MongoClient(MONGODB_URL)
 
-from models import Base
+# Get the default database
+DB_NAME = os.getenv("DB_NAME", "plnts")
+DB: Database = CLIENT[DB_NAME]
 
-# Create the SQLAlchemy engine
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:admin@localhost:5432/postgres")
-engine = create_engine(DATABASE_URL)
+class Table(str, Enum):
+    PLANT = "plant"
+    SYSTEM = "system"
+    GENUS_TYPE = "genus_type"
+    GENUS = "genus"
+    SPECIES = "species"
+    SOIL = "soil"
 
-# Base.metadata.drop_all(bind=engine)
-# Base.metadata.create_all(bind=engine)
+    def count(self, filter: Dict={})-> int:
+        return DB[self.value].count_documents(filter)
 
-# Create a configured "Session" class
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    def create(self, data: Dict[str, Any]) -> ObjectId:
+        result = DB[self.value].insert_one(data)
+        return result.inserted_id
 
-# Create a scoped session
-Session = scoped_session(SessionLocal)
+    def get_one(self, id: str) -> Optional[Dict[str, Any]]:
+        return DB[self.value].find_one({"_id": ObjectId(id)})
 
-# This allows you to query the database directly using the Base class
-Base.query = Session.query_property()
+    def get_many(self, query: Dict[str, Any], limit: int = 100) -> List[Dict[str, Any]]:
+        return list(DB[self.value].find(query).limit(limit))
 
-def safe_sum(column):
-    return func.coalesce(func.sum(column), 0)
+    def update(self, id: str, data: Dict[str, Any]) -> bool:
+        result = DB[self.value].update_one(
+            {"_id": ObjectId(id)}, 
+            {"$set": data}
+        )
+        return result.modified_count > 0
 
-def get_db():
-    """
-    Generator function to create and yield a database session.
-    Use this in FastAPI dependencies or Flask before_request handlers.
-    """
-    db = Session()
-    try:
-        yield db
-    finally:
-        db.close()
-
-def init_db():
-    # Import all modules here that might define models so that
-    # they will be registered properly on the metadata.
-    import models  # Make sure to create this file with your SQLAlchemy models
-    Base.metadata.create_all(bind=engine)
+    def delete(self, id: str) -> bool:
+        result = DB[self.value].delete_one({"_id": ObjectId(id)})
+        return result.deleted_count > 0

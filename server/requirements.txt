@@ -31,6 +31,7 @@ cycler==0.12.1
 debugpy==1.8.5
 decorator==5.1.1
 defusedxml==0.7.1
+dnspython==2.7.0
 exceptiongroup==1.2.2
 executing==2.1.0
 fastjsonschema==2.20.0
@@ -101,6 +102,7 @@ pure_eval==0.2.3
 pycparser==2.22
 pyftdi==0.55.4
 Pygments==2.18.0
+pymongo==4.11.1
 pyparsing==3.1.2
 pyserial==3.5
 python-dateutil==2.9.0.post0
