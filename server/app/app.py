@@ -97,6 +97,8 @@ def get_notebook():
 
 
 # Print details of the running endpoints
+logger.debug("------------------------------------------------------------")
+logger.debug("Printing all available endpoints for this api server:")
 for rule in app.url_map.iter_rules():
     methods = ",".join(sorted(rule.methods))
     arguments = ",".join(sorted(rule.arguments))
@@ -105,6 +107,8 @@ for rule in app.url_map.iter_rules():
     logger.debug(f"    Methods: {methods}")
     logger.debug(f"    Arguments: {arguments}")
     logger.debug("---")
+
+logger.debug("------------------------------------------------------------")
 
 scheduler = APScheduler()
 scheduler.init_app(app)
@@ -134,6 +138,12 @@ def manage_plant_alerts():
             Table.ALERT.create(new_plant_alert)
             existing_plant_alrts_map[new_plant_alert.model_id] = new_plant_alert
 
+
+logger.debug("------------------------------------------------------------")
+logger.debug("Printing all available cron jobs for this api server:")
+for job in scheduler.get_jobs():
+    print(f"Job: {job.name}, Trigger: {job.trigger}, Next run: {job.next_run_time}")
+logger.debug("------------------------------------------------------------")
 
 if __name__ == "__main__":
     # Run the Flask app
