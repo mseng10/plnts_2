@@ -60,7 +60,9 @@ export const APIS = {
     generaCreate: "/genus_types/{id}/tasks/{eid}/"
   },
   task: {
-    updateOne: "/todos/{id}/tasks/{eid}/"
+    resolve: "/todos/{id}/tasks/{eid}/resolve",
+    unresolve: "/todos/{id}/tasks/{eid}/unresolve"
+
   },
 }
 

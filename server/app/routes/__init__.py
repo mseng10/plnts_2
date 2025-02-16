@@ -83,6 +83,8 @@ class Schema(Enum):
         "description": SchemaField(),
         "created_on": SchemaField(read_only=True),
         "updated_on": SchemaField(read_only=True),
+        "resolved": SchemaField(),
+        "resolved_on": SchemaField()
     }
     SOIL = {
         "id": SchemaField(read_only=True),

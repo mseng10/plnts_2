@@ -104,5 +104,35 @@ export const useTasks = (initialTasks) => {
         setIsLoading(false))
   };
 
-  return { tasks, isLoading, error, deprecateTask, updateTask };
+  const resolveTask = async (todo_id, task_id) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.task.resolve).setId(todo_id).setEmbedId(task_id).get(), null)
+      .then(data => 
+        setTasks(prevTasks => prevTasks.map(task => 
+          task.id === task_id ? { ...task, ...data } : task
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+
+  const unresolveTask = async (todo_id, task_id) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.task.unresolve).setId(todo_id).setEmbedId(task_id).get(), null)
+      .then(data => 
+        setTasks(prevTasks => prevTasks.map(task => 
+          task.id === task_id ? { ...task, ...data } : task
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+
+  return { tasks, isLoading, error, deprecateTask, resolveTask, unresolveTask };
 };
