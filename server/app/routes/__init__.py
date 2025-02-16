@@ -36,6 +36,8 @@ class Schema(Enum):
         "deprecated": SchemaField(),
         "deprecated_on": SchemaField(),
         "deprecated_cause": SchemaField(),
+        "batch": SchemaField(),
+        "batch_count": SchemaField()
     }
     PLANT_GENUS_TYPE = {
         "id": SchemaField(read_only=True),

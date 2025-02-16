@@ -37,20 +37,12 @@ class Plant(DeprecatableMixin, FlexibleModel):
         self.watered_on = kwargs.get("watered_on", datetime.now())
 
         self.species_id = Fields.object_id(kwargs.get("species_id"))
-        self.identity = kwargs.get("identity", "plant")
+
+        self.batch = kwargs.get("batch", False)
+        self.batch_count = kwargs.get("batch_count", False)
 
     def __repr__(self) -> str:
         return f"{self.id}"
-
-
-class Batch(Plant):
-    """Batch of plants."""
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.count = kwargs.get("count", 0)
-        self.identity = "batch"
-
 
 class PlantGenusType(FlexibleModel):
     def __init__(self, **kwargs):

@@ -26,6 +26,7 @@ import SystemUpdate from './pages/system/SystemUpdate';
 import TodoCreate from './pages/todo/TodoCreate';
 import TodoUpdate from './pages/todo/TodoUpdate';
 import MixCreate from './pages/mix/MixCreate';
+import MixUpdate from './pages/mix/MixUpdate';
 import Stats from './pages/stat/Stats';
 import Mixes from './pages/mix/Mixes';
 
@@ -159,6 +160,7 @@ function App() {
 
             <Route path="/mixes" element={<Mixes />} />
             <Route path="/mixes/create" element={<MixCreate /> } />
+            <Route path="/mixes/:id" element={<MixUpdate /> } />
           </Routes>
         </Box>
       </ThemeProvider>
