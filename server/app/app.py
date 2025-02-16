@@ -142,7 +142,9 @@ def manage_plant_alerts():
 logger.debug("------------------------------------------------------------")
 logger.debug("Printing all available cron jobs for this api server:")
 for job in scheduler.get_jobs():
-    print(f"Job: {job.name}, Trigger: {job.trigger}, Next run: {job.next_run_time}")
+    logger.debug(
+        f"Job: {job.name}, Trigger: {job.trigger}, Next run: {job.next_run_time}"
+    )
 logger.debug("------------------------------------------------------------")
 
 if __name__ == "__main__":

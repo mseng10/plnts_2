@@ -3,8 +3,7 @@ Module defining models for system.
 """
 from datetime import datetime
 from bson import ObjectId
-from models import FlexibleModel, DeprecatableMixin
-from models import FlexibleModel
+from models import FlexibleModel, DeprecatableMixin, Fields
 
 
 class Light(DeprecatableMixin, FlexibleModel):
@@ -12,7 +11,7 @@ class Light(DeprecatableMixin, FlexibleModel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.id = kwargs.get("_id", ObjectId())
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
         self.name = kwargs.get("name")
         self.created_on = kwargs.get("created_on", datetime.now())
         self.updated_on = kwargs.get("updated_on", datetime.now())
@@ -28,7 +27,7 @@ class System(DeprecatableMixin, FlexibleModel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.id = kwargs.get("_id", ObjectId())
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
         self.name = kwargs.get("name")
         self.description = kwargs.get("description")
         self.created_on = kwargs.get("created_on", datetime.now())

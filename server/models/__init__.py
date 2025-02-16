@@ -17,7 +17,7 @@ class FlexibleModel:
     """Base model with MongoDB support"""
 
     def __init__(self, **kwargs):
-        self.id = kwargs.get("_id", ObjectId())  # MongoDB ID
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
         for key, value in kwargs.items():
             setattr(self, key, value)
 

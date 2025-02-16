@@ -4,7 +4,7 @@ Module defining models for todos.
 from datetime import datetime
 from typing import Dict, Any, List
 from bson import ObjectId
-from models import FlexibleModel, DeprecatableMixin
+from models import FlexibleModel, DeprecatableMixin, Fields
 
 
 class Task(DeprecatableMixin, FlexibleModel):
@@ -12,8 +12,7 @@ class Task(DeprecatableMixin, FlexibleModel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        print(kwargs.get("_id"))
-        self.id = kwargs.get("_id", ObjectId())
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
         self.description = kwargs.get("description")
         self.created_on = kwargs.get("created_on", datetime.now())
         self.updated_on = kwargs.get("updated_on", datetime.now())
@@ -26,7 +25,7 @@ class Todo(DeprecatableMixin, FlexibleModel):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.id = kwargs.get("_id", ObjectId())
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
         self.created_on = kwargs.get("created_on", datetime.now())
         self.updated_on = kwargs.get("updated_on", datetime.now())
         self.due_on = kwargs.get("due_on")
@@ -34,7 +33,6 @@ class Todo(DeprecatableMixin, FlexibleModel):
         self.description = kwargs.get("description")
 
         # Embedded tasks
-        print(kwargs.get("tasks", []))
         self.tasks: List[Task] = [Task(**task) for task in kwargs.get("tasks", [])]
 
     def __repr__(self):

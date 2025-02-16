@@ -154,6 +154,7 @@ class Schema(Enum):
         self.fields = fields
 
     def read(self, obj: FlexibleModel, depth=0, include_nested=False) -> Dict[str, Any]:
+        """Read a flexible model and serialize it for the client."""
         if depth > 5:
             return {}
 
@@ -174,11 +175,10 @@ class Schema(Enum):
                         result[k] = nested_schema.read(value, depth + 1, include_nested)
                 elif not v.internal_only:
                     result[k] = value
-        print(result)
         return result
 
     def patch(self, model: FlexibleModel, data: Dict[str, Any], depth=0):
-        """ """
+        """Patch a flexible model with json data from another."""
         if depth > 5:
             return model
 
@@ -218,11 +218,12 @@ class Schema(Enum):
                 setattr(model, field_name, new_value)
 
     def create(self, model_clazz: Type[FlexibleModel], data: Dict[str, Any]):
+        """Create a model from json from the client."""
         return model_clazz(**data)
 
 
 class GenericCRUD:
-    def __init__(self, table, schema):
+    def __init__(self, table: Table, schema: Schema):
         self.table: Table = table
         self.schema: Schema = schema
 
