@@ -24,6 +24,7 @@ CLIENT: MongoClient = MongoClient(MONGODB_URL)
 DB_NAME = os.getenv("DB_NAME", "plnts")
 DB: Database = CLIENT[DB_NAME]
 
+
 class Table(Enum):
     PLANT = ("plant", Plant)
     SYSTEM = ("system", System)
@@ -40,7 +41,7 @@ class Table(Enum):
         self.table_name = table_name
         self.model_class = model_class
 
-    def count(self, filter: Dict={})-> int:
+    def count(self, filter: Dict = {}) -> int:
         return DB[self.table_name].count_documents(filter)
 
     def create(self, data: FlexibleModel) -> ObjectId:
@@ -50,13 +51,17 @@ class Table(Enum):
     def get_one(self, id: str) -> Optional[Type[FlexibleModel]]:
         return self.model_class(**DB[self.table_name].find_one({"_id": ObjectId(id)}))
 
-    def get_many(self, query: Dict[str, Any]={}, limit: int = 100) -> List[Dict[str, Any]]:
-        return [self.model_class(**item) for item in list(DB[self.table_name].find(query).limit(limit))]
+    def get_many(
+        self, query: Dict[str, Any] = {}, limit: int = 100
+    ) -> List[Dict[str, Any]]:
+        return [
+            self.model_class(**item)
+            for item in list(DB[self.table_name].find(query).limit(limit))
+        ]
 
     def update(self, id: str, data: FlexibleModel) -> bool:
         result = DB[self.table_name].update_one(
-            {"_id": ObjectId(id)}, 
-            {"$set": data.to_dict()}
+            {"_id": ObjectId(id)}, {"$set": data.to_dict()}
         )
         return result.modified_count > 0
 

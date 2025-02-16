@@ -6,55 +6,55 @@ from typing import Dict, Any, List
 from bson import ObjectId
 from models import FlexibleModel, DeprecatableMixin, Fields
 
+
 class Soil(FlexibleModel):
-   """Soil types available for mixes."""
+    """Soil types available for mixes."""
 
-   def __init__(self, **kwargs):
-       super().__init__(**kwargs)
-       self._id = Fields.object_id(kwargs.get('_id', ObjectId()))
-       self.created_on = kwargs.get('created_on', datetime.now())
-       self.description = kwargs.get('description')
-       self.group = kwargs.get('group')
-       self.name = kwargs.get('name')
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.description = kwargs.get("description")
+        self.group = kwargs.get("group")
+        self.name = kwargs.get("name")
 
-   def __repr__(self) -> str:
-       return f"{self.name}"
+    def __repr__(self) -> str:
+        return f"{self.name}"
+
 
 class SoilPart(FlexibleModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._id = Fields.object_id(kwargs.get('_id', ObjectId()))
-        self.soil_id = Fields.object_id(kwargs.get('soil_id'))
-        self.created_on = kwargs.get('created_on', datetime.now())
-        self.updated_on = kwargs.get('updated_on', datetime.now())
-        self.parts = kwargs.get('parts')
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.soil_id = Fields.object_id(kwargs.get("soil_id"))
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.parts = kwargs.get("parts")
 
 
 class Mix(DeprecatableMixin, FlexibleModel):
-   """Soil mix model with embedded soil parts."""
+    """Soil mix model with embedded soil parts."""
 
-   def __init__(self, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._id = Fields.object_id(kwargs.get('_id', ObjectId()))
-        self.name = kwargs.get('name')
-        self.description = kwargs.get('description')
-        self.created_on = kwargs.get('created_on', datetime.now())
-        self.updated_on = kwargs.get('updated_on', datetime.now())
-        self.experimental = kwargs.get('experimental', False)
-       
-       # Embedded soil parts
-        self.parts: List[SoilPart] = [SoilPart(sp) for sp in kwargs.get('parts', [])]
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.name = kwargs.get("name")
+        self.description = kwargs.get("description")
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.experimental = kwargs.get("experimental", False)
 
+        # Embedded soil parts
+        self.parts: List[SoilPart] = [SoilPart(sp) for sp in kwargs.get("parts", [])]
 
-   def __repr__(self) -> str:
-       return f"{self.name}"
+    def __repr__(self) -> str:
+        return f"{self.name}"
 
-   def to_dict(self) -> Dict[str, Any]:
-       """Convert to MongoDB document format"""
-       base_dict = super().to_dict()
-       if 'soil_parts' in base_dict:
-           base_dict['soil_parts'] = [
-               part.to_dict()
-               for part in base_dict['soil_parts']
-           ]
-       return base_dict
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to MongoDB document format"""
+        base_dict = super().to_dict()
+        if "soil_parts" in base_dict:
+            base_dict["soil_parts"] = [
+                part.to_dict() for part in base_dict["soil_parts"]
+            ]
+        return base_dict

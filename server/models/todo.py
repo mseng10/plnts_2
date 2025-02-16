@@ -9,31 +9,33 @@ from models import FlexibleModel, DeprecatableMixin
 
 class Task(DeprecatableMixin, FlexibleModel):
     """TODO Item"""
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        print(kwargs.get('_id'))
-        self._id = kwargs.get('_id', ObjectId())
-        self.description = kwargs.get('description')
-        self.created_on = kwargs.get('created_on', datetime.now())
-        self.updated_on = kwargs.get('updated_on', datetime.now())
-        self.resolved_on = kwargs.get('resolved_on')
-        self.resolved = kwargs.get('resolved', False)
+        print(kwargs.get("_id"))
+        self.id = kwargs.get("_id", ObjectId())
+        self.description = kwargs.get("description")
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.resolved_on = kwargs.get("resolved_on")
+        self.resolved = kwargs.get("resolved", False)
+
 
 class Todo(DeprecatableMixin, FlexibleModel):
     """TODO model with embedded tasks."""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._id = kwargs.get('_id', ObjectId())
-        self.created_on = kwargs.get('created_on', datetime.now())
-        self.updated_on = kwargs.get('updated_on', datetime.now())
-        self.due_on = kwargs.get('due_on')
-        self.name = kwargs.get('name')
-        self.description = kwargs.get('description')
-        
+        self.id = kwargs.get("_id", ObjectId())
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.due_on = kwargs.get("due_on")
+        self.name = kwargs.get("name")
+        self.description = kwargs.get("description")
+
         # Embedded tasks
-        print(kwargs.get('tasks', []))
-        self.tasks: List[Task] = [Task(**task) for task in kwargs.get('tasks', [])]
+        print(kwargs.get("tasks", []))
+        self.tasks: List[Task] = [Task(**task) for task in kwargs.get("tasks", [])]
 
     def __repr__(self):
         return f"{self.name}"
@@ -41,9 +43,6 @@ class Todo(DeprecatableMixin, FlexibleModel):
     def to_dict(self) -> Dict[str, Any]:
         """Convert to MongoDB document format"""
         base_dict = super().to_dict()
-        if 'tasks' in base_dict:
-            base_dict['tasks'] = [
-                task.to_dict()
-                for task in self.tasks
-            ]
+        if "tasks" in base_dict:
+            base_dict["tasks"] = [task.to_dict() for task in self.tasks]
         return base_dict

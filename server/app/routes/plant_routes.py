@@ -3,9 +3,9 @@ from flask import Blueprint, jsonify, request
 from shared.db import Table
 from routes import GenericCRUD, APIBuilder, Schema
 
-bp = Blueprint('plants', __name__)
+bp = Blueprint("plants", __name__)
 plant_crud = GenericCRUD(Table.PLANT, Schema.PLANT)
-APIBuilder.register_blueprint(bp, 'plants', plant_crud)
+APIBuilder.register_blueprint(bp, "plants", plant_crud)
 
 # @APIBuilder.register_custom_route(bp, 'deprecate/', ['GET'])
 # def deprecate_plants():
@@ -24,7 +24,7 @@ APIBuilder.register_blueprint(bp, 'plants', plant_crud)
 #         plant.deprecated = True
 #         plant.deprecated_on = datetime.now()
 #         plant.deprecated_cause = cause
-    
+
 #     db.commit()
 #     db.close()
 
