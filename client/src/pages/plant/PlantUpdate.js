@@ -28,7 +28,6 @@ const PlantUpdate = ({ plantProp }) => {
 
   useEffect(() => {
     const initializeForm = (plant) => {
-      console.log(plant.system_id);
       if (plant) {
         setMix(mixes.find(_m => _m.id === plant.mix_id));
         setSelectedSpecies(species.find(_s => _s.id === plant.species_id));
@@ -43,7 +42,7 @@ const PlantUpdate = ({ plantProp }) => {
     if (plantProp) {
       initializeForm(plantProp);
     } else if (plants.length > 0 && id) {
-      const plant = plants.find(_p => _p.id === parseInt(id));
+      const plant = plants.find(_p => _p.id === id);
       if (plant) {
         initializeForm(plant);
       }

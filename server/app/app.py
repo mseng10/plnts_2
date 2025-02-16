@@ -133,7 +133,7 @@ def manage_plant_alerts():
     for plant in existing_plants:
         end_date = plant.watered_on + timedelta(days=float(plant.watering))
         if end_date < now and existing_plant_alrts_map.get(plant.id) is None:
-            new_plant_alert = Alert(model_id=plant.id, alert_type=AlertTypes.WATER)
+            new_plant_alert:Alert = Alert(model_id=plant.id, alert_type=AlertTypes.WATER.value)
             # Create the alert in the db
             Table.ALERT.create(new_plant_alert)
             existing_plant_alrts_map[new_plant_alert.model_id] = new_plant_alert

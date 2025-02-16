@@ -47,7 +47,7 @@ const SystemUpdate = ({ systemProp }) => {
     if (systemProp) {
       initializeForm(systemProp);
     } else if (systems.length > 0 && id) {
-      const system = systems.find(_t => _t.id === parseInt(id));
+      const system = systems.find(_t => _t.id === id);
       if (system) {
         initializeForm(system);
       }

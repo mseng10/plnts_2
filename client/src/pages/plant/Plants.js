@@ -63,7 +63,7 @@ const Plants = ({ initialPlants }) => {
       <GridToolbarExport />
       <Box sx={{ flexGrow: 1 }} />
       {selectedPlants.length === 1 && (
-        <IconButton size="small" color="primary" onClick={() => navigate(`/plants/${selectedPlants[0].id}`, { plantProp: selectedPlants[0] })}>
+        <IconButton size="small" color="primary" onClick={() => navigate(`/plants/${selectedPlants[0].id}`)}>
           <EditSharp />
         </IconButton>
       )}
@@ -97,10 +97,9 @@ const Plants = ({ initialPlants }) => {
           checkboxSelection
           disableRowSelectionOnClick
           onRowSelectionModelChange={(newSelectionModel) => {
-          const newSelectedPlants = newSelectionModel.map(index => plants[index-1]);
-
-            console.log(newSelectedPlants)
-            setSelectedPlants(newSelectedPlants);
+          const newSelectedPlants = newSelectionModel.map(id => 
+            plants.find(plant => plant.id === id));            
+          setSelectedPlants(newSelectedPlants);
           }}
           slots={{ toolbar: CustomToolbar }}
         />

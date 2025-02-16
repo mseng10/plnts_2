@@ -4,6 +4,7 @@ Module defining models for alerts.
 from datetime import datetime
 from models import FlexibleModel, DeprecatableMixin, Fields
 import enum
+from bson import ObjectId
 
 
 class AlertTypes(enum.Enum):

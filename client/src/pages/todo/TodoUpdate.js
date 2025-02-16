@@ -27,7 +27,7 @@ const TodoUpdate = ({ todoProp }) => {
     if (todoProp) {
       initializeForm(todoProp);
     } else if (todos.length > 0 && id) {
-      const todo = todos.find(_t => _t.id === parseInt(id));
+      const todo = todos.find(_t => _t.id === id);
       if (todo) {
         initializeForm(todo);
       }

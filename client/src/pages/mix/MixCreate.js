@@ -38,7 +38,6 @@ const MixCreate = () => {
           });
         }
       });
-      console.log(soils_json)
       setExperimental(false);
       await createMix({ name, description, experimental, soil_parts: soils_json });
       navigate("/");
