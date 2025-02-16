@@ -17,11 +17,10 @@ import logging
 # Create a logger for this specific module
 logger = setup_logger(__name__, logging.DEBUG)
 
-def create_model(model_path: str, model_class: Type[FlexibleModel]):
+def create_model(model_path: str, table: Table):
     """
     Create the provided model from the data path.
     """
-    table: Table = model_class.table
 
     logger.info(f"Beginning to create model {table.value}")
     
@@ -33,13 +32,11 @@ def create_model(model_path: str, model_class: Type[FlexibleModel]):
 
     # Load models from CSV and insert them
     # Doing this way to create null values in the db in the event some fields get updated
-    models = model_class.from_csv(model_path)
-    documents = [model.to_dict() for model in models]
-    
-    if documents:
-        for doc in documents:
+    models: List[FlexibleModel] = table.model_class.from_csv(model_path)
+    if models:
+        for doc in models:
             table.create(doc)
-        logger.info(f"Successfully created {len(documents)} documents for {table.value}")
+        logger.info(f"Successfully created {len(models)} documents for {table.value}")
     else:
         logger.error(f"No documents to create for {table.value}")
 
@@ -49,11 +46,11 @@ def create_all_models():
    """
    logger.info("Beginning to create models.")
    
-   models_to_create: List[Tuple[str, Type[FlexibleModel]]] = [
-       ("data/installable/soils/soils.csv", Soil),
-       ("data/installable/plants/genus_types.csv", PlantGenusType),
-       ("data/installable/plants/genera.csv", PlantGenus),
-       ("data/installable/plants/species.csv", PlantSpecies),
+   models_to_create: List[Tuple[str, Table]] = [
+       ("data/installable/soils/soils.csv", Table.SOIL),
+       ("data/installable/plants/genus_types.csv", Table.GENUS_TYPE),
+       ("data/installable/plants/genera.csv", Table.GENUS),
+       ("data/installable/plants/species.csv", Table.SPECIES),
    ]
 
    for model_path, model_class in models_to_create:
@@ -70,4 +67,4 @@ def install():
    logger.info("Installation complete")
 
 if __name__ == "__main__":
-   install()
+    install()

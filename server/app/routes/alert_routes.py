@@ -1,8 +1,8 @@
 from flask import Blueprint
 
-from models.alert import Alert
-from routes import GenericCRUD, APIBuilder
+from shared.db import Table
+from routes import GenericCRUD, APIBuilder, Schema
 
 bp = Blueprint('alerts', __name__)
-alert_crud = GenericCRUD(Alert)
-APIBuilder.register_resource(bp, 'alerts', alert_crud, ["GET", "GET_MANY", "DELETE"])
+alert_crud = GenericCRUD(Table.ALERT, Schema.ALERT)
+APIBuilder.register_blueprint(bp, 'alerts', alert_crud, ["GET", "GET_MANY", "DELETE"])

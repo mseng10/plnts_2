@@ -2,12 +2,18 @@
 from typing import List, Any, Dict
 import numpy as np
 import csv
-from shared.db import Table
 from bson import ObjectId
+
+class Fields:
+
+    @staticmethod
+    def object_id(value):
+        if isinstance(value,str):
+            return ObjectId(value)
+        return value
 
 class FlexibleModel:
     """Base model with MongoDB support"""
-    table: Table = None  # Override in subclasses
     
     def __init__(self, **kwargs):
         self._id = kwargs.get('_id', ObjectId())  # MongoDB ID
@@ -38,6 +44,15 @@ class FlexibleModel:
             reader = csv.DictReader(csvfile)
             return [cls.from_dict(row) for row in reader]
 
+    # Overridable method
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary for MongoDB storage"""
-        return {k: v for k, v in self.__dict__.items() if not k.startswith('_')}
+        return {k: v for k, v in self.__dict__.items()}
+    
+
+class DeprecatableMixin:
+    """ In case the model is deprecated."""
+    def __init__(self, **kwargs):
+        self.deprecated = kwargs.get('deprecated', False)
+        self.deprecated_on = kwargs.get('deprecated_on')
+        self.deprecated_cause = kwargs.get('deprecated_cause')

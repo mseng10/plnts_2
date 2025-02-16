@@ -3,12 +3,11 @@ Module defining models for system.
 """
 from datetime import datetime
 from bson import ObjectId
-from models.plant import DeprecatableMixin
+from models import FlexibleModel, DeprecatableMixin
 from models import FlexibleModel
 
 class Light(DeprecatableMixin, FlexibleModel):
    """Light model."""
-   collection_name = "light"
 
    def __init__(self, **kwargs):
        super().__init__(**kwargs)
@@ -22,21 +21,8 @@ class Light(DeprecatableMixin, FlexibleModel):
    def __repr__(self) -> str:
        return f"{self.name}"
 
-#    schema = ModelConfig({
-#        '_id': FieldConfig(read_only=True),
-#        'created_on': FieldConfig(read_only=True),
-#        'updated_on': FieldConfig(read_only=True),
-#        'name': FieldConfig(),
-#        'cost': FieldConfig(),
-#        'system_id': FieldConfig(),
-#        'deprecated': FieldConfig(),
-#        'deprecated_on': FieldConfig(),
-#        'deprecated_cause': FieldConfig()
-#    })
-
 class System(DeprecatableMixin, FlexibleModel):
    """System model."""
-   collection_name = "system"
 
    def __init__(self, **kwargs):
        super().__init__(**kwargs)
@@ -64,26 +50,4 @@ class System(DeprecatableMixin, FlexibleModel):
 
    def __repr__(self) -> str:
        return f"{self.name}"
-
-#    schema = ModelConfig({
-#        '_id': FieldConfig(read_only=True),
-#        'created_on': FieldConfig(read_only=True),
-#        'updated_on': FieldConfig(read_only=True),
-#        'last_humidity': FieldConfig(read_only=True),
-#        'last_temperature': FieldConfig(read_only=True),
-#        'container_id': FieldConfig(internal_only=True),
-#        'is_local': FieldConfig(internal_only=True),
-#        'url': FieldConfig(internal_only=True),
-#        'name': FieldConfig(),
-#        'description': FieldConfig(),
-#        'target_humidity': FieldConfig(),
-#        'target_temperature': FieldConfig(),
-#        'duration': FieldConfig(),
-#        'distance': FieldConfig(),
-#        'deprecated': FieldConfig(),
-#        'deprecated_on': FieldConfig(),
-#        'deprecated_cause': FieldConfig()
-#        # Relationships will be handled by querying the related collections
-#        # 'plants': FieldConfig(nested=Plant.schema, include_nested=True, delete_with_parent=True)
-#        # 'lights': FieldConfig(nested=Light.schema, include_nested=True, delete_with_parent=True)
-#    })
+   

@@ -3,7 +3,7 @@ from shared.db import Table
 from models.system import System
 
 ENVIRONMENT = os.getenv('ENVIRONMENT', 'docker')
-USE_LOCAL_HARDWARE = os.getenv('USE_LOCAL_HARDWARE', 'false').lower() == 'true'
+USE_LOCAL_HARDWARE = os.getenv('USE_LOCAL_HARDWARE', 'true').lower() == 'true'
 
 def discover_systems():
     """
@@ -13,8 +13,7 @@ def discover_systems():
     if USE_LOCAL_HARDWARE:
         # Check for local system and create new system if needed
         local_system = Table.SYSTEM.count({'container_id': 'local'})
-        
-        if local_system > 0:
+        if local_system == 0:
             local_system = System(
                 name='Local System',
                 description='System created by service. Please update accordingly',
@@ -27,7 +26,7 @@ def discover_systems():
             )
             
             # Insert the new system
-            Table.SYSTEM.create(local_system.to_dict())
+            Table.SYSTEM.create(local_system)
 
        # TODO: Support for Kubernetes
        # if ENVIRONMENT == 'kubernetes':

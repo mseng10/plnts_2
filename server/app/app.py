@@ -24,7 +24,8 @@ from shared.discover import discover_systems
 logger = setup_logger(__name__, logging.DEBUG)
 
 # Probably abstract this out to a Role class and have this be in the master role class
-discover_systems() # Maybe put this into the installable?
+# Maybe put this into the installable?
+discover_systems()
 
 # Create Flask app
 app = Flask(__name__)
@@ -62,7 +63,7 @@ def get_meta():
     logger.info("Received request to query the meta")
 
     meta = {
-        # "alert_count": db.plant_alerts.count_documents({"deprecated": False}),
+        "alert_count": Table.ALERT.count({"deprecated": False}),
         "todo_count": Table.TODO.count({"deprecated": False})
     }
 
@@ -85,6 +86,16 @@ def get_notebook():
     
     # Serve the HTML
     return body
+
+# Print details of the running endpoints
+for rule in app.url_map.iter_rules():
+    methods = ','.join(sorted(rule.methods))
+    arguments = ','.join(sorted(rule.arguments))
+    logger.debug(f"Endpoint: {rule.endpoint}")
+    logger.debug(f"    URL: {rule}")
+    logger.debug(f"    Methods: {methods}")
+    logger.debug(f"    Arguments: {arguments}")
+    logger.debug("---")
 
 scheduler = APScheduler()
 scheduler.init_app(app)

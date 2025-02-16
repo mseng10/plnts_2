@@ -1,38 +1,36 @@
 from flask import Blueprint, jsonify
 from shared.logger import logger
 
-from models.system import System, Light
-from routes import GenericCRUD, APIBuilder
+from shared.db import Table
+from bson import ObjectId
+
+from routes import GenericCRUD, APIBuilder, Schema
 
 system_bp = Blueprint('systems', __name__)
-system_crud = GenericCRUD(System)
-APIBuilder.register_resource(system_bp, 'systems', system_crud)
+system_crud = GenericCRUD(Table.SYSTEM, Schema.SYSTEM)
+APIBuilder.register_blueprint(system_bp, 'systems', system_crud)
 
-# @APIBuilder.register_custom_route(system_bp, '/systems/<int:system_id>/plants/', ['GET'])
-# def get_systems_plants(system_id):
-#     """
-#     Get system's plants.
-#     """
-#     logger.info("Received request to get a system's plants")
+@APIBuilder.register_custom_route(system_bp, "/systems/<string:id>/plants/", methods=['GET'])
+def get_systems_plants(id):
+    """
+    Get system's plants.
+    """
+    logger.info("Received request to get a system's plants")
+
+    plants = Table.PLANT.get_many({'system_id': ObjectId(id)})
+
+    return jsonify([Schema.PLANT.read(plant) for plant in plants])
+
+@APIBuilder.register_custom_route(system_bp, "/systems/<string:id>/alerts/", ["GET"])
+def get_systems_alerts(id):
+    """
+    Get system's alerts.
+    """
+    logger.info("Received request to get a system's alerts")
+
+    alerts = Table.ALERT.get_many({'model_id': ObjectId(id)})
     
-#     db = Session()
-#     plants = db.query(Plant).filter(Plant.system_id == system_id).all()
-#     db.close()
-
-#     return jsonify([Plant.schema.serialize(plant) for plant in plants])
-
-# @APIBuilder.register_custom_route(system_bp, "/systems/<int:system_id>/alerts/", ["GET"])
-# def get_systems_alerts(system_id):
-#     """
-#     Get system's alerts.
-#     """
-#     logger.info("Received request to get a system's alerts")
-    
-#     db = Session()
-#     plant_alerts = db.query(PlantAlert).filter(PlantAlert.system_id == system_id).all()
-#     db.close()
-
-#     return jsonify([PlantAlert.schema.serialize(plant_alert) for plant_alert in plant_alerts])
+    return jsonify([Schema.ALERT.read(alert) for alert in alerts])
 
 # @APIBuilder.register_custom_route(system_bp, "/systems/<int:system_id>/video_feed/", ["GET"])
 # def get_video_feed(system_id):
@@ -85,5 +83,5 @@ APIBuilder.register_resource(system_bp, 'systems', system_crud)
 #         return jsonify({"error": str(e)}), 500
 
 light_bp = Blueprint('lights', __name__)
-light_crud = GenericCRUD(Light)
-APIBuilder.register_resource(light_bp, 'lights', light_crud, ["GET", "GET_MANY", "POST"])
+light_crud = GenericCRUD(Table.LIGHT, Schema.LIGHT)
+APIBuilder.register_blueprint(light_bp, 'lights', light_crud, ["GET", "GET_MANY", "POST"])
