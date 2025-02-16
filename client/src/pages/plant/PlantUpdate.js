@@ -53,14 +53,15 @@ const PlantUpdate = ({ plantProp }) => {
     event.preventDefault();
     const updatedPlant = {
       id,
-      size,
-      cost,
+      size: parseInt(size),
+      cost: parseInt(cost),
       mix_id: mix.id,
       system_id: system.id,
       species_id: selectedSpecies.id,
-      watering,
+      watering: parseInt(watering),
       phase
     };
+    console.log(updatedPlant)
     try {
       await updatePlant(updatedPlant);
       navigate("/plants");

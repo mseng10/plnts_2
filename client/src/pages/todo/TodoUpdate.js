@@ -38,6 +38,7 @@ const TodoUpdate = ({ todoProp }) => {
     event.preventDefault();
     const due_on = dueOn.toISOString()
     const updatedTodo = {
+      id,
       name,
       description,
       due_on

@@ -135,7 +135,7 @@ class Schema(Enum):
         "name": SchemaField(),
         "description": SchemaField(),
         "experimental": SchemaField(),
-        "soil_parts": SchemaField(nested=True, nested_class="SOIL_PART"),
+        "soil_parts": SchemaField(nested=True, nested_schema="SOIL_PART"),
         "deprecated": SchemaField(),
         "deprecated_on": SchemaField(),
         "deprecated_cause": SchemaField(),
@@ -153,7 +153,7 @@ class Schema(Enum):
     def __init__(self, fields: Dict[str, SchemaField]):
         self.fields = fields
 
-    def read(self, obj: FlexibleModel, depth=0, include_nested=False) -> Dict[str, Any]:
+    def read(self, obj: FlexibleModel, depth=0) -> Dict[str, Any]:
         """Read a flexible model and serialize it for the client."""
         if depth > 5:
             return {}
@@ -168,11 +168,11 @@ class Schema(Enum):
                     nested_schema: Schema = getattr(Schema, v.nested_schema)
                     if isinstance(value, list):
                         result[k] = [
-                            nested_schema.read(item, depth + 1, include_nested)
+                            nested_schema.read(item, depth + 1)
                             for item in value
                         ]
                     elif value is not None:
-                        result[k] = nested_schema.read(value, depth + 1, include_nested)
+                        result[k] = nested_schema.read(value, depth + 1)
                 elif not v.internal_only:
                     result[k] = value
         return result
@@ -242,7 +242,6 @@ class GenericCRUD:
     def get_many(self):
         try:
             items = self.table.get_many()
-
             return jsonify([self.schema.read(item) for item in items])
         except Exception as e:
             logger.error(f"Error in get_many: {str(e)}")
@@ -250,7 +249,7 @@ class GenericCRUD:
 
     def create(self):
         try:
-            item = self.schema.create(self.table.model_class, request.json)
+            item: FlexibleModel = self.schema.create(self.table.model_class, request.json)
 
             result = self.table.create(item)
             item.id = result
@@ -268,6 +267,8 @@ class GenericCRUD:
                 return jsonify({"error": "Not found"}), 404
 
             self.schema.patch(db_model, request.json)
+
+            self.table.update(id, db_model)
 
             return jsonify(db_model.to_dict())
 

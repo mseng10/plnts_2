@@ -54,14 +54,17 @@ class Table(Enum):
     def get_many(
         self, query: Dict[str, Any] = {}, limit: int = 100
     ) -> List[Dict[str, Any]]:
-        return [
-            self.model_class(**item)
-            for item in list(DB[self.table_name].find(query).limit(limit))
-        ]
+        ret = []
+        for item in DB[self.table_name].find(query).limit(limit):
+            ret.append(self.model_class(**item))
+        return ret
 
     def update(self, id: str, data: FlexibleModel) -> bool:
+        # Temp Solution
+        set = data.to_dict()
+        del set['_id']
         result = DB[self.table_name].update_one(
-            {"_id": ObjectId(id)}, {"$set": data.to_dict()}
+            {"_id": ObjectId(id)}, {"$set": set}
         )
         return result.modified_count > 0
 
