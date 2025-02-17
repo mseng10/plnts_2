@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost, simplePatch, apiBuilder, APIS } from '../api';
+import { simpleFetch, simplePost, simplePatch, apiBuilder, APIS, simpleDelete } from '../api';
 
 /** Query and api functionality for all systems. */
 export const useSystems = () => {
@@ -42,7 +42,7 @@ export const useSystems = () => {
     const deprecateSystem = async (id) => {
       setIsLoading(true);
       setError(null);
-      simplePost(apiBuilder(APIS.system.deprecateOne).setId(id).get())
+      simpleDelete(apiBuilder(APIS.system.deleteOne).setId(id).get())
         .then(() => 
           setSystems(prevSystems => prevSystems.filter(system => 
             system.id !== id

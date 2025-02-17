@@ -8,7 +8,7 @@ from routes import GenericCRUD, APIBuilder, Schema
 
 system_bp = Blueprint("systems", __name__)
 system_crud = GenericCRUD(Table.SYSTEM, Schema.SYSTEM)
-APIBuilder.register_blueprint(system_bp, "systems", system_crud)
+APIBuilder.register_blueprint(system_bp, "systems", system_crud, ["GET", "GET_MANY", "POST", "PATCH", "BANISH"])
 
 
 @APIBuilder.register_custom_route(

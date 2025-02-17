@@ -5,7 +5,7 @@ from routes import GenericCRUD, APIBuilder, Schema
 
 bp = Blueprint("plants", __name__)
 plant_crud = GenericCRUD(Table.PLANT, Schema.PLANT)
-APIBuilder.register_blueprint(bp, "plants", plant_crud)
+APIBuilder.register_blueprint(bp, "plants", plant_crud, ["GET", "GET_MANY", "POST", "PATCH", "BANISH"])
 
 # @APIBuilder.register_custom_route(bp, 'deprecate/', ['GET'])
 # def deprecate_plants():

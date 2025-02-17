@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost, apiBuilder, simplePatch, APIS } from '../api';
+import { simpleFetch, simplePost, apiBuilder, simplePatch, APIS, simpleDelete } from '../api';
 
 export const useMixes = () => {
   const [mixes, setMixes] = useState([]);
@@ -47,10 +47,10 @@ export const useMixes = () => {
   };
 
   /** Deprecate the mix */
-  const deprecateMix = async (id) => {
+  const deleteMix = async (id) => {
     setIsLoading(true);
     setError(null);
-    simplePost(apiBuilder(APIS.plant.deprecateOne).setId(id).get())
+    simpleDelete(apiBuilder(APIS.plant.deleteOne).setId(id).get())
       .then(() => 
         setMixes(prevMixes => prevMixes.filter(mix => 
           mix.id !== id
@@ -62,7 +62,7 @@ export const useMixes = () => {
         setIsLoading(false))
   };
 
-  return { mixes, isLoading, error, setError, createMix, updateMix, deprecateMix };
+  return { mixes, isLoading, error, setError, createMix, updateMix, deleteMix };
 };
 
 export const useSoilParts = (initialParts) => {

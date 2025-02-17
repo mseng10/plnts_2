@@ -6,7 +6,7 @@ export const APIS = {
     create: "/plants/",
     getOne: "/plants/{id}/",
     updateOne: "/plants/{id}/",
-    deprecateOne: "/plants/{id}/deprecate/",
+    deleteOne: "/plants/{id}/",
     waterMany: "/plants/water/",
     deprecateMany: "/plants/deprecate/"
   },
@@ -15,7 +15,7 @@ export const APIS = {
     create: "/systems/",
     getOne: "/systems/{id}/",
     updateOne: "/systems/{id}/",
-    deprecateOne: "/systems/{id}/deprecate/",
+    deleteOne: "/systems/{id}/",
     plants: "/systems/{id}/plants/",
     alerts: "/systems/{id}/alerts/"
   },
@@ -28,11 +28,14 @@ export const APIS = {
   },
   alert: {
     getAll: "/alerts/",
-    deprecateOne: "/alerts/{id}/deprecate"
+    deleteOne: "/alerts/{id}/",
+    deleteOne: "/todos/{id}/",
   },
   light: {
     getAll: "/lights/",
-    create: "/lights/"
+    create: "/lights/",
+    deleteOne: "/todos/{id}/",
+
   },
   meta: {
     getOne: "/meta/"
@@ -44,7 +47,7 @@ export const APIS = {
     getAll: "/mixes/",
     create: "/mixes/",
     updateOne: "/mixes/{id}/",
-    deprecateOne: "/mixes/{id}/deprecate/"
+    deleteOne: "/todos/{id}/",
   },
   soil: {
     getAll: "/soils/"
@@ -62,7 +65,6 @@ export const APIS = {
   task: {
     resolve: "/todos/{id}/tasks/{eid}/resolve",
     unresolve: "/todos/{id}/tasks/{eid}/unresolve"
-
   },
 }
 
@@ -141,7 +143,6 @@ export const simpleDelete = (url) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-
-      return response.json();
+      return "";
     });
 };

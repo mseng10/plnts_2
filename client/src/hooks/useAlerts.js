@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost, APIS, apiBuilder } from '../api';
+import { simpleFetch, simplePost, APIS, apiBuilder, simpleDelete } from '../api';
 
 export const useAlerts = (initialAlerts = []) => {
   const [alerts, setAlerts] = useState(initialAlerts);
@@ -18,7 +18,7 @@ export const useAlerts = (initialAlerts = []) => {
   const resolveAlert = async (id) => {
     setIsLoading(true);
     setError(null);
-    simplePost(apiBuilder(APIS.alert.deprecateOne).setId(id).get())
+    simpleDelete(apiBuilder(APIS.alert.deleteOne).setId(id).get())
       .then(() => 
         setAlerts(prevAlerts => prevAlerts.filter(alert => 
           alert.id !== id

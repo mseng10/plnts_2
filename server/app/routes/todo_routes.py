@@ -11,7 +11,7 @@ from models.todo import Todo
 
 bp = Blueprint("todos", __name__)
 todo_crud = GenericCRUD(Table.TODO, Schema.TODO)
-APIBuilder.register_blueprint(bp, "todos", todo_crud)
+APIBuilder.register_blueprint(bp, "todos", todo_crud, ["GET", "GET_MANY", "POST", "PATCH", "DELETE"])
 
 @APIBuilder.register_custom_route(bp, "/todos/<string:id>/tasks/<string:task_id>/resolve", methods=['POST'])
 def resolve_task(id, task_id):
