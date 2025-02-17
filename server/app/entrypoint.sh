@@ -42,4 +42,5 @@ fi
 
 echo "\n==== STARTING FLASK APP ===="
 # Start the Flask application
-exec gunicorn -b 0.0.0.0:5000 app.app:app
+cd app/ # This is here because I had a hilariously bad time starting app
+exec gunicorn -b 0.0.0.0:5000 app:app
