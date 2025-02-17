@@ -8,6 +8,10 @@ import InvertColorsSharpIcon from '@mui/icons-material/InvertColorsSharp';
 import TungstenSharpIcon from '@mui/icons-material/TungstenSharp';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Divider from '@mui/material/Divider';
 import { CardActionArea, CardHeader } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import GrassOutlinedIcon from '@mui/icons-material/GrassOutlined';
@@ -17,14 +21,14 @@ import CardActions from '@mui/material/CardActions';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import SystemPlants from '../../modals/system/SystemPlants';
 import SystemAlerts from '../../modals/system/SystemAlerts';
-import { useSystems } from '../../hooks/useSystems';
+import { useSystems, useLights } from '../../hooks/useSystems';
 import { CARD_STYLE, AVATAR_STYLE, CIRCULAR_PROGRESS_STYLE, ICON_STYLE } from '../../constants';
 import { EditSharp } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
 import { NoData, ServerError, Loading } from '../../elements/Page';
 
-const SystemCard = ({ system, deprecateSystem }) => {
+const SystemCard = ({ system, lights, deprecateSystem }) => {
   const navigate = useNavigate();
   const [isSystemsPlanetsOpen, setIsSystemsPlanetsOpen] = useState(false);
   const [isSystemAlertsOpen, setIsSystemsAlertsOpen] = useState(false);
@@ -71,6 +75,19 @@ const SystemCard = ({ system, deprecateSystem }) => {
                 />
                 <TungstenSharpIcon sx={ICON_STYLE} />
               </Box>
+              <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+              <Divider sx={{width: '100%' }}  component="li" />
+              {lights && lights.map((light) => (
+                <div key={light.id}>
+                  <ListItem
+                    disableGutters
+                  >
+                    <ListItemText primary={light.name} style={{ color: "black" }}/>
+                  </ListItem>
+                  <Divider sx={{width: '100%' }}  component="li" />
+                </div>
+              ))}
+            </List>
             </Box>
           </CardContent>
           <CardActions disableSpacing>
@@ -109,6 +126,7 @@ const SystemCard = ({ system, deprecateSystem }) => {
 
 const Systems = () => {
   const { systems, isLoading, error, deprecateSystem } = useSystems();
+  const {lights } = useLights();
 
   if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
@@ -118,7 +136,7 @@ const Systems = () => {
     <Grid container justifyContent="center" spacing={4}>
       {systems.map((system) => (
         <Grid key={system.id} item>
-          <SystemCard system={system} deprecateSystem={deprecateSystem}/>
+          <SystemCard system={system} lights = {lights.filter(light => light.system_id === system.id)} deprecateSystem={deprecateSystem}/>
         </Grid>
       ))}
     </Grid>

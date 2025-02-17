@@ -40,6 +40,31 @@ def get_systems_alerts(id):
 
     return jsonify([Schema.ALERT.read(alert) for alert in alerts])
 
+@APIBuilder.register_custom_route(
+    system_bp, "/systems/<string:id>/lights/", methods=["GET"]
+)
+def get_systems_lights(id):
+    """
+    Get system's lights.
+    """
+    logger.info("Received request to get a system's alerts")
+
+    lights = Table.LIGHT.get_many({"system_id": ObjectId(id)})
+
+    return jsonify([Schema.LIGHT.read(light) for light in lights])
+
+# @APIBuilder.register_custom_route(
+#     system_bp, "/systems/<string:id>/lights/<string:light_id>/", methods=["POST"]
+# )
+# def resync_light(id, light_id):
+#     """
+#     Get system's lights.
+#     """
+#     logger.info("Received request to get a system's alerts")
+
+#     light = Table.LIGHT.get_one(light_id)
+
+#     return jsonify([Schema.LIGHT.read(light) for light in lights])
 
 # @APIBuilder.register_custom_route(system_bp, "/systems/<int:system_id>/video_feed/", ["GET"])
 # def get_video_feed(system_id):
