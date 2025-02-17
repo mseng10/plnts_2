@@ -1,47 +1,47 @@
-id,name,common_name,genus_type_id
-1,Echeveria,Echeveria,1
-2,Sedum,Stonecrop,1
-3,Haworthia,Haworthia,1
-4,Crassula,Jade Plant,1
-5,Kalanchoe,Kalanchoe,1
-6,Sempervivum,Hens and Chicks,1
-7,Mammillaria,Pincushion Cactus,2
-8,Opuntia,Prickly Pear,2
-9,Schlumbergera,Christmas Cactus,2
-10,Rhipsalis,Mistletoe Cactus,2
-11,Monstera,Swiss Cheese Plant,3
-12,Philodendron,Philodendron,3
-13,Ficus,Fig,3
-14,Dracaena,Dragon Tree,3
-15,Dieffenbachia,Dumb Cane,3
-16,Calathea,Prayer Plant,3
-17,Maranta,Maranta,3
-18,Stromanthe,Stromanthe,3
-19,Nephrolepis,Boston Fern,4
-20,Asplenium,Bird's Nest Fern,4
-21,Adiantum,Maidenhair Fern,4
-22,Platycerium,Staghorn Fern,4
-23,Aglaonema,Chinese Evergreen,5
-24,Spathiphyllum,Peace Lily,5
-25,Anthurium,Flamingo Flower,5
-26,Alocasia,Elephant Ear,5
-27,Syngonium,Arrowhead Plant,5
-28,Phalaenopsis,Moth Orchid,6
-29,Saintpaulia,African Violet,6
-30,Begonia,Begonia,6
-31,Hoya,Wax Plant,6
-32,Epipremnum,Pothos,7
-33,Hedera,English Ivy,7
-34,Cissus,Rex Begonia Vine,7
-35,Tradescantia,Wandering Jew,7
-36,Neoregelia,Bromeliad,8
-37,Guzmania,Bromeliad,8
-38,Vriesea,Bromeliad,8
-39,Chamaedorea,Parlor Palm,9
-40,Rhapis,Lady Palm,9
-41,Phoenix,Date Palm,9
-42,Tillandsia,Air Plant,10
-43,Dionaea,Venus Flytrap,11
-44,Nepenthes,Pitcher Plant,11
-45,Paphiopedilum,Slipper Orchid,12
-46,Cattleya,Corsage Orchid,12
+_id,name,common_name,genus_type_id
+65cd7a8e9b72e6c8940d5234,Echeveria,Echeveria,65cd7a8e9b72e6c8940d1234
+65cd7a8e9b72e6c8940d5235,Sedum,Stonecrop,65cd7a8e9b72e6c8940d1234
+65cd7a8e9b72e6c8940d5236,Haworthia,Haworthia,65cd7a8e9b72e6c8940d1234
+65cd7a8e9b72e6c8940d5237,Crassula,Jade Plant,65cd7a8e9b72e6c8940d1234
+65cd7a8e9b72e6c8940d5238,Kalanchoe,Kalanchoe,65cd7a8e9b72e6c8940d1234
+65cd7a8e9b72e6c8940d5239,Sempervivum,Hens and Chicks,65cd7a8e9b72e6c8940d1234
+65cd7a8e9b72e6c8940d523a,Mammillaria,Pincushion Cactus,65cd7a8e9b72e6c8940d1235
+65cd7a8e9b72e6c8940d523b,Opuntia,Prickly Pear,65cd7a8e9b72e6c8940d1235
+65cd7a8e9b72e6c8940d523c,Schlumbergera,Christmas Cactus,65cd7a8e9b72e6c8940d1235
+65cd7a8e9b72e6c8940d523d,Rhipsalis,Mistletoe Cactus,65cd7a8e9b72e6c8940d1235
+65cd7a8e9b72e6c8940d523e,Monstera,Swiss Cheese Plant,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d523f,Philodendron,Philodendron,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d5240,Ficus,Fig,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d5241,Dracaena,Dragon Tree,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d5242,Dieffenbachia,Dumb Cane,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d5243,Calathea,Prayer Plant,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d5244,Maranta,Maranta,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d5245,Stromanthe,Stromanthe,65cd7a8e9b72e6c8940d1236
+65cd7a8e9b72e6c8940d5246,Nephrolepis,Boston Fern,65cd7a8e9b72e6c8940d1237
+65cd7a8e9b72e6c8940d5247,Asplenium,Bird's Nest Fern,65cd7a8e9b72e6c8940d1237
+65cd7a8e9b72e6c8940d5248,Adiantum,Maidenhair Fern,65cd7a8e9b72e6c8940d1237
+65cd7a8e9b72e6c8940d5249,Platycerium,Staghorn Fern,65cd7a8e9b72e6c8940d1237
+65cd7a8e9b72e6c8940d524a,Aglaonema,Chinese Evergreen,65cd7a8e9b72e6c8940d1238
+65cd7a8e9b72e6c8940d524b,Spathiphyllum,Peace Lily,65cd7a8e9b72e6c8940d1238
+65cd7a8e9b72e6c8940d524c,Anthurium,Flamingo Flower,65cd7a8e9b72e6c8940d1238
+65cd7a8e9b72e6c8940d524d,Alocasia,Elephant Ear,65cd7a8e9b72e6c8940d1238
+65cd7a8e9b72e6c8940d524e,Syngonium,Arrowhead Plant,65cd7a8e9b72e6c8940d1238
+65cd7a8e9b72e6c8940d524f,Phalaenopsis,Moth Orchid,65cd7a8e9b72e6c8940d1239
+65cd7a8e9b72e6c8940d5250,Saintpaulia,African Violet,65cd7a8e9b72e6c8940d1239
+65cd7a8e9b72e6c8940d5251,Begonia,Begonia,65cd7a8e9b72e6c8940d1239
+65cd7a8e9b72e6c8940d5252,Hoya,Wax Plant,65cd7a8e9b72e6c8940d1239
+65cd7a8e9b72e6c8940d5253,Epipremnum,Pothos,65cd7a8e9b72e6c8940d123a
+65cd7a8e9b72e6c8940d5254,Hedera,English Ivy,65cd7a8e9b72e6c8940d123a
+65cd7a8e9b72e6c8940d5255,Cissus,Rex Begonia Vine,65cd7a8e9b72e6c8940d123a
+65cd7a8e9b72e6c8940d5256,Tradescantia,Wandering Jew,65cd7a8e9b72e6c8940d123a
+65cd7a8e9b72e6c8940d5257,Neoregelia,Bromeliad,65cd7a8e9b72e6c8940d123b
+65cd7a8e9b72e6c8940d5258,Guzmania,Bromeliad,65cd7a8e9b72e6c8940d123b
+65cd7a8e9b72e6c8940d5259,Vriesea,Bromeliad,65cd7a8e9b72e6c8940d123b
+65cd7a8e9b72e6c8940d525a,Chamaedorea,Parlor Palm,65cd7a8e9b72e6c8940d123c
+65cd7a8e9b72e6c8940d525b,Rhapis,Lady Palm,65cd7a8e9b72e6c8940d123c
+65cd7a8e9b72e6c8940d525c,Phoenix,Date Palm,65cd7a8e9b72e6c8940d123c
+65cd7a8e9b72e6c8940d525d,Tillandsia,Air Plant,65cd7a8e9b72e6c8940d123d
+65cd7a8e9b72e6c8940d525e,Dionaea,Venus Flytrap,65cd7a8e9b72e6c8940d123d
+65cd7a8e9b72e6c8940d525f,Nepenthes,Pitcher Plant,65cd7a8e9b72e6c8940d123d
+65cd7a8e9b72e6c8940d5260,Paphiopedilum,Slipper Orchid,65cd7a8e9b72e6c8940d123f
+65cd7a8e9b72e6c8940d5261,Cattleya,Corsage Orchid,65cd7a8e9b72e6c8940d123f

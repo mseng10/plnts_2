@@ -2,95 +2,52 @@
 Module defining models for system.
 """
 from datetime import datetime
-from typing import List
-
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import relationship, Mapped, mapped_column
-
-from models.plant import DeprecatableMixin
-from models import FlexibleModel, ModelConfig, FieldConfig, Base
+from bson import ObjectId
+from models import FlexibleModel, BanishableMixin, Fields
 
 
-class Light(Base, DeprecatableMixin, FlexibleModel):
+class Light(BanishableMixin, FlexibleModel):
     """Light model."""
 
-    __tablename__ = "light"
-
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=False)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now)
-    cost = Column(Integer(), nullable=False, default=0)
-    system_id: Mapped[int] = mapped_column(
-        ForeignKey("system.id", ondelete="CASCADE")
-    )  # System this light belongs to
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.name = kwargs.get("name")
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.cost = kwargs.get("cost", 0)
+        self.system_id = Fields.object_id(kwargs.get("system_id"))
 
     def __repr__(self) -> str:
         return f"{self.name}"
-    
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'name': FieldConfig(),
-        'cost': FieldConfig(),
-        'system_id': FieldConfig()
-    })
-    
 
-class System(Base, DeprecatableMixin, FlexibleModel):
+
+class System(BanishableMixin, FlexibleModel):
     """System model."""
 
-    __tablename__ = "system"
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.name = kwargs.get("name")
+        self.description = kwargs.get("description")
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
 
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=False)
-    description = Column(String(400), nullable=False)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now)
+        # Controlled Factors
+        self.target_humidity = kwargs.get("target_humidity", 0)  # %
+        self.target_temperature = kwargs.get("target_temperature", 0)  # F
 
-    # Controlled Factors - maybe move to a 
-    target_humidity = Column(Integer(), default=0, nullable=False)  # %
-    target_temperature = Column(Integer(), default=0, nullable=False)  # F
+        # Latest updates
+        self.last_humidity = kwargs.get("last_humidity")  # %
+        self.last_temperature = kwargs.get("last_temperature")  # F
 
-    # Latest updates (might break out at some point..)
-    last_humidity = Column(Integer(), nullable=True)  # %
-    last_temperature = Column(Integer(), nullable=True)  # F
+        # Internal
+        self.container_id = kwargs.get("container_id")
+        self.url = kwargs.get("url")
 
-    # Internal
-    container_id = Column(String(64), unique=True, nullable=False)
-    url = Column(String(200), nullable=False)
-
-    # Plants belonging to this system
-    plants: Mapped[List["Plant"]] = relationship(
-        "Plant", backref="system", passive_deletes=True
-    )  # Available plants of this system
-
-    # Lighting
-    duration = Column(Integer(), nullable=False)  # hours
-    distance = Column(Integer(), nullable=False)  # inches
-    lights: Mapped[List["Light"]] = relationship(
-        "Light", backref="system", passive_deletes=True
-    )  # Available plants of this system
+        # Lighting
+        self.duration = kwargs.get("duration")  # hours
+        self.distance = kwargs.get("distance")  # inches
 
     def __repr__(self) -> str:
         return f"{self.name}"
-
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'last_humidity': FieldConfig(read_only=True),
-        'last_temperature': FieldConfig(read_only=True),
-        'container_id': FieldConfig(internal_only=True),
-        'is_local': FieldConfig(internal_only=True),
-        'url': FieldConfig(internal_only=True),
-        'name': FieldConfig(),
-        'description': FieldConfig(),
-        'target_humidity': FieldConfig(),
-        'target_temperature': FieldConfig(),
-        'duration': FieldConfig(),
-        'distance': FieldConfig(),
-        # 'plants': FieldConfig(nested=Plant.schema, include_nested=True, delete_with_parent=True) 
-        # 'lights': FieldConfig(nested=Light.schema, include_nested=True, delete_with_parent=True) 
-    })

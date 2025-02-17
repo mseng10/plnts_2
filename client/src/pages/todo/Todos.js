@@ -25,17 +25,13 @@ import { NoData, ServerError, Loading } from '../../elements/Page';
 const TodoCard = ({ todo, onResolve }) => {
   const navigate = useNavigate();
   const isPastDue = dayjs(todo.due_on).isBefore(dayjs(), 'day');
-  const { tasks, updateTask } = useTasks(todo.tasks);
+  const { tasks, resolveTask, unresolveTask } = useTasks(todo.tasks);
 
   const handleToggle = (task) => () => {
     if (task.resolved) {
-      task.resolved = false;
-      task.resolved_on = null;
-      updateTask(todo.id, task);
+      unresolveTask(todo.id, task.id);
     } else {
-      task.resolved = true;
-      task.resolved_on = new Date();
-      updateTask(todo.id, task);
+      resolveTask(todo.id, task.id)
     }
   };
 
@@ -75,7 +71,7 @@ const TodoCard = ({ todo, onResolve }) => {
                         edge="end"
                         onChange={(handleToggle(task))}
                         checked={task.resolved}
-                        color='primary'
+                        color='success'
                       />
                     }
                   >

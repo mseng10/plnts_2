@@ -1,62 +1,23 @@
 """
-Module defining models for plants.
+Module defining models for alerts.
 """
-
 from datetime import datetime
-from typing import List
+from models import FlexibleModel, BanishableMixin, Fields
+import enum
+from bson import ObjectId
 
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from models.plant import DeprecatableMixin
-from models import FlexibleModel, ModelConfig, FieldConfig, Base
+class AlertTypes(enum.Enum):
+    WATER = "Water"
 
-class Alert(Base, DeprecatableMixin):
+
+class Alert(BanishableMixin, FlexibleModel):
     """Alert Base Class"""
-    __tablename__ = "alert"
 
-    id = Column(Integer, primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    alert_type = Column(String(50))
-    
-    __mapper_args__ = {
-        'polymorphic_identity': 'alert',
-        'polymorphic_on': alert_type
-    }
-
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'alert_type': FieldConfig(read_only=True)
-    })
-
-class PlantAlert(Alert):
-    """Plant alert model."""
-
-    __tablename__ = "plant_alert"
-
-    id = Column(Integer(), ForeignKey('alert.id'), primary_key=True)
-    plant_alert_type = Column(String(50))
-
-    plant_id: Mapped[int] = mapped_column(
-        ForeignKey("plant.id", ondelete="CASCADE")
-    )  # plant this plant belongs to
-    system_id: Mapped[int] = mapped_column(
-        ForeignKey("system.id", ondelete="CASCADE")
-    )  # System this light belongs to
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'plant_alert'
-    }
-
-    def __repr__(self):
-        return "plant_alert"
-
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'plant_alert_type': FieldConfig(read_only=True),
-        'plant_id': FieldConfig(read_only=True),
-        'system_id': FieldConfig(read_only=True)
-    })
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.alert_type = kwargs.get("alert_type", "alert")
+        self.model_id = Fields.object_id(kwargs.get("alert_type", "alert"))

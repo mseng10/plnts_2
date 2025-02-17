@@ -1,70 +1,46 @@
 """
-Module defining models for plants.
+Module defining models for todos.
 """
-
 from datetime import datetime
-from typing import List
+from typing import Dict, Any, List
+from bson import ObjectId
+from models import FlexibleModel, BanishableMixin, Fields
 
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from models.plant import DeprecatableMixin
-from models import FlexibleModel, ModelConfig, FieldConfig, Base
+class Task(FlexibleModel):
+    """TODO Item"""
 
-class Task(Base, DeprecatableMixin, FlexibleModel):
-    """Task of a Todo."""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.description = kwargs.get("description")
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.resolved_on = kwargs.get("resolved_on")
+        self.resolved = kwargs.get("resolved", False)
 
-    __tablename__ = "task"
 
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    description = Column(String(100), nullable=False)
-    todo_id: Mapped[int] = mapped_column(
-        ForeignKey("todo.id", ondelete="CASCADE")
-    )  # Todo this task belongs to
-    
-    resolved = Column(Boolean, default=False, nullable=False)
-    resolved_on = Column(DateTime(), nullable=True)
+class Todo(BanishableMixin, FlexibleModel):
+    """TODO model with embedded tasks."""
 
-    def __repr__(self):
-        return f"{self.description}"
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.due_on = kwargs.get("due_on")
+        self.name = kwargs.get("name")
+        self.description = kwargs.get("description")
 
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'todo_id': FieldConfig(),
-        'description': FieldConfig(),
-        'resolved': FieldConfig(),
-        'resolved_on': FieldConfig()
-    })
-
-class Todo(Base, DeprecatableMixin, FlexibleModel):
-    """TOOO model."""
-
-    __tablename__ = "todo"
-
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    due_on = Column(DateTime(), default=None, nullable=True)
-    name = Column(String(100), nullable=False)
-    description = Column(String(400), nullable=True)
-
-    tasks: Mapped[List["Task"]] = relationship(
-        "Task", backref="todo", passive_deletes=True
-    )  # Available tasks of this todo
-
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'due_on': FieldConfig(),
-        'name': FieldConfig(),
-        'description': FieldConfig(),
-        'tasks': FieldConfig(nested=Task.schema, nested_class=Task, include_nested=True, delete_with_parent=True, nested_identifier='todo_id'),
-    })
+        # Embedded tasks
+        self.tasks: List[Task] = [Task(**task) for task in kwargs.get("tasks", [])]
 
     def __repr__(self):
         return f"{self.name}"
+
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to MongoDB document format"""
+        base_dict = super().to_dict()
+        if "tasks" in base_dict:
+            base_dict["tasks"] = [task.to_dict() for task in self.tasks]
+        return base_dict

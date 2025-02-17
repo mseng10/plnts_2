@@ -3,5 +3,9 @@ venv/
 .idea/
 
 *.log
-
+*.pyc
 *.json
+
+myenv~/
+
+db/

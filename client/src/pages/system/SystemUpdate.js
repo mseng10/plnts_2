@@ -18,8 +18,8 @@ const SystemUpdate = ({ systemProp }) => {
   const { systems, isLoading, error, updateSystem } = useSystems();
 
   // Form Fields
-  const [humidity, setHumidity] = useState(60);
-  const [temperature, setTempurature] = useState(68);
+  const [target_humidity, setHumidity] = useState(60);
+  const [target_temperature, setTempurature] = useState(68);
   const [duration, setDuration] = useState(12);
   const [distance, setDistance] = useState(24);
   const [name, setName] = useState('');
@@ -33,8 +33,8 @@ const SystemUpdate = ({ systemProp }) => {
       if (system) {
         setName(system.name);
         setDescription(system.description);
-        setHumidity(system.humidity);
-        setTempurature(system.temperature);
+        setHumidity(system.target_humidity);
+        setTempurature(system.target_temperature);
         setDuration(system.duration);
         setDistance(system.distance);
         // TODO: Sync light data
@@ -47,7 +47,7 @@ const SystemUpdate = ({ systemProp }) => {
     if (systemProp) {
       initializeForm(systemProp);
     } else if (systems.length > 0 && id) {
-      const system = systems.find(_t => _t.id === parseInt(id));
+      const system = systems.find(_t => _t.id === id);
       if (system) {
         initializeForm(system);
       }
@@ -58,12 +58,13 @@ const SystemUpdate = ({ systemProp }) => {
     event.preventDefault();
     const light = lightModel;
     const updatedSystem = {
+      id,
       name,
       description,
-      humidity,
-      temperature,
-      duration,
-      distance,
+      target_humidity: parseInt(target_humidity),
+      target_temperature: parseInt(target_temperature),
+      duration: parseInt(duration),
+      distance: parseInt(distance),
       light
     };
     try {
@@ -111,7 +112,7 @@ const SystemUpdate = ({ systemProp }) => {
             <SliderInput
               icon="humidity"
               label={"Humidity"}
-              value={humidity}
+              value={target_humidity}
               setValue={setHumidity}
               defaultValue={12}
               step={1}
@@ -122,7 +123,7 @@ const SystemUpdate = ({ systemProp }) => {
             <SliderInput
               icon="temperature"
               label={"Temperature"}
-              value={temperature}
+              value={target_temperature}
               setValue={setTempurature}
               marks={temperatureMarks}
               step={2}

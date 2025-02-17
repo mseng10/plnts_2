@@ -1,89 +1,60 @@
-from sqlalchemy import Column, Integer, String, DateTime, Table, ForeignKey, Boolean
-from sqlalchemy.orm import relationship, Mapped
-
+"""
+Module for soil mix related models.
+"""
 from datetime import datetime
-from typing import List
+from typing import Dict, Any, List
+from bson import ObjectId
+from models import FlexibleModel, BanishableMixin, Fields
 
-from models.plant import DeprecatableMixin
-from models import Base, FieldConfig, ModelConfig, FlexibleModel
 
-class Soil(Base, FlexibleModel):
-    """Soil. Created on installation."""
-    __tablename__ = "soil"
+class Soil(FlexibleModel):
+    """Soil types available for mixes."""
 
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    description = Column(String(400), nullable=False)
-    group = Column(String(100), nullable=False)
-    name = Column(String(100), nullable=False)
-    
-    mix_soil_parts: Mapped[List["SoilPart"]] = relationship(
-        "SoilPart", backref="soil", passive_deletes=True
-    )
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.description = kwargs.get("description")
+        self.group = kwargs.get("group")
+        self.name = kwargs.get("name")
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'name': FieldConfig(read_only=True),
-        'description': FieldConfig(read_only=True),
-        'group': FieldConfig(read_only=True)
-    })
 
-class SoilPart(Base, FlexibleModel):
-    __tablename__ = 'mix_soil_part'
+class SoilPart(FlexibleModel):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.soil_id = Fields.object_id(kwargs.get("soil_id"))
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.parts = kwargs.get("parts")
 
-    id = Column(Integer(), primary_key=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now, onupdate=datetime.now)
-    mix_id = Column(Integer, ForeignKey('mix.id'), nullable=False)
-    # mix = relationship("Mix", back_populates="soils")
-    soil_id = Column(Integer, ForeignKey('soil.id'), nullable=False)
-    # soil = relationship("Soil", back_populates="mixes")
-    parts = Column(Integer, default=1, nullable=False)
 
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'mix_id': FieldConfig(),
-        'soil_id': FieldConfig(),
-        'parts': FieldConfig()
-    })
+class Mix(BanishableMixin, FlexibleModel):
+    """Soil mix model with embedded soil parts."""
 
-class Mix(Base, DeprecatableMixin):
-    """Soil mix model."""
-    __tablename__ = "mix"
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.name = kwargs.get("name")
+        self.description = kwargs.get("description")
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.experimental = kwargs.get("experimental", False)
 
-    id = Column(Integer(), primary_key=True)
-    name = Column(String(100), nullable=False)
-    description = Column(String(400), nullable=True)
-    created_on = Column(DateTime(), default=datetime.now)
-    updated_on = Column(DateTime(), default=datetime.now)
-    experimental = Column(Boolean, default=False, nullable=False)
-    
-    # Plants belonging to this mix
-    plants: Mapped[List["Plant"]] = relationship(
-        "Plant", backref="mix", passive_deletes=True
-    )  # Available plants of this mix
-
-    soil_parts: Mapped[List["SoilPart"]] = relationship(
-        "SoilPart", backref="mix", passive_deletes=True
-    )  # Available tasks of this todo
-
+        # Embedded soil parts
+        self.soil_parts: List[SoilPart] = [
+            SoilPart(**sp) for sp in kwargs.get("soil_parts", [])
+        ]
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
-    schema = ModelConfig({
-        'id': FieldConfig(read_only=True),
-        'created_on': FieldConfig(read_only=True),
-        'updated_on': FieldConfig(read_only=True),
-        'name': FieldConfig(),
-        'description': FieldConfig(),
-        'experimental': FieldConfig(),
-        'soil_parts': FieldConfig(nested=SoilPart.schema, nested_class=SoilPart, include_nested=True, delete_with_parent=True, nested_identifier='mix_id'),
-        # parts: Fieldconfig ?
-    })
+    def to_dict(self) -> Dict[str, Any]:
+        """Convert to MongoDB document format"""
+        base_dict = super().to_dict()
+        if len(self.soil_parts) > 0:
+            base_dict["soil_parts"] = [part.to_dict() for part in self.soil_parts]
+        return base_dict

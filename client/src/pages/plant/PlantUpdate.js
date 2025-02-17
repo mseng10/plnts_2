@@ -28,7 +28,6 @@ const PlantUpdate = ({ plantProp }) => {
 
   useEffect(() => {
     const initializeForm = (plant) => {
-      console.log(plant.system_id);
       if (plant) {
         setMix(mixes.find(_m => _m.id === plant.mix_id));
         setSelectedSpecies(species.find(_s => _s.id === plant.species_id));
@@ -43,7 +42,7 @@ const PlantUpdate = ({ plantProp }) => {
     if (plantProp) {
       initializeForm(plantProp);
     } else if (plants.length > 0 && id) {
-      const plant = plants.find(_p => _p.id === parseInt(id));
+      const plant = plants.find(_p => _p.id === id);
       if (plant) {
         initializeForm(plant);
       }
@@ -51,22 +50,21 @@ const PlantUpdate = ({ plantProp }) => {
   }, [plantProp, plants, id, species, mixes, systems]);
 
   const handleSubmit = async (event) => {
-    console.log(system);
     event.preventDefault();
     const updatedPlant = {
       id,
-      size,
-      cost,
+      size: parseInt(size),
+      cost: parseInt(cost),
       mix_id: mix.id,
       system_id: system.id,
       species_id: selectedSpecies.id,
-      watering,
+      watering: parseInt(watering),
       phase
     };
-    console.log(updatedPlant.system_id);
+    console.log(updatedPlant)
     try {
       await updatePlant(updatedPlant);
-      navigate("/");
+      navigate("/plants");
     } catch (error) {
       console.error('Error updating plant:', error);
       // You might want to show an error message to the user here
@@ -74,7 +72,7 @@ const PlantUpdate = ({ plantProp }) => {
   };
 
   const handleCancel = () => {
-    navigate("/");
+    navigate("/plants");
   };
 
   if (isLoading) return <Loading/>;

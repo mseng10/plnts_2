@@ -10,9 +10,11 @@ import Divider from '@mui/material/Divider';
 import Modal from '@mui/material/Modal';
 import { MODAL_STYLE } from '../../constants';
 import { ServerError } from '../../elements/Page';
+import { useSpecies } from '../../hooks/usePlants';
 
 const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
   const { plants, isLoading, error, setPlants, waterPlants } = usePlants(initialPlants);
+  const {species} = useSpecies();
   const [checkedPlants, setCheckedPlants] = useState([]);
   const [allChecked, setAllChecked] = useState(true);
   const [formError, setFormError] = useState(null);
@@ -23,8 +25,7 @@ const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
       setCheckedPlants([...plants]);
       setAllChecked(true);
     }
-    console.log(initialPlants);
-  }, [plants, initialPlants]);
+  }, [plants, species, initialPlants]);
 
   const handleToggle = (plant) => () => {
     const currentIndex = checkedPlants.findIndex(_p => _p.id === plant.id);
@@ -127,7 +128,7 @@ const WaterPlantsForm = ({ isOpen, initialPlants, onRequestClose }) => {
                       />
                     }
                   >
-                    <ListItemText primary={plant.name} style={{ color: "black" }}/>
+                    <ListItemText primary={species.find(_s => _s.id === plant.species_id)?.name || 'N/A'} style={{ color: "black" }}/>
                   </ListItem>
                   <Divider sx={{width: '100%' }}  component="li" />
                 </div>
