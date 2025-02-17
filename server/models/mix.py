@@ -4,7 +4,7 @@ Module for soil mix related models.
 from datetime import datetime
 from typing import Dict, Any, List
 from bson import ObjectId
-from models import FlexibleModel, DeprecatableMixin, Fields
+from models import FlexibleModel, BanishableMixin, Fields
 
 
 class Soil(FlexibleModel):
@@ -32,7 +32,7 @@ class SoilPart(FlexibleModel):
         self.parts = kwargs.get("parts")
 
 
-class Mix(DeprecatableMixin, FlexibleModel):
+class Mix(BanishableMixin, FlexibleModel):
     """Soil mix model with embedded soil parts."""
 
     def __init__(self, **kwargs):

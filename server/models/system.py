@@ -3,10 +3,10 @@ Module defining models for system.
 """
 from datetime import datetime
 from bson import ObjectId
-from models import FlexibleModel, DeprecatableMixin, Fields
+from models import FlexibleModel, BanishableMixin, Fields
 
 
-class Light(DeprecatableMixin, FlexibleModel):
+class Light(BanishableMixin, FlexibleModel):
     """Light model."""
 
     def __init__(self, **kwargs):
@@ -22,7 +22,7 @@ class Light(DeprecatableMixin, FlexibleModel):
         return f"{self.name}"
 
 
-class System(DeprecatableMixin, FlexibleModel):
+class System(BanishableMixin, FlexibleModel):
     """System model."""
 
     def __init__(self, **kwargs):

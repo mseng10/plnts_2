@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from typing import List, Callable, Type, Dict, Optional, Any
 from shared.logger import logger
-from models import FlexibleModel
+from models import FlexibleModel, DeprecatableMixin
 from enum import Enum
 from dataclasses import dataclass
 from bson import ObjectId
@@ -191,7 +191,6 @@ class Schema(Enum):
                 continue
 
             field_config: SchemaField = self.fields[field_name]
-
             if field_config.nested and not field_config.internal_only:
                 nested_schema: Schema = getattr(Schema, field_config.nested_schema)
 
@@ -219,7 +218,11 @@ class Schema(Enum):
                         else nested_schema.patch(None, new_value, depth + 1),
                     )
             elif not field_config.internal_only:
-                setattr(model, field_name, new_value)
+                new_value_formatted = new_value
+                if isinstance(new_value_formatted, ObjectId):
+                    new_value_formatted = str(new_value_formatted)
+
+                setattr(model, field_name, new_value_formatted)
 
     def create(self, model_clazz: Type[FlexibleModel], data: Dict[str, Any]):
         """Create a model from json from the client."""
@@ -272,9 +275,10 @@ class GenericCRUD:
 
             self.schema.patch(db_model, request.json)
 
-            self.table.update(id, db_model)
+            if not self.table.update(id, db_model):
+                return jsonify({"error": str("")}), 400
 
-            return jsonify(db_model.to_dict())
+            return self.schema.read(db_model)
 
         except Exception as e:
             logger.error(f"Error in update: {str(e)}")
@@ -293,27 +297,36 @@ class GenericCRUD:
         except Exception as e:
             logger.error(f"Error in delete: {str(e)}")
             return jsonify({"error": str(e)}), 500
-
-    def delete_many(self):
-        data = request.json
-        ids = data.get("ids", [])
-
-        if not ids:
-            return jsonify({"error": "No ids provided"}), 400
-
+        
+    def banish(self, id: str):
         try:
-            deleted_count = 0
-            for id in ids:
-                result = self.table.delete(id)
-                if result:
-                    deleted_count += 1
-            return (
-                jsonify({"message": f"Successfully deleted {deleted_count} items"}),
-                200,
-            )
+            item = self.table.get_one(id)
+            if not item:
+                return jsonify({"error": "Not found"}), 404
+
+            if not self.table.banish(id):
+                return jsonify({"error": "Unknown, fix it"}), 404
+            return "", 201
 
         except Exception as e:
-            logger.error(f"Error in delete_many: {str(e)}")
+            logger.error(f"Error in delete: {str(e)}")
+            return jsonify({"error": str(e)}), 500
+
+    def deprecate(self):
+        try:
+            item = self.table.get_one(id)
+            if not item:
+                return jsonify({"error": "Not found"}), 404
+            elif not isinstance(item, DeprecatableMixin):
+                return jsonify({"error": "Not found"}), 400
+            
+            item.deprecate()
+
+            self.table.deprecate(item) # Yes an update
+            return "", 201
+
+        except Exception as e:
+            logger.error(f"Error in delete: {str(e)}")
             return jsonify({"error": str(e)}), 500
 
 
@@ -330,6 +343,7 @@ class APIBuilder:
             "PATCH",
             "DELETE",
             "DELETE_MANY",
+            "BANISH"
         ],
     ):
         def create_wrapper(operation):
@@ -365,6 +379,14 @@ class APIBuilder:
         if "DELETE" in methods:
             blueprint.route(f"/{resource_name}/<id>/", methods=["DELETE"])(
                 create_wrapper("delete")
+            )
+        if "DEPRECATE" in methods:
+            blueprint.route(f"/{resource_name}/<id>/deprecate/", methods=["POST"])(
+                create_wrapper("deprecate")
+            )
+        if "BANISH" in methods:
+            blueprint.route(f"/{resource_name}/<id>/", methods=["DELETE"])(
+                create_wrapper("banish")
             )
         if "DELETE_MANY" in methods:
             blueprint.route(f"/{resource_name}/", methods=["DELETE"])(

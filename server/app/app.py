@@ -30,6 +30,7 @@ discover_systems()
 
 # Create Flask app
 app = Flask(__name__)
+app.config['DEBUG'] = True
 
 from routes.system_routes import system_bp, light_bp
 from routes.plant_routes import bp as plant_bp

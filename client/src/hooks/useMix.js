@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost, apiBuilder, APIS } from '../api';
+import { simpleFetch, simplePost, apiBuilder, simplePatch, APIS } from '../api';
 
 export const useMixes = () => {
   const [mixes, setMixes] = useState([]);
@@ -34,7 +34,7 @@ export const useMixes = () => {
   const updateMix = async (updatedMix) => {
     setIsLoading(true);
     setError(null);
-    simplePost(apiBuilder(APIS.mix.updateOne).setId(updatedMix.id).get(), updatedMix)
+    simplePatch(apiBuilder(APIS.mix.updateOne).setId(updatedMix.id).get(), updatedMix)
       .then(data => 
         setMixes(prevMixes => prevMixes.map(mix => 
           mix.id === updatedMix.id ? { ...mix, ...data } : mix
@@ -63,6 +63,13 @@ export const useMixes = () => {
   };
 
   return { mixes, isLoading, error, setError, createMix, updateMix, deprecateMix };
+};
+
+export const useSoilParts = (initialParts) => {
+  const [soilParts, setSoilParts] = useState(initialParts);
+  const [isLoading, setIsLoading] = useState(true);
+
+  return { soilParts, isLoading, setSoilParts, setIsLoading };
 };
 
 /** Query a all soil matters. */

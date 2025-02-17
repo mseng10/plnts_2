@@ -5,7 +5,7 @@ import os
 from enum import Enum
 from typing import Dict, Any, Optional, List, Type
 
-from models import FlexibleModel
+from models import FlexibleModel, DeprecatableMixin, BanishableMixin
 from models.alert import Alert
 from models.mix import Mix, Soil
 from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies
@@ -23,7 +23,7 @@ CLIENT: MongoClient = MongoClient(MONGODB_URL)
 # Get the default database
 DB_NAME = os.getenv("DB_NAME", "plnts")
 DB: Database = CLIENT[DB_NAME]
-
+HIST: Database = CLIENT[DB_NAME+"_hist"]
 
 class Table(Enum):
     PLANT = ("plant", Plant)
@@ -60,14 +60,32 @@ class Table(Enum):
         return ret
 
     def update(self, id: str, data: FlexibleModel) -> bool:
-        # Temp Solution
         set = data.to_dict()
         del set['_id']
         result = DB[self.table_name].update_one(
             {"_id": ObjectId(id)}, {"$set": set}
         )
         return result.modified_count > 0
+    
+    def deprecate(self, data: FlexibleModel) -> bool:
+        if not isinstance(data, DeprecatableMixin):
+            return False
+        
+        data.deprecate()
+        return self.update(data.id, data)
 
     def delete(self, id: str) -> bool:
         result = DB[self.table_name].delete_one({"_id": ObjectId(id)})
         return result.deleted_count > 0
+    
+    def banish(self, id: str) -> bool:
+        banishable: FlexibleModel = self.get_one(id)
+        if not isinstance(banishable, BanishableMixin):
+            return False
+
+        banishable.banish()
+        if not self.delete(id):
+            return False
+        
+        result = HIST[self.table_name].insert_one(banishable.to_dict())
+        return result.inserted_id is not None

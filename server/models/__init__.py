@@ -3,6 +3,7 @@ from typing import List, Any, Dict
 import numpy as np
 import csv
 from bson import ObjectId
+from datetime import datetime, timedelta
 
 
 class Fields:
@@ -58,3 +59,21 @@ class DeprecatableMixin:
         self.deprecated = kwargs.get("deprecated", False)
         self.deprecated_on = kwargs.get("deprecated_on")
         self.deprecated_cause = kwargs.get("deprecated_cause")
+
+    def deprecate(self, cause):
+        self.deprecate = True
+        self.deprecated_on = datetime.now()
+        self.deprecated_cause = cause
+
+class BanishableMixin:
+    """In case the model is deprecated."""
+
+    def __init__(self, **kwargs):
+        self.banished = kwargs.get("banished", False)
+        self.banished_on = kwargs.get("banished_on")
+        self.banished_cause = kwargs.get("banished_cause")
+
+    def banish(self, cause):
+        self.banished = True
+        self.banished_on = datetime.now()
+        self.banished_cause = cause

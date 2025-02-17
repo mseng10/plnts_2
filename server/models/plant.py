@@ -5,7 +5,7 @@ from datetime import datetime
 import enum
 from bson import ObjectId
 
-from models import FlexibleModel, DeprecatableMixin, Fields
+from models import FlexibleModel, BanishableMixin, Fields
 
 
 class PHASES(enum.Enum):
@@ -16,7 +16,7 @@ class PHASES(enum.Enum):
     SEED = "Seed"
 
 
-class Plant(DeprecatableMixin, FlexibleModel):
+class Plant(BanishableMixin, FlexibleModel):
     """Plant model."""
 
     def __init__(self, **kwargs):

@@ -4,10 +4,10 @@ Module defining models for todos.
 from datetime import datetime
 from typing import Dict, Any, List
 from bson import ObjectId
-from models import FlexibleModel, DeprecatableMixin, Fields
+from models import FlexibleModel, BanishableMixin, Fields
 
 
-class Task(DeprecatableMixin, FlexibleModel):
+class Task(FlexibleModel):
     """TODO Item"""
 
     def __init__(self, **kwargs):
@@ -20,7 +20,7 @@ class Task(DeprecatableMixin, FlexibleModel):
         self.resolved = kwargs.get("resolved", False)
 
 
-class Todo(DeprecatableMixin, FlexibleModel):
+class Todo(BanishableMixin, FlexibleModel):
     """TODO model with embedded tasks."""
 
     def __init__(self, **kwargs):

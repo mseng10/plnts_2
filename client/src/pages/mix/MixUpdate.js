@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { FormTextInput, TextAreaInput } from '../../elements/Form';
-import { useMixes, useSoils } from '../../hooks/useMix';
+import { useMixes, useSoils, useSoilParts } from '../../hooks/useMix';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import IconFactory from '../../elements/IconFactory';
@@ -20,11 +20,32 @@ const MixUpdate = () => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [experimental, setExperimental] = useState(false);
-  const [soilsByParts, setSoilsByParts] = useState([{"soil": "", "parts": 1}]);
 
   const navigate = useNavigate();
-  const { error, createMix , setError} = useMixes();
+  const { mixes, error, updateMix , setError} = useMixes();
   const { soils } = useSoils();
+  const {soilParts, setSoilParts} = useSoilParts();
+
+  useEffect(() => {
+    const initializeForm = (mix) => {
+      if (mix) {
+        setName(mix.name);
+        setDescription(mix.description);
+        let soil_parts = mix.soil_parts
+        soil_parts.forEach((soilPart) => {
+          soilPart.soil = soils.find(soil => soil.id === soilPart.soil_id);
+        });
+        setSoilParts(soil_parts)
+      }
+    };
+
+    if (mixes.length > 0 && id) {
+      const mix = mixes.find(_t => _t.id === id);
+      if (mix) {
+        initializeForm(mix);
+      }
+    }
+  }, [mixes, soils, id]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,17 +53,16 @@ const MixUpdate = () => {
 
     try {
       const soils_json = [];
-      soilsByParts.forEach((soilByPart) => {
-        if (soilByPart.soil !== "") {
+      soilParts.forEach((soilPart) => {
+        if (soilPart.soil !== "") {
           soils_json.push({
-            soil_id: soilByPart.soil.id,
-            parts: soilByPart.parts
+            soil_id: soilPart.soil.id,
+            parts: soilPart.parts
           });
         }
       });
-      console.log(soils_json)
       setExperimental(false);
-      await createMix({ id: id, name, description, experimental, soil_parts: soils_json });
+      await updateMix({ id: id, name, description, experimental, soil_parts: soils_json });
       navigate("/");
     } catch (err) {
       setError("Failed to create mix. Please try again.");
@@ -50,11 +70,11 @@ const MixUpdate = () => {
   };
 
   const handleCancel = () => {
-    navigate("/");
+    navigate("/mixes");
   };
 
   const createSoildByPart = () => {
-    setSoilsByParts(prevSoilsByParts => {
+    setSoilParts(prevSoilsByParts => {
       return [
         ...prevSoilsByParts,
         { soil: null, parts: 1 }  // Default to 1 part, null soil
@@ -63,7 +83,7 @@ const MixUpdate = () => {
   };
 
   const updateSoilByPartsCount = (index, delta) => {
-    setSoilsByParts(prevSoilsByParts => {
+    setSoilParts(prevSoilsByParts => {
       const newSoilsByParts = [...prevSoilsByParts];
       const newParts = (newSoilsByParts[index].parts || 0) + delta;
       if (newParts > 0) {
@@ -80,7 +100,7 @@ const MixUpdate = () => {
   };
 
   const updateSoilByParts = (index, soilByPart) => {
-    setSoilsByParts(prevSoilsByParts => {
+    setSoilParts(prevSoilsByParts => {
       const newSoilsByParts = [...prevSoilsByParts];
       if (index === newSoilsByParts.length) {
         return [...newSoilsByParts, soilByPart];
@@ -112,7 +132,6 @@ const MixUpdate = () => {
                 <div id="pieSlice4" className="hold"><div className="pie"></div></div>
                 <div id="pieSlice5" className="hold"><div className="pie"></div></div>
                 <div id="pieSlice6" className="hold"><div className="pie"></div></div>
-                <div className="innerCircle"><div className="content"><b>Data</b><br></br>from 16<sup>th</sup> April, 2014</div></div>
               </div>
               <ButtonGroup>
                 <IconButton className="left_button" type="submit" color="info">
@@ -149,7 +168,7 @@ const MixUpdate = () => {
           </Box>
           <Box sx={{ width: 256, height: 312, borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
           <List>
-              {soilsByParts.map((soilByPart, index) => {
+              {soilParts && soilParts.map((soilPart, index) => {
                 return (
                   <Stack key={index} direction="row" alignItems="center">
                     <Autocomplete
@@ -159,12 +178,12 @@ const MixUpdate = () => {
                       }}
                       color="primary"
                       disableClearable
-                      value={soilByPart.soil ? soilByPart.soil.name : ''}
+                      value={soilPart.soil ? soilPart.soil.name : ''}
                       options={soils.map((option) => option.name)}
                       onChange={(event, newValue) => {
                         const selectedSoil = soils.find(soil => soil.name === newValue);
                         updateSoilByParts(index, {
-                          ...soilByPart,
+                          ...soilPart,
                           soil: selectedSoil
                         });
                       }}
@@ -184,7 +203,7 @@ const MixUpdate = () => {
                     <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, -1)}>
                       <RemoveSharpIcon/>
                     </IconButton>
-                      <p>{soilByPart.parts}</p>
+                      <p>{soilPart.parts}</p>
                     <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, 1)}>
                       <AddSharpIcon/>
                     </IconButton>
