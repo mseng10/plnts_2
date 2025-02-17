@@ -40,6 +40,7 @@ def get_systems_alerts(id):
 
     return jsonify([Schema.ALERT.read(alert) for alert in alerts])
 
+
 @APIBuilder.register_custom_route(
     system_bp, "/systems/<string:id>/lights/", methods=["GET"]
 )
@@ -52,6 +53,7 @@ def get_systems_lights(id):
     lights = Table.LIGHT.get_many({"system_id": ObjectId(id)})
 
     return jsonify([Schema.LIGHT.read(light) for light in lights])
+
 
 # @APIBuilder.register_custom_route(
 #     system_bp, "/systems/<string:id>/lights/<string:light_id>/", methods=["POST"]

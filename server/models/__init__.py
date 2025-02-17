@@ -74,7 +74,7 @@ class BanishableMixin:
         self.banished_on = kwargs.get("banished_on")
         self.banished_cause = kwargs.get("banished_cause")
 
-    def banish(self, cause: Optional[str]=None):
+    def banish(self, cause: Optional[str] = None):
         self.banished = True
         self.banished_on = datetime.now()
         self.banished_cause = cause
