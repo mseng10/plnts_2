@@ -10,4 +10,4 @@ COPY adaptor ./adaptor
 
 ENV PYTHONPATH="/app:${PYTHONPATH}"
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "adaptor.adaptor:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5001", "adaptor.adaptor:app"]

@@ -27,7 +27,7 @@ services:
       context: ./server
       dockerfile: adaptor/Dockerfile
     ports:
-      - "8003:5000"
+      - "8003:5001"
     environment:
       - ENVIRONMENT=docker
       - MONGODB_URL=mongodb://mongo1:27017/plnts
