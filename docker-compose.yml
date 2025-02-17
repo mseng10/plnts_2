@@ -8,7 +8,7 @@ services:
       - "8002:5000"
     environment:
       - MONGODB_URL=mongodb://mongo1:27017
-      - MONGODB_URL_HIST=mongodb://mongo1:27018
+      - MONGODB_URL_HIST=mongodb://mongo2:27018
       - USE_LOCAL_HARDWARE=true
       - ENVIRONMENT=docker
     volumes:
@@ -27,10 +27,10 @@ services:
       context: ./server
       dockerfile: adaptor/Dockerfile
     ports:
-      - "8003:5000"
+      - "8003:5001"
     environment:
       - ENVIRONMENT=docker
-      - MONGODB_URL=mongodb://mongo2:27017/plnts
+      - MONGODB_URL=mongodb://mongo1:27017/plnts
     volumes:
       - ./server/shared:/app/shared
       - ./server/adaptor:/app/adaptor
@@ -56,7 +56,7 @@ services:
     volumes:
       - mongo_data_2:/data/db
     ports:
-      - "27018:27017"
+      - "27018:27018"
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 5s
@@ -69,8 +69,8 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile
-    args:
-      - NODE_ENV=${NODE_ENV:-development}
+      args:
+        NODE_ENV: ${NODE_ENV:-development}
     ports:
       - "3000:3000"
     environment:

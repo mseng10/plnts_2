@@ -5,22 +5,42 @@ echo "Debugging information:"
 cd ../
 cd app/
 
-# Wait for the database to be ready
-until PGPASSWORD=$POSTGRES_PASSWORD psql -h "db" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c '\q'; do
-  >&2 echo "Postgres is unavailable - sleeping"
+# Print working directory and structure
+echo "==== CURRENT DIRECTORY ===="
+pwd
+# echo "\n==== DIRECTORY STRUCTURE FROM ROOT ===="
+# ls -R /
+echo "\n==== DIRECTORY STRUCTURE FROM /server ===="
+ls -R /server
+echo "\n==== DIRECTORY STRUCTURE FROM /app ===="
+ls -R /app
+echo "\n==== PYTHON PATH ===="
+echo $PYTHONPATH
+echo "\n==== ENVIRONMENT VARIABLES ===="
+env
+
+# Wait for MongoDB connections
+echo "\n==== CHECKING MONGODB CONNECTIONS ===="
+until mongosh --host mongo1 --port 27017 --eval "db.adminCommand('ping')" > /dev/null 2>&1; do
+  >&2 echo "Main MongoDB (mongo1:27017) is unavailable - sleeping"
   sleep 1
 done
->&2 echo "Postgres is up - executing command"
+
+until mongosh --host mongo2 --port 27017 --eval "db.adminCommand('ping')" > /dev/null 2>&1; do
+  >&2 echo "Historical MongoDB (mongo2:27017) is unavailable - sleeping"
+  sleep 1
+done
 
 # Check if the install flag exists
 if [ ! -f ".installed" ]; then
-  echo "Running install script..."
+  echo "\n==== RUNNING INSTALL SCRIPT ===="
   python install.py
   touch .installed
 else
-  echo "Install script already run, skipping..."
+  echo "\n==== INSTALL SCRIPT ALREADY RUN ===="
 fi
 
+echo "\n==== STARTING FLASK APP ===="
 # Start the Flask application
-echo "Starting Flask app..."
-exec gunicorn -b 0.0.0.0:5000 app.app:app
+cd app/ # This is here because I had a hilariously bad time starting app
+exec gunicorn -b 0.0.0.0:5000 app:app
