@@ -44,6 +44,7 @@ class Plant(BanishableMixin, FlexibleModel):
     def __repr__(self) -> str:
         return f"{self.id}"
 
+
 class PlantGenusType(FlexibleModel):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

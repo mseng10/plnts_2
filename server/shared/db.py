@@ -20,10 +20,12 @@ from pymongo.database import Database
 MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
 CLIENT: MongoClient = MongoClient(MONGODB_URL)
 
-# Get the default database
-DB_NAME = os.getenv("DB_NAME", "plnts")
-DB: Database = CLIENT[DB_NAME]
-HIST: Database = CLIENT[DB_NAME+"_hist"]
+MONGODB_URL_HIST = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+CLIENT_HIST: MongoClient = MongoClient(MONGODB_URL)
+
+DB: Database = CLIENT["plnts"]
+HIST: Database = CLIENT["plnts_hist"]
+
 
 class Table(Enum):
     PLANT = ("plant", Plant)
@@ -61,23 +63,21 @@ class Table(Enum):
 
     def update(self, id: str, data: FlexibleModel) -> bool:
         set = data.to_dict()
-        del set['_id']
-        result = DB[self.table_name].update_one(
-            {"_id": ObjectId(id)}, {"$set": set}
-        )
+        del set["_id"]
+        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set})
         return result.modified_count > 0
-    
+
     def deprecate(self, data: FlexibleModel) -> bool:
         if not isinstance(data, DeprecatableMixin):
             return False
-        
+
         data.deprecate()
         return self.update(data.id, data)
 
     def delete(self, id: str) -> bool:
         result = DB[self.table_name].delete_one({"_id": ObjectId(id)})
         return result.deleted_count > 0
-    
+
     def banish(self, id: str) -> bool:
         banishable: FlexibleModel = self.get_one(id)
         if not isinstance(banishable, BanishableMixin):
@@ -86,6 +86,6 @@ class Table(Enum):
         banishable.banish()
         if not self.delete(id):
             return False
-        
+
         result = HIST[self.table_name].insert_one(banishable.to_dict())
         return result.inserted_id is not None

@@ -8,7 +8,9 @@ from routes import GenericCRUD, APIBuilder, Schema
 
 system_bp = Blueprint("systems", __name__)
 system_crud = GenericCRUD(Table.SYSTEM, Schema.SYSTEM)
-APIBuilder.register_blueprint(system_bp, "systems", system_crud, ["GET", "GET_MANY", "POST", "PATCH", "BANISH"])
+APIBuilder.register_blueprint(
+    system_bp, "systems", system_crud, ["GET", "GET_MANY", "POST", "PATCH", "BANISH"]
+)
 
 
 @APIBuilder.register_custom_route(
@@ -25,7 +27,9 @@ def get_systems_plants(id):
     return jsonify([Schema.PLANT.read(plant) for plant in plants])
 
 
-@APIBuilder.register_custom_route(system_bp, "/systems/<string:id>/alerts/", ["GET"])
+@APIBuilder.register_custom_route(
+    system_bp, "/systems/<string:id>/alerts/", methods=["GET"]
+)
 def get_systems_alerts(id):
     """
     Get system's alerts.
@@ -90,5 +94,5 @@ def get_systems_alerts(id):
 light_bp = Blueprint("lights", __name__)
 light_crud = GenericCRUD(Table.LIGHT, Schema.LIGHT)
 APIBuilder.register_blueprint(
-    light_bp, "lights", light_crud, ["GET", "GET_MANY", "POST"]
+    light_bp, "lights", light_crud, ["GET", "GET_MANY", "POST", "BANISH"]
 )

@@ -45,7 +45,9 @@ class Mix(BanishableMixin, FlexibleModel):
         self.experimental = kwargs.get("experimental", False)
 
         # Embedded soil parts
-        self.soil_parts: List[SoilPart] = [SoilPart(**sp) for sp in kwargs.get("soil_parts", [])]
+        self.soil_parts: List[SoilPart] = [
+            SoilPart(**sp) for sp in kwargs.get("soil_parts", [])
+        ]
 
     def __repr__(self) -> str:
         return f"{self.name}"
@@ -53,8 +55,6 @@ class Mix(BanishableMixin, FlexibleModel):
     def to_dict(self) -> Dict[str, Any]:
         """Convert to MongoDB document format"""
         base_dict = super().to_dict()
-        if len(self.soil_parts)>0:
-            base_dict["soil_parts"] = [
-                part.to_dict() for part in self.soil_parts
-            ]
+        if len(self.soil_parts) > 0:
+            base_dict["soil_parts"] = [part.to_dict() for part in self.soil_parts]
         return base_dict

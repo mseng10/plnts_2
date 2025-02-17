@@ -37,7 +37,7 @@ class Schema(Enum):
         "deprecated_on": SchemaField(),
         "deprecated_cause": SchemaField(),
         "batch": SchemaField(),
-        "batch_count": SchemaField()
+        "batch_count": SchemaField(),
     }
     PLANT_GENUS_TYPE = {
         "id": SchemaField(read_only=True),
@@ -86,7 +86,7 @@ class Schema(Enum):
         "created_on": SchemaField(read_only=True),
         "updated_on": SchemaField(read_only=True),
         "resolved": SchemaField(),
-        "resolved_on": SchemaField()
+        "resolved_on": SchemaField(),
     }
     SOIL = {
         "id": SchemaField(read_only=True),
@@ -172,8 +172,7 @@ class Schema(Enum):
                     nested_schema: Schema = getattr(Schema, v.nested_schema)
                     if isinstance(value, list):
                         result[k] = [
-                            nested_schema.read(item, depth + 1)
-                            for item in value
+                            nested_schema.read(item, depth + 1) for item in value
                         ]
                     elif value is not None:
                         result[k] = nested_schema.read(value, depth + 1)
@@ -256,7 +255,9 @@ class GenericCRUD:
 
     def create(self):
         try:
-            item: FlexibleModel = self.schema.create(self.table.model_class, request.json)
+            item: FlexibleModel = self.schema.create(
+                self.table.model_class, request.json
+            )
 
             result = self.table.create(item)
             item.id = result
@@ -297,7 +298,7 @@ class GenericCRUD:
         except Exception as e:
             logger.error(f"Error in delete: {str(e)}")
             return jsonify({"error": str(e)}), 500
-        
+
     def banish(self, id: str):
         try:
             item = self.table.get_one(id)
@@ -319,10 +320,10 @@ class GenericCRUD:
                 return jsonify({"error": "Not found"}), 404
             elif not isinstance(item, DeprecatableMixin):
                 return jsonify({"error": "Not found"}), 400
-            
+
             item.deprecate()
 
-            self.table.deprecate(item) # Yes an update
+            self.table.deprecate(item)  # Yes an update
             return "", 201
 
         except Exception as e:
@@ -343,7 +344,7 @@ class APIBuilder:
             "PATCH",
             "DELETE",
             "DELETE_MANY",
-            "BANISH"
+            "BANISH",
         ],
     ):
         def create_wrapper(operation):

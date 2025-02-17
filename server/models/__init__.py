@@ -65,6 +65,7 @@ class DeprecatableMixin:
         self.deprecated_on = datetime.now()
         self.deprecated_cause = cause
 
+
 class BanishableMixin:
     """In case the model is deprecated."""
 

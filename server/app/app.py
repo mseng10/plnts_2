@@ -30,7 +30,7 @@ discover_systems()
 
 # Create Flask app
 app = Flask(__name__)
-app.config['DEBUG'] = True
+app.config["DEBUG"] = True
 
 from routes.system_routes import system_bp, light_bp
 from routes.plant_routes import bp as plant_bp
@@ -134,7 +134,9 @@ def manage_plant_alerts():
     for plant in existing_plants:
         end_date = plant.watered_on + timedelta(days=float(plant.watering))
         if end_date < now and existing_plant_alrts_map.get(plant.id) is None:
-            new_plant_alert:Alert = Alert(model_id=plant.id, alert_type=AlertTypes.WATER.value)
+            new_plant_alert: Alert = Alert(
+                model_id=plant.id, alert_type=AlertTypes.WATER.value
+            )
             # Create the alert in the db
             Table.ALERT.create(new_plant_alert)
             existing_plant_alrts_map[new_plant_alert.model_id] = new_plant_alert
