@@ -71,8 +71,8 @@ def get_meta():
     logger.info("Received request to query the meta")
 
     meta = {
-        "alert_count": Table.ALERT.count({"deprecated": False}),
-        "todo_count": Table.TODO.count({"deprecated": False}),
+        "alert_count": Table.ALERT.count(),
+        "todo_count": Table.TODO.count(),
     }
 
     logger.info("Successfully generated meta data.")
@@ -127,9 +127,7 @@ def manage_plant_alerts():
     for existing_plant_alert in existing_plant_alrts:
         existing_plant_alrts_map[existing_plant_alert.plant_id] = existing_plant_alert
 
-    existing_plants: List[Plant] = Table.PLANT.get_many(
-        {"deprecated": False}
-    )  # Sure...
+    existing_plants: List[Plant] = Table.PLANT.get_many()
     now = datetime.now()
     for plant in existing_plants:
         end_date = plant.watered_on + timedelta(days=float(plant.watering))

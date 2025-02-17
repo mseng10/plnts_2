@@ -348,7 +348,7 @@ class APIBuilder:
         ],
     ):
         def create_wrapper(operation):
-            if operation in ["get", "update", "delete"]:
+            if operation in ["get", "update", "delete", "banish"]:
 
                 def wrapper(id):
                     return getattr(crud, operation)(id)

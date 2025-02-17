@@ -1,5 +1,5 @@
 # models/__init__.py
-from typing import List, Any, Dict
+from typing import List, Any, Dict, Optional
 import numpy as np
 import csv
 from bson import ObjectId
@@ -74,7 +74,7 @@ class BanishableMixin:
         self.banished_on = kwargs.get("banished_on")
         self.banished_cause = kwargs.get("banished_cause")
 
-    def banish(self, cause):
+    def banish(self, cause: Optional[str]=None):
         self.banished = True
         self.banished_on = datetime.now()
         self.banished_cause = cause
