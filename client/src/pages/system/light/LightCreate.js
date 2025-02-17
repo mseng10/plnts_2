@@ -22,7 +22,7 @@ const NewLightForm = () => {
     try {
       await createLight({
         name,
-        cost,
+        cost: parseInt(cost),
         system_id: system.id
       });
       navigate("/");

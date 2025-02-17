@@ -16,7 +16,7 @@ class Light(DeprecatableMixin, FlexibleModel):
         self.created_on = kwargs.get("created_on", datetime.now())
         self.updated_on = kwargs.get("updated_on", datetime.now())
         self.cost = kwargs.get("cost", 0)
-        self.system_id = kwargs.get("system_id")
+        self.system_id = Fields.object_id(kwargs.get("system_id"))
 
     def __repr__(self) -> str:
         return f"{self.name}"

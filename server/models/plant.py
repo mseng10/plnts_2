@@ -65,9 +65,7 @@ class PlantGenus(FlexibleModel):
         self.common_name = kwargs.get("common_name")
         self.description = kwargs.get("description")
         self.watering = kwargs.get("watering")
-        self.genus_type_id = Fields.object_id(
-            Fields.object_id(kwargs.get("genus_type_id"))
-        )
+        self.genus_type_id = Fields.object_id(kwargs.get("genus_type_id"))
 
 
 class PlantSpecies(FlexibleModel):
