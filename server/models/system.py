@@ -1,6 +1,7 @@
 """
 Module defining models for system.
 """
+
 from datetime import datetime
 from bson import ObjectId
 from models import FlexibleModel, BanishableMixin, Fields

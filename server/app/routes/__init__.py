@@ -200,9 +200,11 @@ class Schema(Enum):
                         model,
                         field_name,
                         [
-                            nested_schema.patch(current_item, new_item, depth + 1)
-                            if current_item is not None
-                            else nested_schema.patch(None, new_item, depth + 1)
+                            (
+                                nested_schema.patch(current_item, new_item, depth + 1)
+                                if current_item is not None
+                                else nested_schema.patch(None, new_item, depth + 1)
+                            )
                             for current_item, new_item in zip(current_value, new_value)
                         ],
                     )
@@ -212,9 +214,11 @@ class Schema(Enum):
                     setattr(
                         model,
                         field_name,
-                        nested_schema.patch(current_value, new_value, depth + 1)
-                        if current_value is not None
-                        else nested_schema.patch(None, new_value, depth + 1),
+                        (
+                            nested_schema.patch(current_value, new_value, depth + 1)
+                            if current_value is not None
+                            else nested_schema.patch(None, new_value, depth + 1)
+                        ),
                     )
             elif not field_config.internal_only:
                 new_value_formatted = new_value

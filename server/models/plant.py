@@ -1,6 +1,7 @@
 """
 Module defining models for plants.
 """
+
 from datetime import datetime
 import enum
 from bson import ObjectId

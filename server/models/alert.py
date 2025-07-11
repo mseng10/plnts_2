@@ -1,6 +1,7 @@
 """
 Module defining models for alerts.
 """
+
 from datetime import datetime
 from models import FlexibleModel, BanishableMixin, Fields
 import enum

@@ -3,7 +3,6 @@ Utility module for miscellaneous functions.
 """
 
 import sys
-from colorama import Fore
 
 
 class Util:
@@ -30,6 +29,4 @@ class Util:
         """
         Perform a system exit and print a goodbye message.
         """
-        print("")
-        print(Fore.GREEN + "GOODBYE:)")
-        sys.exit()
+        sys.exit(1)
