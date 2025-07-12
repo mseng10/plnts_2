@@ -26,7 +26,7 @@ const PlantCreate = () => {
     const newPlant = {
       size,
       cost,
-      species_id: selectedSpecies.id,
+      species_id: selectedSpecies ? selectedSpecies.id : null,
       system_id: system.id,
       mix_id: mix.id,
       watering,

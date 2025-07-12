@@ -57,7 +57,7 @@ const PlantUpdate = ({ plantProp }) => {
       cost: parseInt(cost),
       mix_id: mix.id,
       system_id: system.id,
-      species_id: selectedSpecies.id,
+      species_id: selectedSpecies ? selectedSpecies.id : null,
       watering: parseInt(watering),
       phase
     };
