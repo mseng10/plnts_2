@@ -22,13 +22,38 @@ const groupTodosByDate = (todos) => {
 const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const Calendar = () => {
-  const { todos, isLoading, error, resolveTodo } = useTodos();
+  const { todos, isLoading, error, resolveTodo, updateTodo } = useTodos();
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [selectedTodo, setSelectedTodo] = useState(null);
 
   const handleTodoClick = (todo) => {
     // If the same todo is clicked again, hide the card. Otherwise, show the new one.
     setSelectedTodo(prev => (prev && prev.id === todo.id ? null : todo));
+  };
+
+  const handleDragStart = (e, todo) => {
+    e.dataTransfer.setData('application/json', JSON.stringify(todo));
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = async (e, newDate) => {
+    e.preventDefault();
+    try {
+      const todo = JSON.parse(e.dataTransfer.getData('application/json'));
+      const originalDate = dayjs(todo.due_on);
+
+      if (originalDate.isSame(newDate, 'day')) {
+        return; // Do nothing if dropped on the same day
+      }
+
+      // Make a PATCH request to update the due date
+      await updateTodo({ id: todo.id, due_on: newDate.toISOString() });
+    } catch (err) {
+      console.error("Failed to update todo date via drag and drop:", err);
+    }
   };
   
   const todosByDate = useMemo(() => groupTodosByDate(todos), [todos]);
@@ -104,6 +129,8 @@ const Calendar = () => {
             return (
               <Grid item xs={1} key={index}>
                 <Paper 
+                  onDragOver={handleDragOver}
+                  onDrop={(e) => handleDrop(e, date)}
                   variant="outlined" 
                   sx={{ 
                     height: '100%', 
@@ -124,7 +151,16 @@ const Calendar = () => {
                   <List dense disablePadding sx={{ overflowY: 'auto', flex: 1 }}>
                     {dayTodos.map(todo => (
                       <Tooltip key={todo.id} title={todo.name} placement="top">
-                        <ListItem button onClick={() => handleTodoClick(todo)} sx={{ p: '2px 4px', borderRadius: 1, mb: 0.5, backgroundColor: 'rgba(0,0,0,0.2)' }}>
+                        <ListItem
+                          draggable
+                          onDragStart={(e) => handleDragStart(e, todo)}
+                          button 
+                          onClick={() => handleTodoClick(todo)} 
+                          sx={{ 
+                            p: '2px 4px', borderRadius: 1, mb: 0.5, backgroundColor: 'rgba(0,0,0,0.2)',
+                            cursor: 'grab'
+                          }}
+                        >
                           <ListItemText primary={todo.name} primaryTypographyProps={{ noWrap: true, variant: 'caption', sx: { color: 'white' } }} />
                         </ListItem>
                       </Tooltip>
