@@ -138,9 +138,9 @@ const Calendar = () => {
                     minHeight: 150,
                     p: 1,
                     opacity: isCurrentMonth ? 1 : 0.6,
-                    backgroundColor: isToday ? 'rgba(255, 255, 255, 0.2)' : 'rgba(255, 255, 255, 0.1)',
+                    backgroundColor: isToday ? 'rgba(255, 255, 255, 0.25)' : 'rgba(255, 255, 255, 0.15)',
                     border: '1px solid',
-                    borderColor: isPastDue ? 'error.main' : 'rgba(255, 255, 255, 0.2)',
+                    borderColor: isPastDue ? 'error.main' : 'rgba(255, 255, 255, 0.25)',
                     overflowY: 'auto',
                     display: 'flex',
                     flexDirection: 'column'
