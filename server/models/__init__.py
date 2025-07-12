@@ -78,3 +78,15 @@ class BanishableMixin:
         self.banished = True
         self.banished_on = datetime.now()
         self.banished_cause = cause
+
+
+class ExpenseMixin:
+    """In case the model has an expense."""
+
+    def __init__(self, **kwargs):
+        self.cost = kwargs.get("cost", 0)
+        self.purchased_on = kwargs.get("purchased_on")
+        self.purchase_source = kwargs.get("purchase_source")
+
+
+

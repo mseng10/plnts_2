@@ -9,7 +9,7 @@ from models import FlexibleModel, BanishableMixin, Fields
 
 
 class Task(FlexibleModel):
-    """TODO Item"""
+    """TODO task"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

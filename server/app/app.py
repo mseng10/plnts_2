@@ -45,6 +45,8 @@ from routes.installable_model_routes import (
     genus_bp,
 )
 from routes.alert_routes import bp as alert_bp
+from routes.app_routes import bp as app_bp
+
 
 # Models
 app.register_blueprint(system_bp)
@@ -61,6 +63,10 @@ app.register_blueprint(genus_bp)
 app.register_blueprint(species_bp)
 app.register_blueprint(soils_bp)
 
+# App
+app.register_blueprint(app_bp)
+
+# Enable CORS
 CORS(app)
 
 
