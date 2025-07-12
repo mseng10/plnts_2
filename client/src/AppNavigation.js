@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -20,12 +20,13 @@ function AppNavigation({ window }) {
   const location = useLocation();
   
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSubOption, setSelectedSubOption] = useState(null);
 
   const { meta } = useMeta();
 
-  const navigationOptions = [
+  const navigationOptions = useMemo(() => [
     { id: 'menu', url: '/', icon: 'menu', color: 'info' },
     { id: 'home', url: '/', icon: 'home', color: 'primary' },
     { id: 'create', icon: 'create', color: 'primary', subMenu: [
@@ -45,7 +46,7 @@ function AppNavigation({ window }) {
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'error', badgeCount: meta.alert_count, badgeCountColor: "error" },
     { id: 'todo', url: '/todos', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
     { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},
-  ];
+  ], [meta]);
 
   useEffect(() => {
     const currentPath = location.pathname;
@@ -60,9 +61,26 @@ function AppNavigation({ window }) {
         setSelectedSubOption(currentSubOption ? currentSubOption.id : null);
       }
     }
-  }, [location]);
+  }, [location, navigationOptions]);
 
   const handleNavigation = (option) => {
+    // The 'menu' button toggles the collapsed state of the primary navigation.
+    if (option.id === 'menu') {
+      const willCollapse = !isNavCollapsed;
+      setIsNavCollapsed(willCollapse);
+      // If collapsing the nav, also close any open sub-menu drawer.
+      if (willCollapse) {
+        setDrawerOpen(false);
+        setSelectedOption(null);
+      }
+      return;
+    }
+
+    // If another button is clicked while collapsed, expand the nav.
+    if (isNavCollapsed) {
+      setIsNavCollapsed(false);
+    }
+
     if (option.subMenu) {
       setDrawerOpen(true);
       setSelectedOption(option.id);
@@ -84,7 +102,9 @@ function AppNavigation({ window }) {
     <div>
       <div className='left_half'>
         <List>
-          {navigationOptions.map((option) => (
+          {navigationOptions
+            .filter(option => !isNavCollapsed || option.id === 'menu')
+            .map((option) => (
             <ListItem key={option.id} disablePadding>
               <IconButton
                 size="large"
@@ -149,7 +169,12 @@ function AppNavigation({ window }) {
         }}
         sx={{
           display: { xs: 'block', sm: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerOpen ? expandedDrawerWidth : drawerWidth },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: drawerOpen ? expandedDrawerWidth : drawerWidth,
+            background: 'inherit', // To maintain transparency
+            borderRight: isNavCollapsed ? 'none' : `1px solid rgba(255, 255, 255, 0.12)`
+          },
         }}
       >
         {drawer}
@@ -162,7 +187,8 @@ function AppNavigation({ window }) {
             boxSizing: 'border-box', 
             width: drawerOpen ? expandedDrawerWidth : drawerWidth,
             transition: 'width 0.3s ease-in-out',
-            background: 'inherit'
+            background: 'inherit', // To maintain transparency
+            borderRight: isNavCollapsed ? 'none' : `1px solid rgba(255, 255, 255, 0.12)`
           },
         }}
         open
