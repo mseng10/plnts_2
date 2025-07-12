@@ -18,11 +18,11 @@ from pymongo import MongoClient
 from pymongo.database import Database
 
 # Create the MongoDB client
-MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://admin:password123@localhost:27017")
 CLIENT: MongoClient = MongoClient(MONGODB_URL)
 
-MONGODB_URL_HIST = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
-CLIENT_HIST: MongoClient = MongoClient(MONGODB_URL)
+MONGODB_URL_HIST = os.getenv("MONGODB_URL_HIST", "mongodb://admin:password123@localhost:27017")
+CLIENT_HIST: MongoClient = MongoClient(MONGODB_URL_HIST)
 
 DB: Database = CLIENT["plnts"]
 HIST: Database = CLIENT["plnts_hist"]
