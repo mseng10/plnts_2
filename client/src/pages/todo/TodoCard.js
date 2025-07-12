@@ -35,8 +35,7 @@ const TodoCard = ({ todo, onResolve }) => {
   };
 
   return (
-    <Grid item width={300}>
-      <Card sx={CARD_STYLE} borderRadius={20}>
+    <Card sx={{...CARD_STYLE, width: 300}}>
         <CardActionArea>
           <CardHeader
             avatar={
@@ -77,8 +76,7 @@ const TodoCard = ({ todo, onResolve }) => {
             <IconButton color="info" onClick={() => onResolve(todo.id)}><CheckCircleOutlineIcon /></IconButton>
           </CardActions>
         </CardActionArea>
-      </Card>
-    </Grid>
+    </Card>
   );
 };
 

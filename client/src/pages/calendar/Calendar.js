@@ -4,7 +4,7 @@ import { Loading, ServerError } from '../../elements/Page';
 import { Box, Grid, Typography, IconButton, Paper, List, ListItem, ListItemText, Tooltip } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import dayjs from 'dayjs';
-import TodoCard from '../todo/TodoCard';
+import CalendarDateCard from './CalendarDateCard';
 
 // Helper to group todos by date for efficient lookup
 const groupTodosByDate = (todos) => {
@@ -24,11 +24,11 @@ const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const Calendar = () => {
   const { todos, isLoading, error, resolveTodo, updateTodo } = useTodos();
   const [currentDate, setCurrentDate] = useState(dayjs());
-  const [selectedTodo, setSelectedTodo] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(null);
 
-  const handleTodoClick = (todo) => {
-    // If the same todo is clicked again, hide the card. Otherwise, show the new one.
-    setSelectedTodo(prev => (prev && prev.id === todo.id ? null : todo));
+  const handleDateClick = (date) => {
+    // If the same date is clicked again, hide the card. Otherwise, show the new one.
+    setSelectedDate(prev => (prev && prev.isSame(date, 'day') ? null : date));
   };
 
   const handleDragStart = (e, todo) => {
@@ -83,8 +83,7 @@ const Calendar = () => {
   };
 
   const handleResolve = (todoId) => {
-    resolveTodo(todoId);
-    setSelectedTodo(null);
+    resolveTodo(todoId); // This updates the todos list, and the card will re-render automatically.
   };
 
   if (isLoading) return <Loading />;
@@ -129,11 +128,13 @@ const Calendar = () => {
             return (
               <Grid item xs={1} key={index}>
                 <Paper 
+                  onClick={() => handleDateClick(date)}
                   onDragOver={handleDragOver}
                   onDrop={(e) => handleDrop(e, date)}
                   variant="outlined" 
                   sx={{ 
                     height: '100%', 
+                    cursor: 'pointer',
                     minHeight: 150,
                     p: 1,
                     opacity: isCurrentMonth ? 1 : 0.6,
@@ -154,8 +155,7 @@ const Calendar = () => {
                         <ListItem
                           draggable
                           onDragStart={(e) => handleDragStart(e, todo)}
-                          button 
-                          onClick={() => handleTodoClick(todo)} 
+                          // button prop adds unwanted styles, sx provides better control
                           sx={{ 
                             p: '2px 4px', borderRadius: 1, mb: 0.5, backgroundColor: 'rgba(0,0,0,0.2)',
                             cursor: 'grab'
@@ -173,8 +173,8 @@ const Calendar = () => {
         </Grid>
       </Box>
       <Box sx={{
-        width: selectedTodo ? 300 : 0,
-        marginLeft: selectedTodo ? 2 : 0,
+        width: selectedDate ? 350 : 0, // A bit wider to accommodate the new card
+        marginLeft: selectedDate ? 2 : 0,
         flexShrink: 0,
         display: 'flex',
         flexDirection: 'column',
@@ -182,7 +182,11 @@ const Calendar = () => {
         transition: 'width 0.4s ease-in-out, margin-left 0.4s ease-in-out',
         overflow: 'hidden',
       }}>
-        {selectedTodo && <TodoCard todo={selectedTodo} onResolve={handleResolve} />}
+        {selectedDate && <CalendarDateCard 
+          date={selectedDate} 
+          todos={todosByDate[selectedDate.format('YYYY-MM-DD')] || []} 
+          onResolve={handleResolve} 
+        />}
       </Box>
     </Box>
   );
