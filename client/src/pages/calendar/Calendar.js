@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useTodos } from '../../hooks/useTodos';
 import { Loading, ServerError } from '../../elements/Page';
-import { Box, Grid, Typography, IconButton, Paper, List, ListItem, ListItemText, Tooltip } from '@mui/material';
+import { Box, Grid, Typography, IconButton, Paper, List, ListItem, ListItemText, Tooltip, ListItemIcon } from '@mui/material';
 import { ArrowBackIosNew, ArrowForwardIos } from '@mui/icons-material';
 import dayjs from 'dayjs';
 import CalendarDateCard from './CalendarDateCard';
+import IconFactory from '../../elements/IconFactory';
 
 // Helper to group todos by date for efficient lookup
 const groupTodosByDate = (todos) => {
@@ -157,11 +158,16 @@ const Calendar = () => {
                           onDragStart={(e) => handleDragStart(e, todo)}
                           // button prop adds unwanted styles, sx provides better control
                           sx={{ 
+                            display: 'flex',
+                            alignItems: 'center',
                             p: '2px 4px', borderRadius: 1, mb: 0.5, backgroundColor: 'rgba(0,0,0,0.2)',
                             cursor: 'grab'
                           }}
                         >
-                          <ListItemText primary={todo.name} primaryTypographyProps={{ noWrap: true, variant: 'caption', sx: { color: 'white' } }} />
+                          <ListItemIcon sx={{ minWidth: 'auto', mr: 0.5, color: 'white' }}>
+                            <IconFactory icon="todo" size="xs" />
+                          </ListItemIcon>
+                          <ListItemText primary={todo.name} primaryTypographyProps={{ noWrap: true, variant: 'caption', sx: { color: 'white' } }}/>
                         </ListItem>
                       </Tooltip>
                     ))}
