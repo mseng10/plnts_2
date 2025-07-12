@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
 import { FormTextInput, TextAreaInput, FormButton, DateSelector } from '../../elements/Form';
@@ -31,32 +31,22 @@ const TodoCreate = () => {
   };
 
   const handleCancel = () => {
+    console.log("HELP")
     navigate("/");
   };
 
   const removeTask = (index) => {
-    setTasks(prevTasks => {
-      prevTasks.filter((task, ind) => ind !== index)
-    });
+    setTasks(prevTasks => prevTasks.filter((task, ind) => ind !== index));
   };
 
   const addTask = () => {
-    setTasks(prevTasks => {
-      return [
-        ...prevTasks,
-        { description: "" }
-      ];
-    });
+    setTasks(prevTasks => [...prevTasks, { description: "" }]);
   };
 
   const updateTask = (description, index) => {
-    if (tasks.length == 0) {
-      setTasks([]);
-    } else {
-      setTasks(prevTasks => prevTasks.map((task, _i) => 
-        _i === index ? { ...task, description: description } : task
-      ));
-    }
+    setTasks(prevTasks => prevTasks.map((task, _i) => 
+      _i === index ? { ...task, description: description } : task
+    ));
   };
 
 
