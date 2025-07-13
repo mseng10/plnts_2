@@ -103,7 +103,7 @@ export const usePlants = (initialPlants) => {
 };
 
 /** Query a all genuses. */
-export const useGeneraTypes = () => {
+export const useGenera = () => {
   const [genera, setGenera] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -168,6 +168,20 @@ export const useSpecies = () => {
       .finally(() => 
         setIsLoading(false))
   };
+
+  const createAll = async (newType) => {
+    setIsLoading(true);
+    setError(null);
+    simplePost(apiBuilder(APIS.species.createAll).get(), newType)
+      .then(data => 
+        setSpecies(prevSpecies => [...prevSpecies, data.species]))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+
   
-  return { species, isLoading, error, createSpecies, setError };
+  return { species, isLoading, error, createSpecies, createAll, setError };
 };

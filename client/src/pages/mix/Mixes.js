@@ -83,7 +83,7 @@ const Mixes = () => {
 
   if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
-  if (mixes.length == 0) return <NoData/>;
+  if (mixes.length === 0) return <NoData/>;
 
   return (
     <Grid container justifyContent="center" spacing={4}>

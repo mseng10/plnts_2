@@ -156,10 +156,6 @@ function App() {
             <Route path="/plants/:id" element={<PlantUpdate />} />
             <Route path="/plants/create" element={<PlantCreate />} />
 
-            {/* <Route path="/species/create" element={<SpeciesCreate /> } /> */}
-
-            {/* <Route path="/genera/create" element={<GeneraCreate /> } /> */}
-
             <Route path="/mixes" element={<Mixes />} />
             <Route path="/mixes/create" element={<MixCreate /> } />
             <Route path="/mixes/:id" element={<MixUpdate /> } />

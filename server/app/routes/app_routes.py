@@ -5,7 +5,7 @@ from shared.logger import logger
 # Standard Blueprint
 bp = Blueprint("app", __name__, url_prefix="/")
 
-@bp.route("/health", methods=["GET"])
+@bp.route("/health/", methods=["GET"])
 def health():
     """
     Return health for app.

@@ -83,7 +83,7 @@ const TodoUpdate = ({ todoProp }) => {
 
 
   const updateTask = (description, index) => {
-    if (tasks.length == 0) {
+    if (tasks.length === 0) {
       setTasks([]);
     } else {
       setTasks(prevTasks => prevTasks.map((task, _i) => 
