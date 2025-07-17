@@ -151,6 +151,27 @@ class Schema(Enum):
         "parts": SchemaField(),
         "id": SchemaField(read_only=True),
     }
+    EXPENSE = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "deprecated": SchemaField(),
+        "deprecated_on": SchemaField(),
+        "deprecated_cause": SchemaField(),
+        "cost": SchemaField(),
+        "name": SchemaField(),
+        "category": SchemaField()
+    }
+    BUDGET = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "deprecated": SchemaField(),
+        "deprecated_on": SchemaField(),
+        "deprecated_cause": SchemaField(),
+        "budget": SchemaField(),
+        "month": SchemaField()
+    }
 
     """Standard model serializer with MongoDB support"""
 
