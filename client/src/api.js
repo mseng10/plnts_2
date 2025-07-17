@@ -29,7 +29,6 @@ export const APIS = {
   alert: {
     getAll: "/alerts/",
     deleteOne: "/alerts/{id}/",
-    deleteOne: "/todos/{id}/",
   },
   light: {
     getAll: "/lights/",
@@ -67,6 +66,10 @@ export const APIS = {
     resolve: "/todos/{id}/tasks/{eid}/resolve",
     unresolve: "/todos/{id}/tasks/{eid}/unresolve"
   },
+  app: {
+    chat: "/chat/",
+    health: "/health/"
+  }
 }
 
 export const apiBuilder = (url) => {

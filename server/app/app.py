@@ -5,6 +5,7 @@ Running webserver.
 import logging
 import sys
 import os
+import asyncio
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -63,25 +64,22 @@ app.register_blueprint(app_bp)
 # Enable CORS
 CORS(app)
 
-# Print details of the running endpoints
-logger.debug("------------------------------------------------------------")
-logger.debug("Printing all available endpoints for this api server:")
-for rule in app.url_map.iter_rules():
-    methods = ",".join(sorted(rule.methods))
-    arguments = ",".join(sorted(rule.arguments))
-    logger.debug(f"Endpoint: {rule.endpoint}")
-    logger.debug(f"    URL: {rule}")
-    logger.debug(f"    Methods: {methods}")
-    logger.debug(f"    Arguments: {arguments}")
-    logger.debug("---")
+# # Print details of the running endpoints
+# logger.debug("------------------------------------------------------------")
+# logger.debug("Printing all available endpoints for this api server:")
+# for rule in app.url_map.iter_rules():
+#     methods = ",".join(sorted(rule.methods))
+#     arguments = ",".join(sorted(rule.arguments))
+#     logger.debug(f"Endpoint: {rule.endpoint}")
+#     logger.debug(f"    URL: {rule}")
+#     logger.debug(f"    Methods: {methods}")
+#     logger.debug(f"    Arguments: {arguments}")
+#     logger.debug("---")
 
-logger.debug("------------------------------------------------------------")
+# logger.debug("------------------------------------------------------------")
 
 # Initialize and start the background scheduler
 init_scheduler(app)
 
 if __name__ == "__main__":
-    # Run the Flask app
-    app.run(host="0.0.0.0", port=8002)
-
-    # app.run(debug=True)
+    asyncio.run(app.run(host="0.0.0.0", port=8002, debug=True))
