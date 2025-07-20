@@ -11,7 +11,7 @@ def discover_systems():
     """
     Meant to be ran from the master roled node (system) in a cluster of nodes (systems).
     """
-    
+
     logger.info("Discovering nothing")
     # if USE_LOCAL_HARDWARE:
     #     # Check for local system and create new system if needed

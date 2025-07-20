@@ -6,7 +6,10 @@ from routes import GenericCRUD, APIBuilder, Schema
 expense_bp = Blueprint("expense", __name__)
 expense_crud = GenericCRUD(Table.EXPENSE, Schema.EXPENSE)
 APIBuilder.register_blueprint(
-    expense_bp, "expense", expense_crud, ["GET", "GET_MANY", "POST", "DEPRECATE", "PATCH"]
+    expense_bp,
+    "expense",
+    expense_crud,
+    ["GET", "GET_MANY", "POST", "DEPRECATE", "PATCH"],
 )
 
 budget_bp = Blueprint("budget", __name__)

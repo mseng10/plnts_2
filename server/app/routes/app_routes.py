@@ -9,47 +9,47 @@ from fastmcp import Client
 # Standard Blueprint
 bp = Blueprint("app", __name__, url_prefix="/")
 
-# @bp.route("/health/", methods=["GET"])
-# def health():
-#     """
-#     Return health for app.
-#     """
-#     logger.info("Received request to check the health endpoint")
-#     # TODO: Check mongo health
-#     return jsonify({"status": "healthy"})
+@bp.route("/health/", methods=["GET"])
+def health():
+    """
+    Return health for app.
+    """
+    logger.info("Received request to check the health endpoint")
+    # TODO: Check mongo health
+    return jsonify({"status": "healthy"})
 
-# @bp.route("/meta/", methods=["GET"])
-# def get_meta():
-#     """
-#     Get meta data of the application.
-#     """
-#     logger.info("Received request to query the meta")
+@bp.route("/meta/", methods=["GET"])
+def get_meta():
+    """
+    Get meta data of the application.
+    """
+    logger.info("Received request to query the meta")
 
-#     meta = {
-#         "alert_count": Table.ALERT.count(),
-#         "todo_count": Table.TODO.count(),
-#     }
+    meta = {
+        "alert_count": Table.ALERT.count(),
+        "todo_count": Table.TODO.count(),
+    }
 
-#     logger.info("Successfully generated meta data.")
-#     return jsonify(meta)
+    logger.info("Successfully generated meta data.")
+    return jsonify(meta)
 
 
-# @bp.route("/notebook/", methods=["GET"])
-# def get_notebook():
-#     """
-#     Get the jupyter notebook for this.
-#     """
-#     # Read the notebook
-#     with open("notebook", "r", encoding="utf-8") as f:
-#         notebook_content = nbformat.read(f, as_version=4)
+@bp.route("/notebook/", methods=["GET"])
+def get_notebook():
+    """
+    Get the jupyter notebook for this.
+    """
+    # Read the notebook
+    with open("notebook", "r", encoding="utf-8") as f:
+        notebook_content = nbformat.read(f, as_version=4)
 
-#     # Convert the notebook to HTML
-#     html_exporter = HTMLExporter()
-#     html_exporter.template_name = "classic"
-#     (body, _) = html_exporter.from_notebook_node(notebook_content)
+    # Convert the notebook to HTML
+    html_exporter = HTMLExporter()
+    html_exporter.template_name = "classic"
+    (body, _) = html_exporter.from_notebook_node(notebook_content)
 
-#     # Serve the HTML
-#     return body
+    # Serve the HTML
+    return body
 
 MODEL = "llama3.2:3b"  # Use a model that supports tool calling, e.g., llama3.1:8b
 MCP_URL = "http://127.0.0.1:8000/mcp/"
@@ -73,10 +73,6 @@ async def get_ollama_tools():
 async def call_tool_async(tool_name: str, args: dict):
     async with Client(MCP_URL) as client:
         result = await client.call_tool(tool_name, args)
-        print("--------")
-        print("TOOL CALL")
-        print(result.content[0].text)
-        print("--------")
         return result.content[0].text
 
 @bp.route('/chat/', methods=['POST'])

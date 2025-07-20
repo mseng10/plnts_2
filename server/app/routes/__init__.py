@@ -160,7 +160,7 @@ class Schema(Enum):
         "deprecated_cause": SchemaField(),
         "cost": SchemaField(),
         "name": SchemaField(),
-        "category": SchemaField()
+        "category": SchemaField(),
     }
     BUDGET = {
         "id": SchemaField(read_only=True),
@@ -170,7 +170,7 @@ class Schema(Enum):
         "deprecated_on": SchemaField(),
         "deprecated_cause": SchemaField(),
         "budget": SchemaField(),
-        "month": SchemaField()
+        "month": SchemaField(),
     }
 
     """Standard model serializer with MongoDB support"""

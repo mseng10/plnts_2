@@ -87,6 +87,3 @@ class ExpenseMixin:
         self.cost = kwargs.get("cost", 0)
         self.purchased_on = kwargs.get("purchased_on")
         self.purchase_source = kwargs.get("purchase_source")
-
-
-
