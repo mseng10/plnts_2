@@ -58,7 +58,7 @@ def read_sensor(retries=5, delay_seconds=2):
             }
         except RuntimeError:
             # Reading doesn't always work! Just print an error and we'll try again
-            print("Sensor read failure, retrying...")
+            logger.error("Sensor read failure, retrying...")
             time.sleep(delay_seconds)
 
     return None, None

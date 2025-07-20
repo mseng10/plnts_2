@@ -15,7 +15,7 @@ class Fields:
 
 
 class FlexibleModel:
-    """Base model with MongoDB support"""
+    """Base model that supports many different forms."""
 
     def __init__(self, **kwargs):
         self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
