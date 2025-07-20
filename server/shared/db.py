@@ -95,3 +95,56 @@ class Table(Enum):
 
         result = HIST[self.table_name].insert_one(banishable.to_dict())
         return result.inserted_id is not None
+    
+
+class Query:
+    """A fluent builder for creating MongoDB query dictionaries."""
+
+    def __init__(self):
+        self._query = {}
+
+    def _add_condition(self, field, operator, value):
+        if field not in self._query or not isinstance(self._query.get(field), dict):
+            self._query[field] = {}
+        self._query[field][f'${operator}'] = value
+        return self
+
+    def filter_by(self, **kwargs):
+        for key, value in kwargs.items():
+            self._query[key] = value
+        return self
+
+    def gt(self, field, value):
+        return self._add_condition(field, 'gt', value)
+
+    def gte(self, field, value):
+        return self._add_condition(field, 'gte', value)
+
+    def lt(self, field, value):
+        return self._add_condition(field, 'lt', value)
+
+    def lte(self, field, value):
+        return self._add_condition(field, 'lte', value)
+
+    def in_(self, field, values):
+        return self._add_condition(field, 'in', values)
+
+    def not_in(self, field, values):
+        return self._add_condition(field, 'nin', values)
+
+    def not_equal(self, field, value):
+        return self._add_condition(field, 'ne', value)
+
+    def exists(self, field, exists=True):
+        return self._add_condition(field, 'exists', exists)
+
+    def logical_and(self, queries):
+        self._query = {'$and': queries}
+        return self
+
+    def logical_or(self, queries):
+        self._query = {'$or': queries}
+        return self
+
+    def build(self):
+        return self._query

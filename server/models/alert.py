@@ -3,16 +3,19 @@ Module defining models for alerts.
 """
 
 from datetime import datetime
-from models import FlexibleModel, BanishableMixin, Fields
+from models import FlexibleModel, DeprecatableMixin, Fields
 import enum
 from bson import ObjectId
 
 
 class AlertTypes(enum.Enum):
     WATER = "Water"
+    REPOT = "Repot"
+    CLEANSE = "Cleanse"
+    PROPOGATE = "Propogate"
 
 
-class Alert(BanishableMixin, FlexibleModel):
+class Alert(DeprecatableMixin, FlexibleModel):
     """Alert Base Class"""
 
     def __init__(self, **kwargs):
