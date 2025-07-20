@@ -1,4 +1,4 @@
-from flask import Blueprint
+from flask import Blueprint, request
 
 from shared.db import Table, Query
 from shared.logger import logger
