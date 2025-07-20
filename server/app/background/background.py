@@ -13,11 +13,11 @@ from shared.db import Table
 from shared.logger import logger
 
 # Initialize the scheduler
-scheduler = APScheduler()
+scheduler: APScheduler = APScheduler()
 
 
 @scheduler.task("cron", id="manage_plant_alerts_job", minute="*")
-def manage_plant_alerts():
+def manage_plant_alerts() -> None:
     """
     Cron job to create watering alerts for plants that are due.
     This job runs every minute to check for plants that need watering.
@@ -65,7 +65,7 @@ def manage_plant_alerts():
         logger.exception(f"An error occurred during the manage_plant_alerts job: {e}")
 
 
-def init_scheduler(app: Flask):
+def init_scheduler(app: Flask) -> None:
     """Initializes and starts the APScheduler."""
     scheduler.init_app(app)
     scheduler.start()
