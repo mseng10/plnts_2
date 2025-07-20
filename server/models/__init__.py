@@ -85,5 +85,5 @@ class ExpenseMixin:
 
     def __init__(self, **kwargs):
         self.cost = kwargs.get("cost", 0)
-        self.purchased_on = kwargs.get("purchased_on")
+        self.purchased_on = kwargs.get("purchased_on", datetime.now())
         self.purchase_source = kwargs.get("purchase_source")

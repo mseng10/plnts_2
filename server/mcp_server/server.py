@@ -24,7 +24,7 @@ def list_todos():
     Each todo is a dictionary with keys like 'task' and 'due date' (YYYY-MM-DD)."""
     logger.info("Got a call to query all todos")
     response = requests.get("http://localhost:8002/todos/")
-    return (response.json())
+    return response.json()
 
 
 @mcp.tool("Create a todo")

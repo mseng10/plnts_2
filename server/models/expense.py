@@ -6,8 +6,8 @@ from models import FlexibleModel, Fields, DeprecatableMixin, ExpenseMixin
 
 
 class EXPENSE_CATEGORY(enum.Enum):
-    NEED = "Adult"
-    CRAP = "Cutting"
+    NEED = "Need"
+    CRAP = "Crap"
 
 
 class Expense(FlexibleModel, DeprecatableMixin, ExpenseMixin):
