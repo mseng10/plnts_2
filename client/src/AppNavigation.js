@@ -45,7 +45,8 @@ function AppNavigation({ window }) {
     ]},
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'error', badgeCount: meta.alert_count, badgeCountColor: "error" },
     { id: 'todo', url: '/todos', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
-    { id: 'calendar', url: '/calendar', icon: 'calendar', color: 'primary' },
+    { id: 'calendar', url: '/calendar', icon: 'calendar', color: 'primary', badgeCount: meta.todo_count },
+    { id: 'budget', url: '/budget', icon: 'atm', color: 'primary' },
     { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},
   ], [meta]);
 

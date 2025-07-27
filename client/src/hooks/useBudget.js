@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { simpleFetch, simplePost, simplePatch, simpleDelete, apiBuilder, APIS } from '../api';
 
 export const EXPENSE_CATEGORIES = {
-  NEED: 'Adult', // As per EXPENSE_CATEGORY enum
-  CRAP: 'Cutting'  // As per EXPENSE_CATEGORY enum
+  NEED: 'Need', // As per EXPENSE_CATEGORY enum
+  CRAP: 'Crap'  // As per EXPENSE_CATEGORY enum
 };
 
 export const useBudget = () => {
