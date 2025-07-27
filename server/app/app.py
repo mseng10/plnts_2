@@ -34,10 +34,10 @@ from routes.mix_routes import mixes_bp, soils_bp
 from routes.stat_routes import bp as stat_bp
 from routes.alert_routes import bp as alert_bp
 from routes.app_routes import bp as app_bp
+from routes.chat_routes import chat_bp
 from background.background import init_scheduler
 
 
-# Models
 app.register_blueprint(system_bp)
 app.register_blueprint(light_bp)
 app.register_blueprint(plant_bp)
@@ -45,32 +45,29 @@ app.register_blueprint(todo_bp)
 app.register_blueprint(mixes_bp)
 app.register_blueprint(stat_bp)
 app.register_blueprint(alert_bp)
-
-# Installables
+app.register_blueprint(chat_bp)
 app.register_blueprint(genus_types_bp)
 app.register_blueprint(genus_bp)
 app.register_blueprint(species_bp)
 app.register_blueprint(soils_bp)
-
-# App
 app.register_blueprint(app_bp)
 
 # Enable CORS
 CORS(app)
 
-# # Print details of the running endpoints
-# logger.debug("------------------------------------------------------------")
-# logger.debug("Printing all available endpoints for this api server:")
-# for rule in app.url_map.iter_rules():
-#     methods = ",".join(sorted(rule.methods))
-#     arguments = ",".join(sorted(rule.arguments))
-#     logger.debug(f"Endpoint: {rule.endpoint}")
-#     logger.debug(f"    URL: {rule}")
-#     logger.debug(f"    Methods: {methods}")
-#     logger.debug(f"    Arguments: {arguments}")
-#     logger.debug("---")
+# Print details of the running endpoints
+logger.debug("------------------------------------------------------------")
+logger.debug("Printing all available endpoints for this api server:")
+for rule in app.url_map.iter_rules():
+    methods = ",".join(sorted(rule.methods))
+    arguments = ",".join(sorted(rule.arguments))
+    logger.debug(f"Endpoint: {rule.endpoint}")
+    logger.debug(f"    URL: {rule}")
+    logger.debug(f"    Methods: {methods}")
+    logger.debug(f"    Arguments: {arguments}")
+    logger.debug("---")
 
-# logger.debug("------------------------------------------------------------")
+logger.debug("------------------------------------------------------------")
 
 # Initialize and start the background scheduler
 init_scheduler(app)

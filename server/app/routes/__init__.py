@@ -172,6 +172,20 @@ class Schema(Enum):
         "budget": SchemaField(),
         "month": SchemaField(),
     }
+    CHAT = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "due_on": SchemaField(),
+        "name": SchemaField(),
+        "messages": SchemaField(nested=True, nested_schema="MESSAGE"),
+    }
+    MESSAGE = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "contents": SchemaField(),
+    }
 
     """Standard model serializer with MongoDB support"""
 

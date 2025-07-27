@@ -30,6 +30,7 @@ import MixUpdate from './pages/mix/MixUpdate';
 import Stats from './pages/stat/Stats';
 import Calendar from './pages/calendar/Calendar';
 import Mixes from './pages/mix/Mixes';
+import BudgetPage from './pages/budget/BudgetPage';
 
 const drawerWidth = 240;
 
@@ -155,6 +156,8 @@ function App() {
             <Route path="/plants" element={<Plants />} />
             <Route path="/plants/:id" element={<PlantUpdate />} />
             <Route path="/plants/create" element={<PlantCreate />} />
+
+            <Route path="/budget" element={<BudgetPage />} />
 
             <Route path="/mixes" element={<Mixes />} />
             <Route path="/mixes/create" element={<MixCreate /> } />

@@ -13,6 +13,7 @@ from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies
 from models.system import System, Light
 from models.todo import Todo
 from models.expense import Expense, Budget
+from models.chat import Chat
 
 from bson import ObjectId
 from pymongo import MongoClient
@@ -44,6 +45,7 @@ class Table(Enum):
     LIGHT = ("light", Light)
     EXPENSE = ("expense", Expense)
     BUDGET = ("budget", Budget)
+    CHAT = ("chat", Chat)
 
     def __init__(self, table_name: str, model_class: Type[FlexibleModel]) -> None:
         self.table_name = table_name

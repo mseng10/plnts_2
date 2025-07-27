@@ -6,6 +6,7 @@ from models import FlexibleModel, Fields, DeprecatableMixin, ExpenseMixin
 
 
 class EXPENSE_CATEGORY(enum.Enum):
+    """Types of expenses"""
     NEED = "Need"
     CRAP = "Crap"
 

@@ -43,6 +43,8 @@ def create_todo(name: str, due_on: str):
     except Exception as e:
         return f"Error creating todo: {str(e)}"
 
+@mcp.prompt("")
 
 if __name__ == "__main__":
     mcp.run(transport="http", port=8000)
+

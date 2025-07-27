@@ -69,7 +69,20 @@ export const APIS = {
   app: {
     chat: "/chat/",
     health: "/health/"
-  }
+  },
+  budget: {
+    getAll: "/budget/",
+    create: "/budget/",
+    getOne: "/budget/{id}/",
+    updateOne: "/budget/{id}/",
+    deprecateOne: "/budget/{id}/",
+  },
+  expense: {
+    getAll: "/expense/",
+    create: "/expense/",
+    updateOne: "/expense/{id}/",
+    deprecateOne: "/expense/{id}/",
+  },
 }
 
 export const apiBuilder = (url) => {

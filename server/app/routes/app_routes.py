@@ -1,8 +1,6 @@
 from flask import Blueprint, jsonify, request
 from shared.db import Table
 from shared.logger import logger
-from shared.mcp_client import chat
-from flask import Flask, Blueprint, request, jsonify
 
 # Standard Blueprint
 bp = Blueprint("app", __name__, url_prefix="/")
@@ -50,14 +48,3 @@ def get_notebook():
 
     # Serve the HTML
     return body
-
-
-@bp.route("/chat/", methods=["POST"])
-def chat():
-    logger.info("Initializing chat with user")
-    data = request.json
-    user_message = data.get("message")
-    if not user_message:
-        return jsonify({"error": "No message provided"}), 400
-
-    return jsonify({"content": chat()["content"]})  # Don't love

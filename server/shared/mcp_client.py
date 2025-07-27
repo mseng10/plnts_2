@@ -1,6 +1,7 @@
 import asyncio
 import ollama
 
+from typing import Dict, Any
 from fastmcp import Client
 
 MODEL = "llama3.2:3b"  # Use a model that supports tool calling, e.g., llama3.1:8b
@@ -31,7 +32,7 @@ async def call_tool_async(tool_name: str, args: dict):
         return result.content[0].text
 
 
-def chat(user_message: str):
+def message(user_message: str) -> Dict[str, Any]:
     # Add system prompt to guide parameter gathering
     # TODO: Update
     messages = [
