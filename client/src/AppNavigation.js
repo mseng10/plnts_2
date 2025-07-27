@@ -42,9 +42,9 @@ function AppNavigation({ window }) {
       { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },
       { id: 'mixes', url: '/mixes', icon: 'mix', label: 'Mix' },
       { id: 'systems', url: '/systems', icon: 'system', label: 'System' },
+      { id: 'todos', url: '/todos', icon: 'todo', label: 'Todo' }
     ]},
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'error', badgeCount: meta.alert_count, badgeCountColor: "error" },
-    { id: 'todo', url: '/todos', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
     { id: 'calendar', url: '/calendar', icon: 'calendar', color: 'primary', badgeCount: meta.todo_count },
     { id: 'budget', url: '/budget', icon: 'atm', color: 'primary' },
     { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},

@@ -1,233 +1,216 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import Box from '@mui/material/Box';
-import { FormTextInput, TextAreaInput } from '../../elements/Form';
-import { useMixes, useSoils, useSoilParts } from '../../hooks/useMix';
+import { FormTextInput, TextAreaInput, AutoCompleteInput } from '../../elements/Form';
+import { useMixes, useSoils } from '../../hooks/useMix';
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
 import IconFactory from '../../elements/IconFactory';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Autocomplete from '@mui/material/Autocomplete';
-import AddSharpIcon from '@mui/icons-material/AddSharp';
-import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
-import TextField from '@mui/material/TextField';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import List from '@mui/material/List';
-import { ServerError } from '../../elements/Page';
+import { ServerError, Loading } from '../../elements/Page';
+import { Paper, Button, Grid, Typography } from '@mui/material';
 
 const MixUpdate = () => {
-  const { id } = useParams();
+    const { id } = useParams();
+    const navigate = useNavigate();
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [experimental, setExperimental] = useState(false);
+    // Hooks
+    const { mixes, error, updateMix, setError, isLoading: mixLoading } = useMixes();
+    const { soils, isLoading: soilsLoading } = useSoils();
 
-  const navigate = useNavigate();
-  const { mixes, error, updateMix , setError} = useMixes();
-  const { soils } = useSoils();
-  const {soilParts, setSoilParts} = useSoilParts();
+    // State
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [soilParts, setSoilParts] = useState([]);
 
-  useEffect(() => {
-    const initializeForm = (mix) => {
-      if (mix) {
-        setName(mix.name);
-        setDescription(mix.description);
-        let soil_parts = mix.soil_parts
-        soil_parts.forEach((soilPart) => {
-          soilPart.soil = soils.find(soil => soil.id === soilPart.soil_id);
-        });
-        setSoilParts(soil_parts)
-      }
+    useEffect(() => {
+        const initializeForm = (mix) => {
+            if (mix && soils.length > 0) {
+                setName(mix.name || '');
+                setDescription(mix.description || '');
+                // Map soil_id to the full soil object for the Autocomplete component
+                const initialSoilParts = mix.soil_parts?.map(part => ({
+                    ...part,
+                    soil: soils.find(s => s.id === part.soil_id)
+                })) || [];
+                setSoilParts(initialSoilParts);
+            }
+        };
+
+        if (mixes.length > 0 && id) {
+            const mix = mixes.find(_m => String(_m.id) === String(id));
+            if (mix) {
+                initializeForm(mix);
+            } else {
+                navigate("/404");
+            }
+        }
+    }, [mixes, soils, id, navigate]);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setError(null);
+
+        if (!name) {
+            setError({ message: "Mix name is required." });
+            return;
+        }
+
+        const final_soil_parts = soilParts
+            .filter(part => part.soil && part.parts > 0)
+            .map(part => ({
+                soil_id: part.soil.id,
+                parts: part.parts
+            }));
+
+        if (final_soil_parts.length === 0) {
+            setError({ message: "You must add at least one soil ingredient." });
+            return;
+        }
+
+        try {
+            await updateMix({ id, name, description, experimental: false, soil_parts: final_soil_parts });
+            navigate("/");
+        } catch (err) {
+            console.error("Failed to update mix:", err);
+        }
     };
 
-    if (mixes.length > 0 && id) {
-      const mix = mixes.find(_t => _t.id === id);
-      if (mix) {
-        initializeForm(mix);
-      }
-    }
-  }, [mixes, soils, id]);
+    const handleCancel = () => {
+        navigate("/");
+    };
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(null);
+    const addSoilPart = () => {
+        setSoilParts(prev => [...prev, { soil: null, parts: 1 }]);
+    };
 
-    try {
-      const soils_json = [];
-      soilParts.forEach((soilPart) => {
-        if (soilPart.soil !== "") {
-          soils_json.push({
-            soil_id: soilPart.soil.id,
-            parts: soilPart.parts
-          });
-        }
-      });
-      setExperimental(false);
-      await updateMix({ id: id, name, description, experimental, soil_parts: soils_json });
-      navigate("/");
-    } catch (err) {
-      setError("Failed to create mix. Please try again.");
-    }
-  };
+    const removeSoilPart = (index) => {
+        setSoilParts(prev => prev.filter((_, i) => i !== index));
+    };
 
-  const handleCancel = () => {
-    navigate("/mixes");
-  };
+    const updateSoilPart = (index, field, value) => {
+        setSoilParts(prev => {
+            const newParts = [...prev];
+            newParts[index] = { ...newParts[index], [field]: value };
+            return newParts;
+        });
+    };
 
-  const createSoildByPart = () => {
-    setSoilParts(prevSoilsByParts => {
-      return [
-        ...prevSoilsByParts,
-        { soil: null, parts: 1 }  // Default to 1 part, null soil
-      ];
-    });
-  };
+    const handlePartCountChange = (index, delta) => {
+        setSoilParts(prev => {
+            const newParts = [...prev];
+            const currentParts = newParts[index].parts;
+            if (currentParts + delta > 0) {
+                newParts[index].parts = currentParts + delta;
+            }
+            return newParts;
+        });
+    };
 
-  const updateSoilByPartsCount = (index, delta) => {
-    setSoilParts(prevSoilsByParts => {
-      const newSoilsByParts = [...prevSoilsByParts];
-      const newParts = (newSoilsByParts[index].parts || 0) + delta;
-      if (newParts > 0) {
-        newSoilsByParts[index] = {
-          ...newSoilsByParts[index],
-          parts: newParts
-        };
+    if (mixLoading || soilsLoading) return <Loading />;
+    if (error && !error.message) return <ServerError error={error} />;
 
-        return newSoilsByParts;
-      }
+    return (
+        <Box sx={{
+            minHeight: '100vh',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backdropFilter: 'blur(5px)',
+            p: 4
+        }}>
+            <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
+                {/* --- MAIN FORM CARD --- */}
+                <Grid item xs={12} md={7} lg={6}>
+                    <Paper
+                        elevation={12}
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{
+                            width: '100%',
+                            p: 4,
+                            borderRadius: 4,
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s ease-in-out',
+                        }}
+                    >
+                        <Grid container spacing={4}>
+                            <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <IconFactory icon={"mix"} color={"primary"} size={"xxxlg"} />
+                            </Grid>
+                            <Grid item xs={12} md={8}>
+                                <Stack spacing={2.5}>
+                                    <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'white' }}>
+                                        Update Mix
+                                    </Typography>
+                                    <FormTextInput label="Name" value={name} setValue={setName} />
+                                    <TextAreaInput label="Description" value={description} setValue={setDescription} />
+                                    
+                                    {error && error.message && <Typography color="error" sx={{ textAlign: 'center' }}>{error.message}</Typography>}
+                                    
+                                    <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
+                                        <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>Cancel</Button>
+                                        <Button type="submit" variant="contained" color="primary" fullWidth>Update</Button>
+                                    </Stack>
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
 
-      return prevSoilsByParts;
-    });
-  };
-
-  const updateSoilByParts = (index, soilByPart) => {
-    setSoilParts(prevSoilsByParts => {
-      const newSoilsByParts = [...prevSoilsByParts];
-      if (index === newSoilsByParts.length) {
-        return [...newSoilsByParts, soilByPart];
-      } else {
-        newSoilsByParts[index] = {
-          ...newSoilsByParts[index],
-          soil: soilByPart.soil,
-          parts: soilByPart.parts
-        };
-
-        return newSoilsByParts;
-      }
-    });
-  };
-  // if (isLoading) return <Loading/>;
-  if (error) return <ServerError/>;
-
-  return (
-    <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ width: 800, height: 312, borderRadius: 2 }} display="flex">
-        <form onSubmit={handleSubmit}>
-          <Box sx={{ width: 512, height: 312, borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
-            <div className='left'>
-              <div className="pieContainer">
-                <div className="pieBackground"></div>
-                <div id="pieSlice1" className="hold"><div className="pie"></div></div>
-                <div id="pieSlice2" className="hold"><div className="pie"></div></div>
-                <div id="pieSlice3" className="hold"><div className="pie"></div></div>
-                <div id="pieSlice4" className="hold"><div className="pie"></div></div>
-                <div id="pieSlice5" className="hold"><div className="pie"></div></div>
-                <div id="pieSlice6" className="hold"><div className="pie"></div></div>
-              </div>
-              <ButtonGroup>
-                <IconButton className="left_button" type="submit" color="info">
-                  <IconFactory
-                      icon={"check"}
-                      size={"xlg"}
-                  >
-                  </IconFactory>
-                </IconButton>
-                <IconButton className="left_button" color="error" onClick={handleCancel}>
-                  <IconFactory
-                      icon={"close"}
-                      size={"xlg"}
-                  >
-                  </IconFactory>
-                </IconButton>
-              </ButtonGroup>
-            </div>
-            <div className='right'>
-              <FormTextInput
-                label="Title"
-                value={name}
-                color="type"
-                setValue={setName}
-              />
-              <TextAreaInput
-                label="Description"
-                value={description}
-                color="lime"
-                setValue={setDescription}
-              />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-            </div>
-          </Box>
-          <Box sx={{ width: 256, height: 312, borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
-          <List>
-              {soilParts && soilParts.map((soilPart, index) => {
-                return (
-                  <Stack key={index} direction="row" alignItems="center">
-                    <Autocomplete
-                      freeSolo
-                      sx={{
-                        width:'80%'
-                      }}
-                      color="primary"
-                      disableClearable
-                      value={soilPart.soil ? soilPart.soil.name : ''}
-                      options={soils.map((option) => option.name)}
-                      onChange={(event, newValue) => {
-                        const selectedSoil = soils.find(soil => soil.name === newValue);
-                        updateSoilByParts(index, {
-                          ...soilPart,
-                          soil: selectedSoil
-                        });
-                      }}
-                      renderInput={(params) => (
-                      <TextField
-                        variant="standard"
-                        {...params}
-                        label="Soil Type"
-                        InputProps={{
-                        ...params.InputProps,
-                        type: 'search',
-                      }}
-                  />
-                  )}
-                  />
-                  <ButtonGroup sx = {{ float:'right'}}>
-                    <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, -1)}>
-                      <RemoveSharpIcon/>
-                    </IconButton>
-                      <p>{soilPart.parts}</p>
-                    <IconButton color='primary' onClick={() => updateSoilByPartsCount(index, 1)}>
-                      <AddSharpIcon/>
-                    </IconButton>
-                  </ButtonGroup>
-                </Stack>
-              )})}
-              </List>
-              <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-              <IconButton 
-                onClick={() => createSoildByPart()}>
-                <IconFactory 
-                  icon={"create"}
-                  size="md"/>
-              </IconButton>
-              </Box>
-          </Box>
-        </form>
-      </Box>
-    </Box>
-  );
+                {/* --- SOIL PARTS PANEL --- */}
+                <Grid item xs={12} md={5} lg={4}>
+                     <Paper
+                        elevation={12}
+                        sx={{
+                            width: '100%',
+                            p: 2,
+                            borderRadius: 4,
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                        }}
+                    >
+                        <Stack spacing={1}>
+                            <Typography variant="h6" sx={{ color: 'white', p: 1 }}>Soil Ingredients</Typography>
+                            <List sx={{ maxHeight: 350, overflowY: 'auto', p: 1 }}>
+                                {soilParts.map((part, index) => (
+                                    <Stack key={index} direction="row" alignItems="center" spacing={1} sx={{ mb: 1 }}>
+                                        <Box sx={{ flexGrow: 1 }}>
+                                            <AutoCompleteInput
+                                                label={`Soil ${index + 1}`}
+                                                options={soils}
+                                                value={part.soil}
+                                                setValue={(newValue) => updateSoilPart(index, 'soil', newValue)}
+                                            />
+                                        </Box>
+                                        <IconButton size="small" onClick={() => handlePartCountChange(index, -1)}><RemoveCircleOutlineIcon /></IconButton>
+                                        <Typography sx={{ color: 'white', minWidth: '20px', textAlign: 'center' }}>{part.parts}</Typography>
+                                        <IconButton size="small" onClick={() => handlePartCountChange(index, 1)}><AddCircleOutlineIcon /></IconButton>
+                                        <IconButton color="error" size="small" onClick={() => removeSoilPart(index)}>
+                                            <IconFactory icon="close" />
+                                        </IconButton>
+                                    </Stack>
+                                ))}
+                            </List>
+                             <Button
+                                startIcon={<AddCircleOutlineIcon />}
+                                onClick={addSoilPart}
+                                sx={{ alignSelf: 'center' }}
+                            >
+                                Add Ingredient
+                            </Button>
+                        </Stack>
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Box>
+    );
 };
 
 export default MixUpdate;
