@@ -1,22 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Paper, Stack, TextField, MenuItem, Button, IconButton, Box, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { EXPENSE_CATEGORIES } from '../../hooks/useBudget';
+import dayjs from 'dayjs';
+import { FormTextInput, TextAreaInput, DateSelector } from '../../elements/Form';
 
 const ExpenseForm = ({ expense, onSave, onClose }) => {
     const [name, setName] = useState('');
     const [cost, setCost] = useState('');
     const [category, setCategory] = useState(EXPENSE_CATEGORIES.NEED);
+    const [purchasedOn, setPurchasedOn] = useState(dayjs());
 
     useEffect(() => {
         if (expense) {
             setName(expense.name);
             setCost(expense.cost);
             setCategory(expense.category);
+            setPurchasedOn(dayjs(expense.purchased_on));
         } else {
             // Reset for new expense
             setName('');
-            setCost('');
             setCategory(EXPENSE_CATEGORIES.NEED);
         }
     }, [expense]);
@@ -27,6 +30,7 @@ const ExpenseForm = ({ expense, onSave, onClose }) => {
             name,
             cost: parseFloat(cost),
             category,
+            purchased_on: purchasedOn.toISOString()
         };
         if (expense) {
             expenseData.id = expense.id;
@@ -91,6 +95,7 @@ const ExpenseForm = ({ expense, onSave, onClose }) => {
                         <MenuItem value={EXPENSE_CATEGORIES.NEED}>Needed</MenuItem>
                         <MenuItem value={EXPENSE_CATEGORIES.CRAP}>Crap</MenuItem>
                     </TextField>
+                    <DateSelector label="Pruchased On" value={purchasedOn} setValue={setPurchasedOn} />
                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1, mt: 2 }}>
                         <Button onClick={onClose} color="secondary">Cancel</Button>
                         <Button type="submit" variant="contained" color="primary">Save</Button>

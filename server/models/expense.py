@@ -19,6 +19,7 @@ class Expense(FlexibleModel, DeprecatableMixin, ExpenseMixin):
         self.updated_on = kwargs.get("updated_on", datetime.now())
         self.name = kwargs.get("name", "Unkwown")
         self.category = kwargs.get("category", EXPENSE_CATEGORY.NEED.value)
+        self.purchased_on = kwargs.get("purchased_on", datetime.now())
 
 
 class Budget(FlexibleModel, DeprecatableMixin):

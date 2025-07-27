@@ -161,6 +161,7 @@ class Schema(Enum):
         "cost": SchemaField(),
         "name": SchemaField(),
         "category": SchemaField(),
+        "purchased_on": SchemaField()
     }
     BUDGET = {
         "id": SchemaField(read_only=True),

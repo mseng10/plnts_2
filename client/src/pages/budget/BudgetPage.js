@@ -20,7 +20,7 @@ const BudgetPage = () => {
 
   const { monthlyBudget, monthlyExpenses } = useMemo(() => {
     const budgetForMonth = budgets.find(b => b.month === currentMonthStr);
-    const expensesForMonth = expenses.filter(e => dayjs(e.created_on).format('YYYY-MM') === currentMonthStr);
+    const expensesForMonth = expenses.filter(e => dayjs(e.purchased_on).format('YYYY-MM') === currentMonthStr);
     return { monthlyBudget: budgetForMonth, monthlyExpenses: expensesForMonth };
   }, [budgets, expenses, currentMonthStr]);
   

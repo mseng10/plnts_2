@@ -6,6 +6,9 @@ import DeleteIcon from '@mui/icons-material/Delete';
 const ExpenseList = ({ title, expenses, onEdit, onDelete }) => {
     const titleColor = title === 'Needed' ? 'info.main' : 'warning.main';
 
+    // Sort expenses by purchased_on date in descending order (newest first)
+    const sortedExpenses = [...expenses].sort((a, b) => new Date(b.purchased_on) - new Date(a.purchased_on));
+
     return (
         <Paper sx={{
             p: 2,
@@ -22,7 +25,7 @@ const ExpenseList = ({ title, expenses, onEdit, onDelete }) => {
             </Typography>
             <Box sx={{ flexGrow: 1, overflowY: 'auto' }}>
                 <List>
-                    {expenses.map((expense) => (
+                    {sortedExpenses.map((expense) => (
                         <ListItem
                             key={expense.id}
                             secondaryAction={
@@ -43,13 +46,13 @@ const ExpenseList = ({ title, expenses, onEdit, onDelete }) => {
                         >
                             <ListItemText
                                 primary={expense.name}
-                                secondary={`$${expense.cost.toFixed(2)}`}
+                                secondary={`${new Date(expense.purchased_on).toLocaleDateString()} - $${expense.cost.toFixed(2)}`}
                                 primaryTypographyProps={{ color: 'white' }}
                                 secondaryTypographyProps={{ color: 'rgba(255, 255, 255, 0.7)' }}
                             />
                         </ListItem>
                     ))}
-                    {expenses.length === 0 &&
+                    {sortedExpenses.length === 0 &&
                         <Typography sx={{ textAlign: 'center', color: 'rgba(255, 255, 255, 0.7)', mt: 2 }}>
                             No expenses here.
                         </Typography>

@@ -9,7 +9,7 @@ APIBuilder.register_blueprint(
     expense_bp,
     "expense",
     expense_crud,
-    ["GET", "GET_MANY", "POST", "DEPRECATE", "PATCH"],
+    ["GET", "GET_MANY", "POST", "DELETE", "PATCH"],
 )
 
 budget_bp = Blueprint("budget", __name__)

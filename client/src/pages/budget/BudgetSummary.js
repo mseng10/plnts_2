@@ -1,4 +1,3 @@
-import React from 'react';
 import { Paper, Typography, Box, Grid, LinearProgress } from '@mui/material';
 
 const BudgetSummary = ({ budget, totalSpent }) => {
