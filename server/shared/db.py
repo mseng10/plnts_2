@@ -1,6 +1,7 @@
 """
 This is the main source for anything db related.
 """
+
 import os
 from enum import Enum
 from typing import Dict, Any, Optional, List, Type
@@ -8,20 +9,24 @@ from typing import Dict, Any, Optional, List, Type
 from models import FlexibleModel, DeprecatableMixin, BanishableMixin
 from models.alert import Alert
 from models.mix import Mix, Soil
-from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies
+from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies, CarePlan
 from models.system import System, Light
 from models.todo import Todo
+from models.expense import Expense, Budget
+from models.chat import Chat
 
 from bson import ObjectId
 from pymongo import MongoClient
 from pymongo.database import Database
 
 # Create the MongoDB client
-MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
+MONGODB_URL = os.getenv("MONGODB_URL", "mongodb://admin:password123@localhost:27017")
 CLIENT: MongoClient = MongoClient(MONGODB_URL)
 
-MONGODB_URL_HIST = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
-CLIENT_HIST: MongoClient = MongoClient(MONGODB_URL)
+MONGODB_URL_HIST = os.getenv(
+    "MONGODB_URL_HIST", "mongodb://admin:password123@localhost:27017"
+)
+CLIENT_HIST: MongoClient = MongoClient(MONGODB_URL_HIST)
 
 DB: Database = CLIENT["plnts"]
 HIST: Database = CLIENT["plnts_hist"]
@@ -38,6 +43,11 @@ class Table(Enum):
     ALERT = ("alert", Alert)
     MIX = ("mix", Mix)
     LIGHT = ("light", Light)
+    EXPENSE = ("expense", Expense)
+    BUDGET = ("budget", Budget)
+    CHAT = ("chat", Chat)
+    CARE_PLAN = ("care_plan", CarePlan)
+
 
     def __init__(self, table_name: str, model_class: Type[FlexibleModel]) -> None:
         self.table_name = table_name
@@ -89,3 +99,56 @@ class Table(Enum):
 
         result = HIST[self.table_name].insert_one(banishable.to_dict())
         return result.inserted_id is not None
+
+
+class Query:
+    """A fluent builder for creating MongoDB query dictionaries."""
+
+    def __init__(self):
+        self._query = {}
+
+    def _add_condition(self, field, operator, value):
+        if field not in self._query or not isinstance(self._query.get(field), dict):
+            self._query[field] = {}
+        self._query[field][f"${operator}"] = value
+        return self
+
+    def filter_by(self, **kwargs):
+        for key, value in kwargs.items():
+            self._query[key] = value
+        return self
+
+    def gt(self, field, value):
+        return self._add_condition(field, "gt", value)
+
+    def gte(self, field, value):
+        return self._add_condition(field, "gte", value)
+
+    def lt(self, field, value):
+        return self._add_condition(field, "lt", value)
+
+    def lte(self, field, value):
+        return self._add_condition(field, "lte", value)
+
+    def in_(self, field, values):
+        return self._add_condition(field, "in", values)
+
+    def not_in(self, field, values):
+        return self._add_condition(field, "nin", values)
+
+    def not_equal(self, field, value):
+        return self._add_condition(field, "ne", value)
+
+    def exists(self, field, exists=True):
+        return self._add_condition(field, "exists", exists)
+
+    def logical_and(self, queries):
+        self._query = {"$and": queries}
+        return self
+
+    def logical_or(self, queries):
+        self._query = {"$or": queries}
+        return self
+
+    def build(self):
+        return self._query

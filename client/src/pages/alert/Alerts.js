@@ -63,7 +63,7 @@ const Alerts = () => {
 
   if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
-  if (alerts.length == 0) return <NoDataHappy/>;
+  if (alerts.length === 0) return <NoDataHappy/>;
 
   return (
     <div className="App">

@@ -1,5 +1,6 @@
 import os
 from shared.db import Table
+from shared.logger import logger
 from models.system import System
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "docker")
@@ -11,23 +12,24 @@ def discover_systems():
     Meant to be ran from the master roled node (system) in a cluster of nodes (systems).
     """
 
-    if USE_LOCAL_HARDWARE:
-        # Check for local system and create new system if needed
-        local_system = Table.SYSTEM.count({"container_id": "local"})
-        if local_system == 0:
-            local_system = System(
-                name="Local System",
-                description="System created by service. Please update accordingly",
-                url="local",
-                container_id="local",
-                target_humidity=-1,
-                target_temperature=-1,
-                duration=-1,
-                distance=-1,
-            )
+    logger.info("Discovering nothing")
+    # if USE_LOCAL_HARDWARE:
+    #     # Check for local system and create new system if needed
+    #     local_system = Table.SYSTEM.count({"container_id": "local"})
+    #     if local_system == 0:
+    #         local_system = System(
+    #             name="Local System",
+    #             description="System created by service. Please update accordingly",
+    #             url="local",
+    #             container_id="local",
+    #             target_humidity=-1,
+    #             target_temperature=-1,
+    #             duration=-1,
+    #             distance=-1,
+    #         )
 
-            # Insert the new system
-            Table.SYSTEM.create(local_system)
+    #         # Insert the new system
+    #         Table.SYSTEM.create(local_system)
 
     # TODO: Support for Kubernetes
     # if ENVIRONMENT == 'kubernetes':

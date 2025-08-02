@@ -130,7 +130,7 @@ const Systems = () => {
 
   if (isLoading) return <Loading/>;
   if (error) return <ServerError/>;
-  if (systems.length == 0) return <NoData/>;
+  if (systems.length === 0) return <NoData/>;
 
   return (
     <Grid container justifyContent="center" spacing={4}>

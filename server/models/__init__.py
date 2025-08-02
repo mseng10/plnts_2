@@ -15,7 +15,7 @@ class Fields:
 
 
 class FlexibleModel:
-    """Base model with MongoDB support"""
+    """Base model that supports many different forms."""
 
     def __init__(self, **kwargs):
         self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
@@ -61,7 +61,7 @@ class DeprecatableMixin:
         self.deprecated_cause = kwargs.get("deprecated_cause")
 
     def deprecate(self, cause):
-        self.deprecate = True
+        self.deprecated = True
         self.deprecated_on = datetime.now()
         self.deprecated_cause = cause
 

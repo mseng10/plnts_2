@@ -27,17 +27,18 @@ class Schema(Enum):
         "cost": SchemaField(),
         "species_id": SchemaField(),
         "watered_on": SchemaField(),
-        "watering": SchemaField(),
+        "potted_on": SchemaField(),
+        "fertilized_on": SchemaField(),
+        "cleansed_on": SchemaField(),
         "identity": SchemaField(),
         "phase": SchemaField(),
         "size": SchemaField(),
         "system_id": SchemaField(),
         "mix_id": SchemaField(),
+        "care_plan_id": SchemaField(),
         "deprecated": SchemaField(),
         "deprecated_on": SchemaField(),
         "deprecated_cause": SchemaField(),
-        "batch": SchemaField(),
-        "batch_count": SchemaField(),
     }
     PLANT_GENUS_TYPE = {
         "id": SchemaField(read_only=True),
@@ -151,9 +152,54 @@ class Schema(Enum):
         "parts": SchemaField(),
         "id": SchemaField(read_only=True),
     }
+    EXPENSE = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "deprecated": SchemaField(),
+        "deprecated_on": SchemaField(),
+        "deprecated_cause": SchemaField(),
+        "cost": SchemaField(),
+        "name": SchemaField(),
+        "category": SchemaField(),
+        "purchased_on": SchemaField()
+    }
+    BUDGET = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "deprecated": SchemaField(),
+        "deprecated_on": SchemaField(),
+        "deprecated_cause": SchemaField(),
+        "budget": SchemaField(),
+        "month": SchemaField(),
+    }
+    CHAT = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "due_on": SchemaField(),
+        "name": SchemaField(),
+        "messages": SchemaField(nested=True, nested_schema="MESSAGE"),
+    }
+    MESSAGE = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "contents": SchemaField(),
+    }
+    CARE_PLAN = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "name": SchemaField(),
+        "watering": SchemaField(),
+        "fertilizing": SchemaField(),
+        "cleaning": SchemaField(),
+        "potting": SchemaField(),
+    }
 
     """Standard model serializer with MongoDB support"""
-
     def __init__(self, fields: Dict[str, SchemaField]):
         self.fields = fields
 
@@ -200,9 +246,11 @@ class Schema(Enum):
                         model,
                         field_name,
                         [
-                            nested_schema.patch(current_item, new_item, depth + 1)
-                            if current_item is not None
-                            else nested_schema.patch(None, new_item, depth + 1)
+                            (
+                                nested_schema.patch(current_item, new_item, depth + 1)
+                                if current_item is not None
+                                else nested_schema.patch(None, new_item, depth + 1)
+                            )
                             for current_item, new_item in zip(current_value, new_value)
                         ],
                     )
@@ -212,9 +260,11 @@ class Schema(Enum):
                     setattr(
                         model,
                         field_name,
-                        nested_schema.patch(current_value, new_value, depth + 1)
-                        if current_value is not None
-                        else nested_schema.patch(None, new_value, depth + 1),
+                        (
+                            nested_schema.patch(current_value, new_value, depth + 1)
+                            if current_value is not None
+                            else nested_schema.patch(None, new_value, depth + 1)
+                        ),
                     )
             elif not field_config.internal_only:
                 new_value_formatted = new_value

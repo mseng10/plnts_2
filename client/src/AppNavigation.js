@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from "react-router-dom";
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -20,12 +20,13 @@ function AppNavigation({ window }) {
   const location = useLocation();
   
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isNavCollapsed, setIsNavCollapsed] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
   const [selectedSubOption, setSelectedSubOption] = useState(null);
 
   const { meta } = useMeta();
 
-  const navigationOptions = [
+  const navigationOptions = useMemo(() => [
     { id: 'menu', url: '/', icon: 'menu', color: 'info' },
     { id: 'home', url: '/', icon: 'home', color: 'primary' },
     { id: 'create', icon: 'create', color: 'primary', subMenu: [
@@ -36,16 +37,20 @@ function AppNavigation({ window }) {
       { id: 'system', url: '/systems/create', icon: 'system', label: 'System' },
       { id: 'light', url: '/lights/create', icon: 'light', label: 'Light' },
       { id: 'todo', url: '/todos/create', icon: 'todo', label: 'Todo' },
+      { id: 'care_plan', url: '/care_plans/create', icon: 'care_plan', label: 'Care Plan'}
     ]},
     { id: 'view', icon: 'view', color: 'primary', subMenu: [
       { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },
       { id: 'mixes', url: '/mixes', icon: 'mix', label: 'Mix' },
       { id: 'systems', url: '/systems', icon: 'system', label: 'System' },
+      { id: 'todos', url: '/todos', icon: 'todo', label: 'Todo' },
+      { id: 'care_plan', url: '/care_plans', icon: 'care_plan', label: 'Care Plans'}
     ]},
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'error', badgeCount: meta.alert_count, badgeCountColor: "error" },
-    { id: 'todo', url: '/todos', icon: 'todo', color: 'primary', badgeCount: meta.todo_count},
+    { id: 'calendar', url: '/calendar', icon: 'calendar', color: 'primary', badgeCount: meta.todo_count },
+    { id: 'budget', url: '/budget', icon: 'atm', color: 'primary' },
     { id: 'stats', url: '/stats', icon: 'stats', color: 'primary'},
-  ];
+  ], [meta]);
 
   useEffect(() => {
     const currentPath = location.pathname;
@@ -60,9 +65,26 @@ function AppNavigation({ window }) {
         setSelectedSubOption(currentSubOption ? currentSubOption.id : null);
       }
     }
-  }, [location]);
+  }, [location, navigationOptions]);
 
   const handleNavigation = (option) => {
+    // The 'menu' button toggles the collapsed state of the primary navigation.
+    if (option.id === 'menu') {
+      const willCollapse = !isNavCollapsed;
+      setIsNavCollapsed(willCollapse);
+      // If collapsing the nav, also close any open sub-menu drawer.
+      if (willCollapse) {
+        setDrawerOpen(false);
+        setSelectedOption(null);
+      }
+      return;
+    }
+
+    // If another button is clicked while collapsed, expand the nav.
+    if (isNavCollapsed) {
+      setIsNavCollapsed(false);
+    }
+
     if (option.subMenu) {
       setDrawerOpen(true);
       setSelectedOption(option.id);
@@ -84,7 +106,9 @@ function AppNavigation({ window }) {
     <div>
       <div className='left_half'>
         <List>
-          {navigationOptions.map((option) => (
+          {navigationOptions
+            .filter(option => !isNavCollapsed || option.id === 'menu')
+            .map((option) => (
             <ListItem key={option.id} disablePadding>
               <IconButton
                 size="large"
@@ -149,7 +173,12 @@ function AppNavigation({ window }) {
         }}
         sx={{
           display: { xs: 'block', sm: 'none' },
-          '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerOpen ? expandedDrawerWidth : drawerWidth },
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: drawerOpen ? expandedDrawerWidth : drawerWidth,
+            background: 'inherit', // To maintain transparency
+            borderRight: isNavCollapsed ? 'none' : `1px solid rgba(255, 255, 255, 0.12)`
+          },
         }}
       >
         {drawer}
@@ -162,7 +191,8 @@ function AppNavigation({ window }) {
             boxSizing: 'border-box', 
             width: drawerOpen ? expandedDrawerWidth : drawerWidth,
             transition: 'width 0.3s ease-in-out',
-            background: 'inherit'
+            background: 'inherit', // To maintain transparency
+            borderRight: isNavCollapsed ? 'none' : `1px solid rgba(255, 255, 255, 0.12)`
           },
         }}
         open

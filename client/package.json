@@ -1,5 +1,5 @@
 {
-  "name": "react-starter",
+  "name": "bubby",
   "version": "18.2.0",
   "private": true,
   "dependencies": {
@@ -22,7 +22,7 @@
     "web-vitals": "3.5.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "WATCHPACK_POLLING=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "coverage": "react-scripts test --coverage --watchAll=false",

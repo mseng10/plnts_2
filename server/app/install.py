@@ -2,6 +2,7 @@
 Process dedicated to installing static data (e.g. genuses, species, etc).
 Could eventually see this moving to cloud.
 """
+
 import sys
 import os
 from typing import Type, List, Tuple

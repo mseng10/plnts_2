@@ -15,29 +15,27 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 export const FormButton = ({icon, color, handleCancel}) => {
   // Handle case when system data is not available
   return  (
-    <div className='left'>
+    <Stack direction="column" alignItems="center" spacing={2}>
       <IconFactory
         icon={icon}
         color={color}
         size={"xxxlg"}
-      ></IconFactory>
+      />
       <ButtonGroup>
         <IconButton className="left_button" type="submit" color="info">
           <IconFactory
             icon={"check"}
             size={"xlg"}
-          >
-          </IconFactory>
+          />
         </IconButton>
         <IconButton className="left_button" color="error" onClick={handleCancel}>
           <IconFactory
             icon={"close"}
             size={"xlg"}
-          >
-          </IconFactory>
+          />
         </IconButton>
       </ButtonGroup>
-    </div>)
+    </Stack>)
 };
 
 export const TextAreaInput = (fieldInfo) => {

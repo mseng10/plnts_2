@@ -29,7 +29,6 @@ export const APIS = {
   alert: {
     getAll: "/alerts/",
     deleteOne: "/alerts/{id}/",
-    deleteOne: "/todos/{id}/",
   },
   light: {
     getAll: "/lights/",
@@ -54,7 +53,8 @@ export const APIS = {
   },
   species: {
     getAll: "/species/",
-    create: "/species/"
+    create: "/species/",
+    createAll: "/species/all", // sure
   },
   generaTypes: {
     getAll: "/genus_types/",
@@ -66,6 +66,29 @@ export const APIS = {
     resolve: "/todos/{id}/tasks/{eid}/resolve",
     unresolve: "/todos/{id}/tasks/{eid}/unresolve"
   },
+  app: {
+    chat: "/chat/",
+    health: "/health/"
+  },
+  budget: {
+    getAll: "/budget/",
+    create: "/budget/",
+    getOne: "/budget/{id}/",
+    updateOne: "/budget/{id}/",
+    deprecateOne: "/budget/{id}/",
+  },
+  expense: {
+    getAll: "/expense/",
+    create: "/expense/",
+    updateOne: "/expense/{id}/",
+    deprecateOne: "/expense/{id}/",
+  },
+  carePlans: {
+    get: "/care_plans/{id}/",
+    getAll: "/care_plans/",
+    create: "/care_plans/",
+    updateOne: "/care_plans/{id}/",
+  }
 }
 
 export const apiBuilder = (url) => {

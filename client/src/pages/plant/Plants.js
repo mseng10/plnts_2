@@ -28,7 +28,7 @@ const Plants = ({ initialPlants }) => {
       field: 'species_id',
       headerName: 'Type',
       width: 150,
-      valueGetter: ({ value }) => species.find(_s => _s.id === value)?.name || 'N/A',
+      valueGetter: ({ value }) => species.find(_s => _s.id === value)?.name || '?',
     },
     {
       field: 'system_id',

@@ -1,132 +1,168 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
-import { FormTextInput, TextAreaInput, FormButton, DateSelector } from '../../elements/Form';
+import { FormTextInput, TextAreaInput, DateSelector } from '../../elements/Form';
 import dayjs from 'dayjs';
 import { useTodos } from '../../hooks/useTodos';
-import { List, Stack, ButtonGroup, IconButton } from '@mui/material';
-import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
+import { List, Stack, Button, Paper, Grid, Typography, IconButton } from '@mui/material';
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import IconFactory from '../../elements/IconFactory';
 
 const TodoCreate = () => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [tasks, setTasks] = useState([]);
-  const [dueOn, setDueOn] = useState(dayjs());
-  const [error, setError] = useState(null);
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [tasks, setTasks] = useState([]);
+    const [dueOn, setDueOn] = useState(dayjs());
+    const [error, setError] = useState(null);
 
-  const navigate = useNavigate();
-  const { createTodo } = useTodos();
+    const navigate = useNavigate();
+    const { createTodo } = useTodos();
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setError(null);
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setError(null);
 
-    try {
-      await createTodo({ name, description, due_on: dueOn.toISOString(), tasks });
-      navigate("/");
-    } catch (err) {
-      setError("Failed to create todo. Please try again.");
-    }
-  };
+        if (!name) {
+            setError("Title is a required field.");
+            return;
+        }
 
-  const handleCancel = () => {
-    navigate("/");
-  };
+        try {
+            // Filter out any empty tasks before submitting
+            const finalTasks = tasks.filter(task => task.description.trim() !== '');
+            await createTodo({ name, description, due_on: dueOn.toISOString(), tasks: finalTasks });
+            navigate("/");
+        } catch (err) {
+            setError("Failed to create todo. Please try again.");
+            console.error(err);
+        }
+    };
 
-  const removeTask = (index) => {
-    setTasks(prevTasks => {
-      prevTasks.filter((task, ind) => ind !== index)
-    });
-  };
+    const handleCancel = () => {
+        navigate("/");
+    };
 
-  const addTask = () => {
-    setTasks(prevTasks => {
-      return [
-        ...prevTasks,
-        { description: "" }
-      ];
-    });
-  };
+    const removeTask = (index) => {
+        setTasks(prevTasks => prevTasks.filter((_, ind) => ind !== index));
+    };
 
-  const updateTask = (description, index) => {
-    if (tasks.length == 0) {
-      setTasks([]);
-    } else {
-      setTasks(prevTasks => prevTasks.map((task, _i) => 
-        _i === index ? { ...task, description: description } : task
-      ));
-    }
-  };
+    const addTask = () => {
+        setTasks(prevTasks => [...prevTasks, { description: "" }]);
+    };
 
+    const updateTask = (description, index) => {
+        setTasks(prevTasks => prevTasks.map((task, _i) =>
+            _i === index ? { ...task, description: description } : task
+        ));
+    };
 
-  return (
-    <Box sx={{ height: '100%', width: '100%' }}>
-      <Box sx={{ width: 800, height: 312, borderRadius: 2 }} display="flex">
-        <form onSubmit={handleSubmit}>
-          <Box sx={{ width: 512, height: 312, borderRadius: 2, float:'left', paddingRight: 2, paddingLeft: 4  }}>
-            <FormButton
-              icon="todo"
-              color="lime"
-              handleCancel={handleCancel}
-            />
-            <div className='right'>
-              <FormTextInput
-                label="Title"
-                value={name}
-                color="type"
-                setValue={setName}
-              />
-              <TextAreaInput
-                label="Description"
-                value={description}
-                color="lime"
-                setValue={setDescription}
-              />
-              <DateSelector
-                label="Due"
-                value={dueOn}
-                setValue={setDueOn}
-              />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
-            </div>
-          </Box>
-          <Box sx={{ width: 256, height: 312, borderRadius: 2, float:'right', paddingRight: 2, marginLeft: 4  }}>
-          <List>
-            {tasks && tasks.map((task, index) => {
-              return (
-                <Stack key={index} direction="row" alignItems="center">
-                  <FormTextInput
-                    label="Task"
-                    value={task.description}
-                    color="primary"
-                    setValue={(value => updateTask(value, index))}
-                />
-                  <ButtonGroup sx = {{ float:'right'}}>
-                    <IconButton color='error' onClick={() => removeTask(index)}>
-                      <RemoveSharpIcon/>
-                    </IconButton>
-                  </ButtonGroup>
-                </Stack>
-              )})}
-            </List>
-            <Box
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-              <IconButton 
-                onClick={() => addTask()}>
-                <IconFactory 
-                  icon={"create"}
-                  size="md"/>
-              </IconButton>
-              </Box>
-          </Box>
-        </form>
-      </Box>
-    </Box>
-  );
+    return (
+        <Box sx={{
+            minHeight: '100vh',
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            backdropFilter: 'blur(5px)',
+            p: 4
+        }}>
+            <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
+                {/* --- MAIN FORM CARD --- */}
+                <Grid item xs={12} md={7} lg={6}>
+                    <Paper
+                        elevation={12}
+                        component="form"
+                        onSubmit={handleSubmit}
+                        sx={{
+                            width: '100%',
+                            p: 4,
+                            borderRadius: 4,
+                            // Styles updated to match the SpeciesCreateCard
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s ease-in-out',
+                        }}
+                    >
+                        <Grid container spacing={4}>
+                            {/* --- ICON AREA --- */}
+                            <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                <IconFactory
+                                    icon={"todo"}
+                                    color={"primary"}
+                                    size={"xxxlg"}
+                                />
+                            </Grid>
+
+                            {/* --- FORM FIELDS --- */}
+                            <Grid item xs={12} md={8}>
+                                <Stack spacing={2.5}>
+                                    <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'white' }}>
+                                        Create a New Todo
+                                    </Typography>
+                                    <FormTextInput label="Title" value={name} setValue={setName} />
+                                    <TextAreaInput label="Description" value={description} setValue={setDescription} />
+                                    <DateSelector label="Due" value={dueOn} setValue={setDueOn} />
+                                    {error && <Typography color="error" sx={{ textAlign: 'center' }}>{error}</Typography>}
+                                    <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
+                                        <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>
+                                            Cancel
+                                        </Button>
+                                        <Button type="submit" variant="contained" color="primary" fullWidth>
+                                            Submit
+                                        </Button>
+                                    </Stack>
+                                </Stack>
+                            </Grid>
+                        </Grid>
+                    </Paper>
+                </Grid>
+
+                {/* --- TASKS PANEL --- */}
+                <Grid item xs={12} md={5} lg={4}>
+                     <Paper
+                        elevation={12}
+                        sx={{
+                            width: '100%',
+                            p: 2,
+                            borderRadius: 4,
+                            // Styles updated to match the SpeciesCreateCard
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s ease-in-out',
+                        }}
+                    >
+                        <Stack spacing={1}>
+                            <Typography variant="h6" sx={{ color: 'white', p:1 }}>Tasks</Typography>
+                            <List sx={{maxHeight: 350, overflowY: 'auto', p: 1}}>
+                                {tasks.map((task, index) => (
+                                    <Stack key={index} direction="row" alignItems="center" spacing={1} sx={{mb: 1}}>
+                                        <FormTextInput
+                                            label={`Task ${index + 1}`}
+                                            value={task.description}
+                                            setValue={(value) => updateTask(value, index)}
+                                        />
+                                        <IconButton color="error" onClick={() => removeTask(index)}>
+                                            <RemoveCircleOutlineIcon />
+                                        </IconButton>
+                                    </Stack>
+                                ))}
+                            </List>
+                             <Button
+                                startIcon={<AddCircleOutlineIcon />}
+                                onClick={addTask}
+                                sx={{ alignSelf: 'center' }}
+                            >
+                                Add Task
+                            </Button>
+                        </Stack>
+                    </Paper>
+                </Grid>
+            </Grid>
+        </Box>
+    );
 };
 
 export default TodoCreate;

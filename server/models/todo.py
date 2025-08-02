@@ -1,6 +1,7 @@
 """
 Module defining models for todos.
 """
+
 from datetime import datetime
 from typing import Dict, Any, List
 from bson import ObjectId
@@ -8,7 +9,7 @@ from models import FlexibleModel, BanishableMixin, Fields
 
 
 class Task(FlexibleModel):
-    """TODO Item"""
+    """TODO task"""
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
