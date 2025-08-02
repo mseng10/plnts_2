@@ -27,6 +27,7 @@ import SentimentNeutralSharpIcon from '@mui/icons-material/SentimentNeutralSharp
 import SentimentVerySatisfiedSharpIcon from '@mui/icons-material/SentimentVerySatisfiedSharp';
 import CalendarMonthSharpIcon from '@mui/icons-material/CalendarMonthSharp';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -123,6 +124,9 @@ const IconFactory = ({ icon, color, size }) => {
     break;
   case 'atm':
     IconComponent = LocalAtmIcon;
+    break;
+  case 'care_plan':
+    IconComponent = SelfImprovementIcon;
     break;
     
   // Add more cases for other icons

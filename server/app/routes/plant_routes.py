@@ -76,3 +76,9 @@ genus_crud = GenericCRUD(Table.GENUS, Schema.PLANT_GENUS)
 APIBuilder.register_blueprint(
     genus_bp, "genera", genus_crud, methods=["GET", "GET_MANY"]
 )
+
+care_plan_bp = Blueprint("care_plans", __name__)
+care_plan_crud = GenericCRUD(Table.CARE_PLAN, Schema.CARE_PLAN)
+APIBuilder.register_blueprint(
+    care_plan_bp, "care_plans", care_plan_crud, methods=["GET", "GET_MANY", "POST", "PATCH", "BANISH"]
+)

@@ -5,35 +5,43 @@ import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from "react-router-dom";
-import { AutoCompleteInput, DropdownInput, FormButton, NumberInput } from '../../elements/Form';
+import { AutoCompleteInput, DropdownInput, NumberInput, DateSelector } from '../../elements/Form';
 import { usePlants, useSpecies } from '../../hooks/usePlants';
+import { useCarePlans } from '../../hooks/useCarePlans';
 import { PHASE_LABELS } from '../../constants';
 import { useMixes } from '../../hooks/useMix';
 import { ServerError, Loading } from '../../elements/Page';
 import SpeciesCreateCard from './species/SpeciesCreateCard';
 import { Paper, Button, Typography } from '@mui/material';
 import IconFactory from '../../elements/IconFactory';
+import dayjs from 'dayjs';
 
 const PlantCreate = () => {
     const navigate = useNavigate();
     const { systems, isLoading, error, createPlant } = usePlants();
     const { species } = useSpecies();
     const { mixes } = useMixes(true);
+    const { carePlans } = useCarePlans();
 
     const [selectedSpecies, setSelectedSpecies] = useState(null);
     const [system, setSystem] = useState(null);
     const [mix, setMix] = useState(null);
-    const [size, setSize] = useState(''); // Use empty string for better placeholder behavior
+    const [carePlan, setCarePlan] = useState(null);
+    const [size, setSize] = useState('');
     const [cost, setCost] = useState('');
-    const [watering, setWatering] = useState('');
     const [phase, setPhase] = useState(PHASE_LABELS.adult);
     const [showSpeciesCreate, setShowSpeciesCreate] = useState(false);
     const [formError, setFormError] = useState('');
+    
+    // New date fields
+    const [potted_on, setPottedOn] = useState(dayjs());
+    const [watered_on, setWateredOn] = useState(dayjs());
+    const [fertilized_on, setFertilizedOn] = useState(dayjs());
+    const [cleansed_on, setCleansedOn] = useState(dayjs());
 
     const handleSpeciesCreated = (newSpecies) => {
-        // The useSpecies hook should handle re-fetching and updating the list.
         setSelectedSpecies(newSpecies);
-        setShowSpeciesCreate(false); // Hide card on successful creation
+        setShowSpeciesCreate(false);
     };
 
     const handleSpeciesCreateClose = () => {
@@ -56,8 +64,12 @@ const PlantCreate = () => {
             species_id: selectedSpecies.id,
             system_id: system.id,
             mix_id: mix.id,
-            watering: watering || 0,
-            phase
+            care_plan_id: carePlan ? carePlan.id : null,
+            phase,
+            potted_on: potted_on.toISOString(),
+            watered_on: watered_on.toISOString(),
+            fertilized_on: fertilized_on.toISOString(),
+            cleansed_on: cleansed_on.toISOString(),
         };
 
         try {
@@ -98,7 +110,6 @@ const PlantCreate = () => {
                             width: '100%',
                             p: 4,
                             borderRadius: 4,
-                            // Styles updated to match the SpeciesCreateCard
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             backgroundColor: 'rgba(255, 255, 255, 0.1)',
                             backdropFilter: 'blur(10px)',
@@ -108,11 +119,11 @@ const PlantCreate = () => {
                         <Grid container spacing={4}>
                             {/* --- ICON AREA --- */}
                             <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <IconFactory
-                                icon={"plant"}
-                                color={"primary"}
-                                size={"xxxlg"}
-                              />
+                                <IconFactory
+                                    icon={"plant"}
+                                    color={"primary"}
+                                    size={"xxxlg"}
+                                />
                             </Grid>
 
                             {/* --- FORM FIELDS --- */}
@@ -140,12 +151,19 @@ const PlantCreate = () => {
                                     
                                     <AutoCompleteInput label="System" value={system} setValue={setSystem} options={systems} />
                                     <AutoCompleteInput label="Mix" value={mix} setValue={setMix} options={mixes} />
+                                    <AutoCompleteInput label="Care Plan" value={carePlan} setValue={setCarePlan} options={carePlans} />
                                     <DropdownInput label="Phase" value={phase} options={Object.values(PHASE_LABELS)} setValue={setPhase} />
 
                                     <Grid container spacing={2}>
-                                        <Grid item xs={4}><NumberInput label="Size" value={size} setValue={setSize} /></Grid>
-                                        <Grid item xs={4}><NumberInput label="Cost" value={cost} setValue={setCost} /></Grid>
-                                        <Grid item xs={4}><NumberInput label="Watering" value={watering} setValue={setWatering} /></Grid>
+                                        <Grid item xs={6}><NumberInput label="Size" value={size} setValue={setSize} /></Grid>
+                                        <Grid item xs={6}><NumberInput label="Cost" value={cost} setValue={setCost} /></Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}><DateSelector label="Potted On" value={potted_on} setValue={setPottedOn} /></Grid>
+                                        <Grid item xs={6}><DateSelector label="Watered On" value={watered_on} setValue={setWateredOn} /></Grid>
+                                        <Grid item xs={6}><DateSelector label="Fertilized On" value={fertilized_on} setValue={setFertilizedOn} /></Grid>
+                                        <Grid item xs={6}><DateSelector label="Cleansed On" value={cleansed_on} setValue={setCleansedOn} /></Grid>
                                     </Grid>
 
                                     {formError && <Typography color="error" sx={{ textAlign: 'center' }}>{formError}</Typography>}

@@ -7,7 +7,7 @@ from typing import List
 from flask import Flask
 from flask_apscheduler import APScheduler
 
-from models.plant import Plant
+from models.plant import Plant, CarePlan
 from models.alert import Alert, AlertTypes
 from shared.db import Table
 from shared.logger import logger
@@ -32,6 +32,8 @@ def manage_plant_alerts() -> None:
 
         # Fetch all plants
         plants: List[Plant] = Table.PLANT.get_many()
+        care_plans: List[CarePlan] = Table.CARE_PLAN.get_many()
+        
         now = datetime.now()
         alerts_created_count = 0
 

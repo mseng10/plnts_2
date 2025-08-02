@@ -12,7 +12,8 @@ class AlertTypes(enum.Enum):
     WATER = "Water"
     REPOT = "Repot"
     CLEANSE = "Cleanse"
-    PROPOGATE = "Propogate"
+    FERTILIZE = "Fertilize"
+    # PROPOGATE = "Propogate"
 
 
 class Alert(DeprecatableMixin, FlexibleModel):

@@ -37,12 +37,14 @@ function AppNavigation({ window }) {
       { id: 'system', url: '/systems/create', icon: 'system', label: 'System' },
       { id: 'light', url: '/lights/create', icon: 'light', label: 'Light' },
       { id: 'todo', url: '/todos/create', icon: 'todo', label: 'Todo' },
+      { id: 'care_plan', url: '/care_plans/create', icon: 'care_plan', label: 'Care Plan'}
     ]},
     { id: 'view', icon: 'view', color: 'primary', subMenu: [
       { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },
       { id: 'mixes', url: '/mixes', icon: 'mix', label: 'Mix' },
       { id: 'systems', url: '/systems', icon: 'system', label: 'System' },
-      { id: 'todos', url: '/todos', icon: 'todo', label: 'Todo' }
+      { id: 'todos', url: '/todos', icon: 'todo', label: 'Todo' },
+      { id: 'care_plan', url: '/care_plans', icon: 'care_plan', label: 'Care Plans'}
     ]},
     { id: 'alert', url: '/alerts', icon: 'alert', color: 'error', badgeCount: meta.alert_count, badgeCountColor: "error" },
     { id: 'calendar', url: '/calendar', icon: 'calendar', color: 'primary', badgeCount: meta.todo_count },

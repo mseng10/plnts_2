@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
-import { AutoCompleteInput, DropdownInput, NumberInput } from '../../elements/Form';
+import { AutoCompleteInput, DropdownInput, NumberInput, DateSelector } from '../../elements/Form';
 import { usePlants, useSpecies } from '../../hooks/usePlants';
+import { useCarePlans } from '../../hooks/useCarePlans';
 import { PHASE_LABELS } from '../../constants';
 import { ServerError, Loading } from '../../elements/Page';
 import { useMixes } from '../../hooks/useMix';
 import { Paper, Button, Grid, Typography, Stack } from '@mui/material';
 import IconFactory from '../../elements/IconFactory';
+import dayjs from 'dayjs';
 
 const PlantUpdate = ({ plantProp }) => {
     const { id } = useParams();
@@ -17,26 +19,37 @@ const PlantUpdate = ({ plantProp }) => {
     const { plants, systems, isLoading: plantsLoading, error, updatePlant, setError } = usePlants();
     const { mixes, isLoading: mixesLoading } = useMixes();
     const { species, isLoading: speciesLoading } = useSpecies();
+    const { carePlans, isLoading: carePlansLoading } = useCarePlans();
 
     // Fields
     const [selectedSpecies, setSelectedSpecies] = useState(null);
     const [mix, setMix] = useState(null);
     const [system, setSystem] = useState(null);
+    const [carePlan, setCarePlan] = useState(null);
     const [size, setSize] = useState('');
     const [cost, setCost] = useState('');
-    const [watering, setWatering] = useState('');
     const [phase, setPhase] = useState("adult");
+    
+    // Date fields
+    const [potted_on, setPottedOn] = useState(dayjs());
+    const [watered_on, setWateredOn] = useState(dayjs());
+    const [fertilized_on, setFertilizedOn] = useState(dayjs());
+    const [cleansed_on, setCleansedOn] = useState(dayjs());
 
     useEffect(() => {
         const initializeForm = (plant) => {
-            if (plant && mixes.length && species.length && systems.length) {
+            if (plant && mixes.length && species.length && systems.length && carePlans.length) {
                 setMix(mixes.find(_m => _m.id === plant.mix_id) || null);
                 setSelectedSpecies(species.find(_s => _s.id === plant.species_id) || null);
                 setSystem(systems.find(_s => _s.id === plant.system_id) || null);
+                setCarePlan(carePlans.find(_c => _c.id === plant.care_plan_id) || null);
                 setSize(plant.size || '');
                 setCost(plant.cost || '');
-                setWatering(plant.watering || '');
                 setPhase(plant.phase || "adult");
+                setPottedOn(dayjs(plant.potted_on));
+                setWateredOn(dayjs(plant.watered_on));
+                setFertilizedOn(dayjs(plant.fertilized_on));
+                setCleansedOn(dayjs(plant.cleansed_on));
             }
         };
 
@@ -50,7 +63,7 @@ const PlantUpdate = ({ plantProp }) => {
                 navigate("/404");
             }
         }
-    }, [plantProp, plants, id, species, mixes, systems, navigate]);
+    }, [plantProp, plants, id, species, mixes, systems, carePlans, navigate]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -68,8 +81,12 @@ const PlantUpdate = ({ plantProp }) => {
             mix_id: mix.id,
             system_id: system.id,
             species_id: selectedSpecies.id,
-            watering: watering || 0,
-            phase
+            care_plan_id: carePlan ? carePlan.id : null,
+            phase,
+            potted_on: potted_on.toISOString(),
+            watered_on: watered_on.toISOString(),
+            fertilized_on: fertilized_on.toISOString(),
+            cleansed_on: cleansed_on.toISOString(),
         };
 
         try {
@@ -84,7 +101,7 @@ const PlantUpdate = ({ plantProp }) => {
         navigate("/");
     };
 
-    const isLoading = plantsLoading || mixesLoading || speciesLoading;
+    const isLoading = plantsLoading || mixesLoading || speciesLoading || carePlansLoading;
     if (isLoading) return <Loading />;
     if (error && !error.message) return <ServerError error={error} />;
 
@@ -126,12 +143,19 @@ const PlantUpdate = ({ plantProp }) => {
                                     <AutoCompleteInput label="Species" value={selectedSpecies} setValue={setSelectedSpecies} options={species} />
                                     <AutoCompleteInput label="Mix" value={mix} setValue={setMix} options={mixes} />
                                     <AutoCompleteInput label="System" value={system} setValue={setSystem} options={systems} />
+                                    <AutoCompleteInput label="Care Plan" value={carePlan} setValue={setCarePlan} options={carePlans} />
                                     <DropdownInput label="Phase" value={phase} options={Object.values(PHASE_LABELS)} setValue={setPhase} />
                                     
                                     <Grid container spacing={2}>
-                                        <Grid item xs={4}><NumberInput label="Size" value={size} setValue={setSize} /></Grid>
-                                        <Grid item xs={4}><NumberInput label="Cost" value={cost} setValue={setCost} /></Grid>
-                                        <Grid item xs={4}><NumberInput label="Watering" value={watering} setValue={setWatering} /></Grid>
+                                        <Grid item xs={6}><NumberInput label="Size" value={size} setValue={setSize} /></Grid>
+                                        <Grid item xs={6}><NumberInput label="Cost" value={cost} setValue={setCost} /></Grid>
+                                    </Grid>
+
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={6}><DateSelector label="Potted On" value={potted_on} setValue={setPottedOn} /></Grid>
+                                        <Grid item xs={6}><DateSelector label="Watered On" value={watered_on} setValue={setWateredOn} /></Grid>
+                                        <Grid item xs={6}><DateSelector label="Fertilized On" value={fertilized_on} setValue={setFertilizedOn} /></Grid>
+                                        <Grid item xs={6}><DateSelector label="Cleansed On" value={cleansed_on} setValue={setCleansedOn} /></Grid>
                                     </Grid>
 
                                     {error && error.message && <Typography color="error" sx={{ textAlign: 'center' }}>{error.message}</Typography>}

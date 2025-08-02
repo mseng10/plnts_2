@@ -31,6 +31,10 @@ import Stats from './pages/stat/Stats';
 import Calendar from './pages/calendar/Calendar';
 import Mixes from './pages/mix/Mixes';
 import BudgetPage from './pages/budget/BudgetPage';
+import CarePlanCreate from './pages/care_plan/CarePlanCreate';
+import CarePlanUpdate from './pages/care_plan/CarePlanUpdate';
+import CarePlans from './pages/care_plan/CarePlans';
+
 
 const drawerWidth = 240;
 
@@ -162,6 +166,10 @@ function App() {
             <Route path="/mixes" element={<Mixes />} />
             <Route path="/mixes/create" element={<MixCreate /> } />
             <Route path="/mixes/:id" element={<MixUpdate /> } />
+
+            <Route path='/care_plans' element={<CarePlans />} />
+            <Route path="/care_plans/create" element={<CarePlanCreate />} />
+            <Route path="/care_plans/:id" element={<CarePlanUpdate />} />
           </Routes>
         </Box>
       </ThemeProvider>

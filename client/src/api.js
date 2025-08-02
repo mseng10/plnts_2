@@ -83,6 +83,12 @@ export const APIS = {
     updateOne: "/expense/{id}/",
     deprecateOne: "/expense/{id}/",
   },
+  carePlans: {
+    get: "/care_plans/{id}/",
+    getAll: "/care_plans/",
+    create: "/care_plans/",
+    updateOne: "/care_plans/{id}/",
+  }
 }
 
 export const apiBuilder = (url) => {

@@ -27,17 +27,18 @@ class Schema(Enum):
         "cost": SchemaField(),
         "species_id": SchemaField(),
         "watered_on": SchemaField(),
-        "watering": SchemaField(),
+        "potted_on": SchemaField(),
+        "fertilized_on": SchemaField(),
+        "cleansed_on": SchemaField(),
         "identity": SchemaField(),
         "phase": SchemaField(),
         "size": SchemaField(),
         "system_id": SchemaField(),
         "mix_id": SchemaField(),
+        "care_plan_id": SchemaField(),
         "deprecated": SchemaField(),
         "deprecated_on": SchemaField(),
         "deprecated_cause": SchemaField(),
-        "batch": SchemaField(),
-        "batch_count": SchemaField(),
     }
     PLANT_GENUS_TYPE = {
         "id": SchemaField(read_only=True),
@@ -187,9 +188,18 @@ class Schema(Enum):
         "updated_on": SchemaField(read_only=True),
         "contents": SchemaField(),
     }
+    CARE_PLAN = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "name": SchemaField(),
+        "watering": SchemaField(),
+        "fertilizing": SchemaField(),
+        "cleaning": SchemaField(),
+        "potting": SchemaField(),
+    }
 
     """Standard model serializer with MongoDB support"""
-
     def __init__(self, fields: Dict[str, SchemaField]):
         self.fields = fields
 

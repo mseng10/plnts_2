@@ -2,7 +2,7 @@ from datetime import datetime
 import enum
 from bson import ObjectId
 
-from models import FlexibleModel, Fields, DeprecatableMixin, ExpenseMixin
+from models import FlexibleModel, Fields, DeprecatableMixin
 
 
 class EXPENSE_CATEGORY(enum.Enum):
@@ -11,7 +11,7 @@ class EXPENSE_CATEGORY(enum.Enum):
     CRAP = "Crap"
 
 
-class Expense(FlexibleModel, DeprecatableMixin, ExpenseMixin):
+class Expense(FlexibleModel, DeprecatableMixin):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
