@@ -93,7 +93,7 @@ const Plants = ({ initialPlants }) => {
           initialState={{
             pagination: { paginationModel: { pageSize: 5 } },
           }}
-          pageSizeOptions={[5]}
+          pageSizeOptions={[100]}
           checkboxSelection
           disableRowSelectionOnClick
           onRowSelectionModelChange={(newSelectionModel) => {

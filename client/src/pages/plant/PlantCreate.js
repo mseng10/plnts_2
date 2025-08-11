@@ -49,21 +49,24 @@ const PlantCreate = () => {
     };
 
     const handleSubmit = async (event) => {
+
+        console.log(selectedSpecies);
+
         event.preventDefault();
         setFormError(''); // Reset error on new submission
 
         // --- Form Validation ---
-        if (!selectedSpecies || !system || !mix || !phase) {
-            setFormError('Please fill out all required fields.');
-            return;
-        }
+        // if (!selectedSpecies || !system || !mix || !phase) {
+        //     setFormError('Please fill out all required fields.');
+        //     return;
+        // }
 
         const newPlant = {
             size: size || 0, // Default to 0 if empty
             cost: cost || 0,
-            species_id: selectedSpecies.id,
+            species_id: selectedSpecies ? selectedSpecies.id : null,
             system_id: system.id,
-            mix_id: mix.id,
+            mix_id: mix ? mix.id: null,
             care_plan_id: carePlan ? carePlan.id : null,
             phase,
             potted_on: potted_on.toISOString(),
@@ -84,6 +87,7 @@ const PlantCreate = () => {
     const handleCancel = () => {
         navigate("/");
     };
+
 
     if (isLoading) return <Loading />;
     if (error) return <ServerError />;

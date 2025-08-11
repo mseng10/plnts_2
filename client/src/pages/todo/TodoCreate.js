@@ -78,7 +78,6 @@ const TodoCreate = () => {
                             width: '100%',
                             p: 4,
                             borderRadius: 4,
-                            // Styles updated to match the SpeciesCreateCard
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             backgroundColor: 'rgba(255, 255, 255, 0.1)',
                             backdropFilter: 'blur(10px)',
@@ -127,7 +126,6 @@ const TodoCreate = () => {
                             width: '100%',
                             p: 2,
                             borderRadius: 4,
-                            // Styles updated to match the SpeciesCreateCard
                             border: '1px solid rgba(255, 255, 255, 0.2)',
                             backgroundColor: 'rgba(255, 255, 255, 0.1)',
                             backdropFilter: 'blur(10px)',
