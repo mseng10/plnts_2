@@ -5,6 +5,7 @@ import csv
 from bson import ObjectId
 from datetime import datetime, timedelta
 
+UNKNOWN = "Unknown"
 
 class Fields:
     @staticmethod

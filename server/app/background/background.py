@@ -25,39 +25,73 @@ def manage_plant_alerts() -> None:
     logger.info("Running manage_plant_alerts job...")
     try:
         # Fetch all existing watering alerts to avoid creating duplicates
-        existing_alerts: List[Alert] = Table.ALERT.get_many(
-            {"alert_type": AlertTypes.WATER.value}
-        )
-        plants_with_alerts = {alert.model_id for alert in existing_alerts}
+        existing_alerts: List[Alert] = Table.ALERT.get_many()
+        plants_with_alerts = {alert.model_id: alert for alert in existing_alerts}
 
         # Fetch all plants
         plants: List[Plant] = Table.PLANT.get_many()
-        care_plans: List[CarePlan] = Table.CARE_PLAN.get_many()
+        care_plans: List[CarePlan] = {care_plan.id: care_plan for care_plan in Table.CARE_PLAN.get_many()}
         
         now = datetime.now()
         alerts_created_count = 0
 
         for plant in plants:
-            # Skip if the plant already has a watering alert or has no watering schedule
-            if plant.id in plants_with_alerts or not all(
-                [plant.watered_on, plant.watering]
-            ):
+            care_plan: CarePlan = care_plans.get(plant.care_plan_id)
+            if care_plan is None:
                 continue
 
             try:
-                due_date = plant.watered_on + timedelta(days=float(plant.watering))
-                if due_date < now:
-                    new_alert = Alert(
-                        model_id=plant.id, alert_type=AlertTypes.WATER.value
-                    )
-                    Table.ALERT.create(new_alert)
-                    alerts_created_count += 1
-                    logger.info(
-                        f"Created watering alert for plant: {plant.name} (ID: {plant.id})"
-                    )
+                if not(plant.id in plants_with_alerts and plants_with_alerts[plant.id].alert_type == AlertTypes.WATER.value):
+                    water_due_date = plant.watered_on + timedelta(days=float(care_plan.watering))
+                    if water_due_date < now:
+                        new_alert = Alert(
+                            model_id=plant.id, alert_type=AlertTypes.WATER.value
+                        )
+                        Table.ALERT.create(new_alert)
+                        alerts_created_count += 1
+                        logger.info(
+                            f"Created watering alert for plant: ID: {plant.id}"
+                        )
+
+                if not(plant.id in plants_with_alerts and plants_with_alerts[plant.id].alert_type == AlertTypes.FERTILIZE.value):
+                    fertilize_due_date = plant.fertilized_on + timedelta(days=float(care_plan.fertilizing))
+                    if fertilize_due_date < now:
+                        new_alert = Alert(
+                            model_id=plant.id, alert_type=AlertTypes.FERTILIZE.value
+                        )
+                        Table.ALERT.create(new_alert)
+                        alerts_created_count += 1
+                        logger.info(
+                            f"Created fertilize alert for plant: ID: {plant.id}"
+                        )
+
+                if not(plant.id in plants_with_alerts and plants_with_alerts[plant.id].alert_type == AlertTypes.REPOT.value):
+                    potting_due_date = plant.potted_on + timedelta(days=float(care_plan.potting))
+                    if potting_due_date < now:
+                        new_alert = Alert(
+                            model_id=plant.id, alert_type=AlertTypes.REPOT.value
+                        )
+                        Table.ALERT.create(new_alert)
+                        alerts_created_count += 1
+                        logger.info(
+                            f"Created repot alert for plant: ID: {plant.id}"
+                        )
+
+                if not(plant.id in plants_with_alerts and plants_with_alerts[plant.id].alert_type == AlertTypes.CLEANSE.value):
+                    cleaning_due_date = plant.cleansed_on + timedelta(days=float(care_plan.cleaning))
+                    if cleaning_due_date < now:
+                        new_alert = Alert(
+                            model_id=plant.id, alert_type=AlertTypes.CLEANSE.value
+                        )
+                        Table.ALERT.create(new_alert)
+                        alerts_created_count += 1
+                        logger.info(
+                            f"Created cleanse alert for plant: ID: {plant.id}"
+                        )
+                        
             except (ValueError, TypeError) as e:
                 logger.warning(
-                    f"Could not process watering schedule for plant {plant.name} (ID: {plant.id}). Error: {e}"
+                    f"Could not process watering schedule for plant ID: {plant.id}. Error: {e}"
                 )
 
         logger.info(

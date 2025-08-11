@@ -9,15 +9,21 @@ from datetime import datetime
 from models.todo import Todo
 
 
-bp = Blueprint("todos", __name__)
-todo_crud = GenericCRUD(Table.TODO, Schema.TODO)
+todos_bp = Blueprint("todos", __name__)
+todos_crud = GenericCRUD(Table.TODO, Schema.TODO)
 APIBuilder.register_blueprint(
-    bp, "todos", todo_crud, ["GET", "GET_MANY", "POST", "PATCH", "DELETE"]
+    todos_bp, "todos", todos_crud, ["GET", "GET_MANY", "POST", "PATCH", "DELETE"]
+)
+
+goals_bp = Blueprint("goals", __name__)
+goals_crud = GenericCRUD(Table.GOAL, Schema.GOAL)
+APIBuilder.register_blueprint(
+    goals_bp, "goals", goals_crud, ["GET", "GET_MANY", "POST", "PATCH", "DELETE"]
 )
 
 
 @APIBuilder.register_custom_route(
-    bp, "/todos/<string:id>/tasks/<string:task_id>/resolve", methods=["POST"]
+    todos_bp, "/todos/<string:id>/tasks/<string:task_id>/resolve", methods=["POST"]
 )
 def resolve_task(id, task_id):
     todo: Todo = Table.TODO.get_one(id)
@@ -38,7 +44,7 @@ def resolve_task(id, task_id):
 
 
 @APIBuilder.register_custom_route(
-    bp, "/todos/<string:id>/tasks/<string:task_id>/unresolve", methods=["POST"]
+    todos_bp, "/todos/<string:id>/tasks/<string:task_id>/unresolve", methods=["POST"]
 )
 def unresolve_task(id, task_id):
     todo: Todo = Table.TODO.get_one(id)

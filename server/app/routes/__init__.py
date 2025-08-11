@@ -80,6 +80,7 @@ class Schema(Enum):
         "deprecated_on": SchemaField(),
         "deprecated_cause": SchemaField(),
         "tasks": SchemaField(nested=True, nested_schema="TASK"),
+        "goal_id": SchemaField()
     }
     TASK = {
         "id": SchemaField(read_only=True),
@@ -197,6 +198,16 @@ class Schema(Enum):
         "fertilizing": SchemaField(),
         "cleaning": SchemaField(),
         "potting": SchemaField(),
+    }
+    GOAL = {
+        "id": SchemaField(read_only=True),
+        "created_on": SchemaField(read_only=True),
+        "updated_on": SchemaField(read_only=True),
+        "due_on": SchemaField(),
+        "name": SchemaField(),
+        "description": SchemaField(),
+        "due_month": SchemaField(),
+        "status": SchemaField()
     }
 
     """Standard model serializer with MongoDB support"""

@@ -34,6 +34,7 @@ import BudgetPage from './pages/budget/BudgetPage';
 import CarePlanCreate from './pages/care_plan/CarePlanCreate';
 import CarePlanUpdate from './pages/care_plan/CarePlanUpdate';
 import CarePlans from './pages/care_plan/CarePlans';
+import GoalCreate from './pages/goals/GoalCreate';
 
 
 const drawerWidth = 240;
@@ -170,6 +171,8 @@ function App() {
             <Route path='/care_plans' element={<CarePlans />} />
             <Route path="/care_plans/create" element={<CarePlanCreate />} />
             <Route path="/care_plans/:id" element={<CarePlanUpdate />} />
+
+            <Route path="/goals/create" element={<GoalCreate />} />
           </Routes>
         </Box>
       </ThemeProvider>

@@ -51,10 +51,10 @@ def create_all_models():
     logger.info("Beginning to create models.")
 
     models_to_create: List[Tuple[str, Table]] = [
-        ("data/installable/soils/soils.csv", Table.SOIL),
-        ("data/installable/plants/genus_types.csv", Table.GENUS_TYPE),
-        ("data/installable/plants/genera.csv", Table.GENUS),
-        ("data/installable/plants/species.csv", Table.SPECIES),
+        ("../data/installable/soils/soils.csv", Table.SOIL),
+        ("../data/installable/plants/genus_types.csv", Table.GENUS_TYPE),
+        ("../data/installable/plants/genera.csv", Table.GENUS),
+        ("../data/installable/plants/species.csv", Table.SPECIES),
     ]
 
     for model_path, model_class in models_to_create:

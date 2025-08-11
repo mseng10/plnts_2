@@ -28,6 +28,7 @@ import SentimentVerySatisfiedSharpIcon from '@mui/icons-material/SentimentVerySa
 import CalendarMonthSharpIcon from '@mui/icons-material/CalendarMonthSharp';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import SelfImprovementIcon from '@mui/icons-material/SelfImprovement';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 
 const IconFactory = ({ icon, color, size }) => {
   const sizeChart = {
@@ -127,6 +128,9 @@ const IconFactory = ({ icon, color, size }) => {
     break;
   case 'care_plan':
     IconComponent = SelfImprovementIcon;
+    break;
+  case 'goal':
+    IconComponent = WorkspacePremiumIcon;
     break;
     
   // Add more cases for other icons

@@ -29,7 +29,7 @@ app.config["DEBUG"] = True
 
 from routes.system_routes import system_bp, light_bp
 from routes.plant_routes import bp as plant_bp, genus_bp, genus_types_bp, species_bp, care_plan_bp
-from routes.todo_routes import bp as todo_bp
+from routes.todo_routes import todos_bp, goals_bp
 from routes.mix_routes import mixes_bp, soils_bp
 from routes.stat_routes import bp as stat_bp
 from routes.alert_routes import bp as alert_bp
@@ -43,7 +43,8 @@ from background.background import init_scheduler
 app.register_blueprint(system_bp)
 app.register_blueprint(light_bp)
 app.register_blueprint(plant_bp)
-app.register_blueprint(todo_bp)
+app.register_blueprint(todos_bp)
+app.register_blueprint(goals_bp)
 app.register_blueprint(mixes_bp)
 app.register_blueprint(stat_bp)
 app.register_blueprint(alert_bp)

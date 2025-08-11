@@ -32,6 +32,7 @@ class Todo(BanishableMixin, FlexibleModel):
         self.due_on = kwargs.get("due_on")
         self.name = kwargs.get("name")
         self.description = kwargs.get("description")
+        self.goal_id = kwargs.get("goal_id") # nullable
 
         # Embedded tasks
         self.tasks: List[Task] = [Task(**task) for task in kwargs.get("tasks", [])]
@@ -45,3 +46,20 @@ class Todo(BanishableMixin, FlexibleModel):
         if "tasks" in base_dict:
             base_dict["tasks"] = [task.to_dict() for task in self.tasks]
         return base_dict
+    
+class Goal(BanishableMixin, FlexibleModel): 
+    """Goal model"""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
+        self.created_on = kwargs.get("created_on", datetime.now())
+        self.updated_on = kwargs.get("updated_on", datetime.now())
+        self.name = kwargs.get("name")
+        self.description = kwargs.get("description")
+        self.due_month = kwargs.get("due_month")
+        self.status = kwargs.get("status", "not_started")
+
+    def __repr__(self):
+        return f"{self.name} ({self.due_month})"
+        

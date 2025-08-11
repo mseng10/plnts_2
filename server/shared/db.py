@@ -11,7 +11,7 @@ from models.alert import Alert
 from models.mix import Mix, Soil
 from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies, CarePlan
 from models.system import System, Light
-from models.todo import Todo
+from models.todo import Todo, Goal
 from models.expense import Expense, Budget
 from models.chat import Chat
 
@@ -47,6 +47,7 @@ class Table(Enum):
     BUDGET = ("budget", Budget)
     CHAT = ("chat", Chat)
     CARE_PLAN = ("care_plan", CarePlan)
+    GOAL = ("goal", Goal)
 
 
     def __init__(self, table_name: str, model_class: Type[FlexibleModel]) -> None:

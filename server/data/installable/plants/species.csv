@@ -1,61 +1,38 @@
-_id,name,common_name,description,genus_id
-65cd7a8e9b72e6c8940d9234,Echeveria elegans,Mexican Snowball,Forms pale green-blue rosettes,65cd7a8e9b72e6c8940d5234
-65cd7a8e9b72e6c8940d9235,Echeveria agavoides,Molded Wax Agave,Forms rosettes with pointed leaves,65cd7a8e9b72e6c8940d5234
-65cd7a8e9b72e6c8940d9236,Sedum morganianum,Burro's Tail,Trailing succulent with tear-drop shaped leaves,65cd7a8e9b72e6c8940d5235
-65cd7a8e9b72e6c8940d9237,Haworthia fasciata,Zebra Plant,Small succulent with white striped leaves,65cd7a8e9b72e6c8940d5236
-65cd7a8e9b72e6c8940d9238,Crassula ovata,Jade Plant,Succulent shrub with oval leaves,65cd7a8e9b72e6c8940d5237
-65cd7a8e9b72e6c8940d9239,Kalanchoe blossfeldiana,Flaming Katy,Succulent with clusters of small flowers,65cd7a8e9b72e6c8940d5238
-65cd7a8e9b72e6c8940d923a,Sempervivum tectorum,Common Houseleek,Forms rosettes that produce offsets,65cd7a8e9b72e6c8940d5239
-65cd7a8e9b72e6c8940d923b,Mammillaria crinita,Pincushion Cactus,Small spherical cactus with fine spines,65cd7a8e9b72e6c8940d523a
-65cd7a8e9b72e6c8940d923c,Opuntia microdasys,Bunny Ears Cactus,Paddle-shaped stems with small glochids,65cd7a8e9b72e6c8940d523b
-65cd7a8e9b72e6c8940d923d,Schlumbergera truncata,Christmas Cactus,Tropical cactus with flattened stems and colorful flowers,65cd7a8e9b72e6c8940d523c
-65cd7a8e9b72e6c8940d923e,Rhipsalis baccifera,Mistletoe Cactus,Epiphytic cactus with thin cylindrical stems,65cd7a8e9b72e6c8940d523d
-65cd7a8e9b72e6c8940d923f,Monstera deliciosa,Swiss Cheese Plant,Large-leaved tropical plant with natural leaf holes,65cd7a8e9b72e6c8940d523e
-65cd7a8e9b72e6c8940d9240,Monstera adansonii,Swiss Cheese Vine,Smaller version with more holes in leaves,65cd7a8e9b72e6c8940d523e
-65cd7a8e9b72e6c8940d9241,Monstera obliqua,Mexican Bread Plant,Rare Monstera with very large leaf holes,65cd7a8e9b72e6c8940d523e
-65cd7a8e9b72e6c8940d9242,Philodendron hederaceum,Heartleaf Philodendron,Vining plant with heart-shaped leaves,65cd7a8e9b72e6c8940d523f
-65cd7a8e9b72e6c8940d9243,Philodendron bipinnatifidum,Tree Philodendron,Large philodendron with deeply lobed leaves,65cd7a8e9b72e6c8940d523f
-65cd7a8e9b72e6c8940d9244,Ficus lyrata,Fiddle Leaf Fig,Popular indoor tree with large violin-shaped leaves,65cd7a8e9b72e6c8940d5240
-65cd7a8e9b72e6c8940d9245,Ficus elastica,Rubber Plant,Tree-like plant with large glossy leaves,65cd7a8e9b72e6c8940d5240
-65cd7a8e9b72e6c8940d9246,Dracaena marginata,Dragon Tree,Tree-like plant with slender stems and strap-like leaves,65cd7a8e9b72e6c8940d5241
-65cd7a8e9b72e6c8940d9247,Dracaena fragrans,Corn Plant,Tropical plant with long strap-like leaves,65cd7a8e9b72e6c8940d5241
-65cd7a8e9b72e6c8940d9248,Dieffenbachia seguine,Dumb Cane,Tropical plant with large variegated leaves,65cd7a8e9b72e6c8940d5242
-65cd7a8e9b72e6c8940d9249,Calathea ornata,Pinstripe Plant,Tropical plant with pink striped oval leaves,65cd7a8e9b72e6c8940d5243
-65cd7a8e9b72e6c8940d924a,Calathea makoyana,Peacock Plant,Tropical plant with oval leaves marked like peacock feathers,65cd7a8e9b72e6c8940d5243
-65cd7a8e9b72e6c8940d924b,Maranta leuconeura,Prayer Plant,Low-growing plant with oval leaves that fold at night,65cd7a8e9b72e6c8940d5244
-65cd7a8e9b72e6c8940d924c,Stromanthe sanguinea,Triostar,Colorful plant with pink and green variegated leaves,65cd7a8e9b72e6c8940d5245
-65cd7a8e9b72e6c8940d924d,Nephrolepis exaltata,Boston Fern,Popular houseplant with arching fronds,65cd7a8e9b72e6c8940d5246
-65cd7a8e9b72e6c8940d924e,Asplenium nidus,Bird's Nest Fern,Fern with wide simple fronds growing from a central point,65cd7a8e9b72e6c8940d5247
-65cd7a8e9b72e6c8940d924f,Adiantum raddianum,Delta Maidenhair Fern,Delicate fern with small leaflets on black stems,65cd7a8e9b72e6c8940d5248
-65cd7a8e9b72e6c8940d9250,Platycerium bifurcatum,Staghorn Fern,Epiphytic fern with distinctive antler-like fronds,65cd7a8e9b72e6c8940d5249
-65cd7a8e9b72e6c8940d9251,Aglaonema commutatum,Chinese Evergreen,Low-maintenance plant with variegated leaves,65cd7a8e9b72e6c8940d524a
-65cd7a8e9b72e6c8940d9252,Spathiphyllum wallisii,Peace Lily,Tropical plant with white spathe flowers,65cd7a8e9b72e6c8940d524b
-65cd7a8e9b72e6c8940d9253,Anthurium andraeanum,Flamingo Flower,Tropical plant with heart-shaped leaves and colorful spathes,65cd7a8e9b72e6c8940d524c
-65cd7a8e9b72e6c8940d9254,Alocasia polly,African Mask Plant,Compact alocasia with arrow-shaped leaves,65cd7a8e9b72e6c8940d524d
-65cd7a8e9b72e6c8940d9255,Syngonium podophyllum,Arrowhead Plant,Vining plant with arrow-shaped leaves,65cd7a8e9b72e6c8940d524e
-65cd7a8e9b72e6c8940d9256,Phalaenopsis amabilis,Moth Orchid,Popular orchid with long-lasting flowers,65cd7a8e9b72e6c8940d524f
-65cd7a8e9b72e6c8940d9257,Saintpaulia ionantha,African Violet,Small plant with fuzzy leaves and purple flowers,65cd7a8e9b72e6c8940d5250
-65cd7a8e9b72e6c8940d9258,Begonia rex,Rex Begonia,Begonia grown for its colorful foliage,65cd7a8e9b72e6c8940d5251
-65cd7a8e9b72e6c8940d9259,Hoya carnosa,Wax Plant,Vining plant with thick waxy leaves and fragrant flowers,65cd7a8e9b72e6c8940d5252
-65cd7a8e9b72e6c8940d925a,Epipremnum aureum,Golden Pothos,Vining plant with heart-shaped variegated leaves,65cd7a8e9b72e6c8940d5253
-65cd7a8e9b72e6c8940d925b,Hedera helix,English Ivy,Classic vining plant with lobed leaves,65cd7a8e9b72e6c8940d5254
-65cd7a8e9b72e6c8940d925c,Cissus discolor,Rex Begonia Vine,Climbing vine with colorful leaves,65cd7a8e9b72e6c8940d5255
-65cd7a8e9b72e6c8940d925d,Tradescantia zebrina,Wandering Jew,Trailing plant with purple and silver striped leaves,65cd7a8e9b72e6c8940d5256
-65cd7a8e9b72e6c8940d925e,Neoregelia carolinae,Blushing Bromeliad,Bromeliad with red center leaves when blooming,65cd7a8e9b72e6c8940d5257
-65cd7a8e9b72e6c8940d925f,Guzmania lingulata,Scarlet Star,Bromeliad with bright red flower spike,65cd7a8e9b72e6c8940d5258
-65cd7a8e9b72e6c8940d9260,Vriesea splendens,Flaming Sword,Bromeliad with a bright red paddle-shaped inflorescence,65cd7a8e9b72e6c8940d5259
-65cd7a8e9b72e6c8940d9261,Chamaedorea elegans,Parlor Palm,Small palm suitable for indoor spaces,65cd7a8e9b72e6c8940d525a
-65cd7a8e9b72e6c8940d9262,Rhapis excelsa,Lady Palm,Multi-stemmed palm with fan-shaped leaves,65cd7a8e9b72e6c8940d525b
-65cd7a8e9b72e6c8940d9263,Phoenix roebelenii,Pygmy Date Palm,Small palm with feather-like fronds,65cd7a8e9b72e6c8940d525c
-65cd7a8e9b72e6c8940d9264,Tillandsia ionantha,Sky Plant,Small air plant that turns red when blooming,65cd7a8e9b72e6c8940d525d
-65cd7a8e9b72e6c8940d9265,Dionaea muscipula,Venus Flytrap,Carnivorous plant with hinged trapping leaves,65cd7a8e9b72e6c8940d525e
-65cd7a8e9b72e6c8940d9266,Nepenthes alata,Pitcher Plant,Carnivorous plant with pitcher-shaped traps,65cd7a8e9b72e6c8940d525f
-65cd7a8e9b72e6c8940d9267,Paphiopedilum insigne,Slipper Orchid,Orchid with slipper-shaped pouch,65cd7a8e9b72e6c8940d5260
-65cd7a8e9b72e6c8940d9268,Cattleya labiata,Corsage Orchid,Large-flowered orchid often used in corsages,65cd7a8e9b72e6c8940d5261
-65cd7a8e9b72e6c8940d9269,Echeveria 'Perle von Nürnberg',Pearl of Nurnberg,Echeveria with pale purple-pink leaves,65cd7a8e9b72e6c8940d5234
-65cd7a8e9b72e6c8940d926a,Sedum rubrotinctum,Jelly Bean Plant,Succulent with small jelly bean-shaped leaves,65cd7a8e9b72e6c8940d5235
-65cd7a8e9b72e6c8940d926b,Haworthia cooperi,Cooper's Haworthia,Small succulent with translucent fleshy leaves,65cd7a8e9b72e6c8940d5236
-65cd7a8e9b72e6c8940d926c,Crassula perforata,String of Buttons,Succulent with stacked gray-green leaves,65cd7a8e9b72e6c8940d5235
-65cd7a8e9b72e6c8940d926d,Kalanchoe tomentosa,Panda Plant,Succulent with fuzzy silver-green leaves,65cd7a8e9b72e6c8940d5236
-65cd7a8e9b72e6c8940d926e,Sempervivum arachnoideum,Cobweb Houseleek,Forms rosettes with fine white hairs resembling a cobweb,65cd7a8e9b72e6c8940d5237
-65cd7a8e9b72e6c8940d926f,Mammillaria hahniana,Old Lady Cactus,Cactus covered in soft white hair-like spines,65cd7a8e9b72e6c8940d5238
+_id,name,description,genus_id
+65cd7a8e9b72e6c8940d9234,Echeveria elegans,Forms pale green-blue rosettes,65cd7a8e9b72e6c8940d5234
+65cd7a8e9b72e6c8940d9235,Echeveria agavoides,Forms rosettes with pointed leaves,65cd7a8e9b72e6c8940d5234
+12cd7a8e9b72e6c8940d9212,Whale Fin,Big fin type of snake plant,65cd7a8e9b72e6c8940d5262
+12cd7a8e9b72e6c8940d9213,Whale Fin Variegated,Big fin type of snake plant with green and yellow.,65cd7a8e9b72e6c8940d5262
+66b55b1a9c3d4e5f6a7b8c9d,Classic Snake Plant (Laurentii),When you think of snake plants it's likely the easily-recognizable Dracaena trifasciata 'Laurentii' that comes to mind. Sometimes called the variegated snake plant or striped mother-in-law's tongue this popular hardy species stands out for its striking foliage patternation.,65cd7a8e9b72e6c8940d5262
+66b55b1a9c3d4e5f6a7b8c9e,Haworthia Fasciata,White stripe Haworthia,65cd7a8e9b72e6c8940d5236
+66b55b1a9c3d4e5f6a7b8c9f,Cephalocereus Senilis Old Man,Old man cactus without spikes,65cd7a8e9b72e6c8940d5238
+66b55b1a9c3d4e5f6a7b8ca0,String of Pearls Variegated,Variegated string of pearls,65cd7a8e9b72e6c8940d5263
+66b55b1a9c3d4e5f6a7b8ca1,Tiger Aloe,Tall Green and White,65cd7a8e9b72e6c8940d5264
+66b55b1a9c3d4e5f6a7b8ca2,Vine Aloe,Long and leggy aloe (not real name),65cd7a8e9b72e6c8940d5264
+66b55b1a9c3d4e5f6a7b8ca3,Philo Birkin,Birkins have medium-sized deep green leaves with white pinstripes and variegation,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8ca4,Philo Pink Princess,Striking bright pink variegation contrasts against its dark green or maroon leaves.This philodendron has a climbing growth habit and its variegation requires high humidity and bright indirect light.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8ca5,Philo White Knight,Its long pointed green leaves are splashed with light green and stark white variegation.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8ca6,Philo Silver Sword,This climbing philodendron gets its common name from its silvery sword-shaped leaves.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8ca7,Philo Brasil,It is distinguished by its lime green to yellow variegation.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8ca8,Philo Ring of Fire,With long broadly toothed leaves having bright orange pink red yellow or many hues of green.,65cd7a8e9b72e6c8940d523f
+65cd7a8e9b72e6c8940d523f,Philo Painted Lady,It shows off bold striking leaves like they are streaked with a brush. The bright large yellow foliage is speckled with green and displays pink petioles.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8caa,Philo Jose Bueno,Add a tropical feel to your plant collection with large thick variegated leathery leaves with splashes of yellow gold cream or white hues.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8cab,Philo Rio,It is a type of Philodendron Brasil; the plant displays narrow shiny green cream and gray variegation on the foliage.,65cd7a8e9b72e6c8940d523f
+65cd7a8e9b72e6c8940d5230,Philo Strawberry Shake,It is a stunning variegated houseplant that is known for its unique pink yellow and cream coloring.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8cad,Philo White Stripe,Leggy philodendron typically with a white stripe down the middle.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8cae,Philo Billietiae,While this Philodendron plant can grow up to five feet tall its leaves are significantly impressive. They can reach three feet long and ten inches wide so plant lovers should ensure their Billietiae has plenty of space.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8caf,Philo Heartleaf Varigated,Variegated is an attractive houseplant because of its beautiful heart-shaped leaves and low-maintenance needs.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8cb0,Philo Mamei,a beautiful tropical plant to own. Its heart-shaped bright green leaves show silver markings resembling smudges and giving it a cloud-like appearance,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8cb1,Philo Moonlight,The Moonlight Philodendron is a non-vining variety and typically grows in clumps as a dense shrub-like plant. Even so Moonlight can reach up to two feet tall and over two feet wide at maturity. New leaves come in lime green or bright yellow with the color losing intensity as it grows and eventually altering to a darker green.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8cb2,Philo Micans Variegated,Growing philodendron with pink white and green variegation.,65cd7a8e9b72e6c8940d523f
+66b55b1a9c3d4e5f6a7b8cb3,Monstera Deliciousa,The large foliage of the mature plants has striking fenestration and this exotic-looking plant is super easy to grow indoors. Individual leaves grow to be up to 3 feet long and with its upward vining growth habit and aerial roots it grows best up against a pole or trellis.,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cb4,Monstera Thai Constellation,The splotchy creamy white and yellow pattern on the fenestrated foliage results in a unique form of variegation that for some enthusiasts makes it a worthwhile investment.,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cb5,Monstera Albo,It looks similar to 'Thai Constellation' but the splotchy white patterns can develop to be pure white on some leaves of mature specimens.,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cb6,Monstera Peru,If you're looking for a compact monstera with beautiful individual patterns on its thick foliage consider the variegated variety of the Monstera Peru. Just remember that this plant won't develop fenestrations on its foliage regardless of how mature it is.,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cb7,Monstera Mint,The mint Monstera is a variegated variety of Monstera that has a unique and attractive mint coloring setting it apart from other variegated plants which often have yellow or white flecks of color.,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cb8,Monstera Standleyana,This rare compact monstera species stands out for its unusual and unpredictable individual foliage color variations.,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cb9,Monstera Half Moon,High Variegated White Monstera Adansonii Albo in a Nursery Pot - Half-Moon Swiss Cheese Variegated Plant,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cba,Monstera Aurea,The Aurea features the same attractive foliage as the other non-variegated Monsteras but with the addition of some fairly spectacular yellow variegations.,65cd7a8e9b72e6c8940d523e
+66b55b1a9c3d4e5f6a7b8cbb,Pothos Marble Queen,The marble queen pothos can sometimes be mistaken for the golden pothos as the leaf detail is similar. However this variety can be distinguished by its white/cream variegation. It is a highly variegated variety that requires a bit more light than the golden pothos in order to keep its variegation bright.,65cd7a8e9b72e6c8940d5265
+66b55b1a9c3d4e5f6a7b8cbc,Pothos Golden,Likely the most widely available pothos on the market the golden pothos is characterized by waxy heart-shaped green leaves with yellow variegation. It is considered a fast grower and does well in a variety of light conditions—from low light to bright indirect light.,65cd7a8e9b72e6c8940d5265
+66b55b1a9c3d4e5f6a7b8cbd,Pothos Harlequin,One of the rarest pothos available the harlequin pothos displays highly variegated white and dark green foliage. It looks very similar to the manjula pothos although it does not have any cream/yellow coloring. It requires bright indirect light in order to support its bright variegation.,65cd7a8e9b72e6c8940d5265

@@ -1,5 +1,7 @@
 from flask import Blueprint, request, jsonify
 
+from models.plant import Plant, PlantGenusType, PlantGenus, PlantSpecies
+
 from shared.db import Table, Query
 from shared.logger import logger
 from routes import GenericCRUD, APIBuilder, Schema
@@ -54,19 +56,24 @@ def create_all():
     genus = data["genus"]
     genus_type = data["genus_type"]
 
+    print(genus_type)
+    print(genus)
+    print(species)
+    
+
     if genus_type is not None:
         logger.info("Creating Plant Genus Type")
-        genus_type = Schema.PLANT_GENUS_TYPE.create(genus_type)
+        genus_type = Schema.PLANT_GENUS_TYPE.create(PlantGenusType(**genus_type))
 
     if genus is not None:
         logger.info("Create Plant Genus")
         genus["genus_type_id"] = genus_type.id
-        genus = Schema.PLANT_GENUS.create(genus)
+        genus = Schema.PLANT_GENUS.create(PlantGenus(**genus))
 
     if species is not None:
         logger.info("Creating plant species")
         species["genus_id"] = genus.id
-        species = Schema.SPECIES.create(species)
+        species = Schema.SPECIES.create(PlantSpecies(**species))
 
     return jsonify({"species": species, "genus": genus, "genus_type": genus_type})
 

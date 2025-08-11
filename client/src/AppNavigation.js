@@ -51,7 +51,8 @@ function AppNavigation({ window }) {
             { id: 'system', url: '/systems/create', icon: 'system', label: 'System' },
             { id: 'light', url: '/lights/create', icon: 'light', label: 'Light' },
             { id: 'todo', url: '/todos/create', icon: 'todo', label: 'Todo' },
-            { id: 'care_plan', url: '/care_plans/create', icon: 'care_plan', label: 'Care Plan'}
+            { id: 'care_plan', url: '/care_plans/create', icon: 'care_plan', label: 'Care Plan'},
+            { id: 'goal', url: '/goals/create', icon: 'goal', label: 'Goal'}
         ]},
         { id: 'view', icon: 'view', color: 'primary', subMenu: [
             { id: 'plants', url: '/plants', icon: 'plant', label: 'Plant' },

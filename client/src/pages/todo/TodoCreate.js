@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Box from '@mui/material/Box';
-import { FormTextInput, TextAreaInput, DateSelector } from '../../elements/Form';
+import { FormTextInput, TextAreaInput, DateSelector, AutoCompleteInput } from '../../elements/Form';
 import dayjs from 'dayjs';
 import { useTodos } from '../../hooks/useTodos';
+import { useGoals } from '../../hooks/useGoals'; // Assuming a hook for goals exists
 import { List, Stack, Button, Paper, Grid, Typography, IconButton } from '@mui/material';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -14,10 +15,12 @@ const TodoCreate = () => {
     const [description, setDescription] = useState('');
     const [tasks, setTasks] = useState([]);
     const [dueOn, setDueOn] = useState(dayjs());
+    const [goal, setGoal] = useState(null); // State for the selected goal
     const [error, setError] = useState(null);
 
     const navigate = useNavigate();
     const { createTodo } = useTodos();
+    const { goals } = useGoals(); // Fetching the list of goals
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -31,7 +34,14 @@ const TodoCreate = () => {
         try {
             // Filter out any empty tasks before submitting
             const finalTasks = tasks.filter(task => task.description.trim() !== '');
-            await createTodo({ name, description, due_on: dueOn.toISOString(), tasks: finalTasks });
+            const newTodo = {
+                name,
+                description,
+                due_on: dueOn.toISOString(),
+                tasks: finalTasks,
+                goal_id: goal ? goal.id : null // Add goal_id to the payload
+            };
+            await createTodo(newTodo);
             navigate("/");
         } catch (err) {
             setError("Failed to create todo. Please try again.");
@@ -103,6 +113,12 @@ const TodoCreate = () => {
                                     <FormTextInput label="Title" value={name} setValue={setName} />
                                     <TextAreaInput label="Description" value={description} setValue={setDescription} />
                                     <DateSelector label="Due" value={dueOn} setValue={setDueOn} />
+                                    <AutoCompleteInput
+                                        label="Goal"
+                                        value={goal}
+                                        setValue={setGoal}
+                                        options={goals}
+                                    />
                                     {error && <Typography color="error" sx={{ textAlign: 'center' }}>{error}</Typography>}
                                     <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
                                         <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>
