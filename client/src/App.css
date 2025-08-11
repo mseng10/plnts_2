@@ -204,7 +204,6 @@
 
    animation-delay: 2s;
    animation-duration: 40s;
-   background-color: white;
  }
 
 .bg-bubbles li:nth-child(10){
@@ -213,6 +212,33 @@
    height: 160px;
 
    animation-delay: 11s;
+ }
+
+ .bg-bubbles li:nth-child(11){
+   left: 30%;
+   width: 300px;
+   height: 300px;
+   bottom: -300px;
+
+   animation-delay: 60s;
+   animation-duration: 80s;
+ }
+
+.bg-bubbles li:nth-child(12){
+   left: 78%;
+   width: 50px;
+   height: 50px;
+
+   animation-delay: 20s;
+   animation-duration: 50s;
+ }
+
+.bg-bubbles li:nth-child(13){
+   left: 55%;
+   width: 180px;
+   height: 180px;
+
+   animation-delay: 30s;
  }
 
 @-webkit-keyframes square {
