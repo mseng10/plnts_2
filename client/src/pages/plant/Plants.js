@@ -91,7 +91,7 @@ const Plants = ({ initialPlants }) => {
           rows={plants}
           columns={columns}
           initialState={{
-            pagination: { paginationModel: { pageSize: 5 } },
+            pagination: { paginationModel: { pageSize: 100 } },
           }}
           pageSizeOptions={[100]}
           checkboxSelection
