@@ -27,19 +27,13 @@ def create_model(model_path: str, table: Table):
 
     logger.info(f"Beginning to create model {table.value}")
 
-    # All or nothing for now
-    existing_count = table.count()
-    if existing_count > 0:
-        logger.error(f"Documents already exist for {table.value}, exiting.")
-        return
-
     # Load models from CSV and insert them
     # Doing this way to create null values in the db in the event some fields get updated
     models: List[FlexibleModel] = table.model_class.from_csv(model_path)
     if models:
         for doc in models:
-            table.create(doc)
-        logger.info(f"Successfully created {len(models)} documents for {table.value}")
+            table.upsert(str(doc.id), doc)
+        logger.info(f"Successfully upserted {len(models)} documents for {table.value}")
     else:
         logger.error(f"No documents to create for {table.value}")
 
@@ -48,7 +42,7 @@ def create_all_models():
     """
     Create all of our packaged models on installation.
     """
-    logger.info("Beginning to create models.")
+    logger.info("Beginning to upsert models.")
 
     models_to_create: List[Tuple[str, Table]] = [
         ("../data/installable/soils/soils.csv", Table.SOIL),

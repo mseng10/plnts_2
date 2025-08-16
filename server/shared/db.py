@@ -77,6 +77,12 @@ class Table(Enum):
         del set["_id"]
         result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set})
         return result.modified_count > 0
+    
+    def upsert(self, id: str, data: FlexibleModel) -> bool:
+        set = data.to_dict()
+        del set["_id"]
+        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set}, upsert=True)
+        return result.modified_count > 0
 
     def deprecate(self, data: FlexibleModel) -> bool:
         if not isinstance(data, DeprecatableMixin):
