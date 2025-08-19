@@ -37,13 +37,13 @@ class Plant(BanishableMixin, FlexibleModel):
         self.fertilized_on = kwargs.get("fertilized_on", datetime.now())
         self.cleansed_on = kwargs.get("cleansed_on", datetime.now())
 
-        self.species_id = Fields.object_id(kwargs.get("species_id", UNKNOWN))
-        self.genus_id = Fields.object_id(kwargs.get("genus_id", UNKNOWN))
-        self.genus_type_id = Fields.object_id(kwargs.get("genus_type_id", UNKNOWN))
+        self.species_id = Fields.object_id(kwargs.get("species_id"))
+        self.genus_id = Fields.object_id(kwargs.get("genus_id"))
+        self.genus_type_id = Fields.object_id(kwargs.get("genus_type_id"))
 
-        self.care_plan_id = Fields.object_id(kwargs.get("care_plan_id", UNKNOWN))
-        self.system_id = kwargs.get("system_id", UNKNOWN)
-        self.mix_id = Fields.object_id(kwargs.get("mix_id", UNKNOWN))
+        self.care_plan_id = Fields.object_id(kwargs.get("care_plan_id"))
+        self.system_id = kwargs.get("system_id")
+        self.mix_id = Fields.object_id(kwargs.get("mix_id"))
 
     def __repr__(self) -> str:
         return f"{self.id}"

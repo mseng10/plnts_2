@@ -16,7 +16,7 @@ from shared.logger import logger
 scheduler: APScheduler = APScheduler()
 
 
-@scheduler.task("cron", id="manage_plant_alerts_job", minute="*")
+@scheduler.task("cron", id="manage_plant_alerts_job", hour=23)
 def manage_plant_alerts() -> None:
     """
     Cron job to create watering alerts for plants that are due.
