@@ -14,14 +14,10 @@ from pydantic import ValidationError
 # Read-only fields that should be excluded during create/update operations.
 # Note: Pydantic offers more advanced ways to handle this (e.g., private fields),
 # but this explicit filtering approach is clear and effective.
-READ_ONLY_FIELDS = {
-    'id', 'created_at', 'updated_at', 'created_on', 'updated_on'
-}
+READ_ONLY_FIELDS = {"id", "created_at", "updated_at", "created_on", "updated_on"}
 
 # Internal fields that should not be exposed to clients.
-INTERNAL_FIELDS = {
-    'container_id', 'is_local', 'url'
-}
+INTERNAL_FIELDS = {"container_id", "is_local", "url"}
 
 
 class GenericCRUD:
@@ -33,8 +29,11 @@ class GenericCRUD:
 
     def _filter_request_data(self, data: dict) -> dict:
         """Removes read-only and internal fields from incoming request data."""
-        return {k: v for k, v in data.items()
-                if k not in READ_ONLY_FIELDS and k not in INTERNAL_FIELDS}
+        return {
+            k: v
+            for k, v in data.items()
+            if k not in READ_ONLY_FIELDS and k not in INTERNAL_FIELDS
+        }
 
     def get(self, id: str):
         """Fetches a single document by its ID."""
@@ -46,7 +45,7 @@ class GenericCRUD:
 
             # The item from the DB is already a Pydantic model instance.
             # We serialize it directly to a JSON response.
-            return jsonify(item.model_dump(mode='json'))
+            return jsonify(item.model_dump(mode="json"))
 
         except Exception as e:
             logger.error(f"Error in get({id}): {str(e)}")
@@ -57,7 +56,7 @@ class GenericCRUD:
         try:
             items = self.table.get_many()
             # Serialize the list of model instances directly.
-            return jsonify([item.model_dump(mode='json') for item in items])
+            return jsonify([item.model_dump(mode="json") for item in items])
 
         except Exception as e:
             logger.error(f"Error in get_many: {str(e)}")
@@ -73,7 +72,7 @@ class GenericCRUD:
             # Filter out protected fields before saving.
             # We operate on the model's dict representation.
             item_dict = self._filter_request_data(item.to_dict())
-            
+
             # Re-create the model instance from the filtered data to ensure
             # no protected fields are passed to the database layer.
             item_to_create = self.model_class.from_dict(item_dict)
@@ -81,7 +80,7 @@ class GenericCRUD:
             inserted_id = self.table.create(item_to_create)
             item_to_create.id = inserted_id
 
-            return jsonify(item_to_create.model_dump(mode='json')), 201
+            return jsonify(item_to_create.model_dump(mode="json")), 201
 
         except ValidationError as e:
             logger.error(f"Validation error during create: {e.errors()}")
@@ -111,7 +110,7 @@ class GenericCRUD:
             if not self.table.update(id, updated_item):
                 return jsonify({"error": "Update failed"}), 400
 
-            return jsonify(updated_item.model_dump(mode='json'))
+            return jsonify(updated_item.model_dump(mode="json"))
 
         except ValidationError as e:
             logger.error(f"Validation error during update: {e.errors()}")

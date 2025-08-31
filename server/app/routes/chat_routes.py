@@ -9,6 +9,7 @@ chat_bp = Blueprint("chat", __name__)
 chat_crud = GenericCRUD(Table.CHAT)
 APIBuilder.register_blueprint(chat_bp, "chat", chat_crud, ["GET", "GET_MANY", "POST"])
 
+
 @APIBuilder.register_custom_route(
     chat_bp, "/chat/<string:id>/message", methods=["POST"]
 )
@@ -18,26 +19,26 @@ def chat(id: str):
     if chat is None:
         logger.error(f"Chat {id} does not exist")
         return jsonify({"error": "Chat does not exist"}), 400
-    
+
     data = request.json
     user_content: str = data.get("message")
     if not user_content:
         logger.error("No message provided")
         return jsonify({"error": "No message provided"}), 400
-    
+
     # Append new message to history
     user_message: Message = Message(contents=user_content)
     chat.messages.append(user_message)
-    
+
     # Post this message to the client
     response_content = message(user_message.contents)
-    
+
     # Append LL response
     response_message: Message = Message(contents=response_content["content"])
     chat.messages.append(response_message)
-    
+
     # Update the table and return the result
     Table.CHAT.update(id, chat)
     updated_chat = Table.CHAT.get_one(id)
-    
-    return jsonify({"content": updated_chat.messages[-1].model_dump(mode='json')})
+
+    return jsonify({"content": updated_chat.messages[-1].model_dump(mode="json")})

@@ -9,6 +9,7 @@ from models import FlexibleModel
 
 class Message(FlexibleModel):
     """Message model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     contents: Optional[str] = None
@@ -16,19 +17,20 @@ class Message(FlexibleModel):
 
 class Chat(FlexibleModel):
     """Chat model with embedded messages."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
     messages: List[Message] = Field(default_factory=list)
 
-    @model_validator(mode='before')
+    @model_validator(mode="before")
     @classmethod
     def process_embedded_messages(cls, values):
         """Convert message dictionaries to Message instances if needed"""
-        if isinstance(values, dict) and 'messages' in values:
-            messages = values['messages']
+        if isinstance(values, dict) and "messages" in values:
+            messages = values["messages"]
             if messages and isinstance(messages[0], dict):
-                values['messages'] = [Message.model_validate(msg) for msg in messages]
+                values["messages"] = [Message.model_validate(msg) for msg in messages]
         return values
 
     def __repr__(self):

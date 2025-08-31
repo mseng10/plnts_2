@@ -77,32 +77,37 @@ class Table(Enum):
     def update(self, id: str, data: FlexibleModel) -> bool:
         set_data = data.to_dict()
         del set_data["_id"]
-        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set_data})
+        result = DB[self.table_name].update_one(
+            {"_id": ObjectId(id)}, {"$set": set_data}
+        )
         return result.modified_count > 0
-    
+
     def upsert(self, id: str, data: FlexibleModel) -> bool:
         set_data = data.to_dict()
         del set_data["_id"]
-        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set_data}, upsert=True)
+        result = DB[self.table_name].update_one(
+            {"_id": ObjectId(id)}, {"$set": set_data}, upsert=True
+        )
         return result.modified_count > 0
 
     def deprecate(self, id: str) -> bool:
         item = self.get_one(id)
         if not item:
             return False
-        
+
         # Check if model has deprecation fields
-        if not hasattr(item, 'deprecated'):
+        if not hasattr(item, "deprecated"):
             return False
-        
+
         # Use FlexibleModel's built-in deprecation if available, or set manually
-        if hasattr(item, 'deprecate') and callable(getattr(item, 'deprecate')):
+        if hasattr(item, "deprecate") and callable(getattr(item, "deprecate")):
             item.deprecate()
         else:
             from datetime import datetime
+
             item.deprecated = True
             item.deprecated_on = datetime.now()
-            
+
         return self.update(id, item)
 
     def delete(self, id: str) -> bool:
@@ -116,7 +121,7 @@ class Table(Enum):
 
         # All FlexibleModel instances now have banishing capability
         banishable.banish()
-        
+
         if not self.delete(id):
             return False
 

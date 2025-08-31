@@ -9,28 +9,30 @@ from models import FlexibleModel, ObjectIdPydantic
 
 class Task(FlexibleModel):
     """TODO task"""
+
     description: Optional[str] = None
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     resolved_on: Optional[datetime] = None
     resolved: bool = False
 
-    @model_validator(mode='before')
+    @model_validator(mode="before")
     @classmethod
     def update_timestamp_on_resolution(cls, values):
         """Update resolved_on timestamp when task is marked as resolved"""
         if isinstance(values, dict):
             # If resolved is being set to True and resolved_on is not set
-            if values.get('resolved') and not values.get('resolved_on'):
-                values['resolved_on'] = datetime.now()
+            if values.get("resolved") and not values.get("resolved_on"):
+                values["resolved_on"] = datetime.now()
             # If resolved is being set to False, clear resolved_on
-            elif not values.get('resolved', False):
-                values['resolved_on'] = None
+            elif not values.get("resolved", False):
+                values["resolved_on"] = None
         return values
 
 
 class Todo(FlexibleModel):
     """TODO model with embedded tasks."""
+
     # Note: No longer inheriting from BanishableMixin since FlexibleModel now has banishing built-in
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
@@ -38,22 +40,22 @@ class Todo(FlexibleModel):
     name: Optional[str] = None
     description: Optional[str] = None
     goal_id: Optional[ObjectIdPydantic] = None  # nullable reference to Goal
-    
+
     # Embedded tasks - Pydantic handles the conversion automatically
     tasks: List[Task] = Field(default_factory=list)
 
     def __repr__(self):
         return f"{self.name or 'Unnamed Todo'}"
 
-    @model_validator(mode='before')
+    @model_validator(mode="before")
     @classmethod
     def process_embedded_tasks(cls, values):
         """Convert task dictionaries to Task instances if needed"""
-        if isinstance(values, dict) and 'tasks' in values:
-            tasks = values['tasks']
+        if isinstance(values, dict) and "tasks" in values:
+            tasks = values["tasks"]
             if tasks and isinstance(tasks[0], dict):
                 # Convert dict representations to Task instances
-                values['tasks'] = [Task.model_validate(task) for task in tasks]
+                values["tasks"] = [Task.model_validate(task) for task in tasks]
         return values
 
     def to_dict(self) -> Dict[str, Any]:
@@ -92,6 +94,7 @@ class Todo(FlexibleModel):
 
 class Goal(FlexibleModel):
     """Goal model"""
+
     # Note: No longer inheriting from BanishableMixin since FlexibleModel now has banishing built-in
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
@@ -100,16 +103,22 @@ class Goal(FlexibleModel):
     due_month: Optional[str] = None  # Consider using a more specific date type
     status: str = "not_started"
 
-    @field_validator('status')
+    @field_validator("status")
     @classmethod
     def validate_status(cls, v):
         """Validate status field values"""
-        valid_statuses = {"not_started", "in_progress", "completed", "on_hold", "cancelled"}
+        valid_statuses = {
+            "not_started",
+            "in_progress",
+            "completed",
+            "on_hold",
+            "cancelled",
+        }
         if v not in valid_statuses:
             raise ValueError(f"Status must be one of: {valid_statuses}")
         return v
 
-    @field_validator('due_month')
+    @field_validator("due_month")
     @classmethod
     def validate_due_month(cls, v):
         """Validate due_month format (optional enhancement)"""

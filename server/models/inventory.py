@@ -9,13 +9,14 @@ from models import FlexibleModel, ObjectIdPydantic
 
 class InventoryItem(FlexibleModel):
     """Inventory item model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
     cost: int = 0
     inventory_type_id: Optional[ObjectIdPydantic] = None
     data: Dict[str, Any] = Field(default_factory=dict)
-    
+
     # Deprecation fields
     deprecated: bool = False
     deprecated_on: Optional[datetime] = None
@@ -36,6 +37,7 @@ class InventoryItem(FlexibleModel):
 
 class InventoryType(FlexibleModel):
     """Inventory type model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     data_schema: Dict[str, Any] = Field(default_factory=dict)

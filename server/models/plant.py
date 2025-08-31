@@ -18,20 +18,21 @@ class PHASES(Enum):
 
 class Plant(FlexibleModel):
     """Plant model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     cost: int = 0
     updated_on: datetime = Field(default_factory=datetime.now)
-    
+
     # Metrics
     phase: Optional[PHASES] = None
     size: int = 0  # inches
-    
+
     # Care info
     watered_on: datetime = Field(default_factory=datetime.now)
     potted_on: datetime = Field(default_factory=datetime.now)
     fertilized_on: datetime = Field(default_factory=datetime.now)
     cleansed_on: datetime = Field(default_factory=datetime.now)
-    
+
     # References
     species_id: Optional[ObjectIdPydantic] = None
     genus_id: Optional[ObjectIdPydantic] = None
@@ -46,6 +47,7 @@ class Plant(FlexibleModel):
 
 class CarePlan(FlexibleModel):
     """Care plan model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
@@ -57,6 +59,7 @@ class CarePlan(FlexibleModel):
 
 class PlantGenusType(FlexibleModel):
     """Plant genus type model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
@@ -66,6 +69,7 @@ class PlantGenusType(FlexibleModel):
 
 class PlantGenus(FlexibleModel):
     """Plant genus model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
@@ -77,6 +81,7 @@ class PlantGenus(FlexibleModel):
 
 class PlantSpecies(FlexibleModel):
     """Plant species model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None

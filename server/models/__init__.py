@@ -8,6 +8,7 @@ from pydantic import BaseModel, Field, ConfigDict, BeforeValidator
 
 # --- Custom Type for BSON ObjectId ---
 
+
 def _object_id_validator(value: Any) -> ObjectId:
     """If the value is a string, convert it to a BSON ObjectId."""
     if isinstance(value, str):
@@ -17,10 +18,12 @@ def _object_id_validator(value: Any) -> ObjectId:
             raise ValueError(f"'{value}' is not a valid ObjectId")
     return value
 
+
 ObjectIdPydantic = Annotated[ObjectId, BeforeValidator(_object_id_validator)]
 
 
 # --- Inheritable Pydantic Base Model ---
+
 
 class FlexibleModel(BaseModel):
     """
@@ -42,7 +45,7 @@ class FlexibleModel(BaseModel):
     # The `id` field is mapped to `_id` for MongoDB compatibility.
     # A new ObjectId is created for new instances via `default_factory`.
     id: ObjectIdPydantic = Field(default_factory=ObjectId, alias="_id")
-    
+
     # Banishing fields for soft deletion
     banished: bool = False
     banished_on: Optional[datetime] = None
@@ -55,7 +58,7 @@ class FlexibleModel(BaseModel):
         # Allows use of custom types like `ObjectId` that aren't native to Pydantic.
         arbitrary_types_allowed=True,
         # Defines how to encode `ObjectId` to JSON (e.g., for API responses).
-        json_encoders={ObjectId: str}
+        json_encoders={ObjectId: str},
     )
 
     def banish(self, cause: Optional[str] = None) -> None:
@@ -80,8 +83,10 @@ class FlexibleModel(BaseModel):
         """Creates a list of model instances from a structured NumPy array."""
         columns = data.dtype.names
         if columns is None:
-            raise ValueError("NumPy array must have named fields (be a structured array).")
-        
+            raise ValueError(
+                "NumPy array must have named fields (be a structured array)."
+            )
+
         # Convert each row to a dictionary before creating the model instance.
         return [cls.from_dict(dict(zip(columns, row))) for row in data]
 
@@ -89,7 +94,7 @@ class FlexibleModel(BaseModel):
     def from_request(cls, req: Any) -> "FlexibleModel":
         """
         Creates a model instance from a web request object (e.g., from Flask).
-        
+
         Tries to parse a JSON body first, then falls back to form data.
         """
         # This implementation is tailored for Flask-like request objects.
@@ -111,7 +116,7 @@ class FlexibleModel(BaseModel):
     def to_dict(self) -> Dict[str, Any]:
         """
         Converts the model to a dictionary suitable for MongoDB storage.
-        
+
         The `by_alias=True` argument ensures that the `id` field is correctly
         serialized back to `_id`.
         """

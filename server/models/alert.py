@@ -17,11 +17,12 @@ class AlertTypes(Enum):
 
 class Alert(FlexibleModel):
     """Alert model."""
+
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     alert_type: Optional[AlertTypes] = None
     model_id: Optional[ObjectIdPydantic] = None
-    
+
     # Deprecation fields
     deprecated: bool = False
     deprecated_on: Optional[datetime] = None

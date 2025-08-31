@@ -22,6 +22,7 @@ APIBuilder.register_blueprint(
     species_bp, "species", species_crud, methods=["GET", "GET_MANY"]
 )
 
+
 @APIBuilder.register_custom_route(species_bp, "/species/all/", methods=["POST"])
 def create_all():
     """Create species with genus and genus_type hierarchy."""
@@ -30,16 +31,16 @@ def create_all():
     species_data = data.get("species")
     genus_data = data.get("genus")
     genus_type_data = data.get("genus_type")
-    
+
     result = {}
-    
+
     if genus_type_data is not None:
         logger.info("Creating Plant Genus Type")
         genus_type = PlantGenusType.model_validate(genus_type_data)
         genus_type_id = Table.GENUS_TYPE.create(genus_type)
         genus_type.id = genus_type_id
-        result["genus_type"] = genus_type.model_dump(mode='json')
-    
+        result["genus_type"] = genus_type.model_dump(mode="json")
+
     if genus_data is not None:
         logger.info("Create Plant Genus")
         if genus_type_data is not None:
@@ -47,8 +48,8 @@ def create_all():
         genus = PlantGenus.model_validate(genus_data)
         genus_id = Table.GENUS.create(genus)
         genus.id = genus_id
-        result["genus"] = genus.model_dump(mode='json')
-    
+        result["genus"] = genus.model_dump(mode="json")
+
     if species_data is not None:
         logger.info("Creating plant species")
         if genus_data is not None:
@@ -56,9 +57,10 @@ def create_all():
         species = PlantSpecies.model_validate(species_data)
         species_id = Table.SPECIES.create(species)
         species.id = species_id
-        result["species"] = species.model_dump(mode='json')
-    
+        result["species"] = species.model_dump(mode="json")
+
     return jsonify(result)
+
 
 genus_bp = Blueprint("genera", __name__)
 genus_crud = GenericCRUD(Table.GENUS)
@@ -69,5 +71,8 @@ APIBuilder.register_blueprint(
 care_plan_bp = Blueprint("care_plans", __name__)
 care_plan_crud = GenericCRUD(Table.CARE_PLAN)
 APIBuilder.register_blueprint(
-    care_plan_bp, "care_plans", care_plan_crud, methods=["GET", "GET_MANY", "POST", "PATCH", "BANISH"]
+    care_plan_bp,
+    "care_plans",
+    care_plan_crud,
+    methods=["GET", "GET_MANY", "POST", "PATCH", "BANISH"],
 )
