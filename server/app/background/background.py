@@ -8,7 +8,7 @@ from flask import Flask
 from flask_apscheduler import APScheduler
 from models.plant import Plant, CarePlan, PlantCareEvent, CareEventType
 from models.alert import Alert, AlertTypes
-from models.brain import Brain
+from models.app import Brain
 from shared.db import Table
 from shared.logger import logger
 
