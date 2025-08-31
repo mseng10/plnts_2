@@ -3,7 +3,7 @@ Module defining models for plants.
 """
 from datetime import datetime
 from enum import Enum
-from typing import Optional
+from typing import Optional, Dict, Any
 from pydantic import Field
 from models import FlexibleModel, ObjectIdPydantic
 
@@ -88,3 +88,25 @@ class PlantSpecies(FlexibleModel):
     common_name: Optional[str] = None
     description: Optional[str] = None
     genus_id: Optional[ObjectIdPydantic] = None
+
+class CareEventType(Enum):
+    WATER = "Water"
+    FERTILIZE = "Fertilize"
+    REPOT = "Repot"
+    CLEANSE = "Cleanse"
+    PRUNE = "Prune"
+    TRANSPLANT = "Transplant"
+
+
+class PlantCareEvent(FlexibleModel):
+    """Individual care event for a plant."""
+    plant_id: ObjectIdPydantic
+    event_type: CareEventType
+    performed_on: datetime = Field(default_factory=datetime.now)
+    created_on: datetime = Field(default_factory=datetime.now)
+    
+    # Optional metadata
+    notes: Optional[str] = None
+    amount: Optional[float] = None  # ml of water, grams of fertilizer, etc
+    duration: Optional[int] = None  # minutes spent on care
+    conditions: Dict[str, Any] = Field(default_factory=dict)  # temp, humidity, etc

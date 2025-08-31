@@ -9,11 +9,12 @@ from typing import Dict, Any, Optional, List, Type
 from models import FlexibleModel
 from models.alert import Alert
 from models.mix import Mix, Soil
-from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies, CarePlan
+from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies, CarePlan, PlantCareEvent
 from models.system import System, Light
 from models.todo import Todo, Goal
 from models.expense import Expense, Budget
 from models.chat import Chat
+from models.app import Brain
 
 from bson import ObjectId
 from pymongo import MongoClient
@@ -48,6 +49,8 @@ class Table(Enum):
     CHAT = ("chat", Chat)
     CARE_PLAN = ("care_plan", CarePlan)
     GOAL = ("goal", Goal)
+    CARE_EVENT = ("plant_care_event", PlantCareEvent)
+    BRAIN = ("brain", Brain)
 
     def __init__(self, table_name: str, model_class: Type[FlexibleModel]) -> None:
         self.table_name = table_name
