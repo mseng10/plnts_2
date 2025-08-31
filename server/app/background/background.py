@@ -8,7 +8,7 @@ from flask import Flask
 from flask_apscheduler import APScheduler
 from models.plant import Plant, CarePlan, PlantCareEvent, CareEventType
 from models.alert import Alert, AlertTypes
-from models.app import Brain
+from models.brain import Brain
 from shared.db import Table
 from shared.logger import logger
 
@@ -258,6 +258,15 @@ def _has_alert_type(
 
 def init_scheduler(app: Flask) -> None:
     """Initializes and starts the APScheduler."""
+    # Ensure Brain exists on startup
+    try:
+        brain = Brain.get_brain()
+        logger.info(
+            f"Brain initialized - Alert check last run: {brain.plant_alert_check_last_run}, Care event check last run: {brain.plant_care_event_check_last_run}"
+        )
+    except Exception as e:
+        logger.error(f"Failed to initialize Brain: {e}")
+
     scheduler.init_app(app)
     scheduler.start()
     logger.info("APScheduler initialized and started with the following jobs:")
