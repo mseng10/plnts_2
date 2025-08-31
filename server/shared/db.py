@@ -6,7 +6,7 @@ import os
 from enum import Enum
 from typing import Dict, Any, Optional, List, Type
 
-from models import FlexibleModel, DeprecatableMixin, BanishableMixin
+from models import FlexibleModel
 from models.alert import Alert
 from models.mix import Mix, Soil
 from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies, CarePlan
@@ -49,7 +49,6 @@ class Table(Enum):
     CARE_PLAN = ("care_plan", CarePlan)
     GOAL = ("goal", Goal)
 
-
     def __init__(self, table_name: str, model_class: Type[FlexibleModel]) -> None:
         self.table_name = table_name
         self.model_class = model_class
@@ -61,46 +60,63 @@ class Table(Enum):
         result = DB[self.table_name].insert_one(data.to_dict())
         return result.inserted_id
 
-    def get_one(self, id: str) -> Optional[Type[FlexibleModel]]:
-        return self.model_class(**DB[self.table_name].find_one({"_id": ObjectId(id)}))
+    def get_one(self, id: str) -> Optional[FlexibleModel]:
+        doc = DB[self.table_name].find_one({"_id": ObjectId(id)})
+        if doc is None:
+            return None
+        return self.model_class.model_validate(doc)
 
     def get_many(
         self, query: Dict[str, Any] = {}, limit: int = 100
-    ) -> List[Dict[str, Any]]:
+    ) -> List[FlexibleModel]:
         ret = []
         for item in DB[self.table_name].find(query).limit(limit):
-            ret.append(self.model_class(**item))
+            ret.append(self.model_class.model_validate(item))
         return ret
 
     def update(self, id: str, data: FlexibleModel) -> bool:
-        set = data.to_dict()
-        del set["_id"]
-        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set})
+        set_data = data.to_dict()
+        del set_data["_id"]
+        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set_data})
         return result.modified_count > 0
     
     def upsert(self, id: str, data: FlexibleModel) -> bool:
-        set = data.to_dict()
-        del set["_id"]
-        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set}, upsert=True)
+        set_data = data.to_dict()
+        del set_data["_id"]
+        result = DB[self.table_name].update_one({"_id": ObjectId(id)}, {"$set": set_data}, upsert=True)
         return result.modified_count > 0
 
-    def deprecate(self, data: FlexibleModel) -> bool:
-        if not isinstance(data, DeprecatableMixin):
+    def deprecate(self, id: str) -> bool:
+        item = self.get_one(id)
+        if not item:
             return False
-
-        data.deprecate()
-        return self.update(data.id, data)
+        
+        # Check if model has deprecation fields
+        if not hasattr(item, 'deprecated'):
+            return False
+        
+        # Use FlexibleModel's built-in deprecation if available, or set manually
+        if hasattr(item, 'deprecate') and callable(getattr(item, 'deprecate')):
+            item.deprecate()
+        else:
+            from datetime import datetime
+            item.deprecated = True
+            item.deprecated_on = datetime.now()
+            
+        return self.update(id, item)
 
     def delete(self, id: str) -> bool:
         result = DB[self.table_name].delete_one({"_id": ObjectId(id)})
         return result.deleted_count > 0
 
     def banish(self, id: str) -> bool:
-        banishable: FlexibleModel = self.get_one(id)
-        if not isinstance(banishable, BanishableMixin):
+        banishable = self.get_one(id)
+        if not banishable:
             return False
 
+        # All FlexibleModel instances now have banishing capability
         banishable.banish()
+        
         if not self.delete(id):
             return False
 

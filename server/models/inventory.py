@@ -1,26 +1,42 @@
+"""
+Module for inventory related models.
+"""
 from datetime import datetime
-import enum
-from bson import ObjectId
+from typing import Dict, Any, Optional
+from pydantic import Field
+from models import FlexibleModel, ObjectIdPydantic
 
-from models import FlexibleModel, Fields, DeprecatableMixin, UNKNOWN
 
-class InventoryItem(FlexibleModel, DeprecatableMixin):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.name = kwargs.get("name", UNKNOWN)
-        self.cost = kwargs.get("cost", 0)
-        self.inventory_type_id = Fields.object_id(kwargs.get("inventory_type_id"))
-        self.data = kwargs.get("data", {})
+class InventoryItem(FlexibleModel):
+    """Inventory item model."""
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
+    name: Optional[str] = None
+    cost: int = 0
+    inventory_type_id: Optional[ObjectIdPydantic] = None
+    data: Dict[str, Any] = Field(default_factory=dict)
+    
+    # Deprecation fields
+    deprecated: bool = False
+    deprecated_on: Optional[datetime] = None
+    deprecated_cause: Optional[str] = None
+
+    def deprecate(self, cause: Optional[str] = None) -> None:
+        """Mark this item as deprecated"""
+        self.deprecated = True
+        self.deprecated_on = datetime.now()
+        self.deprecated_cause = cause
+
+    def undeprecate(self) -> None:
+        """Remove deprecated status"""
+        self.deprecated = False
+        self.deprecated_on = None
+        self.deprecated_cause = None
 
 
 class InventoryType(FlexibleModel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.data_schema = kwargs.get("data_schema", {})
-        self.name = kwargs.get("name", UNKNOWN)
+    """Inventory type model."""
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
+    data_schema: Dict[str, Any] = Field(default_factory=dict)
+    name: Optional[str] = None
