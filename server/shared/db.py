@@ -9,7 +9,14 @@ from typing import Dict, Any, Optional, List, Type
 from models import FlexibleModel
 from models.alert import Alert
 from models.mix import Mix, Soil
-from models.plant import Plant, PlantGenus, PlantGenusType, PlantSpecies, CarePlan, PlantCareEvent
+from models.plant import (
+    Plant,
+    PlantGenus,
+    PlantGenusType,
+    PlantSpecies,
+    CarePlan,
+    PlantCareEvent,
+)
 from models.system import System, Light
 from models.todo import Todo, Goal
 from models.expense import Expense, Budget

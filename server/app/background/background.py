@@ -23,15 +23,19 @@ def manage_plant_alerts() -> None:
     This job runs daily at 23:00 to check for plants that need care.
     """
     logger.info("Running manage_plant_alerts job...")
-    
+
     # Check if 24 hours have passed since last run
     brain = Brain.get_brain()
     if brain.plant_alert_check_last_run:
-        hours_since_last = (datetime.now() - brain.plant_alert_check_last_run).total_seconds() / 3600
+        hours_since_last = (
+            datetime.now() - brain.plant_alert_check_last_run
+        ).total_seconds() / 3600
         if hours_since_last < 24:
-            logger.info(f"Skipping plant alerts job - only {hours_since_last:.1f} hours since last run")
+            logger.info(
+                f"Skipping plant alerts job - only {hours_since_last:.1f} hours since last run"
+            )
             return
-    
+
     start_time = time.time()
 
     try:
@@ -139,7 +143,7 @@ def manage_plant_alerts() -> None:
         logger.info(
             f"Finished manage_plant_alerts job. Created {alerts_created_count} new alerts."
         )
-        
+
         # Update brain with successful completion
         duration = time.time() - start_time
         brain.update_plant_alert_check(duration, "success")
@@ -147,7 +151,7 @@ def manage_plant_alerts() -> None:
 
     except Exception as e:
         logger.exception(f"An error occurred during the manage_plant_alerts job: {e}")
-        
+
         # Update brain with failure status
         duration = time.time() - start_time
         brain.update_plant_alert_check(duration, "failed")
@@ -161,72 +165,81 @@ def detect_plant_care_events() -> None:
     Creates new care events when timestamps indicate care has occurred.
     """
     logger.info("Running detect_plant_care_events job...")
-    
+
     # Check if 1 hour has passed since last run
     brain = Brain.get_brain()
     if brain.plant_care_event_check_last_run:
-        hours_since_last = (datetime.now() - brain.plant_care_event_check_last_run).total_seconds() / 3600
+        hours_since_last = (
+            datetime.now() - brain.plant_care_event_check_last_run
+        ).total_seconds() / 3600
         if hours_since_last < 1:
-            logger.info(f"Skipping care event detection - only {hours_since_last*60:.1f} minutes since last run")
+            logger.info(
+                f"Skipping care event detection - only {hours_since_last*60:.1f} minutes since last run"
+            )
             return
-    
+
     start_time = time.time()
-    
+
     try:
         # Get all active plants
         plants: List[Plant] = Table.PLANT.get_many({"banished": False})
         events_created = 0
         last_run_time = brain.plant_care_event_check_last_run
-        
+
         for plant in plants:
             # Check each care type
             care_checks = [
                 (CareEventType.WATER, plant.watered_on),
-                (CareEventType.FERTILIZE, plant.fertilized_on), 
+                (CareEventType.FERTILIZE, plant.fertilized_on),
                 (CareEventType.REPOT, plant.potted_on),
                 (CareEventType.CLEANSE, plant.cleansed_on),
             ]
-            
+
             for event_type, plant_timestamp in care_checks:
                 if plant_timestamp is None:
                     continue
-                
+
                 # Only create event if plant timestamp is after last run time
                 should_create_event = (
-                    last_run_time is None or 
-                    plant_timestamp > last_run_time
+                    last_run_time is None or plant_timestamp > last_run_time
                 )
-                
+
                 if should_create_event:
                     # Check if we already have an event for this timestamp to avoid duplicates
-                    existing_events = Table.PLANT_CARE_EVENT.get_many({
-                        "plant_id": plant.id,
-                        "event_type": event_type,
-                        "performed_on": plant_timestamp
-                    })
-                    
+                    existing_events = Table.PLANT_CARE_EVENT.get_many(
+                        {
+                            "plant_id": plant.id,
+                            "event_type": event_type,
+                            "performed_on": plant_timestamp,
+                        }
+                    )
+
                     if not existing_events:
                         new_event = PlantCareEvent(
                             plant_id=plant.id,
                             event_type=event_type,
                             performed_on=plant_timestamp,
-                            notes=f"Detected from plant {event_type.value.lower()} timestamp"
+                            notes=f"Detected from plant {event_type.value.lower()} timestamp",
                         )
-                        
+
                         Table.PLANT_CARE_EVENT.create(new_event)
                         events_created += 1
-                        logger.info(f"Created {event_type.value} event for plant {plant.id} at {plant_timestamp}")
-        
-        logger.info(f"Care event detection completed. Created {events_created} new events.")
-        
+                        logger.info(
+                            f"Created {event_type.value} event for plant {plant.id} at {plant_timestamp}"
+                        )
+
+        logger.info(
+            f"Care event detection completed. Created {events_created} new events."
+        )
+
         # Update brain with successful completion
         duration = time.time() - start_time
         brain.update_plant_care_event_check(duration, "success")
         Table.BRAIN.update(str(brain.id), brain)
-        
+
     except Exception as e:
         logger.exception(f"An error occurred during care event detection: {e}")
-        
+
         # Update brain with failure status
         duration = time.time() - start_time
         brain.update_plant_care_event_check(duration, "failed")

@@ -89,6 +89,7 @@ class PlantSpecies(FlexibleModel):
     description: Optional[str] = None
     genus_id: Optional[ObjectIdPydantic] = None
 
+
 class CareEventType(Enum):
     WATER = "Water"
     FERTILIZE = "Fertilize"
@@ -100,11 +101,12 @@ class CareEventType(Enum):
 
 class PlantCareEvent(FlexibleModel):
     """Individual care event for a plant."""
+
     plant_id: ObjectIdPydantic
     event_type: CareEventType
     performed_on: datetime = Field(default_factory=datetime.now)
     created_on: datetime = Field(default_factory=datetime.now)
-    
+
     # Optional metadata
     notes: Optional[str] = None
     amount: Optional[float] = None  # ml of water, grams of fertilizer, etc
