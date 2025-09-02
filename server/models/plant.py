@@ -40,6 +40,8 @@ class Plant(FlexibleModel):
     care_plan_id: Optional[ObjectIdPydantic] = None
     system_id: Optional[str] = None
     mix_id: Optional[ObjectIdPydantic] = None
+    description: Optional[str] = None
+
 
     def __repr__(self) -> str:
         return f"{self.id}"

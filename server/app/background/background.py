@@ -209,7 +209,7 @@ def detect_plant_care_events() -> None:
                     existing_events = Table.PLANT_CARE_EVENT.get_many(
                         {
                             "plant_id": plant.id,
-                            "event_type": event_type,
+                            "event_type": event_type.value,
                             "performed_on": plant_timestamp,
                         }
                     )

@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from typing import List, Callable, Type
 from shared.db import Table
 from shared.logger import logger
-from models import FlexibleModel, DeprecatableMixin
+from models import FlexibleModel
 from pydantic import ValidationError
 
 # The custom PyObjectId class is no longer needed, as the new FlexibleModel
@@ -151,9 +151,6 @@ class GenericCRUD:
             item = self.table.get_one(id)
             if not item:
                 return jsonify({"error": "Not found"}), 404
-            # This check works correctly with the new model structure.
-            if not isinstance(item, DeprecatableMixin):
-                return jsonify({"error": "Model does not support deprecation"}), 400
 
             item.deprecate()
 
