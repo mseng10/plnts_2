@@ -20,7 +20,7 @@ class Plant(FlexibleModel):
     """Plant model."""
 
     created_on: datetime = Field(default_factory=datetime.now)
-    cost: int = 0
+    cost: float = 0
     updated_on: datetime = Field(default_factory=datetime.now)
 
     # Metrics

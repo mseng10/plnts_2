@@ -4,13 +4,12 @@ Could eventually see this moving to cloud.
 """
 import sys
 import os
-from typing import Type, List, Tuple
+from typing import List, Tuple
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from models.plant import PlantGenusType, PlantGenus, PlantSpecies
-from models.mix import Soil
+
 from models import FlexibleModel
-from shared.db import DB, Table
+from shared.db import initialize_database, Table
 from shared.logger import setup_logger
 import logging
 
@@ -60,4 +59,10 @@ def install():
 
 
 if __name__ == "__main__":
+    initialize_database(
+        mongodb_url="mongodb://admin:password123@localhost:27017",
+        mongodb_url_hist="mongodb://admin:password123@localhost:27017",
+        db_name="plnts",
+        hist_db_name="plnts_hist"
+    )
     install()

@@ -2,9 +2,10 @@
 Unit tests for app/background/background.py (background scheduler)
 """
 import unittest
-from unittest.mock import Mock, MagicMock, patch, call
+from unittest.mock import MagicMock, patch, call
 from datetime import datetime, timedelta
 import time
+from typing import Any
 
 # Import the functions we're testing
 from app.background.background import (

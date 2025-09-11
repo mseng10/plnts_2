@@ -13,6 +13,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 from shared.logger import setup_logger
+from shared.db import initialize_database
 from shared.discover import discover_systems
 
 # Create a logger for this specific module
@@ -44,6 +45,13 @@ from routes.chat_routes import chat_bp
 from routes.expense_routes import expense_bp, budget_bp
 
 from background.background import init_scheduler
+
+initialize_database(
+    mongodb_url="mongodb://admin:password123@localhost:27017",
+    mongodb_url_hist="mongodb://admin:password123@localhost:27017",
+    db_name="plnts",
+    hist_db_name="plnts_hist"
+)
 
 
 app.register_blueprint(system_bp)
