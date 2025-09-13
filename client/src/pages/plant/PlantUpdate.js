@@ -103,8 +103,8 @@ const PlantUpdate = () => {
 
         const updatedPlant = {
             id,
-            size: size || 0,
-            cost: cost || 0,
+            size: parseInt(size, 10) || 0,
+            cost: parseFloat(cost) || 0,
             description: description || '',
             mix_id: mix ? mix.id: null,
             system_id: system.id,

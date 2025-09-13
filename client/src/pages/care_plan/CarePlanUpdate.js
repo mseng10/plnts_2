@@ -50,10 +50,10 @@ const CarePlanUpdate = () => {
         const updatedCarePlan = {
             id,
             name,
-            watering: watering || null,
-            fertilizing: fertilizing || null,
-            cleaning: cleaning || null,
-            potting: potting || null,
+            watering: parseInt(watering, 10) || null,
+            fertilizing: parseInt(fertilizing, 10) || null,
+            cleaning: parseInt(cleaning, 10) || null,
+            potting: parseInt(potting, 10) || null,
         };
 
         try {

@@ -63,8 +63,8 @@ const PlantCreate = () => {
         // }
 
         const newPlant = {
-            size: int(size) || 0, // Default to 0 if empty
-            cost: float(cost) || 0,
+            size: parseInt(size, 10) || 0, // Default to 0 if empty
+            cost: parseFloat(cost) || 0,
             description: description || '',
             species_id: selectedSpecies ? selectedSpecies.id : null,
             system_id: system.id,

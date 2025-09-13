@@ -41,10 +41,10 @@ const NewSystemForm = () => {
             await createSystem({
                 name,
                 description,
-                target_humidity,
-                target_temperature,
-                distance,
-                duration,
+                target_humidity: parseInt(target_humidity, 10),
+                target_temperature: parseInt(target_temperature, 10),
+                distance: parseInt(distance, 10),
+                duration: parseInt(duration, 10),
                 light_ids
             });
             navigate("/");
