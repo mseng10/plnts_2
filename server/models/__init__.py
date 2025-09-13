@@ -1,80 +1,139 @@
 # models/__init__.py
-from typing import List, Any, Dict, Optional
+from typing import List, Any, Dict, Annotated, Optional
 import numpy as np
 import csv
+from enum import Enum
 from bson import ObjectId
-from datetime import datetime, timedelta
+from datetime import datetime
+from pydantic import BaseModel, Field, ConfigDict, BeforeValidator
+
+# --- Custom Type for BSON ObjectId ---
 
 
-class Fields:
-    @staticmethod
-    def object_id(value):
-        if isinstance(value, str):
+def _object_id_validator(value: Any) -> ObjectId:
+    """If the value is a string, convert it to a BSON ObjectId."""
+    if isinstance(value, str):
+        try:
             return ObjectId(value)
-        return value
+        except Exception:
+            raise ValueError(f"'{value}' is not a valid ObjectId")
+    return value
 
 
-class FlexibleModel:
-    """Base model that supports many different forms."""
-
-    def __init__(self, **kwargs):
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-    @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "FlexibleModel":
-        return cls(**data)
-
-    @classmethod
-    def from_numpy(cls, data: np.ndarray) -> List["FlexibleModel"]:
-        if len(data.shape) != 2:
-            raise ValueError("Array must be 2-dimensional")
-        columns = data.dtype.names
-        if columns is None:
-            raise ValueError("Array must have named fields")
-        return [cls(**dict(zip(columns, row))) for row in data]
-
-    @classmethod
-    def from_request(cls, req: Any) -> "FlexibleModel":
-        data = req.json if req.is_json else req.form.to_dict()
-        return cls.from_dict(data)
-
-    @classmethod
-    def from_csv(cls, file_path: str) -> List["FlexibleModel"]:
-        with open(file_path, "r", newline="") as csvfile:
-            reader = csv.DictReader(csvfile)
-            return [cls.from_dict(row) for row in reader]
-
-    # Overridable method
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert model to dictionary for MongoDB storage"""
-        return {("_id" if k == "id" else k): v for k, v in self.__dict__.items()}
+ObjectIdPydantic = Annotated[ObjectId, BeforeValidator(_object_id_validator)]
 
 
-class DeprecatableMixin:
-    """In case the model is deprecated."""
-
-    def __init__(self, **kwargs):
-        self.deprecated = kwargs.get("deprecated", False)
-        self.deprecated_on = kwargs.get("deprecated_on")
-        self.deprecated_cause = kwargs.get("deprecated_cause")
-
-    def deprecate(self, cause):
-        self.deprecated = True
-        self.deprecated_on = datetime.now()
-        self.deprecated_cause = cause
+# --- Inheritable Pydantic Base Model ---
 
 
-class BanishableMixin:
-    """In case the model is deprecated."""
+class FlexibleModel(BaseModel):
+    """
+    An inheritable and flexible Pydantic base model for all future models.
 
-    def __init__(self, **kwargs):
-        self.banished = kwargs.get("banished", False)
-        self.banished_on = kwargs.get("banished_on")
-        self.banished_cause = kwargs.get("banished_cause")
+    This model is designed to integrate seamlessly with MongoDB and provides
+    several utility methods for instantiation from various data sources.
 
-    def banish(self, cause: Optional[str] = None):
+    ✨ **Key Features:**
+    - **MongoDB Integration**: Automatically handles MongoDB's `_id` field by
+      mapping it to an `id` attribute. A new `ObjectId` is generated if not provided.
+    - **Type-Safe & Flexible**: Leverages Pydantic for data validation but allows
+      extra, undefined fields (`extra='allow'`) to support varied data structures.
+    - **Banishing Support**: Built-in fields for soft deletion functionality.
+    - **Convenient Initializers**: Includes class methods to easily create model
+      instances from dictionaries, NumPy arrays, web requests, and CSV files.
+    """
+
+    # The `id` field is mapped to `_id` for MongoDB compatibility.
+    # A new ObjectId is created for new instances via `default_factory`.
+    id: ObjectIdPydantic = Field(default_factory=ObjectId, alias="_id")
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
+
+    # Banishing fields for soft deletion
+    banished: bool = False
+    banished_on: Optional[datetime] = None
+    banished_cause: Optional[str] = None
+
+    # `model_config` customizes Pydantic's behavior.
+    model_config = ConfigDict(
+        # Allows the model to accept fields that are not explicitly defined.
+        extra="allow",
+        # Allows use of custom types like `ObjectId` that aren't native to Pydantic.
+        arbitrary_types_allowed=True,
+        # Defines how to encode `ObjectId` to JSON (e.g., for API responses).
+        json_encoders={ObjectId: str},
+    )
+
+    def banish(self, cause: Optional[str] = None) -> None:
+        """Mark this instance as banished (soft delete)"""
         self.banished = True
         self.banished_on = datetime.now()
         self.banished_cause = cause
+
+    def unbanish(self) -> None:
+        """Remove banished status"""
+        self.banished = False
+        self.banished_on = None
+        self.banished_cause = None
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> "FlexibleModel":
+        """Creates a model instance from a dictionary."""
+        return cls.model_validate(data)
+
+    @classmethod
+    def from_numpy(cls, data: np.ndarray) -> List["FlexibleModel"]:
+        """Creates a list of model instances from a structured NumPy array."""
+        columns = data.dtype.names
+        if columns is None:
+            raise ValueError(
+                "NumPy array must have named fields (be a structured array)."
+            )
+
+        # Convert each row to a dictionary before creating the model instance.
+        return [cls.from_dict(dict(zip(columns, row))) for row in data]
+
+    @classmethod
+    def from_request(cls, req: Any) -> "FlexibleModel":
+        """
+        Creates a model instance from a web request object (e.g., from Flask).
+
+        Tries to parse a JSON body first, then falls back to form data.
+        """
+        # This implementation is tailored for Flask-like request objects.
+        data = req.get_json(silent=True) or req.form.to_dict()
+        if not data:
+            raise ValueError("Could not extract JSON or form data from the request.")
+        return cls.from_dict(data)
+
+    @classmethod
+    def from_csv(cls, file_path: str, encoding: str = "utf-8") -> List["FlexibleModel"]:
+        """Creates a list of model instances from a CSV file."""
+        models = []
+        with open(file_path, "r", newline="", encoding=encoding) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                models.append(cls.from_dict(row))
+        return models
+
+    def to_dict(self) -> Dict[str, Any]:
+        """
+        Converts the model to a dictionary suitable for MongoDB storage.
+
+        The `by_alias=True` argument ensures that the `id` field is correctly
+        serialized back to `_id`. Enum values are automatically converted to strings.
+        """
+        data = self.model_dump(by_alias=True)
+
+        # Convert enum values to strings
+        def convert_enums(obj):
+            if isinstance(obj, dict):
+                return {key: convert_enums(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_enums(item) for item in obj]
+            elif isinstance(obj, Enum):
+                return obj.value
+            else:
+                return obj
+
+        return convert_enums(data)

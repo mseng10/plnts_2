@@ -12,7 +12,7 @@ import { PHASE_LABELS } from '../../constants';
 import { useMixes } from '../../hooks/useMix';
 import { ServerError, Loading } from '../../elements/Page';
 import SpeciesCreateCard from './species/SpeciesCreateCard';
-import { Paper, Button, Typography } from '@mui/material';
+import { Paper, Button, Typography, TextField } from '@mui/material';
 import IconFactory from '../../elements/IconFactory';
 import dayjs from 'dayjs';
 
@@ -30,6 +30,7 @@ const PlantCreate = () => {
     const [size, setSize] = useState('');
     const [cost, setCost] = useState('');
     const [phase, setPhase] = useState(PHASE_LABELS.adult);
+    const [description, setDescription] = useState('');
     const [showSpeciesCreate, setShowSpeciesCreate] = useState(false);
     const [formError, setFormError] = useState('');
     
@@ -49,21 +50,25 @@ const PlantCreate = () => {
     };
 
     const handleSubmit = async (event) => {
+
+        console.log(selectedSpecies);
+
         event.preventDefault();
         setFormError(''); // Reset error on new submission
 
         // --- Form Validation ---
-        if (!selectedSpecies || !system || !mix || !phase) {
-            setFormError('Please fill out all required fields.');
-            return;
-        }
+        // if (!selectedSpecies || !system || !mix || !phase) {
+        //     setFormError('Please fill out all required fields.');
+        //     return;
+        // }
 
         const newPlant = {
-            size: size || 0, // Default to 0 if empty
-            cost: cost || 0,
-            species_id: selectedSpecies.id,
+            size: parseInt(size, 10) || 0, // Default to 0 if empty
+            cost: parseFloat(cost) || 0,
+            description: description || '',
+            species_id: selectedSpecies ? selectedSpecies.id : null,
             system_id: system.id,
-            mix_id: mix.id,
+            mix_id: mix ? mix.id: null,
             care_plan_id: carePlan ? carePlan.id : null,
             phase,
             potted_on: potted_on.toISOString(),
@@ -84,6 +89,7 @@ const PlantCreate = () => {
     const handleCancel = () => {
         navigate("/");
     };
+
 
     if (isLoading) return <Loading />;
     if (error) return <ServerError />;
@@ -158,6 +164,36 @@ const PlantCreate = () => {
                                         <Grid item xs={6}><NumberInput label="Size" value={size} setValue={setSize} /></Grid>
                                         <Grid item xs={6}><NumberInput label="Cost" value={cost} setValue={setCost} /></Grid>
                                     </Grid>
+
+                                    <TextField
+                                        label="Description"
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        multiline
+                                        rows={3}
+                                        fullWidth
+                                        placeholder="Add notes about your plant (optional)"
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                                '& fieldset': {
+                                                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                                                },
+                                                '&:hover fieldset': {
+                                                    borderColor: 'rgba(255, 255, 255, 0.5)',
+                                                },
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: 'primary.main',
+                                                },
+                                            },
+                                            '& .MuiInputLabel-root': {
+                                                color: 'rgba(255, 255, 255, 0.7)',
+                                            },
+                                            '& .MuiInputBase-input': {
+                                                color: 'white',
+                                            },
+                                        }}
+                                    />
 
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}><DateSelector label="Potted On" value={potted_on} setValue={setPottedOn} /></Grid>

@@ -27,10 +27,10 @@ const CarePlanCreate = () => {
 
         const newCarePlan = {
             name,
-            watering: parseInt(watering) || null,
-            fertilizing: parseInt(fertilizing) || null,
-            cleaning: parseInt(cleaning) || null,
-            potting: parseInt(potting) || null,
+            watering: parseInt(watering, 10) || null,
+            fertilizing: parseInt(fertilizing, 10) || null,
+            cleaning: parseInt(cleaning, 10) || null,
+            potting: parseInt(potting, 10) || null,
         };
 
         try {

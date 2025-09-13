@@ -66,7 +66,7 @@ const SpeciesCreateCard = ({ onClose, onSpeciesCreated, genera = [], genusTypes 
             // Determine the final genus object.
             // If creating a new one, embed the genusType object within it.
             const genusForPayload = showGenusForm 
-                ? { name: genusName.trim(), genusType: genusTypeForPayload } 
+                ? { name: genusName.trim(), } 
                 : selectedGenus;
 
             // The species object is always new in this form.
@@ -76,7 +76,7 @@ const SpeciesCreateCard = ({ onClose, onSpeciesCreated, genera = [], genusTypes 
             const payload = {
                 species: speciesForPayload,
                 genus: genusForPayload,
-                genusType: genusTypeForPayload,
+                genus_type: genusTypeForPayload,
             };
 
             // Call the createAll command with the consolidated payload.

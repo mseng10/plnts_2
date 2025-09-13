@@ -1,32 +1,41 @@
+"""
+Module for expense related models.
+"""
+
 from datetime import datetime
-import enum
-from bson import ObjectId
+from enum import Enum
+from typing import Optional
+from pydantic import Field
+from models import FlexibleModel
 
-from models import FlexibleModel, Fields, DeprecatableMixin
 
-
-class EXPENSE_CATEGORY(enum.Enum):
+class EXPENSE_CATEGORY(Enum):
     """Types of expenses"""
+
     NEED = "Need"
     CRAP = "Crap"
 
 
-class Expense(FlexibleModel, DeprecatableMixin):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.name = kwargs.get("name", "Unkwown")
-        self.category = kwargs.get("category", EXPENSE_CATEGORY.NEED.value)
-        self.purchased_on = kwargs.get("purchased_on", datetime.now())
+class Expense(FlexibleModel):
+    """Expense model."""
+
+    name: str
+    category: EXPENSE_CATEGORY = EXPENSE_CATEGORY.NEED
+    purchased_on: datetime = Field(default_factory=datetime.now)
+
+    # Deprecation fields
+    deprecated: bool = False
+    deprecated_on: Optional[datetime] = None
+    deprecated_cause: Optional[str] = None
 
 
-class Budget(FlexibleModel, DeprecatableMixin):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.budget = kwargs.get("cost", 0)
-        self.month = kwargs.get("month")
+class Budget(FlexibleModel):
+    """Budget model."""
+
+    budget: int = 0
+    month: Optional[str] = None # check
+
+    # Deprecation fields
+    deprecated: bool = False
+    deprecated_on: Optional[datetime] = None
+    deprecated_cause: Optional[str] = None

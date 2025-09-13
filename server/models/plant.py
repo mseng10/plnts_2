@@ -3,91 +3,99 @@ Module defining models for plants.
 """
 
 from datetime import datetime
-import enum
-from bson import ObjectId
+from enum import Enum
+from typing import Optional, Dict, Any
+from pydantic import Field
+from models import FlexibleModel, ObjectIdPydantic
 
-from models import FlexibleModel, BanishableMixin, Fields
 
-
-class PHASES(enum.Enum):
+class PHASES(Enum):
     ADULT = "Adult"
     CUTTING = "Cutting"
     JUVY = "Juvy"
-    LEAD = "Leaf"
+    LEAF = "Leaf"
     SEED = "Seed"
 
 
-class Plant(BanishableMixin, FlexibleModel):
+class Plant(FlexibleModel):
     """Plant model."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.cost = kwargs.get("cost", 0)
-        self.updated_on = kwargs.get("updated_on", datetime.now())
+    cost: float = 0
 
-        # Metrics
-        self.phase = kwargs.get("phase")
-        self.size = kwargs.get("size", 0)  # inches
+    # Metrics
+    phase: PHASES
+    size: int = 0  # inches
 
-        # Care info
-        self.watered_on = kwargs.get("watered_on", datetime.now())
-        self.potted_on = kwargs.get("potted_on", datetime.now())
-        self.fertilized_on = kwargs.get("fertilized_on", datetime.now())
-        self.cleansed_on = kwargs.get("cleansed_on", datetime.now())
+    # Care info
+    watered_on: datetime = Field(default_factory=datetime.now)
+    potted_on: datetime = Field(default_factory=datetime.now)
+    fertilized_on: datetime = Field(default_factory=datetime.now)
+    cleansed_on: datetime = Field(default_factory=datetime.now)
 
-        self.species_id = Fields.object_id(kwargs.get("species_id"))
-        self.care_plan_id = Fields.object_id(kwargs.get("care_plan_id"))
-        self.system_id = kwargs.get("system_id")
-        self.mix_id = Fields.object_id(kwargs.get("mix_id"))
+    # References
+    species_id: Optional[ObjectIdPydantic] = None
+    genus_id: Optional[ObjectIdPydantic] = None
+    genus_type_id: Optional[ObjectIdPydantic] = None
+    care_plan_id: Optional[ObjectIdPydantic] = None
+    system_id: Optional[str] = None
+    mix_id: Optional[ObjectIdPydantic] = None
+    description: Optional[str] = None
 
     def __repr__(self) -> str:
         return f"{self.id}"
-    
+
+
 class CarePlan(FlexibleModel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.name = kwargs.get("name", datetime.now())
-        self.watering = kwargs.get("watering")
-        self.fertilizing = kwargs.get("fertilizing")
-        self.cleaning = kwargs.get("cleaning")
-        self.potting = kwargs.get("potting")
+    """Care plan model."""
+
+    name: str
+    watering: int
+    fertilizing: int
+    cleaning: int
+    potting: int
+
 
 class PlantGenusType(FlexibleModel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.name = kwargs.get("name")
-        self.description = kwargs.get("description")
-        self.watering = kwargs.get("watering")
+    """Plant genus type model."""
+
+    name: str
+    description: str
+    watering: int
 
 
 class PlantGenus(FlexibleModel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.name = kwargs.get("name")
-        self.common_name = kwargs.get("common_name")
-        self.description = kwargs.get("description")
-        self.watering = kwargs.get("watering")
-        self.genus_type_id = Fields.object_id(kwargs.get("genus_type_id"))
+    """Plant genus model."""
+
+    name: str
+    genus_type_id: ObjectIdPydantic
 
 
 class PlantSpecies(FlexibleModel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.name = kwargs.get("name")
-        self.common_name = kwargs.get("common_name")
-        self.description = kwargs.get("description")
-        self.genus_id = Fields.object_id(kwargs.get("genus_id"))
+    """Plant species model."""
+
+    name: str
+    description: str
+    genus_id: ObjectIdPydantic
+
+
+class CareEventType(Enum):
+    WATER = "Water"
+    FERTILIZE = "Fertilize"
+    REPOT = "Repot"
+    CLEANSE = "Cleanse"
+    PRUNE = "Prune"
+    TRANSPLANT = "Transplant"
+
+
+class PlantCareEvent(FlexibleModel):
+    """Individual care event for a plant."""
+
+    plant_id: ObjectIdPydantic
+    event_type: CareEventType
+    performed_on: datetime = Field(default_factory=datetime.now)
+
+    # Optional metadata
+    notes: Optional[str] = None
+    amount: Optional[float] = None  # ml of water, grams of fertilizer, etc
+    duration: Optional[int] = None  # minutes spent on care
+    conditions: Dict[str, Any] = Field(default_factory=dict)  # temp, humidity, etc

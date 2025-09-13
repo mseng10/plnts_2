@@ -1,42 +1,40 @@
-from datetime import datetime
+"""
+Module for chat related models.
+"""
+
 from typing import List, Dict, Any
-from models import FlexibleModel, BanishableMixin, Fields
-import enum
-from bson import ObjectId
+from pydantic import Field, model_validator
+from models import FlexibleModel
 
 
 class Message(FlexibleModel):
-    """Message class"""
+    """Message model."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.contents = kwargs.get("contents", "Recent chat")
+    contents: str
 
 
-class Chat(BanishableMixin, FlexibleModel):
-    """Chat Class"""
+class Chat(FlexibleModel):
+    """Chat model with embedded messages."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.name = kwargs.get("name", "Recent chat")
+    name: str
+    messages: List[Message] = Field(default_factory=list)
 
-        # Embedded tasks
-        self.messages: List[Message] = [
-            Message(**task) for task in kwargs.get("messages", [])
-        ]
+    @model_validator(mode="before")
+    @classmethod
+    def process_embedded_messages(cls, values):
+        """Convert message dictionaries to Message instances if needed"""
+        if isinstance(values, dict) and "messages" in values:
+            messages = values["messages"]
+            if messages and isinstance(messages[0], dict):
+                values["messages"] = [Message.model_validate(msg) for msg in messages]
+        return values
 
     def __repr__(self):
-        return f"{self.name}"
+        return f"{self.name or 'Unnamed Chat'}"
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to MongoDB document format"""
         base_dict = super().to_dict()
-        if "messages" in base_dict:
+        if self.messages:
             base_dict["messages"] = [message.to_dict() for message in self.messages]
         return base_dict

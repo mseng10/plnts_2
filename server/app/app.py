@@ -13,6 +13,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
 
 from shared.logger import setup_logger
+from shared.db import initialize_database
 from shared.discover import discover_systems
 
 # Create a logger for this specific module
@@ -28,8 +29,14 @@ app.config["DEBUG"] = True
 
 
 from routes.system_routes import system_bp, light_bp
-from routes.plant_routes import bp as plant_bp, genus_bp, genus_types_bp, species_bp, care_plan_bp
-from routes.todo_routes import bp as todo_bp
+from routes.plant_routes import (
+    bp as plant_bp,
+    genus_bp,
+    genus_types_bp,
+    species_bp,
+    care_plan_bp,
+)
+from routes.todo_routes import todos_bp, goals_bp
 from routes.mix_routes import mixes_bp, soils_bp
 from routes.stat_routes import bp as stat_bp
 from routes.alert_routes import bp as alert_bp
@@ -39,11 +46,19 @@ from routes.expense_routes import expense_bp, budget_bp
 
 from background.background import init_scheduler
 
+initialize_database(
+    mongodb_url="mongodb://admin:password123@localhost:27017",
+    mongodb_url_hist="mongodb://admin:password123@localhost:27017",
+    db_name="plnts",
+    hist_db_name="plnts_hist",
+)
+
 
 app.register_blueprint(system_bp)
 app.register_blueprint(light_bp)
 app.register_blueprint(plant_bp)
-app.register_blueprint(todo_bp)
+app.register_blueprint(todos_bp)
+app.register_blueprint(goals_bp)
 app.register_blueprint(mixes_bp)
 app.register_blueprint(stat_bp)
 app.register_blueprint(alert_bp)

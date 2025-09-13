@@ -13,7 +13,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 const TodoUpdate = ({ todoProp }) => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { todos, isLoading, error, updateTodo, setError } = useTodos();
+    const { todos, isLoading, error, updateTodo } = useTodos();
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
@@ -44,10 +44,8 @@ const TodoUpdate = ({ todoProp }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
 
         if (!name) {
-            setError({ message: "Title is a required field." });
             return;
         }
         

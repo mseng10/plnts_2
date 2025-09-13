@@ -75,10 +75,10 @@ const SystemUpdate = ({ systemProp }) => {
             id,
             name,
             description,
-            target_humidity,
-            target_temperature,
-            duration,
-            distance,
+            target_humidity: parseInt(target_humidity, 10),
+            target_temperature: parseInt(target_temperature, 10),
+            duration: parseInt(duration, 10),
+            distance: parseInt(distance, 10),
             light_ids
         };
 

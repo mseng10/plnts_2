@@ -23,15 +23,13 @@ const NewSystemForm = () => {
     
     // Hooks
     const { lights, isLoading: lightsLoading } = useLights();
-    const { createSystem, error, isLoading: systemLoading, setError } = useSystems();
+    const { createSystem, error, isLoading: systemLoading } = useSystems();
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
 
         if (!name) {
-            setError({ message: "System name is a required field." });
             return;
         }
 
@@ -39,19 +37,14 @@ const NewSystemForm = () => {
             .map(item => item.light ? item.light.id : null)
             .filter(id => id !== null);
 
-        if (light_ids.length === 0) {
-            setError({ message: "You must add at least one light." });
-            return;
-        }
-
         try {
             await createSystem({
                 name,
                 description,
-                target_humidity,
-                target_temperature,
-                distance,
-                duration,
+                target_humidity: parseInt(target_humidity, 10),
+                target_temperature: parseInt(target_temperature, 10),
+                distance: parseInt(distance, 10),
+                duration: parseInt(duration, 10),
                 light_ids
             });
             navigate("/");

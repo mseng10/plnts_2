@@ -2,60 +2,53 @@
 Module for soil mix related models.
 """
 
-from datetime import datetime
-from typing import Dict, Any, List
-from bson import ObjectId
-from models import FlexibleModel, BanishableMixin, Fields
+from typing import Dict, Any, List, Optional
+from pydantic import Field, model_validator
+from models import FlexibleModel, ObjectIdPydantic
 
 
 class Soil(FlexibleModel):
     """Soil types available for mixes."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.description = kwargs.get("description")
-        self.group = kwargs.get("group")
-        self.name = kwargs.get("name")
+    description: str
+    group: str
+    name: str
 
     def __repr__(self) -> str:
         return f"{self.name}"
 
 
 class SoilPart(FlexibleModel):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.soil_id = Fields.object_id(kwargs.get("soil_id"))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.parts = kwargs.get("parts")
+    """Soil part for mixes."""
+
+    soil_id: Optional[ObjectIdPydantic] = None
+    parts: Optional[int] = None
 
 
-class Mix(BanishableMixin, FlexibleModel):
+class Mix(FlexibleModel):
     """Soil mix model with embedded soil parts."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.name = kwargs.get("name")
-        self.description = kwargs.get("description")
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.experimental = kwargs.get("experimental", False)
+    name: str
+    description: str
+    experimental: bool = False
+    soil_parts: List[SoilPart] = Field(default_factory=list)
 
-        # Embedded soil parts
-        self.soil_parts: List[SoilPart] = [
-            SoilPart(**sp) for sp in kwargs.get("soil_parts", [])
-        ]
+    @model_validator(mode="before")
+    @classmethod
+    def process_embedded_soil_parts(cls, values):
+        """Convert soil part dictionaries to SoilPart instances if needed"""
+        if isinstance(values, dict) and "soil_parts" in values:
+            parts = values["soil_parts"]
+            if parts and isinstance(parts[0], dict):
+                values["soil_parts"] = [SoilPart.model_validate(part) for part in parts]
+        return values
 
     def __repr__(self) -> str:
-        return f"{self.name}"
+        return f"{self.name or 'Unnamed Mix'}"
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to MongoDB document format"""
         base_dict = super().to_dict()
-        if len(self.soil_parts) > 0:
+        if self.soil_parts:
             base_dict["soil_parts"] = [part.to_dict() for part in self.soil_parts]
         return base_dict

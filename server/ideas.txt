@@ -1,0 +1,37 @@
+Based on your plant management app, here are some background task ideas:
+Data Analysis & Insights
+
+Plant health scoring: Calculate health metrics based on care frequency, growth rate, and alert history
+Care pattern analysis: Identify which plants consistently need more attention and suggest care plan adjustments
+Cost tracking: Aggregate monthly/yearly spending across plants, systems, and supplies
+Growth tracking: Monitor size changes over time and flag plants with unusual growth patterns
+
+Maintenance & Cleanup
+
+Alert cleanup: Remove resolved or expired alerts automatically
+Data archival: Move old chat messages or completed todos to archive collections
+Duplicate detection: Find and flag potential duplicate plants, species, or other records
+Orphaned data cleanup: Remove references to deleted items (e.g., care plans with no associated plants)
+
+Notifications & Reminders
+
+Budget alerts: Warn when monthly spending approaches budget limits
+System maintenance: Remind about cleaning sensors, replacing lights, or calibrating equipment
+Inventory restocking: Alert when soil mixes are running low based on usage patterns
+Goal deadline warnings: Notify about approaching goal due dates
+
+External Integration
+
+Weather sync: Pull local weather data to adjust care recommendations
+Backup creation: Export data to cloud storage or generate recovery files
+Image processing: If you add photos, resize/optimize plant images automatically
+API health checks: Monitor external services your app depends on
+
+Optimization Tasks
+
+Database indexing: Analyze query patterns and suggest index optimizations
+Cache warming: Pre-load frequently accessed data
+Performance metrics: Track response times and system resource usage
+Log rotation: Manage application logs and cleanup old entries
+
+Which of these align with your app's goals? The plant-specific ones seem most relevant given your current domain focus.

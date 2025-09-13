@@ -54,7 +54,7 @@ export const APIS = {
   species: {
     getAll: "/species/",
     create: "/species/",
-    createAll: "/species/all", // sure
+    createAll: "/species/all/", // sure
   },
   generaTypes: {
     getAll: "/genus_types/",
@@ -88,6 +88,13 @@ export const APIS = {
     getAll: "/care_plans/",
     create: "/care_plans/",
     updateOne: "/care_plans/{id}/",
+  },
+  goals: {
+    get: "/goals/{id}/",
+    getAll: "/goals/",
+    create: "/goals/",
+    updateOne: "/goals/{id}/",
+    deleteOne: "/goals/{id}/",
   }
 }
 

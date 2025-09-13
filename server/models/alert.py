@@ -2,27 +2,20 @@
 Module defining models for alerts.
 """
 
-from datetime import datetime
-from models import FlexibleModel, DeprecatableMixin, Fields
-import enum
-from bson import ObjectId
+from enum import Enum
+from typing import Optional
+from models import FlexibleModel, ObjectIdPydantic
 
 
-class AlertTypes(enum.Enum):
+class AlertTypes(Enum):
     WATER = "Water"
     REPOT = "Repot"
     CLEANSE = "Cleanse"
     FERTILIZE = "Fertilize"
-    # PROPOGATE = "Propogate"
 
 
-class Alert(DeprecatableMixin, FlexibleModel):
-    """Alert Base Class"""
+class Alert(FlexibleModel):
+    """Alert model."""
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.id = Fields.object_id(kwargs.get("_id", ObjectId()))
-        self.created_on = kwargs.get("created_on", datetime.now())
-        self.updated_on = kwargs.get("updated_on", datetime.now())
-        self.alert_type = kwargs.get("alert_type", "alert")
-        self.model_id = Fields.object_id(kwargs.get("alert_type", "alert"))
+    alert_type: AlertTypes = None
+    model_id: Optional[ObjectIdPydantic] = None

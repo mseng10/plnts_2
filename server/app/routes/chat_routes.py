@@ -1,12 +1,12 @@
 from flask import Blueprint, request, jsonify
-from routes import GenericCRUD, APIBuilder, Schema
+from routes import GenericCRUD, APIBuilder
 from shared.logger import logger
 from shared.db import Table
 from models.chat import Chat, Message
 from shared.mcp_client import message
 
 chat_bp = Blueprint("chat", __name__)
-chat_crud = GenericCRUD(Table.CHAT, Schema.CHAT)
+chat_crud = GenericCRUD(Table.CHAT)
 APIBuilder.register_blueprint(chat_bp, "chat", chat_crud, ["GET", "GET_MANY", "POST"])
 
 
@@ -15,7 +15,6 @@ APIBuilder.register_blueprint(chat_bp, "chat", chat_crud, ["GET", "GET_MANY", "P
 )
 def chat(id: str):
     logger.info("Initializing chat with user")
-
     chat: Chat = Table.CHAT.get_one(id)
     if chat is None:
         logger.error(f"Chat {id} does not exist")
@@ -23,8 +22,8 @@ def chat(id: str):
 
     data = request.json
     user_content: str = data.get("message")
-    if not user_message:
-        logger.error(f"No message provided")
+    if not user_content:
+        logger.error("No message provided")
         return jsonify({"error": "No message provided"}), 400
 
     # Append new message to history
@@ -32,12 +31,14 @@ def chat(id: str):
     chat.messages.append(user_message)
 
     # Post this message to the client
-    response_message = message(user_message.contents)
+    response_content = message(user_message.contents)
 
     # Append LL response
-    response_message: Message = Message(contents=response_message["content"])
+    response_message: Message = Message(contents=response_content["content"])
     chat.messages.append(response_message)
 
     # Update the table and return the result
     Table.CHAT.update(id, chat)
-    return jsonify({"content": Table.CHAT.get_one(id)["messages"][-1]})  # Don't love
+    updated_chat = Table.CHAT.get_one(id)
+
+    return jsonify({"content": updated_chat.messages[-1].model_dump(mode="json")})

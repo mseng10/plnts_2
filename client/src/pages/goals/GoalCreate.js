@@ -1,44 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from "react-router-dom";
-import { Box, Paper, Grid, Stack, Typography, Button } from '@mui/material';
-import { FormTextInput, NumberInput } from '../../elements/Form';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import Box from '@mui/material/Box';
+import { FormTextInput, TextAreaInput, DateSelector } from '../../elements/Form';
+import dayjs from 'dayjs';
+import { useGoals } from '../../hooks/useGoals';
+import { Stack, Button, Paper, Grid, Typography } from '@mui/material';
 import IconFactory from '../../elements/IconFactory';
-import { useCarePlans } from '../../hooks/useCarePlans';
 import { ServerError, Loading } from '../../elements/Page';
 
-const CarePlanUpdate = () => {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const { carePlans, updateCarePlan, isLoading, error } = useCarePlans();
-
-    // Form State based on the CarePlan model
+const GoalCreate = () => {
     const [name, setName] = useState('');
-    const [watering, setWatering] = useState('');
-    const [fertilizing, setFertilizing] = useState('');
-    const [cleaning, setCleaning] = useState('');
-    const [potting, setPotting] = useState('');
-
-    useEffect(() => {
-        const initializeForm = (plan) => {
-            if (plan) {
-                setName(plan.name || '');
-                setWatering(plan.watering || '');
-                setFertilizing(plan.fertilizing || '');
-                setCleaning(plan.cleaning || '');
-                setPotting(plan.potting || '');
-            }
-        };
-
-        if (carePlans.length > 0 && id) {
-            const plan = carePlans.find(p => String(p.id) === String(id));
-            if (plan) {
-                initializeForm(plan);
-            } else {
-                navigate("/404");
-            }
-        }
-    }, [carePlans, id, navigate]);
-
+    const [description, setDescription] = useState('');
+    const [dueMonth, setDueMonth] = useState(dayjs());
+    
+    const navigate = useNavigate();
+    const { createGoal, isLoading, error } = useGoals();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -47,21 +23,18 @@ const CarePlanUpdate = () => {
             return;
         }
 
-        const updatedCarePlan = {
-            id,
-            name,
-            watering: parseInt(watering, 10) || null,
-            fertilizing: parseInt(fertilizing, 10) || null,
-            cleaning: parseInt(cleaning, 10) || null,
-            potting: parseInt(potting, 10) || null,
-        };
-
         try {
-            await updateCarePlan(updatedCarePlan);
+            const newGoal = {
+                name,
+                description,
+                // Format the date to "YYYY-MM" for the due_month field
+                due_month: dueMonth.format('YYYY-MM'), 
+            };
+            await createGoal(newGoal);
             navigate("/"); // Navigate to a relevant page on success
         } catch (err) {
-            console.error('Error updating care plan:', err);
-            // The hook should handle setting the specific error message
+            console.error("Failed to create goal:", err);
+            // The hook will handle setting the error state
         }
     };
 
@@ -83,6 +56,7 @@ const CarePlanUpdate = () => {
             p: 4
         }}>
             <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
+                {/* --- MAIN FORM CARD --- */}
                 <Grid item xs={12} md={8} lg={7}>
                     <Paper
                         elevation={12}
@@ -102,7 +76,7 @@ const CarePlanUpdate = () => {
                             {/* --- ICON AREA --- */}
                             <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                                 <IconFactory
-                                    icon={"care_plan"} // Assuming a 'care' or similar icon exists
+                                    icon={"goal"} // Assuming a 'goal' icon exists
                                     color={"primary"}
                                     size={"xxxlg"}
                                 />
@@ -112,34 +86,26 @@ const CarePlanUpdate = () => {
                             <Grid item xs={12} md={8}>
                                 <Stack spacing={2.5}>
                                     <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'white' }}>
-                                        Update Care Plan
+                                        Create a New Goal
                                     </Typography>
-                                    
-                                    <FormTextInput
-                                        label="Plan Name"
-                                        value={name}
-                                        setValue={setName}
+                                    <FormTextInput label="Goal Name" value={name} setValue={setName} />
+                                    <TextAreaInput label="Description" value={description} setValue={setDescription} />
+                                    <DateSelector 
+                                        label="Due Month" 
+                                        value={dueMonth} 
+                                        setValue={setDueMonth}
+                                        views={['year', 'month']}
+                                        format="MMMM YYYY"
                                     />
-
-                                    <Typography variant="h6" component="h2" sx={{ color: 'white', pt: 1 }}>
-                                        Frequencies (in days)
-                                    </Typography>
-
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={6} sm={6}><NumberInput label="Watering" value={watering} setValue={setWatering} /></Grid>
-                                        <Grid item xs={6} sm={6}><NumberInput label="Fertilizing" value={fertilizing} setValue={setFertilizing} /></Grid>
-                                        <Grid item xs={6} sm={6}><NumberInput label="Cleaning" value={cleaning} setValue={setCleaning} /></Grid>
-                                        <Grid item xs={6} sm={6}><NumberInput label="Potting" value={potting} setValue={setPotting} /></Grid>
-                                    </Grid>
-
+                                    
                                     {error && error.message && <Typography color="error" sx={{ textAlign: 'center' }}>{error.message}</Typography>}
-
+                                    
                                     <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
                                         <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>
                                             Cancel
                                         </Button>
                                         <Button type="submit" variant="contained" color="primary" fullWidth>
-                                            Update
+                                            Submit
                                         </Button>
                                     </Stack>
                                 </Stack>
@@ -152,4 +118,4 @@ const CarePlanUpdate = () => {
     );
 };
 
-export default CarePlanUpdate;
+export default GoalCreate;
