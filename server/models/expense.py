@@ -19,7 +19,7 @@ class EXPENSE_CATEGORY(Enum):
 class Expense(FlexibleModel):
     """Expense model."""
 
-    name: Optional[str] = None
+    name: str
     category: EXPENSE_CATEGORY = EXPENSE_CATEGORY.NEED
     purchased_on: datetime = Field(default_factory=datetime.now)
 
@@ -33,7 +33,7 @@ class Budget(FlexibleModel):
     """Budget model."""
 
     budget: int = 0
-    month: Optional[str] = None
+    month: Optional[str] = None # check
 
     # Deprecation fields
     deprecated: bool = False

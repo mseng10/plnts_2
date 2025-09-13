@@ -2,8 +2,7 @@
 Module for chat related models.
 """
 
-from datetime import datetime
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from pydantic import Field, model_validator
 from models import FlexibleModel
 
@@ -11,13 +10,13 @@ from models import FlexibleModel
 class Message(FlexibleModel):
     """Message model."""
 
-    contents: Optional[str] = None
+    contents: str
 
 
 class Chat(FlexibleModel):
     """Chat model with embedded messages."""
 
-    name: Optional[str] = None
+    name: str
     messages: List[Message] = Field(default_factory=list)
 
     @model_validator(mode="before")

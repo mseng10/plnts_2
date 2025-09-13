@@ -1,19 +1,16 @@
 """
 Module defining models for system.
 """
-from datetime import datetime
+
 from typing import Optional
-from pydantic import Field
 from models import FlexibleModel, ObjectIdPydantic
 
 
 class Light(FlexibleModel):
     """Light model."""
 
-    name: Optional[str] = None
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
-    cost: int = 0
+    name: str 
+    cost: float = 0
     system_id: Optional[ObjectIdPydantic] = None
 
     def __repr__(self) -> str:
@@ -23,10 +20,8 @@ class Light(FlexibleModel):
 class System(FlexibleModel):
     """System model."""
 
-    name: Optional[str] = None
+    name: str = None
     description: Optional[str] = None
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
 
     # Controlled factors
     target_humidity: int = 0  # %

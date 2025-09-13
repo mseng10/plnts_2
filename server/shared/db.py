@@ -35,17 +35,17 @@ logger = logging.getLogger(__name__)
 
 class DatabaseConfig:
     """Manages database configuration with fallback to environment variables."""
-    
+
     def __init__(
         self,
         mongodb_url: Optional[str] = None,
         mongodb_url_hist: Optional[str] = None,
         db_name: Optional[str] = None,
-        hist_db_name: Optional[str] = None
+        hist_db_name: Optional[str] = None,
     ):
         """
         Initialize database configuration.
-        
+
         Args:
             mongodb_url: Primary MongoDB connection URL
             mongodb_url_hist: History MongoDB connection URL
@@ -60,14 +60,16 @@ class DatabaseConfig:
             "MONGODB_URL_HIST", "mongodb://admin:password123@localhost:27017"
         )
         self.db_name = db_name or os.getenv("MONGODB_DB_NAME", "plnts")
-        self.hist_db_name = hist_db_name or os.getenv("MONGODB_HIST_DB_NAME", "plnts_hist")
-        
+        self.hist_db_name = hist_db_name or os.getenv(
+            "MONGODB_HIST_DB_NAME", "plnts_hist"
+        )
+
         # Initialize clients and databases
         self._client: Optional[MongoClient] = None
         self._client_hist: Optional[MongoClient] = None
         self._db: Optional[Database] = None
         self._hist: Optional[Database] = None
-    
+
     @property
     def client(self) -> MongoClient:
         """Get or create the primary MongoDB client."""
@@ -75,7 +77,7 @@ class DatabaseConfig:
             logger.info(f"Connecting to MongoDB at {self.mongodb_url}")
             self._client = MongoClient(self.mongodb_url)
         return self._client
-    
+
     @property
     def client_hist(self) -> MongoClient:
         """Get or create the history MongoDB client."""
@@ -83,21 +85,21 @@ class DatabaseConfig:
             logger.info(f"Connecting to MongoDB history at {self.mongodb_url_hist}")
             self._client_hist = MongoClient(self.mongodb_url_hist)
         return self._client_hist
-    
+
     @property
     def db(self) -> Database:
         """Get the primary database."""
         if self._db is None:
             self._db = self.client[self.db_name]
         return self._db
-    
+
     @property
     def hist(self) -> Database:
         """Get the history database."""
         if self._hist is None:
             self._hist = self.client_hist[self.hist_db_name]
         return self._hist
-    
+
     def close_connections(self):
         """Close all database connections."""
         if self._client:
@@ -118,17 +120,17 @@ def initialize_database(
     mongodb_url: Optional[str] = None,
     mongodb_url_hist: Optional[str] = None,
     db_name: Optional[str] = None,
-    hist_db_name: Optional[str] = None
+    hist_db_name: Optional[str] = None,
 ) -> DatabaseConfig:
     """
     Initialize the global database configuration.
-    
+
     Args:
         mongodb_url: Primary MongoDB connection URL
         mongodb_url_hist: History MongoDB connection URL
         db_name: Primary database name
         hist_db_name: History database name
-    
+
     Returns:
         DatabaseConfig: The initialized database configuration
     """
@@ -140,7 +142,7 @@ def initialize_database(
 def get_db_config() -> DatabaseConfig:
     """
     Get the current database configuration, initializing with defaults if needed.
-    
+
     Returns:
         DatabaseConfig: The current database configuration
     """
@@ -215,7 +217,7 @@ class Table(Enum):
     def _get_db(self) -> Database:
         """Get the current primary database."""
         return get_db_config().db
-    
+
     def _get_hist_db(self) -> Database:
         """Get the current history database."""
         return get_db_config().hist

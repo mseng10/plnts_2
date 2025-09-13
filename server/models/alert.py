@@ -2,10 +2,8 @@
 Module defining models for alerts.
 """
 
-from datetime import datetime
 from enum import Enum
 from typing import Optional
-from pydantic import Field
 from models import FlexibleModel, ObjectIdPydantic
 
 

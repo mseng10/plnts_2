@@ -2,7 +2,6 @@
 Module for soil mix related models.
 """
 
-from datetime import datetime
 from typing import Dict, Any, List, Optional
 from pydantic import Field, model_validator
 from models import FlexibleModel, ObjectIdPydantic
@@ -11,12 +10,12 @@ from models import FlexibleModel, ObjectIdPydantic
 class Soil(FlexibleModel):
     """Soil types available for mixes."""
 
-    description: Optional[str] = None
-    group: Optional[str] = None
-    name: Optional[str] = None
+    description: str
+    group: str
+    name: str
 
     def __repr__(self) -> str:
-        return f"{self.name or 'Unnamed Soil'}"
+        return f"{self.name}"
 
 
 class SoilPart(FlexibleModel):
@@ -29,8 +28,8 @@ class SoilPart(FlexibleModel):
 class Mix(FlexibleModel):
     """Soil mix model with embedded soil parts."""
 
-    name: Optional[str] = None
-    description: Optional[str] = None
+    name: str
+    description: str
     experimental: bool = False
     soil_parts: List[SoilPart] = Field(default_factory=list)
 

@@ -11,9 +11,9 @@ from models import FlexibleModel, ObjectIdPydantic
 class InventoryItem(FlexibleModel):
     """Inventory item model."""
 
-    name: Optional[str] = None
-    cost: int = 0
-    inventory_type_id: Optional[ObjectIdPydantic] = None
+    name: str
+    cost: float = 0
+    inventory_type_id: ObjectIdPydantic
     data: Dict[str, Any] = Field(default_factory=dict)
 
     # Deprecation fields
@@ -38,4 +38,4 @@ class InventoryType(FlexibleModel):
     """Inventory type model."""
 
     data_schema: Dict[str, Any] = Field(default_factory=dict)
-    name: Optional[str] = None
+    name: str

@@ -23,7 +23,7 @@ class Plant(FlexibleModel):
     cost: float = 0
 
     # Metrics
-    phase: Optional[PHASES] = None
+    phase: PHASES
     size: int = 0  # inches
 
     # Care info
@@ -48,38 +48,34 @@ class Plant(FlexibleModel):
 class CarePlan(FlexibleModel):
     """Care plan model."""
 
-    name: Optional[str] = None
-    watering: Optional[int] = None
-    fertilizing: Optional[int] = None
-    cleaning: Optional[int] = None
-    potting: Optional[int] = None
+    name: str
+    watering: int
+    fertilizing: int
+    cleaning: int
+    potting: int
 
 
 class PlantGenusType(FlexibleModel):
     """Plant genus type model."""
 
-    name: Optional[str] = None
-    description: Optional[str] = None
-    watering: Optional[int] = None
+    name: str
+    description: str
+    watering: int
 
 
 class PlantGenus(FlexibleModel):
     """Plant genus model."""
 
-    name: Optional[str] = None
-    common_name: Optional[str] = None
-    description: Optional[str] = None
-    watering: Optional[int] = None
-    genus_type_id: Optional[ObjectIdPydantic] = None
+    name: str
+    genus_type_id: ObjectIdPydantic
 
 
 class PlantSpecies(FlexibleModel):
     """Plant species model."""
 
-    name: Optional[str] = None
-    common_name: Optional[str] = None
-    description: Optional[str] = None
-    genus_id: Optional[ObjectIdPydantic] = None
+    name: str
+    description: str
+    genus_id: ObjectIdPydantic
 
 
 class CareEventType(Enum):

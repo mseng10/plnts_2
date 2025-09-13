@@ -1,18 +1,17 @@
 """
 Module defining models for todos using the updated FlexibleModel.
 """
+
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from pydantic import Field, field_validator, model_validator
 from models import FlexibleModel, ObjectIdPydantic
-
+from enum import Enum
 
 class Task(FlexibleModel):
     """TODO task"""
 
-    description: Optional[str] = None
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
+    description: str
     resolved_on: Optional[datetime] = None
     resolved: bool = False
 
@@ -33,15 +32,11 @@ class Task(FlexibleModel):
 class Todo(FlexibleModel):
     """TODO model with embedded tasks."""
 
-    # Note: No longer inheriting from BanishableMixin since FlexibleModel now has banishing built-in
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
-    due_on: Optional[datetime] = None
-    name: Optional[str] = None
-    description: Optional[str] = None
+    due_on: datetime
+    name: str
+    description: str
     goal_id: Optional[ObjectIdPydantic] = None  # nullable reference to Goal
 
-    # Embedded tasks - Pydantic handles the conversion automatically
     tasks: List[Task] = Field(default_factory=list)
 
     def __repr__(self):
@@ -91,32 +86,23 @@ class Todo(FlexibleModel):
         """Get all pending tasks"""
         return [task for task in self.tasks if not task.resolved]
 
+class GoalStatus(str, Enum):
+    """Goal status enum"""
+
+    NOT_STARTED = "not_started"
+    IN_PROGRESS = "in_progress"
+    COMPLETED = "completed"
+    ON_HOLD = "on_hold"
+    CANCELLED = "cancelled"
+
 
 class Goal(FlexibleModel):
     """Goal model"""
 
-    # Note: No longer inheriting from BanishableMixin since FlexibleModel now has banishing built-in
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
-    name: Optional[str] = None
-    description: Optional[str] = None
-    due_month: Optional[str] = None  # Consider using a more specific date type
-    status: str = "not_started"
-
-    @field_validator("status")
-    @classmethod
-    def validate_status(cls, v):
-        """Validate status field values"""
-        valid_statuses = {
-            "not_started",
-            "in_progress",
-            "completed",
-            "on_hold",
-            "cancelled",
-        }
-        if v not in valid_statuses:
-            raise ValueError(f"Status must be one of: {valid_statuses}")
-        return v
+    name: str
+    description: str
+    due_month: Optional[str] = None
+    status: GoalStatus = GoalStatus.NOT_STARTED
 
     @field_validator("due_month")
     @classmethod
@@ -131,27 +117,4 @@ class Goal(FlexibleModel):
         return v
 
     def __repr__(self):
-        return f"{self.name or 'Unnamed Goal'} ({self.due_month or 'No due date'})"
-
-    # Helper methods for goal management
-    def mark_completed(self):
-        """Mark this goal as completed"""
-        self.status = "completed"
-        self.updated_on = datetime.now()
-
-    def mark_in_progress(self):
-        """Mark this goal as in progress"""
-        self.status = "in_progress"
-        self.updated_on = datetime.now()
-
-    def put_on_hold(self, cause: Optional[str] = None):
-        """Put this goal on hold"""
-        self.status = "on_hold"
-        self.updated_on = datetime.now()
-        # Could store the cause in a custom field if needed
-
-    def cancel(self, cause: Optional[str] = None):
-        """Cancel this goal"""
-        self.status = "cancelled"
-        self.updated_on = datetime.now()
-        # Could store the cause in a custom field if needed
+        return f"{self.name} ({self.due_month or 'No due date'})"
