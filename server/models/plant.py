@@ -53,10 +53,10 @@ class CarePlan(FlexibleModel):
     created_on: datetime = Field(default_factory=datetime.now)
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
-    watering: Optional[str] = None
-    fertilizing: Optional[str] = None
-    cleaning: Optional[str] = None
-    potting: Optional[str] = None
+    watering: Optional[int] = None
+    fertilizing: Optional[int] = None
+    cleaning: Optional[int] = None
+    potting: Optional[int] = None
 
 
 class PlantGenusType(FlexibleModel):
@@ -66,7 +66,7 @@ class PlantGenusType(FlexibleModel):
     updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
     description: Optional[str] = None
-    watering: Optional[str] = None
+    watering: Optional[int] = None
 
 
 class PlantGenus(FlexibleModel):
@@ -77,7 +77,7 @@ class PlantGenus(FlexibleModel):
     name: Optional[str] = None
     common_name: Optional[str] = None
     description: Optional[str] = None
-    watering: Optional[str] = None
+    watering: Optional[int] = None
     genus_type_id: Optional[ObjectIdPydantic] = None
 
 

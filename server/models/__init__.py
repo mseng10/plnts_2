@@ -2,6 +2,7 @@
 from typing import List, Any, Dict, Annotated, Optional
 import numpy as np
 import csv
+from enum import Enum
 from bson import ObjectId
 from datetime import datetime
 from pydantic import BaseModel, Field, ConfigDict, BeforeValidator
@@ -118,6 +119,19 @@ class FlexibleModel(BaseModel):
         Converts the model to a dictionary suitable for MongoDB storage.
 
         The `by_alias=True` argument ensures that the `id` field is correctly
-        serialized back to `_id`.
+        serialized back to `_id`. Enum values are automatically converted to strings.
         """
-        return self.model_dump(by_alias=True)
+        data = self.model_dump(by_alias=True)
+        
+        # Convert enum values to strings
+        def convert_enums(obj):
+            if isinstance(obj, dict):
+                return {key: convert_enums(value) for key, value in obj.items()}
+            elif isinstance(obj, list):
+                return [convert_enums(item) for item in obj]
+            elif isinstance(obj, Enum):
+                return obj.value
+            else:
+                return obj
+        
+        return convert_enums(data)

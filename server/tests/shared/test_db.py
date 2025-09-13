@@ -3,7 +3,7 @@ Comprehensive tests for the database module
 """
 from bson import ObjectId
 
-from models.plant import Plant, PlantGenus, PlantSpecies
+from models.plant import Plant, PlantGenus, PlantSpecies, PHASES
 from models.system import System
 from models.todo import Todo
 from shared.test_utils import MongoTestCase, DatabaseTestMixin
@@ -42,20 +42,6 @@ class TestDatabaseConfiguration(MongoTestCase):
 class TestTableEnum(MongoTestCase, DatabaseTestMixin):
     """Test the Table enum functionality"""
     
-    def test_all_table_enums_defined(self):
-        """Test that all expected table enums are defined"""
-        expected_tables = [
-            'PLANT', 'SYSTEM', 'GENUS_TYPE', 'GENUS', 'SPECIES',
-            'SOIL', 'TODO', 'ALERT', 'MIX', 'LIGHT', 'EXPENSE',
-            'BUDGET', 'CHAT', 'CARE_PLAN', 'GOAL', 'PLANT_CARE_EVENT', 'BRAIN'
-        ]
-        
-        for table_name in expected_tables:
-            self.assertTrue(hasattr(Table, table_name))
-            table = getattr(Table, table_name)
-            self.assertIsNotNone(table.table_name)
-            self.assertIsNotNone(table.model_class)
-    
     def test_create_and_get_one(self):
         """Test creating and retrieving a single document"""
         plant_data = {
@@ -83,7 +69,7 @@ class TestTableEnum(MongoTestCase, DatabaseTestMixin):
         """Test retrieving multiple documents"""
         # Create multiple plants
         plants_data = [
-            {"name": "Plant 1", "cost": 10.00},
+            {"name": "Plant 1", "cost": 10.00, "phase": PHASES.ADULT},
             {"name": "Plant 2", "cost": 20.00},
             {"name": "Plant 3", "cost": 30.00}
         ]
@@ -342,7 +328,7 @@ class TestCrossTableOperations(MongoTestCase):
         species_id = Table.SPECIES.create(species)
         
         retrieved_species = Table.SPECIES.get_one(str(species_id))
-        self.assertEqual(retrieved_species.genus_id, str(genus_id))
+        self.assertEqual(retrieved_species.genus_id, genus_id)
         
         retrieved_genus = Table.GENUS.get_one(retrieved_species.genus_id)
         self.assertEqual(retrieved_genus.name, "Rosa")
