@@ -1,6 +1,7 @@
 """
 Module for soil mix related models.
 """
+
 from datetime import datetime
 from typing import Dict, Any, List, Optional
 from pydantic import Field, model_validator
@@ -10,7 +11,6 @@ from models import FlexibleModel, ObjectIdPydantic
 class Soil(FlexibleModel):
     """Soil types available for mixes."""
 
-    created_on: datetime = Field(default_factory=datetime.now)
     description: Optional[str] = None
     group: Optional[str] = None
     name: Optional[str] = None
@@ -23,8 +23,6 @@ class SoilPart(FlexibleModel):
     """Soil part for mixes."""
 
     soil_id: Optional[ObjectIdPydantic] = None
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
     parts: Optional[int] = None
 
 
@@ -33,8 +31,6 @@ class Mix(FlexibleModel):
 
     name: Optional[str] = None
     description: Optional[str] = None
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
     experimental: bool = False
     soil_parts: List[SoilPart] = Field(default_factory=list)
 

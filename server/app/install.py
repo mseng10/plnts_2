@@ -2,6 +2,7 @@
 Process dedicated to installing static data (e.g. genuses, species, etc).
 Could eventually see this moving to cloud.
 """
+
 import sys
 import os
 from typing import List, Tuple
@@ -63,6 +64,6 @@ if __name__ == "__main__":
         mongodb_url="mongodb://admin:password123@localhost:27017",
         mongodb_url_hist="mongodb://admin:password123@localhost:27017",
         db_name="plnts",
-        hist_db_name="plnts_hist"
+        hist_db_name="plnts_hist",
     )
     install()

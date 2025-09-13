@@ -1,6 +1,7 @@
 """
 This module handles background tasks for the application using APScheduler.
 """
+
 import time
 from datetime import datetime, timedelta
 from typing import List, Dict
@@ -8,7 +9,7 @@ from flask import Flask
 from flask_apscheduler import APScheduler
 from models.plant import Plant, CarePlan, PlantCareEvent, CareEventType
 from models.alert import Alert, AlertTypes
-from models.app import Brain
+from models.app import Brain, STATUS
 from shared.db import Table
 from shared.logger import logger
 
@@ -146,7 +147,7 @@ def manage_plant_alerts() -> None:
 
         # Update brain with successful completion
         duration = time.time() - start_time
-        brain.update_plant_alert_check(duration, "success")
+        brain.update_plant_alert_check(duration, STATUS.SUCCESS)
         Table.BRAIN.update(str(brain.id), brain)
 
     except Exception as e:
@@ -154,7 +155,7 @@ def manage_plant_alerts() -> None:
 
         # Update brain with failure status
         duration = time.time() - start_time
-        brain.update_plant_alert_check(duration, "failed")
+        brain.update_plant_alert_check(duration, STATUS.FAILED)
         Table.BRAIN.update(str(brain.id), brain)
 
 
@@ -234,7 +235,7 @@ def detect_plant_care_events() -> None:
 
         # Update brain with successful completion
         duration = time.time() - start_time
-        brain.update_plant_care_event_check(duration, "success")
+        brain.update_plant_care_event_check(duration, STATUS.SUCCESS)
         Table.BRAIN.update(str(brain.id), brain)
 
     except Exception as e:
@@ -242,7 +243,7 @@ def detect_plant_care_events() -> None:
 
         # Update brain with failure status
         duration = time.time() - start_time
-        brain.update_plant_care_event_check(duration, "failed")
+        brain.update_plant_care_event_check(duration, STATUS.FAILED)
         Table.BRAIN.update(str(brain.id), brain)
 
 

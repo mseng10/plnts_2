@@ -1,7 +1,13 @@
 from datetime import datetime
 from typing import Optional
-from pydantic import Field
 from models import FlexibleModel
+from enum import Enum
+
+
+class STATUS(Enum):
+    SUCCESS = "success"
+    FAILED = "failed"
+    NEVER_RAN = "never_ran"
 
 
 class Brain(FlexibleModel):
@@ -9,14 +15,11 @@ class Brain(FlexibleModel):
 
     plant_alert_check_last_run: Optional[datetime] = None
     plant_alert_check_duration_seconds: Optional[float] = None
-    plant_alert_check_status: str = "never_run"
+    plant_alert_check_status: STATUS = STATUS.NEVER_RAN
 
     plant_care_event_check_last_run: Optional[datetime] = None
     plant_care_event_check_duration_seconds: Optional[float] = None
-    plant_care_event_check_status: str = "never_run"
-
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
+    plant_care_event_check_status: STATUS = STATUS.NEVER_RAN
 
     @classmethod
     def get_brain(cls) -> "Brain":
@@ -33,7 +36,7 @@ class Brain(FlexibleModel):
             return brain
 
     def update_plant_alert_check(
-        self, duration_seconds: Optional[float] = None, status: str = "success"
+        self, duration_seconds: Optional[float] = None, status: STATUS = STATUS.SUCCESS
     ):
         """Update plant alert check tracking."""
         self.plant_alert_check_last_run = datetime.now()
@@ -42,7 +45,7 @@ class Brain(FlexibleModel):
         self.updated_on = datetime.now()
 
     def update_plant_care_event_check(
-        self, duration_seconds: Optional[float] = None, status: str = "success"
+        self, duration_seconds: Optional[float] = None, status: STATUS = STATUS.SUCCESS
     ):
         """Update plant care event check tracking."""
         self.plant_care_event_check_last_run = datetime.now()

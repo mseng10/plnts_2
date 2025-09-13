@@ -1,6 +1,7 @@
 """
 Module defining models for plants.
 """
+
 from datetime import datetime
 from enum import Enum
 from typing import Optional, Dict, Any
@@ -19,9 +20,7 @@ class PHASES(Enum):
 class Plant(FlexibleModel):
     """Plant model."""
 
-    created_on: datetime = Field(default_factory=datetime.now)
     cost: float = 0
-    updated_on: datetime = Field(default_factory=datetime.now)
 
     # Metrics
     phase: Optional[PHASES] = None
@@ -42,7 +41,6 @@ class Plant(FlexibleModel):
     mix_id: Optional[ObjectIdPydantic] = None
     description: Optional[str] = None
 
-
     def __repr__(self) -> str:
         return f"{self.id}"
 
@@ -50,8 +48,6 @@ class Plant(FlexibleModel):
 class CarePlan(FlexibleModel):
     """Care plan model."""
 
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
     watering: Optional[int] = None
     fertilizing: Optional[int] = None
@@ -62,8 +58,6 @@ class CarePlan(FlexibleModel):
 class PlantGenusType(FlexibleModel):
     """Plant genus type model."""
 
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
     description: Optional[str] = None
     watering: Optional[int] = None
@@ -72,8 +66,6 @@ class PlantGenusType(FlexibleModel):
 class PlantGenus(FlexibleModel):
     """Plant genus model."""
 
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
     common_name: Optional[str] = None
     description: Optional[str] = None
@@ -84,8 +76,6 @@ class PlantGenus(FlexibleModel):
 class PlantSpecies(FlexibleModel):
     """Plant species model."""
 
-    created_on: datetime = Field(default_factory=datetime.now)
-    updated_on: datetime = Field(default_factory=datetime.now)
     name: Optional[str] = None
     common_name: Optional[str] = None
     description: Optional[str] = None
@@ -107,7 +97,6 @@ class PlantCareEvent(FlexibleModel):
     plant_id: ObjectIdPydantic
     event_type: CareEventType
     performed_on: datetime = Field(default_factory=datetime.now)
-    created_on: datetime = Field(default_factory=datetime.now)
 
     # Optional metadata
     notes: Optional[str] = None

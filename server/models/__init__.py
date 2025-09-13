@@ -46,6 +46,8 @@ class FlexibleModel(BaseModel):
     # The `id` field is mapped to `_id` for MongoDB compatibility.
     # A new ObjectId is created for new instances via `default_factory`.
     id: ObjectIdPydantic = Field(default_factory=ObjectId, alias="_id")
+    created_on: datetime = Field(default_factory=datetime.now)
+    updated_on: datetime = Field(default_factory=datetime.now)
 
     # Banishing fields for soft deletion
     banished: bool = False
@@ -122,7 +124,7 @@ class FlexibleModel(BaseModel):
         serialized back to `_id`. Enum values are automatically converted to strings.
         """
         data = self.model_dump(by_alias=True)
-        
+
         # Convert enum values to strings
         def convert_enums(obj):
             if isinstance(obj, dict):
@@ -133,5 +135,5 @@ class FlexibleModel(BaseModel):
                 return obj.value
             else:
                 return obj
-        
+
         return convert_enums(data)
