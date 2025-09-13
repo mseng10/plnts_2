@@ -12,6 +12,10 @@ export const CARD_STYLE = {
   opacity: 0.7,
 };
 
+export const ROOM_STYLE = {
+  opacity: 0.7,
+};
+
 export const MODAL_STYLE = {
   display: 'flex',
   alignItems: 'center',

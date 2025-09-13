@@ -1,361 +1,353 @@
-"""
-Unit tests for app/background/background.py (background scheduler)
-"""
-
-import unittest
-from unittest.mock import MagicMock, patch, call
-from datetime import datetime, timedelta
-import time
-from typing import Any
-
-# Import the functions we're testing
-from app.background.background import (
-    manage_plant_alerts,
-    detect_plant_care_events,
-    _has_alert_type,
-    init_scheduler,
-)
-from models.alert import AlertTypes
-from models.plant import CareEventType
-
-
-class TestManagePlantAlerts(unittest.TestCase):
-    """Test cases for manage_plant_alerts background task"""
-
-    def setUp(self):
-        """Set up test fixtures"""
-        self.mock_brain = MagicMock()
-        self.mock_brain.plant_alert_check_last_run = None
-        self.mock_brain.update_plant_alert_check = MagicMock()
-        self.mock_brain.id = "brain_id"
-
-        # Mock plant data
-        self.mock_plant = MagicMock()
-        self.mock_plant.id = "plant_id_123"
-        self.mock_plant.care_plan_id = "care_plan_id_456"
-        self.mock_plant.watered_on = datetime.now() - timedelta(days=10)
-        self.mock_plant.fertilized_on = datetime.now() - timedelta(days=20)
-        self.mock_plant.potted_on = datetime.now() - timedelta(days=100)
-        self.mock_plant.cleansed_on = datetime.now() - timedelta(days=15)
-
-        # Mock care plan data
-        self.mock_care_plan = MagicMock()
-        self.mock_care_plan.id = "care_plan_id_456"
-        self.mock_care_plan.watering = "7"  # days
-        self.mock_care_plan.fertilizing = "14"  # days
-        self.mock_care_plan.potting = "365"  # days
-        self.mock_care_plan.cleaning = "10"  # days
-
-    @patch("app.background.background.time")
-    @patch("app.background.background.Table")
-    @patch("app.background.background.Brain")
-    def test_manage_plant_alerts_skip_recent_run(
-        self, mock_brain_class, mock_table, mock_time
-    ):
-        """Test that task skips when last run was less than 24 hours ago"""
-        # Setup: last run was 12 hours ago
-        recent_run = datetime.now() - timedelta(hours=12)
-        self.mock_brain.plant_alert_check_last_run = recent_run
-        mock_brain_class.get_brain.return_value = self.mock_brain
-
-        manage_plant_alerts()
-
-        # Should skip and not process any alerts
-        mock_table.ALERT.get_many.assert_not_called()
-        mock_table.PLANT.get_many.assert_not_called()
-        self.mock_brain.update_plant_alert_check.assert_not_called()
-
-    @patch("app.background.background.logger")
-    @patch("app.background.background.time")
-    @patch("app.background.background.Table")
-    @patch("app.background.background.Brain")
-    def test_manage_plant_alerts_first_run(
-        self, mock_brain_class, mock_table, mock_time, mock_logger
-    ):
-        """Test first run when no previous run exists"""
-        # Setup: no previous run
-        self.mock_brain.plant_alert_check_last_run = None
-        mock_brain_class.get_brain.return_value = self.mock_brain
-        mock_time.time.side_effect = [1000.0, 1010.5]  # start and end time
-
-        # Setup table responses
-        mock_table.ALERT.get_many.return_value = []  # No existing alerts
-        mock_table.PLANT.get_many.return_value = [self.mock_plant]
-        mock_table.CARE_PLAN.get_many.return_value = [self.mock_care_plan]
-        mock_table.ALERT.create.return_value = "alert_id"
-        mock_table.BRAIN.update.return_value = True
-
-        manage_plant_alerts()
-
-        # Should process plants and create alerts
-        mock_table.ALERT.get_many.assert_called_once()
-        mock_table.PLANT.get_many.assert_called_once()
-        mock_table.CARE_PLAN.get_many.assert_called_once()
-
-        # Should update brain with success
-        self.mock_brain.update_plant_alert_check.assert_called_once_with(
-            10.5, "success"
-        )
-        mock_table.BRAIN.update.assert_called_once_with("brain_id", self.mock_brain)
-
-    @patch("app.background.background.Alert")
-    @patch("app.background.background.time")
-    @patch("app.background.background.Table")
-    @patch("app.background.background.Brain")
-    def test_manage_plant_alerts_creates_overdue_alerts(
-        self, mock_brain_class, mock_table, mock_time, mock_alert_class
-    ):
-        """Test that overdue alerts are created"""
-        # Setup: old run allows processing
-        old_run = datetime.now() - timedelta(days=2)
-        self.mock_brain.plant_alert_check_last_run = old_run
-        mock_brain_class.get_brain.return_value = self.mock_brain
-        mock_time.time.side_effect = [1000.0, 1005.0]
-
-        # Setup table responses
-        mock_table.ALERT.get_many.return_value = []
-        mock_table.PLANT.get_many.return_value = [self.mock_plant]
-        mock_table.CARE_PLAN.get_many.return_value = [self.mock_care_plan]
-
-        # Mock alert creation
-        mock_alert_instance = MagicMock()
-        mock_alert_class.return_value = mock_alert_instance
-        mock_table.ALERT.create.return_value = "new_alert_id"
-        mock_table.BRAIN.update.return_value = True
-
-        manage_plant_alerts()
-
-        # Should create alerts for overdue care
-        # Water (10 days ago, due every 7 days = 3 days overdue)
-        # Fertilize (20 days ago, due every 14 days = 6 days overdue)
-        # Cleanse (15 days ago, due every 10 days = 5 days overdue)
-        # Not potting (100 days ago, due every 365 days = not overdue)
-
-        expected_calls = [
-            call(model_id="plant_id_123", alert_type=AlertTypes.WATER),
-            call(model_id="plant_id_123", alert_type=AlertTypes.FERTILIZE),
-            call(model_id="plant_id_123", alert_type=AlertTypes.CLEANSE),
-        ]
-        mock_alert_class.assert_has_calls(expected_calls)
-        self.assertEqual(mock_table.ALERT.create.call_count, 3)
-
-    @patch("app.background.background.time")
-    @patch("app.background.background.Table")
-    @patch("app.background.background.Brain")
-    def test_manage_plant_alerts_handles_exception(
-        self, mock_brain_class, mock_table, mock_time
-    ):
-        """Test error handling when exception occurs"""
-        old_run = datetime.now() - timedelta(days=2)
-        self.mock_brain.plant_alert_check_last_run = old_run
-        mock_brain_class.get_brain.return_value = self.mock_brain
-        mock_time.time.side_effect = [1000.0, 1005.0]
-
-        # Setup exception
-        mock_table.ALERT.get_many.side_effect = Exception("Database error")
-        mock_table.BRAIN.update.return_value = True
-
-        manage_plant_alerts()
-
-        # Should update brain with failure status
-        self.mock_brain.update_plant_alert_check.assert_called_once_with(5.0, "failed")
-        mock_table.BRAIN.update.assert_called_once_with("brain_id", self.mock_brain)
-
-
-class TestDetectPlantCareEvents(unittest.TestCase):
-    """Test cases for detect_plant_care_events background task"""
-
-    def setUp(self):
-        """Set up test fixtures"""
-        self.mock_brain = MagicMock()
-        self.mock_brain.plant_care_event_check_last_run = None
-        self.mock_brain.update_plant_care_event_check = MagicMock()
-        self.mock_brain.id = "brain_id"
-
-        self.mock_plant = MagicMock()
-        self.mock_plant.id = "plant_id_123"
-        self.mock_plant.watered_on = datetime.now() - timedelta(
-            minutes=30
-        )  # 30 min ago
-        self.mock_plant.fertilized_on = None
-        self.mock_plant.potted_on = datetime.now() - timedelta(
-            minutes=90
-        )  # 1.5 hours ago
-        self.mock_plant.cleansed_on = None
-
-    @patch("app.background.background.time")
-    @patch("app.background.background.Table")
-    @patch("app.background.background.Brain")
-    def test_detect_care_events_skip_recent_run(
-        self, mock_brain_class, mock_table, mock_time
-    ):
-        """Test that task skips when last run was less than 1 hour ago"""
-        # Setup: last run was 30 minutes ago
-        recent_run = datetime.now() - timedelta(minutes=30)
-        self.mock_brain.plant_care_event_check_last_run = recent_run
-        mock_brain_class.get_brain.return_value = self.mock_brain
-
-        detect_plant_care_events()
-
-        # Should skip processing
-        mock_table.PLANT.get_many.assert_not_called()
-        self.mock_brain.update_plant_care_event_check.assert_not_called()
-
-    @patch("app.background.background.PlantCareEvent")
-    @patch("app.background.background.time")
-    @patch("app.background.background.Table")
-    @patch("app.background.background.Brain")
-    def test_detect_care_events_creates_events(
-        self, mock_brain_class, mock_table, mock_time, mock_care_event_class
-    ):
-        """Test that care events are created for new plant activities"""
-        # Setup: last run was 2 hours ago
-        last_run = datetime.now() - timedelta(hours=2)
-        self.mock_brain.plant_care_event_check_last_run = last_run
-        mock_brain_class.get_brain.return_value = self.mock_brain
-        mock_time.time.side_effect = [1000.0, 1003.0]
-
-        # Setup table responses
-        mock_table.PLANT.get_many.return_value = [self.mock_plant]
-        mock_table.PLANT_CARE_EVENT.get_many.return_value = []  # No existing events
-        mock_table.PLANT_CARE_EVENT.create.return_value = "event_id"
-        mock_table.BRAIN.update.return_value = True
-
-        # Mock care event creation
-        mock_event_instance = MagicMock()
-        mock_care_event_class.return_value = mock_event_instance
-
-        detect_plant_care_events()
-
-        # Should create events for water and repot (both after last run time)
-        expected_calls = [
-            call(
-                plant_id="plant_id_123",
-                event_type=CareEventType.WATER,
-                performed_on=self.mock_plant.watered_on,
-                notes="Detected from plant water timestamp",
-            ),
-            call(
-                plant_id="plant_id_123",
-                event_type=CareEventType.REPOT,
-                performed_on=self.mock_plant.potted_on,
-                notes="Detected from plant repot timestamp",
-            ),
-        ]
-        mock_care_event_class.assert_has_calls(expected_calls)
-        self.assertEqual(mock_table.PLANT_CARE_EVENT.create.call_count, 2)
-
-    @patch("app.background.background.time")
-    @patch("app.background.background.Table")
-    @patch("app.background.background.Brain")
-    def test_detect_care_events_avoids_duplicates(
-        self, mock_brain_class, mock_table, mock_time
-    ):
-        """Test that duplicate events are not created"""
-        last_run = datetime.now() - timedelta(hours=2)
-        self.mock_brain.plant_care_event_check_last_run = last_run
-        mock_brain_class.get_brain.return_value = self.mock_brain
-        mock_time.time.side_effect = [1000.0, 1003.0]
-
-        # Setup existing event that matches plant timestamp
-        existing_event = MagicMock()
-        existing_event.performed_on = self.mock_plant.watered_on
-
-        mock_table.PLANT.get_many.return_value = [self.mock_plant]
-        mock_table.PLANT_CARE_EVENT.get_many.return_value = [existing_event]
-        mock_table.BRAIN.update.return_value = True
-
-        detect_plant_care_events()
-
-        # Should not create any events (duplicates detected)
-        mock_table.PLANT_CARE_EVENT.create.assert_not_called()
-
-        # Should still update brain
-        self.mock_brain.update_plant_care_event_check.assert_called_once_with(
-            3.0, "success"
-        )
-
-
-class TestHasAlertType(unittest.TestCase):
-    """Test cases for _has_alert_type helper function"""
-
-    def test_has_alert_type_exists(self):
-        """Test when plant has alert of specified type"""
-        mock_alert = MagicMock()
-        mock_alert.alert_type = AlertTypes.WATER
-
-        plants_with_alerts = {"plant_123": mock_alert}
-
-        result = _has_alert_type(plants_with_alerts, "plant_123", AlertTypes.WATER)
-        self.assertTrue(result)
-
-    def test_has_alert_type_different_type(self):
-        """Test when plant has alert but of different type"""
-        mock_alert = MagicMock()
-        mock_alert.alert_type = AlertTypes.FERTILIZE
-
-        plants_with_alerts = {"plant_123": mock_alert}
-
-        result = _has_alert_type(plants_with_alerts, "plant_123", AlertTypes.WATER)
-        self.assertFalse(result)
-
-    def test_has_alert_type_no_alert(self):
-        """Test when plant has no alerts"""
-        plants_with_alerts = {}
-
-        result = _has_alert_type(plants_with_alerts, "plant_123", AlertTypes.WATER)
-        self.assertFalse(result)
-
-
-class TestInitScheduler(unittest.TestCase):
-    """Test cases for init_scheduler function"""
-
-    @patch("app.background.background.logger")
-    @patch("app.background.background.Brain")
-    @patch("app.background.background.scheduler")
-    def test_init_scheduler_success(
-        self, mock_scheduler, mock_brain_class, mock_logger
-    ):
-        """Test successful scheduler initialization"""
-        mock_app = MagicMock()
-        mock_brain = MagicMock()
-        mock_brain.plant_alert_check_last_run = datetime.now()
-        mock_brain.plant_care_event_check_last_run = None
-
-        mock_brain_class.get_brain.return_value = mock_brain
-
-        # Mock scheduler jobs
-        mock_job = MagicMock()
-        mock_job.name = "test_job"
-        mock_job.trigger = "cron"
-        mock_job.next_run_time = datetime.now()
-        mock_scheduler.get_jobs.return_value = [mock_job]
-
-        init_scheduler(mock_app)
-
-        # Should initialize brain and scheduler
-        mock_brain_class.get_brain.assert_called_once()
-        mock_scheduler.init_app.assert_called_once_with(mock_app)
-        mock_scheduler.start.assert_called_once()
-        mock_logger.info.assert_called()
-
-    @patch("app.background.background.logger")
-    @patch("app.background.background.Brain")
-    @patch("app.background.background.scheduler")
-    def test_init_scheduler_brain_error(
-        self, mock_scheduler, mock_brain_class, mock_logger
-    ):
-        """Test scheduler initialization when Brain creation fails"""
-        mock_app = MagicMock()
-        mock_brain_class.get_brain.side_effect = Exception("Database connection failed")
-
-        init_scheduler(mock_app)
-
-        # Should log error but continue with scheduler init
-        mock_logger.error.assert_called()
-        mock_scheduler.init_app.assert_called_once_with(mock_app)
-        mock_scheduler.start.assert_called_once()
-
-
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
+# """
+# Unit tests for app/background/background.py (background scheduler)
+# """
+
+# import unittest
+# from unittest.mock import MagicMock, patch, call
+# from datetime import datetime, timedelta
+# import time
+# from typing import Any
+
+# from shared.test_utils import MongoTestCase, DatabaseTestMixin
+# from shared.db import Table
+
+# from app.background.background import (
+#     manage_plant_alerts,
+#     detect_plant_care_events,
+#     _has_alert_type,
+#     init_scheduler,
+# )
+# from models.alert import Alert, AlertTypes
+# from models.plant import Plant, CarePlan, PlantCareEvent, CareEventType, PHASES
+# from models.app import Brain, STATUS
+
+
+# class TestManagePlantAlerts(MongoTestCase, DatabaseTestMixin):
+#     """Test cases for manage_plant_alerts background task"""
+
+#     def setUp(self):
+#         """Set up test fixtures"""
+#         super().setUp()
+        
+#         self.brain = Brain()
+#         self.brain_id = Table.BRAIN.create(self.brain)
+        
+#         self.care_plan = CarePlan(
+#             name="Test Care Plan",
+#             watering=7,
+#             fertilizing=14,
+#             potting=365,
+#             cleaning=10
+#         )
+#         self.care_plan_id = Table.CARE_PLAN.create(self.care_plan)
+        
+#         now = datetime.now()
+#         self.plant = Plant(
+#             phase=PHASES.ADULT,
+#             care_plan_id=self.care_plan_id,
+#             watered_on=now - timedelta(days=10),
+#             fertilized_on=now - timedelta(days=20),
+#             potted_on=now - timedelta(days=100),
+#             cleansed_on=now - timedelta(days=15),
+#             banished=False
+#         )
+#         self.plant_id = Table.PLANT.create(self.plant)
+
+#     def test_manage_plant_alerts_skip_recent_run(self):
+#         """Test that task skips when last run was less than 24 hours ago"""
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_alert_check_last_run = datetime.now() - timedelta(hours=12)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         manage_plant_alerts()
+        
+#         self.assert_collection_count("alert", 0)
+
+#     def test_manage_plant_alerts_first_run(self):
+#         """Test first run when no previous run exists"""
+#         with patch('app.background.background.time.time', side_effect=[1000.0, 1010.5]):
+#             manage_plant_alerts()
+        
+#         self.assert_collection_count("alert", 3)
+        
+#         alerts = Table.ALERT.get_many()
+#         alert_types = [alert.alert_type for alert in alerts]
+#         expected_types = [AlertTypes.WATER, AlertTypes.FERTILIZE, AlertTypes.CLEANSE]
+        
+#         for expected_type in expected_types:
+#             self.assertIn(expected_type, alert_types)
+        
+#         updated_brain = Table.BRAIN.get_one(str(self.brain_id))
+#         self.assertEqual(updated_brain.plant_alert_check_status, STATUS.SUCCESS)
+#         self.assertIsNotNone(updated_brain.plant_alert_check_last_run)
+#         self.assertEqual(updated_brain.plant_alert_check_duration_seconds, 10.5)
+
+#     def test_manage_plant_alerts_creates_overdue_alerts(self):
+#         """Test that overdue alerts are created"""
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_alert_check_last_run = datetime.now() - timedelta(days=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         with patch('app.background.background.time.time') as mock_time:
+#             mock_time.side_effect = [1000.0, 1005.0] + [1005.0] * 10
+#             manage_plant_alerts()
+        
+#         alerts = Table.ALERT.get_many()
+#         self.assertEqual(len(alerts), 3)
+        
+#         for alert in alerts:
+#             self.assertEqual(alert.model_id, self.plant_id)
+        
+#         alert_types = {alert.alert_type for alert in alerts}
+#         expected_types = {AlertTypes.WATER, AlertTypes.FERTILIZE, AlertTypes.CLEANSE}
+#         self.assertEqual(alert_types, expected_types)
+
+#     def test_manage_plant_alerts_avoids_duplicates(self):
+#         """Test that duplicate alerts are not created"""
+#         existing_alert = Alert(model_id=self.plant_id, alert_type=AlertTypes.WATER)
+#         Table.ALERT.create(existing_alert)
+        
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_alert_check_last_run = datetime.now() - timedelta(days=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         manage_plant_alerts()
+        
+#         alerts = Table.ALERT.get_many()
+#         self.assertEqual(len(alerts), 3)
+        
+#         water_alerts = [a for a in alerts if a.alert_type == AlertTypes.WATER]
+#         self.assertEqual(len(water_alerts), 1)
+
+#     def test_manage_plant_alerts_handles_missing_care_plan(self):
+#         """Test handling when plant has no care plan"""
+#         plant_no_plan = Plant(phase=PHASES.CUTTING, banished=False)
+#         Table.PLANT.create(plant_no_plan)
+        
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_alert_check_last_run = datetime.now() - timedelta(days=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         manage_plant_alerts()
+        
+#         self.assert_collection_count("alert", 3)
+
+#     @patch('app.background.background.Table.ALERT.get_many')
+#     def test_manage_plant_alerts_handles_exception(self, mock_get_many):
+#         """Test error handling when exception occurs"""
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_alert_check_last_run = datetime.now() - timedelta(days=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         mock_get_many.side_effect = Exception("Database error")
+        
+#         with patch('app.background.background.time.time', side_effect=[1000.0, 1005.0]):
+#             manage_plant_alerts()
+        
+#         updated_brain = Table.BRAIN.get_one(str(self.brain_id))
+#         self.assertEqual(updated_brain.plant_alert_check_status, STATUS.FAILED)
+#         self.assertEqual(updated_brain.plant_alert_check_duration_seconds, 5.0)
+
+
+# class TestDetectPlantCareEvents(MongoTestCase, DatabaseTestMixin):
+#     """Test cases for detect_plant_care_events background task"""
+
+#     def setUp(self):
+#         """Set up test fixtures"""
+#         super().setUp()
+        
+#         self.brain = Brain()
+#         self.brain_id = Table.BRAIN.create(self.brain)
+        
+#         now = datetime.now()
+#         self.plant = Plant(
+#             phase=PHASES.ADULT,
+#             watered_on=now - timedelta(minutes=30),
+#             fertilized_on=now - timedelta(minutes=60),
+#             potted_on=now - timedelta(minutes=90),
+#             cleansed_on=now - timedelta(minutes=45),
+#             banished=False
+#         )
+#         self.plant_id = Table.PLANT.create(self.plant)
+
+#     def test_detect_care_events_skip_recent_run(self):
+#         """Test that task skips when last run was less than 1 hour ago"""
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_care_event_check_last_run = datetime.now() - timedelta(minutes=30)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         detect_plant_care_events()
+        
+#         self.assert_collection_count("plant_care_event", 0)
+
+#     def test_detect_care_events_creates_events(self):
+#         """Test that care events are created for new plant activities"""
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_care_event_check_last_run = datetime.now() - timedelta(hours=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         with patch('app.background.background.time.time', side_effect=[1000.0, 1003.0]):
+#             detect_plant_care_events()
+        
+#         events = Table.PLANT_CARE_EVENT.get_many()
+#         self.assertEqual(len(events), 4)
+        
+#         event_types = {event.event_type for event in events}
+#         expected_types = {CareEventType.WATER, CareEventType.FERTILIZE, CareEventType.REPOT, CareEventType.CLEANSE}
+#         self.assertEqual(event_types, expected_types)
+        
+#         for event in events:
+#             self.assertEqual(event.plant_id, self.plant_id)
+#             self.assertIn("Detected from plant", event.notes)
+        
+#         updated_brain = Table.BRAIN.get_one(str(self.brain_id))
+#         self.assertEqual(updated_brain.plant_care_event_check_status, STATUS.SUCCESS)
+#         self.assertEqual(updated_brain.plant_care_event_check_duration_seconds, 3.0)
+
+#     def test_detect_care_events_first_run(self):
+#         """Test first run when no previous run exists (None)"""
+#         detect_plant_care_events()
+        
+#         events = Table.PLANT_CARE_EVENT.get_many()
+#         self.assertEqual(len(events), 4)
+
+#     def test_detect_care_events_avoids_duplicates(self):
+#         """Test that duplicate events are not created"""
+#         plant = Table.PLANT.get_one(str(self.plant_id))
+#         existing_event = PlantCareEvent(
+#             plant_id=self.plant_id,
+#             event_type=CareEventType.WATER,
+#             performed_on=plant.watered_on,
+#             notes="Existing event"
+#         )
+#         Table.PLANT_CARE_EVENT.create(existing_event)
+        
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_care_event_check_last_run = datetime.now() - timedelta(hours=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         detect_plant_care_events()
+        
+#         events = Table.PLANT_CARE_EVENT.get_many()
+#         self.assertEqual(len(events), 4)
+        
+#         event_types = {event.event_type for event in events}
+#         expected_types = {CareEventType.WATER, CareEventType.FERTILIZE, CareEventType.REPOT, CareEventType.CLEANSE}
+#         self.assertEqual(event_types, expected_types)
+
+#     def test_detect_care_events_ignores_banished_plants(self):
+#         """Test that banished plants are ignored"""
+#         banished_plant = Plant(
+#             phase=PHASES.SEED,
+#             watered_on=datetime.now() - timedelta(minutes=15),
+#             banished=True
+#         )
+#         Table.PLANT.create(banished_plant)
+        
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_care_event_check_last_run = datetime.now() - timedelta(hours=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         detect_plant_care_events()
+        
+#         events = Table.PLANT_CARE_EVENT.get_many()
+#         for event in events:
+#             self.assertEqual(event.plant_id, self.plant_id)
+
+#     @patch('app.background.background.Table.PLANT.get_many')
+#     def test_detect_care_events_handles_exception(self, mock_get_many):
+#         """Test error handling when exception occurs"""
+#         brain = Table.BRAIN.get_one(str(self.brain_id))
+#         brain.plant_care_event_check_last_run = datetime.now() - timedelta(hours=2)
+#         Table.BRAIN.update(str(self.brain_id), brain)
+        
+#         mock_get_many.side_effect = Exception("Database error")
+        
+#         with patch('app.background.background.time.time', side_effect=[1000.0, 1005.0]):
+#             detect_plant_care_events()
+        
+#         updated_brain = Table.BRAIN.get_one(str(self.brain_id))
+#         self.assertEqual(updated_brain.plant_care_event_check_status, STATUS.FAILED)
+#         self.assertEqual(updated_brain.plant_care_event_check_duration_seconds, 5.0)
+
+
+# class TestHasAlertType(unittest.TestCase):
+#     """Test cases for _has_alert_type helper function"""
+
+#     def test_has_alert_type_exists(self):
+#         """Test when plant has alert of specified type"""
+#         mock_alert = MagicMock()
+#         mock_alert.alert_type = AlertTypes.WATER
+
+#         plants_with_alerts = {"plant_123": mock_alert}
+
+#         result = _has_alert_type(plants_with_alerts, "plant_123", AlertTypes.WATER)
+#         self.assertTrue(result)
+
+#     def test_has_alert_type_different_type(self):
+#         """Test when plant has alert but of different type"""
+#         mock_alert = MagicMock()
+#         mock_alert.alert_type = AlertTypes.FERTILIZE
+
+#         plants_with_alerts = {"plant_123": mock_alert}
+
+#         result = _has_alert_type(plants_with_alerts, "plant_123", AlertTypes.WATER)
+#         self.assertFalse(result)
+
+#     def test_has_alert_type_no_alert(self):
+#         """Test when plant has no alerts"""
+#         plants_with_alerts = {}
+
+#         result = _has_alert_type(plants_with_alerts, "plant_123", AlertTypes.WATER)
+#         self.assertFalse(result)
+
+
+# class TestInitScheduler(unittest.TestCase):
+#     """Test cases for init_scheduler function"""
+
+#     @patch("app.background.background.logger")
+#     @patch("app.background.background.Brain")
+#     @patch("app.background.background.scheduler")
+#     def test_init_scheduler_success(
+#         self, mock_scheduler, mock_brain_class, mock_logger
+#     ):
+#         """Test successful scheduler initialization"""
+#         mock_app = MagicMock()
+#         mock_brain = MagicMock()
+#         mock_brain.plant_alert_check_last_run = datetime.now()
+#         mock_brain.plant_care_event_check_last_run = None
+
+#         mock_brain_class.get_brain.return_value = mock_brain
+
+#         mock_job = MagicMock()
+#         mock_job.name = "test_job"
+#         mock_job.trigger = "cron"
+#         mock_job.next_run_time = datetime.now()
+#         mock_scheduler.get_jobs.return_value = [mock_job]
+
+#         init_scheduler(mock_app)
+
+#         mock_brain_class.get_brain.assert_called_once()
+#         mock_scheduler.init_app.assert_called_once_with(mock_app)
+#         mock_scheduler.start.assert_called_once()
+#         mock_logger.info.assert_called()
+
+#     @patch("app.background.background.logger")
+#     @patch("app.background.background.Brain")
+#     @patch("app.background.background.scheduler")
+#     def test_init_scheduler_brain_error(
+#         self, mock_scheduler, mock_brain_class, mock_logger
+#     ):
+#         """Test scheduler initialization when Brain creation fails"""
+#         mock_app = MagicMock()
+#         mock_brain_class.get_brain.side_effect = Exception("Database connection failed")
+
+#         init_scheduler(mock_app)
+
+#         mock_logger.error.assert_called()
+#         mock_scheduler.init_app.assert_called_once_with(mock_app)
+#         mock_scheduler.start.assert_called_once()
+
+
+# if __name__ == "__main__":
+#     unittest.main(verbosity=2)

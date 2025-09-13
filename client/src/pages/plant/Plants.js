@@ -2,9 +2,10 @@ import React, { useState, useMemo } from 'react';
 import { DataGrid, GridToolbarContainer, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport, GridToolbarDensitySelector } from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
-import { EditSharp, WaterDropOutlined, DeleteOutlineSharp } from '@mui/icons-material';
+import { EditSharp, WaterDropOutlined, DeleteOutlineSharp, CallSplit } from '@mui/icons-material';
 import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
 import DeprecatePlantsForm from '../../modals/plant/DeprecatePlantsForm';
+import SplitPlantForm from '../../modals/plant/PropogationPlantForm';
 import { PHASE_LABELS } from '../../constants';
 import { usePlants, useSpecies } from '../../hooks/usePlants';
 import { useNavigate } from "react-router-dom";
@@ -20,7 +21,8 @@ const Plants = ({ initialPlants }) => {
   const [formStates, setFormStates] = useState({
     updatePlant: false,
     waterPlants: false,
-    deprecatePlants: false
+    deprecatePlants: false,
+    splitPlant: false
   });
 
   const columns = useMemo(() => [
@@ -63,16 +65,41 @@ const Plants = ({ initialPlants }) => {
       <GridToolbarExport />
       <Box sx={{ flexGrow: 1 }} />
       {selectedPlants.length === 1 && (
-        <IconButton size="small" color="primary" onClick={() => navigate(`/plants/${selectedPlants[0].id}`)}>
-          <EditSharp />
-        </IconButton>
+        <>
+          <IconButton 
+            size="small" 
+            color="primary" 
+            onClick={() => navigate(`/plants/${selectedPlants[0].id}`)}
+            title="Edit Plant"
+          >
+            <EditSharp />
+          </IconButton>
+          <IconButton 
+            size="small" 
+            color="secondary" 
+            onClick={() => setFormStates(prev => ({ ...prev, splitPlant: true }))}
+            title="Split Plant"
+          >
+            <CallSplit />
+          </IconButton>
+        </>
       )}
       {selectedPlants.length > 0 && (
         <>
-          <IconButton size="small" color="info" onClick={() => setFormStates(prev => ({ ...prev, waterPlants: true }))}>
+          <IconButton 
+            size="small" 
+            color="info" 
+            onClick={() => setFormStates(prev => ({ ...prev, waterPlants: true }))}
+            title="Water Plants"
+          >
             <WaterDropOutlined />
           </IconButton>
-          <IconButton size="small" color="error" onClick={() => setFormStates(prev => ({ ...prev, deprecatePlants: true }))}>
+          <IconButton 
+            size="small" 
+            color="error" 
+            onClick={() => setFormStates(prev => ({ ...prev, deprecatePlants: true }))}
+            title="Delete Plants"
+          >
             <DeleteOutlineSharp />
           </IconButton>
         </>
@@ -104,6 +131,8 @@ const Plants = ({ initialPlants }) => {
           slots={{ toolbar: CustomToolbar }}
         />
       </Box>
+      
+      {/* Water Plants Modal */}
       {formStates.waterPlants && (
         <WaterPlantsForm
           isOpen={formStates.waterPlants}
@@ -111,11 +140,22 @@ const Plants = ({ initialPlants }) => {
           initialPlants={selectedPlants}
         />
       )}
+      
+      {/* Deprecate Plants Modal */}
       {formStates.deprecatePlants && (
         <DeprecatePlantsForm
           isOpen={formStates.deprecatePlants}
           onRequestClose={() => setFormStates(prev => ({ ...prev, deprecatePlants: false }))}
           initialPlants={selectedPlants}
+        />
+      )}
+      
+      {/* Split Plant Modal */}
+      {formStates.splitPlant && selectedPlants.length === 1 && (
+        <SplitPlantForm
+          isOpen={formStates.splitPlant}
+          plantId={selectedPlants[0].id}
+          onRequestClose={() => setFormStates(prev => ({ ...prev, splitPlant: false }))}
         />
       )}
     </>
