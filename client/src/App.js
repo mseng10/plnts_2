@@ -8,6 +8,11 @@ import Systems from './pages/system/Systems.js';
 import BudgetPage from './pages/budget/Budget.js';
 import GoalCreate from './pages/goals/GoalCreate.js';
 import CarePlanCreate from './pages/care_plan/CarePlanCreate.js';
+import MixCreate from './pages/mix/MixCreate.js';
+import TodoCreate from './pages/todo/TodoCreate.js';
+import SystemCreate from './pages/system/SystemCreate.js';
+import PlantCreate from './pages/plant/PlantCreate.js';
+
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
     const today = new Date();
@@ -124,7 +129,7 @@ const AppLayout = () => {
     { to: "/systems", icon: <LayoutGrid /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isWidePage = ['/calendar', '/budget', '/systems', '/goals/create', '/care-plans/create'].includes(location.pathname);
+  const isWidePage = ['/calendar', '/budget', '/systems', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname);
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -213,6 +218,10 @@ export default function App() {
         <Route path="systems" element={<Systems />} />
         <Route path="goals/create" element={<GoalCreate />} />
         <Route path="care-plans/create" element={<CarePlanCreate />} />
+        <Route path="mixes/create" element={<MixCreate />} />
+        <Route path="todos/create" element={<TodoCreate />} />
+        <Route path="systems/create" element={<SystemCreate />} />
+        <Route path="plants/create" element={<PlantCreate />} />
         <Route path="inventory" element={<PagePlaceholder title="Inventory" />} />
         <Route path="settings" element={<PagePlaceholder title="Settings" />} />
       </Route>

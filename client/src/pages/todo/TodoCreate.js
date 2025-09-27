@@ -1,182 +1,117 @@
-// import React, { useState } from 'react';
-// import { useNavigate } from "react-router-dom";
-// import Box from '@mui/material/Box';
-// import { FormTextInput, TextAreaInput, DateSelector, AutoCompleteInput } from '../../elements/Form';
-// import dayjs from 'dayjs';
-// import { useTodos } from '../../hooks/useTodos';
-// import { useGoals } from '../../hooks/useGoals'; // Assuming a hook for goals exists
-// import { List, Stack, Button, Paper, Grid, Typography, IconButton } from '@mui/material';
-// import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-// import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-// import IconFactory from '../../elements/IconFactory';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import dayjs from 'dayjs';
+import { useTodos } from '../../hooks/useTodos';
+import { useGoals } from '../../hooks/useGoals';
+import { ListTodo, Type, AlignLeft, Flag, Plus, Trash2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-// const TodoCreate = () => {
-//     const [name, setName] = useState('');
-//     const [description, setDescription] = useState('');
-//     const [tasks, setTasks] = useState([]);
-//     const [dueOn, setDueOn] = useState(dayjs());
-//     const [goal, setGoal] = useState(null); // State for the selected goal
-//     const [error, setError] = useState(null);
+const TodoCreate = () => {
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
+    const [tasks, setTasks] = useState([]);
+    const [dueOn, setDueOn] = useState(dayjs().format('YYYY-MM-DD'));
+    const [goalId, setGoalId] = useState('');
+    const [error, setError] = useState(null);
 
-//     const navigate = useNavigate();
-//     const { createTodo } = useTodos();
-//     const { goals } = useGoals(); // Fetching the list of goals
+    const navigate = useNavigate();
+    const { createTodo, isLoading } = useTodos();
+    const { goals, isLoading: goalsLoading } = useGoals();
 
-//     const handleSubmit = async (event) => {
-//         event.preventDefault();
-//         setError(null);
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setError(null);
 
-//         if (!name) {
-//             setError("Title is a required field.");
-//             return;
-//         }
+        if (!name) {
+            setError("Title is a required field.");
+            return;
+        }
 
-//         try {
-//             // Filter out any empty tasks before submitting
-//             const finalTasks = tasks.filter(task => task.description.trim() !== '');
-//             const newTodo = {
-//                 name,
-//                 description,
-//                 due_on: dueOn.toISOString(),
-//                 tasks: finalTasks,
-//                 goal_id: goal ? goal.id : null // Add goal_id to the payload
-//             };
-//             await createTodo(newTodo);
-//             navigate("/");
-//         } catch (err) {
-//             setError("Failed to create todo. Please try again.");
-//             console.error(err);
-//         }
-//     };
+        try {
+            const finalTasks = tasks.filter(task => task.description.trim() !== '');
+            const newTodo = {
+                name,
+                description,
+                due_on: dayjs(dueOn).toISOString(),
+                tasks: finalTasks,
+                goal_id: goalId ? parseInt(goalId, 10) : null
+            };
+            await createTodo(newTodo);
+            navigate("/calendar");
+        } catch (err) {
+            setError("Failed to create todo. Please try again.");
+            console.error(err);
+        }
+    };
 
-//     const handleCancel = () => {
-//         navigate("/");
-//     };
+    const handleCancel = () => navigate(-1);
+    const addTask = () => setTasks(prev => [...prev, { description: "" }]);
+    const removeTask = (index) => setTasks(prev => prev.filter((_, i) => i !== index));
+    const updateTask = (description, index) => {
+        setTasks(prev => prev.map((task, i) => i === index ? { ...task, description } : task));
+    };
 
-//     const removeTask = (index) => {
-//         setTasks(prevTasks => prevTasks.filter((_, ind) => ind !== index));
-//     };
+    if (isLoading || goalsLoading) return <div className="p-4 text-slate-400 text-center">Loading...</div>;
 
-//     const addTask = () => {
-//         setTasks(prevTasks => [...prevTasks, { description: "" }]);
-//     };
+    return (
+        <div className="p-4 h-full flex items-center justify-center">
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-4xl">
+                <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* --- MAIN FORM CARD --- */}
+                    <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 shadow-2xl shadow-black/20 flex flex-col gap-6">
+                        <div className="flex items-center gap-4">
+                            <div className="w-14 h-14 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center">
+                                <ListTodo size={28} />
+                            </div>
+                            <div>
+                                <h2 className="text-xl font-semibold text-slate-100">Create a New Todo</h2>
+                                <p className="text-sm text-slate-400">Organize your tasks and link them to goals.</p>
+                            </div>
+                        </div>
+                        <div className="relative">
+                            <Type size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                            <input type="text" placeholder="Todo Title" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-slate-900/50 rounded-lg border border-slate-700 pl-9 pr-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                        </div>
+                        <div className="relative">
+                            <AlignLeft size={16} className="absolute left-3 top-3 text-slate-500" />
+                            <textarea placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} rows="3" className="w-full bg-slate-900/50 rounded-lg border border-slate-700 pl-9 pr-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-none" />
+                        </div>
+                        <input type="date" value={dueOn} onChange={(e) => setDueOn(e.target.value)} required className="w-full bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                        <div className="relative">
+                            <Flag size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                            <select value={goalId} onChange={(e) => setGoalId(e.target.value)} className="w-full bg-slate-900/50 rounded-lg border border-slate-700 pl-9 pr-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                                <option value="">Link to a goal (optional)</option>
+                                {goals.map(goal => <option key={goal.id} value={goal.id}>{goal.name}</option>)}
+                            </select>
+                        </div>
+                        {error && <p className="text-sm text-red-400 text-center">{error}</p>}
+                        <div className="flex justify-end gap-3 pt-4 mt-auto">
+                            <button type="button" onClick={handleCancel} className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800/60 transition-colors">Cancel</button>
+                            <button type="submit" disabled={isLoading} className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed">
+                                {isLoading ? 'Saving...' : 'Save Todo'}
+                            </button>
+                        </div>
+                    </div>
 
-//     const updateTask = (description, index) => {
-//         setTasks(prevTasks => prevTasks.map((task, _i) =>
-//             _i === index ? { ...task, description: description } : task
-//         ));
-//     };
+                    {/* --- TASKS PANEL --- */}
+                    <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 flex flex-col">
+                        <h3 className="text-lg font-semibold text-slate-300 mb-4">Sub-tasks</h3>
+                        <div className="space-y-3 overflow-y-auto flex-grow pr-2 -mr-4">
+                            {tasks.map((task, index) => (
+                                <div key={index} className="flex items-center gap-2">
+                                    <input type="text" placeholder={`Task ${index + 1}`} value={task.description} onChange={(e) => updateTask(e.target.value, index)} className="flex-grow bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                                    <button type="button" onClick={() => removeTask(index)} className="p-2 text-slate-500 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
+                                </div>
+                            ))}
+                        </div>
+                        <button type="button" onClick={addTask} className="mt-4 flex self-center items-center gap-2 px-3 py-1.5 bg-slate-700/50 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-semibold transition-colors">
+                            <Plus size={16} /> Add Task
+                        </button>
+                    </div>
+                </form>
+            </motion.div>
+        </div>
+    );
+};
 
-//     return (
-//         <Box sx={{
-//             minHeight: '100vh',
-//             width: '100%',
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//             backdropFilter: 'blur(5px)',
-//             p: 4
-//         }}>
-//             <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
-//                 {/* --- MAIN FORM CARD --- */}
-//                 <Grid item xs={12} md={7} lg={6}>
-//                     <Paper
-//                         elevation={12}
-//                         component="form"
-//                         onSubmit={handleSubmit}
-//                         sx={{
-//                             width: '100%',
-//                             p: 4,
-//                             borderRadius: 4,
-//                             border: '1px solid rgba(255, 255, 255, 0.2)',
-//                             backgroundColor: 'rgba(255, 255, 255, 0.1)',
-//                             backdropFilter: 'blur(10px)',
-//                             transition: 'all 0.3s ease-in-out',
-//                         }}
-//                     >
-//                         <Grid container spacing={4}>
-//                             {/* --- ICON AREA --- */}
-//                             <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-//                                 <IconFactory
-//                                     icon={"todo"}
-//                                     color={"primary"}
-//                                     size={"xxxlg"}
-//                                 />
-//                             </Grid>
-
-//                             {/* --- FORM FIELDS --- */}
-//                             <Grid item xs={12} md={8}>
-//                                 <Stack spacing={2.5}>
-//                                     <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'white' }}>
-//                                         Create a New Todo
-//                                     </Typography>
-//                                     <FormTextInput label="Title" value={name} setValue={setName} />
-//                                     <TextAreaInput label="Description" value={description} setValue={setDescription} />
-//                                     <DateSelector label="Due" value={dueOn} setValue={setDueOn} />
-//                                     <AutoCompleteInput
-//                                         label="Goal"
-//                                         value={goal}
-//                                         setValue={setGoal}
-//                                         options={goals}
-//                                     />
-//                                     {error && <Typography color="error" sx={{ textAlign: 'center' }}>{error}</Typography>}
-//                                     <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
-//                                         <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>
-//                                             Cancel
-//                                         </Button>
-//                                         <Button type="submit" variant="contained" color="primary" fullWidth>
-//                                             Submit
-//                                         </Button>
-//                                     </Stack>
-//                                 </Stack>
-//                             </Grid>
-//                         </Grid>
-//                     </Paper>
-//                 </Grid>
-
-//                 {/* --- TASKS PANEL --- */}
-//                 <Grid item xs={12} md={5} lg={4}>
-//                      <Paper
-//                         elevation={12}
-//                         sx={{
-//                             width: '100%',
-//                             p: 2,
-//                             borderRadius: 4,
-//                             border: '1px solid rgba(255, 255, 255, 0.2)',
-//                             backgroundColor: 'rgba(255, 255, 255, 0.1)',
-//                             backdropFilter: 'blur(10px)',
-//                             transition: 'all 0.3s ease-in-out',
-//                         }}
-//                     >
-//                         <Stack spacing={1}>
-//                             <Typography variant="h6" sx={{ color: 'white', p:1 }}>Tasks</Typography>
-//                             <List sx={{maxHeight: 350, overflowY: 'auto', p: 1}}>
-//                                 {tasks.map((task, index) => (
-//                                     <Stack key={index} direction="row" alignItems="center" spacing={1} sx={{mb: 1}}>
-//                                         <FormTextInput
-//                                             label={`Task ${index + 1}`}
-//                                             value={task.description}
-//                                             setValue={(value) => updateTask(value, index)}
-//                                         />
-//                                         <IconButton color="error" onClick={() => removeTask(index)}>
-//                                             <RemoveCircleOutlineIcon />
-//                                         </IconButton>
-//                                     </Stack>
-//                                 ))}
-//                             </List>
-//                              <Button
-//                                 startIcon={<AddCircleOutlineIcon />}
-//                                 onClick={addTask}
-//                                 sx={{ alignSelf: 'center' }}
-//                             >
-//                                 Add Task
-//                             </Button>
-//                         </Stack>
-//                     </Paper>
-//                 </Grid>
-//             </Grid>
-//         </Box>
-//     );
-// };
-
-// export default TodoCreate;
+export default TodoCreate;
