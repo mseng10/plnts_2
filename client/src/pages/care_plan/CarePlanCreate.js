@@ -1,132 +1,103 @@
-// import React, { useState } from 'react';
-// import { useNavigate } from "react-router-dom";
-// import { Box, Paper, Grid, Stack, Typography, Button } from '@mui/material';
-// import { FormTextInput, NumberInput } from '../../elements/Form';
-// import IconFactory from '../../elements/IconFactory';
-// import { useCarePlans } from '../../hooks/useCarePlans';
-// import { ServerError, Loading } from '../../elements/Page';
+import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
+import { useCarePlans } from '../../hooks/useCarePlans';
+import { ClipboardList, Type, Droplet, Sun, Wind, Scissors } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-// const CarePlanCreate = () => {
-//     const navigate = useNavigate();
-//     // Assuming a similar hook structure for care plans
-//     const { createCarePlan, isLoading, error } = useCarePlans();
+const NumberInput = ({ label, value, onChange, icon }) => (
+    <div className="relative">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">{icon}</div>
+        <input
+            type="number"
+            placeholder={label}
+            value={value}
+            onChange={onChange}
+            className="w-full bg-slate-900/50 rounded-lg border border-slate-700 pl-9 pr-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none"
+        />
+    </div>
+);
 
-//     // Form State based on the CarePlan model
-//     const [name, setName] = useState('');
-//     const [watering, setWatering] = useState('');
-//     const [fertilizing, setFertilizing] = useState('');
-//     const [cleaning, setCleaning] = useState('');
-//     const [potting, setPotting] = useState('');
+const CarePlanCreate = () => {
+    const navigate = useNavigate();
+    const { createCarePlan, isLoading, error } = useCarePlans();
 
-//     const handleSubmit = async (event) => {
-//         event.preventDefault();
+    const [name, setName] = useState('');
+    const [watering, setWatering] = useState('');
+    const [fertilizing, setFertilizing] = useState('');
+    const [cleaning, setCleaning] = useState('');
+    const [potting, setPotting] = useState('');
 
-//         if (!name) {
-//             return;
-//         }
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        if (!name) return;
 
-//         const newCarePlan = {
-//             name,
-//             watering: parseInt(watering, 10) || null,
-//             fertilizing: parseInt(fertilizing, 10) || null,
-//             cleaning: parseInt(cleaning, 10) || null,
-//             potting: parseInt(potting, 10) || null,
-//         };
+        const newCarePlan = {
+            name,
+            watering: parseInt(watering, 10) || null,
+            fertilizing: parseInt(fertilizing, 10) || null,
+            cleaning: parseInt(cleaning, 10) || null,
+            potting: parseInt(potting, 10) || null,
+        };
 
-//         try {
-//             await createCarePlan(newCarePlan);
-//             navigate("/"); // Navigate to a relevant page on success
-//         } catch (err) {
-//             console.error('Error creating care plan:', err);
-//             // The hook should handle setting the specific error message
-//         }
-//     };
+        try {
+            await createCarePlan(newCarePlan);
+            navigate("/");
+        } catch (err) {
+            console.error('Error creating care plan:', err);
+        }
+    };
 
-//     const handleCancel = () => {
-//         navigate("/");
-//     };
+    const handleCancel = () => {
+        navigate(-1);
+    };
 
-//     if (isLoading) return <Loading />;
-//     if (error && !error.message) return <ServerError error={error} />;
+    if (isLoading) return <div className="p-4 text-slate-400 text-center">Creating Care Plan...</div>;
 
-//     return (
-//         <Box sx={{
-//             minHeight: '100vh',
-//             width: '100%',
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//             backdropFilter: 'blur(5px)',
-//             p: 4
-//         }}>
-//             <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
-//                 <Grid item xs={12} md={8} lg={7}>
-//                     <Paper
-//                         elevation={12}
-//                         component="form"
-//                         onSubmit={handleSubmit}
-//                         sx={{
-//                             width: '100%',
-//                             p: 4,
-//                             borderRadius: 4,
-//                             border: '1px solid rgba(255, 255, 255, 0.2)',
-//                             backgroundColor: 'rgba(255, 255, 255, 0.1)',
-//                             backdropFilter: 'blur(10px)',
-//                             transition: 'all 0.3s ease-in-out',
-//                         }}
-//                     >
-//                         <Grid container spacing={4}>
-//                             {/* --- ICON AREA --- */}
-//                             <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-//                                 <IconFactory
-//                                     icon={"care_plan"}
-//                                     color={"primary"}
-//                                     size={"xxxlg"}
-//                                 />
-//                             </Grid>
+    return (
+        <div className="p-4 h-full flex items-center justify-center">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full max-w-lg bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 shadow-2xl shadow-black/20"
+            >
+                <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 bg-sky-500/10 text-sky-500 rounded-2xl flex items-center justify-center">
+                            <ClipboardList size={28} />
+                        </div>
+                        <div>
+                            <h2 className="text-xl font-semibold text-slate-100">New Care Plan</h2>
+                            <p className="text-sm text-slate-400">Define a routine for your plants.</p>
+                        </div>
+                    </div>
 
-//                             {/* --- FORM FIELDS --- */}
-//                             <Grid item xs={12} md={8}>
-//                                 <Stack spacing={2.5}>
-//                                     <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'white' }}>
-//                                         New Care Plan
-//                                     </Typography>
-                                    
-//                                     <FormTextInput
-//                                         label="Plan Name"
-//                                         value={name}
-//                                         setValue={setName}
-//                                     />
+                    <div className="relative">
+                        <Type size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <input type="text" placeholder="Plan Name (e.g., Tropicals)" value={name} onChange={(e) => setName(e.target.value)} required className="w-full bg-slate-900/50 rounded-lg border border-slate-700 pl-9 pr-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
 
-//                                     <Typography variant="h6" component="h2" sx={{ color: 'white', pt: 1 }}>
-//                                         Frequencies (in days)
-//                                     </Typography>
+                    <p className="text-sm font-semibold text-slate-400 -mb-2">Frequencies (in days)</p>
+                    <div className="grid grid-cols-2 gap-4">
+                        <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} />
+                        <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sun size={16} />} />
+                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<Wind size={16} />} />
+                        <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Scissors size={16} />} />
+                    </div>
 
-//                                     <Grid container spacing={2}>
-//                                         <Grid item xs={6} sm={6}><NumberInput label="Watering" value={watering} setValue={setWatering} /></Grid>
-//                                         <Grid item xs={6} sm={6}><NumberInput label="Fertilizing" value={fertilizing} setValue={setFertilizing} /></Grid>
-//                                         <Grid item xs={6} sm={6}><NumberInput label="Cleaning" value={cleaning} setValue={setCleaning} /></Grid>
-//                                         <Grid item xs={6} sm={6}><NumberInput label="Potting" value={potting} setValue={setPotting} /></Grid>
-//                                     </Grid>
+                    {error && <p className="text-sm text-red-400 text-center">{error.message}</p>}
 
-//                                     {error && error.message && <Typography color="error" sx={{ textAlign: 'center' }}>{error.message}</Typography>}
+                    <div className="flex justify-end gap-3 pt-4">
+                        <button type="button" onClick={handleCancel} className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800/60 transition-colors">
+                            Cancel
+                        </button>
+                        <button type="submit" disabled={isLoading} className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed">
+                            {isLoading ? 'Saving...' : 'Save Plan'}
+                        </button>
+                    </div>
+                </form>
+            </motion.div>
+        </div>
+    );
+};
 
-//                                     <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
-//                                         <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>
-//                                             Cancel
-//                                         </Button>
-//                                         <Button type="submit" variant="contained" color="primary" fullWidth>
-//                                             Submit
-//                                         </Button>
-//                                     </Stack>
-//                                 </Stack>
-//                             </Grid>
-//                         </Grid>
-//                     </Paper>
-//                 </Grid>
-//             </Grid>
-//         </Box>
-//     );
-// };
-
-// export default CarePlanCreate;
+export default CarePlanCreate;

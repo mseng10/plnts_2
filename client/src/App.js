@@ -7,6 +7,7 @@ import Calendar from './pages/calendar/Calendar';
 import Systems from './pages/system/Systems.js';
 import BudgetPage from './pages/budget/Budget.js';
 import GoalCreate from './pages/goals/GoalCreate.js';
+import CarePlanCreate from './pages/care_plan/CarePlanCreate.js';
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
     const today = new Date();
@@ -123,7 +124,7 @@ const AppLayout = () => {
     { to: "/systems", icon: <LayoutGrid /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isWidePage = ['/calendar', '/budget', '/systems', '/goals/create'].includes(location.pathname);
+  const isWidePage = ['/calendar', '/budget', '/systems', '/goals/create', '/care-plans/create'].includes(location.pathname);
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -211,6 +212,7 @@ export default function App() {
         <Route path="budget" element={<BudgetPage />} />
         <Route path="systems" element={<Systems />} />
         <Route path="goals/create" element={<GoalCreate />} />
+        <Route path="care-plans/create" element={<CarePlanCreate />} />
         <Route path="inventory" element={<PagePlaceholder title="Inventory" />} />
         <Route path="settings" element={<PagePlaceholder title="Settings" />} />
       </Route>
