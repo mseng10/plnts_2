@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Droplet, Sun, Thermometer, Wind, Plus, Send, Leaf, Calendar, DollarSign, Settings, LayoutGrid, Package, ShieldCheck, ListTodo } from 'lucide-react';
+import { Droplet, Sun, Thermometer, Wind, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, LayoutGrid, Package, ShieldCheck, ListTodo } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Calendar from './pages/calendar/Calendar';
 
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
@@ -89,8 +90,7 @@ const PlantCard = ({ name, species, status }) => (
 
 // --- PAGE COMPONENTS (PLACEHOLDERS) ---
 const DashboardPage = () => (
-    <>
-        <Header />
+    <div className="p-4 h-full flex flex-col">
         <div className="grid grid-cols-2 gap-4 mb-8">
             <StatCard icon={<Leaf />} color="plants" metric="24" label="Total Plants" delay={1} />
             <StatCard icon={<ListTodo />} color="tasks" metric="5" label="Tasks Today" delay={2} />
@@ -102,7 +102,7 @@ const DashboardPage = () => (
             <PlantCard name="Monstera Deliciosa" species="Swiss Cheese Plant" status="Thriving" />
             <PlantCard name="Ficus Lyrata" species="Fiddle Leaf Fig" status="Excellent" />
         </div>
-    </>
+    </div>
 );
 const PagePlaceholder = ({ title }) => <div className="p-8"><h1 className="text-4xl font-bold text-slate-100">{title}</h1></div>;
 
@@ -111,13 +111,16 @@ const AppLayout = () => {
   const [showCreateOptions, setShowCreateOptions] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
   const navRef = useRef(null);
+  const footerRef = useRef(null);
   const location = useLocation();
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const navItems = [
-    { to: "/", icon: <Leaf /> }, { to: "/calendar", icon: <Calendar /> }, { to: "/budget", icon: <DollarSign /> },
+    { to: "/", icon: <Leaf /> }, { to: "/calendar", icon: <CalendarIcon /> }, { to: "/budget", icon: <DollarSign /> },
     { to: "/systems", icon: <LayoutGrid /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
+
+  const isCalendarPage = location.pathname === '/calendar';
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -133,9 +136,14 @@ const AppLayout = () => {
   ];
 
   return (
-    <>
-      <main className="max-w-md mx-auto p-4 relative z-10 pb-40 bg-transparent"><Outlet /></main>
-      <footer className="fixed bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-md z-50">
+    <div className="h-screen grid grid-rows-[auto_1fr_auto]">
+      <div className={`${isCalendarPage ? 'max-w-4xl' : 'max-w-md'} mx-auto px-4 pt-4 w-full`}>
+          <Header />
+      </div>
+      <main className={`mx-auto w-full overflow-y-auto ${isCalendarPage ? 'max-w-4xl' : 'max-w-md'}`}>
+          <Outlet />
+      </main>
+      <footer ref={footerRef} className="relative w-[calc(100%-2rem)] max-w-md mx-auto mb-4 z-10">
         <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-3 shadow-2xl shadow-black/30 flex flex-col gap-3">
           <AnimatePresence>
             {showCreateOptions && (
@@ -180,7 +188,7 @@ const AppLayout = () => {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 };
 
@@ -190,7 +198,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
-        <Route path="calendar" element={<PagePlaceholder title="Calendar" />} />
+        <Route path="calendar" element={<Calendar />} />
         <Route path="budget" element={<PagePlaceholder title="Budget" />} />
         <Route path="systems" element={<PagePlaceholder title="Systems" />} />
         <Route path="inventory" element={<PagePlaceholder title="Inventory" />} />
