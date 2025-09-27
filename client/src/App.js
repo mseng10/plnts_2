@@ -4,6 +4,7 @@ import { Droplet, Sun, Thermometer, Wind, Plus, Send, Leaf, Calendar as Calendar
 import { motion, AnimatePresence } from 'framer-motion';
 import Calendar from './pages/calendar/Calendar';
 
+import Systems from './pages/system/Systems.js';
 import BudgetPage from './pages/budget/Budget.js';
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
@@ -121,7 +122,7 @@ const AppLayout = () => {
     { to: "/systems", icon: <LayoutGrid /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isWidePage = location.pathname === '/calendar' || location.pathname === '/budget';
+  const isWidePage = location.pathname === '/calendar' || location.pathname === '/budget' || location.pathname === '/systems';
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -201,7 +202,7 @@ export default function App() {
         <Route index element={<DashboardPage />} />
         <Route path="calendar" element={<Calendar />} />
         <Route path="budget" element={<BudgetPage />} />
-        <Route path="systems" element={<PagePlaceholder title="Systems" />} />
+        <Route path="systems" element={<Systems />} />
         <Route path="inventory" element={<PagePlaceholder title="Inventory" />} />
         <Route path="settings" element={<PagePlaceholder title="Settings" />} />
       </Route>
