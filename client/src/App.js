@@ -4,6 +4,7 @@ import { Droplet, Sun, Thermometer, Wind, Plus, Send, Leaf, Calendar as Calendar
 import { motion, AnimatePresence } from 'framer-motion';
 import Calendar from './pages/calendar/Calendar';
 
+import BudgetPage from './pages/budget/Budget.js';
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
     const today = new Date();
@@ -120,7 +121,7 @@ const AppLayout = () => {
     { to: "/systems", icon: <LayoutGrid /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isCalendarPage = location.pathname === '/calendar';
+  const isWidePage = location.pathname === '/calendar' || location.pathname === '/budget';
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -137,10 +138,10 @@ const AppLayout = () => {
 
   return (
     <div className="h-screen grid grid-rows-[auto_1fr_auto]">
-      <div className={`${isCalendarPage ? 'max-w-4xl' : 'max-w-md'} mx-auto px-4 pt-4 w-full`}>
+      <div className={`${isWidePage ? 'max-w-4xl' : 'max-w-md'} mx-auto px-4 pt-4 w-full`}>
           <Header />
       </div>
-      <main className={`mx-auto w-full overflow-y-auto ${isCalendarPage ? 'max-w-4xl' : 'max-w-md'}`}>
+      <main className={`mx-auto w-full overflow-y-auto ${isWidePage ? 'max-w-4xl' : 'max-w-md'}`}>
           <Outlet />
       </main>
       <footer ref={footerRef} className="relative w-[calc(100%-2rem)] max-w-md mx-auto mb-4 z-10">
@@ -199,7 +200,7 @@ export default function App() {
       <Route path="/" element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="calendar" element={<Calendar />} />
-        <Route path="budget" element={<PagePlaceholder title="Budget" />} />
+        <Route path="budget" element={<BudgetPage />} />
         <Route path="systems" element={<PagePlaceholder title="Systems" />} />
         <Route path="inventory" element={<PagePlaceholder title="Inventory" />} />
         <Route path="settings" element={<PagePlaceholder title="Settings" />} />
