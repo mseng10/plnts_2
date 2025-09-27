@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Droplet, Sun, Thermometer, Wind, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, LayoutGrid, Package, ShieldCheck, ListTodo } from 'lucide-react';
+import { Droplet, Sun, Thermometer, Wind, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, LayoutGrid, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Calendar from './pages/calendar/Calendar';
 
 import Systems from './pages/system/Systems.js';
 import BudgetPage from './pages/budget/Budget.js';
+import GoalCreate from './pages/goals/GoalCreate.js';
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
     const today = new Date();
@@ -122,7 +123,7 @@ const AppLayout = () => {
     { to: "/systems", icon: <LayoutGrid /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isWidePage = location.pathname === '/calendar' || location.pathname === '/budget' || location.pathname === '/systems';
+  const isWidePage = ['/calendar', '/budget', '/systems', '/goals/create'].includes(location.pathname);
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -133,8 +134,12 @@ const AppLayout = () => {
   }, [location]);
 
   const createOptions = [
-    { icon: <Leaf />, label: 'Plant' }, { icon: <Package />, label: 'Pot' },
-    { icon: <ShieldCheck />, label: 'System' }, { icon: <ListTodo />, label: 'Todo' }
+    { icon: <Leaf />, label: 'Plant', path: '/plants/create' },
+    { icon: <Layers />, label: 'Mix', path: '/mixes/create' },
+    { icon: <ShieldCheck />, label: 'System', path: '/systems/create' },
+    { icon: <ListTodo />, label: 'Todo', path: '/todos/create' },
+    { icon: <ClipboardList />, label: 'Care Plan', path: '/care-plans/create' },
+    { icon: <Flag />, label: 'Goal', path: '/goals/create' }
   ];
 
   return (
@@ -151,12 +156,14 @@ const AppLayout = () => {
             {showCreateOptions && (
               <motion.div initial={{ opacity: 0, y: 10, height: 0 }} animate={{ opacity: 1, y: 0, height: 'auto' }} exit={{ opacity: 0, y: 10, height: 0 }} className="flex justify-center gap-4 overflow-hidden">
                 {createOptions.map((item) => (
-                  <div key={item.label} className="text-center cursor-pointer group">
-                    <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-900/70 shadow-lg group-hover:-translate-y-1 transition-transform duration-200">
-                      {React.cloneElement(item.icon, { size: 22, className: "text-emerald-500" })}
-                    </div>
-                    <p className="text-xs text-slate-400 font-medium mt-2">{item.label}</p>
-                  </div>
+                  <NavLink to={item.path} key={item.label} className="text-center cursor-pointer group no-underline">
+                    <>
+                      <div className="w-12 h-12 rounded-2xl flex items-center justify-center bg-slate-900/70 shadow-lg group-hover:-translate-y-1 transition-transform duration-200">
+                        {React.cloneElement(item.icon, { size: 22, className: "text-emerald-500" })}
+                      </div>
+                      <p className="text-xs text-slate-400 font-medium mt-2">{item.label}</p>
+                    </>
+                  </NavLink>
                 ))}
               </motion.div>
             )}
@@ -203,6 +210,7 @@ export default function App() {
         <Route path="calendar" element={<Calendar />} />
         <Route path="budget" element={<BudgetPage />} />
         <Route path="systems" element={<Systems />} />
+        <Route path="goals/create" element={<GoalCreate />} />
         <Route path="inventory" element={<PagePlaceholder title="Inventory" />} />
         <Route path="settings" element={<PagePlaceholder title="Settings" />} />
       </Route>
