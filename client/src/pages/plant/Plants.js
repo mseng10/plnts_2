@@ -1,165 +1,165 @@
-import React, { useState, useMemo } from 'react';
-import { DataGrid, GridToolbarContainer, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport, GridToolbarDensitySelector } from '@mui/x-data-grid';
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import { EditSharp, WaterDropOutlined, DeleteOutlineSharp, CallSplit } from '@mui/icons-material';
-import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
-import DeprecatePlantsForm from '../../modals/plant/DeprecatePlantsForm';
-import SplitPlantForm from '../../modals/plant/PropogationPlantForm';
-import { PHASE_LABELS } from '../../constants';
-import { usePlants, useSpecies } from '../../hooks/usePlants';
-import { useNavigate } from "react-router-dom";
-import { ServerError, NoData, Loading} from '../../elements/Page';
-import { useMixes } from '../../hooks/useMix';
+// import React, { useState, useMemo } from 'react';
+// import { DataGrid, GridToolbarContainer, GridToolbarColumnsButton, GridToolbarFilterButton, GridToolbarExport, GridToolbarDensitySelector } from '@mui/x-data-grid';
+// import Box from '@mui/material/Box';
+// import IconButton from '@mui/material/IconButton';
+// import { EditSharp, WaterDropOutlined, DeleteOutlineSharp, CallSplit } from '@mui/icons-material';
+// import WaterPlantsForm from '../../modals/plant/WaterPlantsForm';
+// import DeprecatePlantsForm from '../../modals/plant/DeprecatePlantsForm';
+// import SplitPlantForm from '../../modals/plant/PropogationPlantForm';
+// import { PHASE_LABELS } from '../../constants';
+// import { usePlants, useSpecies } from '../../hooks/usePlants';
+// import { useNavigate } from "react-router-dom";
+// import { ServerError, NoData, Loading} from '../../elements/Page';
+// import { useMixes } from '../../hooks/useMix';
 
-const Plants = ({ initialPlants }) => {
-  const navigate = useNavigate();
-  const { plants, systems, isLoading, error } = usePlants(initialPlants);
-  const {species} = useSpecies();
-  const {mixes} = useMixes();
-  const [selectedPlants, setSelectedPlants] = useState([]);
-  const [formStates, setFormStates] = useState({
-    updatePlant: false,
-    waterPlants: false,
-    deprecatePlants: false,
-    splitPlant: false
-  });
+// const Plants = ({ initialPlants }) => {
+//   const navigate = useNavigate();
+//   const { plants, systems, isLoading, error } = usePlants(initialPlants);
+//   const {species} = useSpecies();
+//   const {mixes} = useMixes();
+//   const [selectedPlants, setSelectedPlants] = useState([]);
+//   const [formStates, setFormStates] = useState({
+//     updatePlant: false,
+//     waterPlants: false,
+//     deprecatePlants: false,
+//     splitPlant: false
+//   });
 
-  const columns = useMemo(() => [
-    {
-      field: 'species_id',
-      headerName: 'Type',
-      width: 150,
-      valueGetter: ({ value }) => species.find(_s => _s.id === value)?.name || '?',
-    },
-    {
-      field: 'system_id',
-      headerName: 'System',
-      width: 150,
-      valueGetter: ({ value }) => systems.find(_s => _s.id === value)?.name || 'N/A',
-    },
-    {
-      field: 'mix_id',
-      headerName: 'Mix',
-      width: 150,
-      valueGetter: ({ value }) => mixes.find(_m => _m.id === value)?.name || 'N/A',
-    },
-    { field: 'size', headerName: 'Size', width: 20 },
-    { field: 'cost', headerName: 'Cost', type: 'number', width: 20 },
-    { field: 'created_on', headerName: 'Created On', width: 150 },
-    { field: 'watered_on', headerName: 'Watered On', width: 150 },
-    { field: 'watering', headerName: 'Watering', type: 'number', width: 100 },
-    {
-      field: 'phase',
-      headerName: 'Phase',
-      width: 120,
-      valueGetter: ({ value }) => PHASE_LABELS[value] || 'N/A',
-    },
-  ], [species, mixes, systems]);
+//   const columns = useMemo(() => [
+//     {
+//       field: 'species_id',
+//       headerName: 'Type',
+//       width: 150,
+//       valueGetter: ({ value }) => species.find(_s => _s.id === value)?.name || '?',
+//     },
+//     {
+//       field: 'system_id',
+//       headerName: 'System',
+//       width: 150,
+//       valueGetter: ({ value }) => systems.find(_s => _s.id === value)?.name || 'N/A',
+//     },
+//     {
+//       field: 'mix_id',
+//       headerName: 'Mix',
+//       width: 150,
+//       valueGetter: ({ value }) => mixes.find(_m => _m.id === value)?.name || 'N/A',
+//     },
+//     { field: 'size', headerName: 'Size', width: 20 },
+//     { field: 'cost', headerName: 'Cost', type: 'number', width: 20 },
+//     { field: 'created_on', headerName: 'Created On', width: 150 },
+//     { field: 'watered_on', headerName: 'Watered On', width: 150 },
+//     { field: 'watering', headerName: 'Watering', type: 'number', width: 100 },
+//     {
+//       field: 'phase',
+//       headerName: 'Phase',
+//       width: 120,
+//       valueGetter: ({ value }) => PHASE_LABELS[value] || 'N/A',
+//     },
+//   ], [species, mixes, systems]);
 
-  const CustomToolbar = () => (
-    <GridToolbarContainer>
-      <GridToolbarColumnsButton />
-      <GridToolbarFilterButton />
-      <GridToolbarDensitySelector />
-      <GridToolbarExport />
-      <Box sx={{ flexGrow: 1 }} />
-      {selectedPlants.length === 1 && (
-        <>
-          <IconButton 
-            size="small" 
-            color="primary" 
-            onClick={() => navigate(`/plants/${selectedPlants[0].id}`)}
-            title="Edit Plant"
-          >
-            <EditSharp />
-          </IconButton>
-          <IconButton 
-            size="small" 
-            color="secondary" 
-            onClick={() => setFormStates(prev => ({ ...prev, splitPlant: true }))}
-            title="Split Plant"
-          >
-            <CallSplit />
-          </IconButton>
-        </>
-      )}
-      {selectedPlants.length > 0 && (
-        <>
-          <IconButton 
-            size="small" 
-            color="info" 
-            onClick={() => setFormStates(prev => ({ ...prev, waterPlants: true }))}
-            title="Water Plants"
-          >
-            <WaterDropOutlined />
-          </IconButton>
-          <IconButton 
-            size="small" 
-            color="error" 
-            onClick={() => setFormStates(prev => ({ ...prev, deprecatePlants: true }))}
-            title="Delete Plants"
-          >
-            <DeleteOutlineSharp />
-          </IconButton>
-        </>
-      )}
-    </GridToolbarContainer>
-  );
+//   const CustomToolbar = () => (
+//     <GridToolbarContainer>
+//       <GridToolbarColumnsButton />
+//       <GridToolbarFilterButton />
+//       <GridToolbarDensitySelector />
+//       <GridToolbarExport />
+//       <Box sx={{ flexGrow: 1 }} />
+//       {selectedPlants.length === 1 && (
+//         <>
+//           <IconButton 
+//             size="small" 
+//             color="primary" 
+//             onClick={() => navigate(`/plants/${selectedPlants[0].id}`)}
+//             title="Edit Plant"
+//           >
+//             <EditSharp />
+//           </IconButton>
+//           <IconButton 
+//             size="small" 
+//             color="secondary" 
+//             onClick={() => setFormStates(prev => ({ ...prev, splitPlant: true }))}
+//             title="Split Plant"
+//           >
+//             <CallSplit />
+//           </IconButton>
+//         </>
+//       )}
+//       {selectedPlants.length > 0 && (
+//         <>
+//           <IconButton 
+//             size="small" 
+//             color="info" 
+//             onClick={() => setFormStates(prev => ({ ...prev, waterPlants: true }))}
+//             title="Water Plants"
+//           >
+//             <WaterDropOutlined />
+//           </IconButton>
+//           <IconButton 
+//             size="small" 
+//             color="error" 
+//             onClick={() => setFormStates(prev => ({ ...prev, deprecatePlants: true }))}
+//             title="Delete Plants"
+//           >
+//             <DeleteOutlineSharp />
+//           </IconButton>
+//         </>
+//       )}
+//     </GridToolbarContainer>
+//   );
 
-  if (isLoading) return <Loading/>;
-  if (error) return <ServerError/>;
-  if (plants.length === 0) return <NoData/>;
+//   if (isLoading) return <Loading/>;
+//   if (error) return <ServerError/>;
+//   if (plants.length === 0) return <NoData/>;
 
-  return (
-    <>
-      <Box sx={{ height: '100%', width: '100%' }}>
-        <DataGrid
-          rows={plants}
-          columns={columns}
-          initialState={{
-            pagination: { paginationModel: { pageSize: 100 } },
-          }}
-          pageSizeOptions={[100]}
-          checkboxSelection
-          disableRowSelectionOnClick
-          onRowSelectionModelChange={(newSelectionModel) => {
-          const newSelectedPlants = newSelectionModel.map(id => 
-            plants.find(plant => plant.id === id));            
-          setSelectedPlants(newSelectedPlants);
-          }}
-          slots={{ toolbar: CustomToolbar }}
-        />
-      </Box>
+//   return (
+//     <>
+//       <Box sx={{ height: '100%', width: '100%' }}>
+//         <DataGrid
+//           rows={plants}
+//           columns={columns}
+//           initialState={{
+//             pagination: { paginationModel: { pageSize: 100 } },
+//           }}
+//           pageSizeOptions={[100]}
+//           checkboxSelection
+//           disableRowSelectionOnClick
+//           onRowSelectionModelChange={(newSelectionModel) => {
+//           const newSelectedPlants = newSelectionModel.map(id => 
+//             plants.find(plant => plant.id === id));            
+//           setSelectedPlants(newSelectedPlants);
+//           }}
+//           slots={{ toolbar: CustomToolbar }}
+//         />
+//       </Box>
       
-      {/* Water Plants Modal */}
-      {formStates.waterPlants && (
-        <WaterPlantsForm
-          isOpen={formStates.waterPlants}
-          onRequestClose={() => setFormStates(prev => ({ ...prev, waterPlants: false }))}
-          initialPlants={selectedPlants}
-        />
-      )}
+//       {/* Water Plants Modal */}
+//       {formStates.waterPlants && (
+//         <WaterPlantsForm
+//           isOpen={formStates.waterPlants}
+//           onRequestClose={() => setFormStates(prev => ({ ...prev, waterPlants: false }))}
+//           initialPlants={selectedPlants}
+//         />
+//       )}
       
-      {/* Deprecate Plants Modal */}
-      {formStates.deprecatePlants && (
-        <DeprecatePlantsForm
-          isOpen={formStates.deprecatePlants}
-          onRequestClose={() => setFormStates(prev => ({ ...prev, deprecatePlants: false }))}
-          initialPlants={selectedPlants}
-        />
-      )}
+//       {/* Deprecate Plants Modal */}
+//       {formStates.deprecatePlants && (
+//         <DeprecatePlantsForm
+//           isOpen={formStates.deprecatePlants}
+//           onRequestClose={() => setFormStates(prev => ({ ...prev, deprecatePlants: false }))}
+//           initialPlants={selectedPlants}
+//         />
+//       )}
       
-      {/* Split Plant Modal */}
-      {formStates.splitPlant && selectedPlants.length === 1 && (
-        <SplitPlantForm
-          isOpen={formStates.splitPlant}
-          plantId={selectedPlants[0].id}
-          onRequestClose={() => setFormStates(prev => ({ ...prev, splitPlant: false }))}
-        />
-      )}
-    </>
-  );
-};
+//       {/* Split Plant Modal */}
+//       {formStates.splitPlant && selectedPlants.length === 1 && (
+//         <SplitPlantForm
+//           isOpen={formStates.splitPlant}
+//           plantId={selectedPlants[0].id}
+//           onRequestClose={() => setFormStates(prev => ({ ...prev, splitPlant: false }))}
+//         />
+//       )}
+//     </>
+//   );
+// };
 
-export default Plants;
+// export default Plants;

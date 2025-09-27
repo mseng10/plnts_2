@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost, APIS, apiBuilder, simpleDelete } from '../api';
+import { simpleFetch, APIS, apiBuilder, simpleDelete } from '../api';
 
 export const useAlerts = (initialAlerts = []) => {
   const [alerts, setAlerts] = useState(initialAlerts);
