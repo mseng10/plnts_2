@@ -9,6 +9,7 @@ import Bubby from './pages/bubby/Bubby.js';
 import Mixes from './pages/mix/Mixes.js';
 import CarePlans from './pages/care_plan/CarePlans.js';
 import BudgetPage from './pages/budget/Budget.js';
+import CarePlanUpdate from './pages/care_plan/CarePlanUpdate.js';
 import GoalCreate from './pages/goals/GoalCreate.js';
 import CarePlanCreate from './pages/care_plan/CarePlanCreate.js';
 import MixCreate from './pages/mix/MixCreate.js';
@@ -107,7 +108,7 @@ const AppLayout = () => {
     { to: "/bubbys/systems", icon: <Leaf /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isWidePage = ['/calendar', '/budget', '/bubbys/systems', '/bubbys/care-plans', '/bubbys/mixes', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname);
+  const isWidePage = ['/calendar', '/budget', '/bubbys/systems', '/bubbys/care-plans', '/bubbys/mixes', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname) || location.pathname.startsWith('/bubbys/care-plans/');
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -131,7 +132,7 @@ const AppLayout = () => {
       <div className={`${isWidePage ? 'max-w-4xl' : 'max-w-md'} mx-auto px-4 pt-4 w-full`}>
           <Header />
       </div>
-      <main className={`mx-auto w-full overflow-y-auto ${isWidePage ? 'max-w-4xl' : 'max-w-md'}`}>
+      <main className={`mx-auto w-full h-full overflow-hidden ${isWidePage ? 'max-w-4xl' : 'max-w-md'}`}>
           <Outlet />
       </main>
       <footer ref={footerRef} className="relative w-[calc(100%-2rem)] max-w-md mx-auto mb-4 z-10">
@@ -195,7 +196,9 @@ export default function App() {
         <Route path="budget" element={<BudgetPage />} />        
         <Route path="bubbys" element={<Bubby />}>
           <Route path="systems" element={<Systems />} />
-          <Route path="care-plans" element={<CarePlans />} />
+          <Route path="care-plans" element={<CarePlans />}>
+            <Route path=":id" element={<CarePlanUpdate />} />
+          </Route>
           <Route path="mixes" element={<Mixes />} />
         </Route>
         <Route path="goals/create" element={<GoalCreate />} />

@@ -16,6 +16,15 @@ code {
     monospace;
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    /* Firefox */
+    scrollbar-width: none;
+    /* Safari and Chrome */
+    &::-webkit-scrollbar { display: none; }
+  }
+}
+
 @keyframes gradientShift { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(10vw, -10vh) rotate(30deg); } 50% { transform: translate(-10vw, 15vh) rotate(60deg); } 75% { transform: translate(5vw, 5vh) rotate(90deg); } }
 @keyframes rise { 0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 8px; } 100% { transform: translateY(-120vh) rotate(720deg); opacity: 0; border-radius: 50%; } }
 @keyframes rotate { to { transform: rotate(360deg); } }

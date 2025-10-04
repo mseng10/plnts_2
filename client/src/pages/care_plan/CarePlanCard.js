@@ -41,7 +41,7 @@ const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
                 ))}
             </div>
             <div className="border-t border-slate-700/50 mt-6 pt-4 flex justify-end items-center gap-1">
-                <button onClick={() => navigate(`/care-plans/${carePlan.id}`)} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Edit size={16} /></button>
+                <button onClick={() => navigate(`/bubbys/care-plans/${carePlan.id}`)} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Edit size={16} /></button>
                 <button onClick={handleDelete} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
             </div>
         </motion.div>
