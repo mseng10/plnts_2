@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useCarePlans } from '../../hooks/useCarePlans';
-import { ClipboardList, Type, Droplet, Sprout, Sparkles, Replace } from 'lucide-react';
+import { ClipboardList, Type, Droplet, Sprout, SprayCan, Replace } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const NumberInput = ({ label, value, onChange, icon }) => (
@@ -80,7 +80,7 @@ const CarePlanCreate = () => {
                     <div className="grid grid-cols-2 gap-4">
                         <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} />
                         <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sprout size={16} />} />
-                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<Sparkles size={16} />} />
+                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<SprayCan size={16} />} />
                         <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Replace size={16} />} />
                     </div>
 

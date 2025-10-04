@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Droplet, Sprout, Sparkles, Replace, Edit, Trash2 } from 'lucide-react';
+import { Droplet, Sprout, SprayCan, Replace, Edit, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
@@ -9,7 +9,7 @@ const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
     const careActions = [
         { label: 'Watering', value: carePlan.watering, icon: <Droplet size={22} className="text-sky-400" /> },
         { label: 'Fertilizing', value: carePlan.fertilizing, icon: <Sprout size={22} className="text-lime-400" /> },
-        { label: 'Cleaning', value: carePlan.cleaning, icon: <Sparkles size={22} className="text-cyan-400" /> },
+        { label: 'Cleaning', value: carePlan.cleaning, icon: <SprayCan size={22} className="text-fuchsia-400" /> },
         { label: 'Potting', value: carePlan.potting, icon: <Replace size={22} className="text-slate-400" /> },
     ].filter(action => action.value);
 

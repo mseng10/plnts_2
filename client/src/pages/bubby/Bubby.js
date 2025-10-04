@@ -1,11 +1,12 @@
 import React from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
-import { ShieldCheck, ClipboardList } from 'lucide-react';
+import { ShieldCheck, ClipboardList, Layers } from 'lucide-react';
 
 const Bubby = () => {
     const navItems = [
         { to: 'systems', label: 'Systems', icon: <ShieldCheck size={16} /> },
         { to: 'care-plans', label: 'Care Plans', icon: <ClipboardList size={16} /> },
+        { to: 'mixes', label: 'Mixes', icon: <Layers size={16} /> },
     ];
 
     return (

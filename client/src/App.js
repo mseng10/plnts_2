@@ -6,6 +6,7 @@ import Calendar from './pages/calendar/Calendar';
 
 import Systems from './pages/system/Systems.js';
 import Bubby from './pages/bubby/Bubby.js';
+import Mixes from './pages/mix/Mixes.js';
 import CarePlans from './pages/care_plan/CarePlans.js';
 import BudgetPage from './pages/budget/Budget.js';
 import GoalCreate from './pages/goals/GoalCreate.js';
@@ -106,7 +107,7 @@ const AppLayout = () => {
     { to: "/bubbys/systems", icon: <Leaf /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isWidePage = ['/calendar', '/budget', '/bubbys/systems', '/bubbys/care-plans', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname);
+  const isWidePage = ['/calendar', '/budget', '/bubbys/systems', '/bubbys/care-plans', '/bubbys/mixes', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname);
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -195,6 +196,7 @@ export default function App() {
         <Route path="bubbys" element={<Bubby />}>
           <Route path="systems" element={<Systems />} />
           <Route path="care-plans" element={<CarePlans />} />
+          <Route path="mixes" element={<Mixes />} />
         </Route>
         <Route path="goals/create" element={<GoalCreate />} />
         <Route path="care-plans/create" element={<CarePlanCreate />} />

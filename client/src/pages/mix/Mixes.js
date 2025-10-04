@@ -1,99 +1,32 @@
-// import React from 'react';
-// import Grid from '@mui/material/Grid';
-// import Box from '@mui/material/Box';
-// import Card from '@mui/material/Card';
-// import CardContent from '@mui/material/CardContent';
-// import List from '@mui/material/List';
-// import ListItem from '@mui/material/ListItem';
-// import ListItemText from '@mui/material/ListItemText';
-// import Divider from '@mui/material/Divider';
-// import { CardActionArea, CardHeader } from '@mui/material';
-// import Avatar from '@mui/material/Avatar';
-// import IconButton from '@mui/material/IconButton';
-// import CardActions from '@mui/material/CardActions';
-// import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
-// import { EditSharp } from '@mui/icons-material';
-// import { useNavigate } from 'react-router-dom';
-// import { NoData, ServerError, Loading } from '../../elements/Page';
-// import { useMixes, useSoilParts, useSoils } from '../../hooks/useMix';
-// import DeleteOutlineSharpIcon from '@mui/icons-material/DeleteOutlineSharp';
-// import PieChartOutlineSharpIcon from '@mui/icons-material/PieChartOutlineSharp';
-// import Typography from '@mui/material/Typography';
+import React from 'react';
+import { useMixes, useSoils } from '../../hooks/useMix';
+import MixCard from './MixCard';
+import { Layers } from 'lucide-react';
 
+const Mixes = () => {
+    const { mixes, isLoading, error, deprecateMix } = useMixes();
+    const { soils, isLoading: soilsLoading, error: soilsError } = useSoils();
 
-// const MixCard = ({ mix, deprecateMix }) => {
-//   const navigate = useNavigate();
+    if (isLoading || soilsLoading) return <div className="p-4 text-slate-400 text-center">Loading mixes...</div>;
+    if (error || soilsError) return <div className="p-4 text-red-400 text-center">Error loading mixes.</div>;
 
-//   const { soilParts } = useSoilParts(mix.soil_parts); 
-//   const { soils } = useSoils();
+    if (mixes.length === 0) {
+        return (
+            <div className="p-4 h-full flex flex-col items-center justify-center text-center">
+                <Layers size={48} className="text-slate-600 mb-4" />
+                <h2 className="text-xl font-semibold text-slate-300">No Mixes Found</h2>
+                <p className="text-slate-500 mt-1">Create your first soil mix to get started.</p>
+            </div>
+        );
+    }
 
-//   return (
-//     <>
-//       <Card sx={CARD_STYLE}>
-//         <CardActionArea>
-//           <CardHeader
-//             avatar={
-//               <Avatar sx={AVATAR_STYLE}>
-//                 <PieChartOutlineSharpIcon className="small_button" color='info'/>
-//               </Avatar>
-//             }
-//             title={mix.name}
-//             subheader={mix.created_on}
-//           />
-//           <CardContent>
-//             <Box>
-//               <Typography variant="body2" color="text.secondary">
-//                 {mix.description}
-//               </Typography>
-//               <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-//               <Divider sx={{width: '100%' }}  component="li" />
-//               {soilParts && soilParts.map((sp) => (
-//                 <div key={sp.id}>
-//                   <ListItem
-//                     disableGutters
-//                     secondaryAction={sp.parts}
-//                   >
-//                     <ListItemText 
-//                       primary={soils && soils.length > 0 ? soils.find(s => s.id === sp.soil_id).name : ""}
-//                       secondaryAction={sp.parts}
-//                     />
-//                   </ListItem>
-//                   <Divider sx={{width: '100%' }}  component="li" />
-//                 </div>
-//               ))}
-//             </List>
-//             </Box>
-//           </CardContent>
-//           <CardActions disableSpacing>
-//             <IconButton color="info" onClick={() => navigate(`/mixes/${mix.id}`)}>
-//               <EditSharp />
-//             </IconButton>
-//             <IconButton color="error" onClick={() => deprecateMix(mix.id)}>
-//               <DeleteOutlineSharpIcon />
-//             </IconButton>
-//           </CardActions>
-//         </CardActionArea>
-//       </Card>
-//     </>
-//   );
-// };
+    return (
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {mixes.map((mix) => (
+                <MixCard key={mix.id} mix={mix} deprecateMix={deprecateMix} soils={soils} />
+            ))}
+        </div>
+    );
+};
 
-// const Mixes = () => {
-//   const { mixes, isLoading, error, deprecateMix } = useMixes();
-
-//   if (isLoading) return <Loading/>;
-//   if (error) return <ServerError/>;
-//   if (mixes.length === 0) return <NoData/>;
-
-//   return (
-//     <Grid container justifyContent="center" spacing={4}>
-//       {mixes.map((mix) => (
-//         <Grid key={mix.id} item>
-//           <MixCard mix={mix} deprecateMi={deprecateMix}/>
-//         </Grid>
-//       ))}
-//     </Grid>
-//   );
-// };
-
-// export default Mixes;
+export default Mixes;
