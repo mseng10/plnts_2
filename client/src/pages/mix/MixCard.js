@@ -1,7 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Layers, Edit, Trash2 } from 'lucide-react';
+import { Layers, Edit, Trash2, Blocks as BlocksIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const soilColors = [
+    'text-red-400', 'text-orange-400', 'text-amber-400', 'text-lime-400', 
+    'text-emerald-400', 'text-teal-400', 'text-cyan-400', 'text-sky-400', 
+    'text-blue-400', 'text-indigo-400', 'text-violet-400', 'text-purple-400', 
+    'text-fuchsia-400', 'text-pink-400', 'text-rose-400'
+];
+const getSoilColor = (soilId) => soilId ? soilColors[parseInt(soilId, 10) % soilColors.length] : 'text-slate-400';
 
 const MixCard = ({ mix, deprecateMix, soils }) => {
     const navigate = useNavigate();
@@ -36,8 +44,9 @@ const MixCard = ({ mix, deprecateMix, soils }) => {
             </div>
             <div className="flex-grow space-y-2">
                 {mix.soil_parts.map(part => (
-                    <div key={part.id} className="flex justify-between items-center text-sm bg-slate-900/50 px-3 py-1.5 rounded-md">
-                        <span className="text-slate-300">{getSoilName(part.soil_id)}</span>
+                    <div key={part.id} className="flex items-center text-sm bg-slate-900/50 px-3 py-1.5 rounded-md">
+                        <BlocksIcon size={16} className={`mr-2 flex-shrink-0 ${getSoilColor(part.soil_id)}`} />
+                        <span className="text-slate-300 flex-grow">{getSoilName(part.soil_id)}</span>
                         <span className="font-mono text-xs text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full">{Math.round((part.parts / totalParts) * 100)}%</span>
                     </div>
                 ))}

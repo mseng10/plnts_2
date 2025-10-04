@@ -1,8 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import { useMixes, useSoils } from '../../hooks/useMix';
-import { Layers, Type, AlignLeft, Plus, Minus, Trash2 } from 'lucide-react';
+import { Layers, Type, AlignLeft, Plus, Minus, Trash2, Blocks as BlocksIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
+
+const soilColors = [
+    'text-red-400', 'text-orange-400', 'text-amber-400', 'text-lime-400', 
+    'text-emerald-400', 'text-teal-400', 'text-cyan-400', 'text-sky-400', 
+    'text-blue-400', 'text-indigo-400', 'text-violet-400', 'text-purple-400', 
+    'text-fuchsia-400', 'text-pink-400', 'text-rose-400'
+];
+const getSoilColor = (soilId) => soilId ? soilColors[parseInt(soilId, 10) % soilColors.length] : 'text-slate-400';
 
 const MixUpdate = () => {
     const { id } = useParams();
@@ -93,6 +101,7 @@ const MixUpdate = () => {
                     <div className="space-y-3">
                         {soilsByParts.map((part, index) => (
                             <div key={index} className="flex items-center gap-2">
+                                <BlocksIcon size={20} className={getSoilColor(part.soil_id)} />
                                 <select value={part.soil_id} onChange={(e) => updateSoilPart(index, 'soil_id', e.target.value)} className="flex-grow bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
                                     <option value="">Select Soil...</option>
                                     {soils.map(soil => <option key={soil.id} value={soil.id}>{soil.name}</option>)}

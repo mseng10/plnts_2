@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Droplet, Sprout, SprayCan, Replace, Edit, Trash2 } from 'lucide-react';
+import { Droplet, Sprout, SprayCan, Replace, Edit, Trash2, ClipboardList } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
@@ -26,7 +26,10 @@ const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
             animate={{ opacity: 1, y: 0 }}
             className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
         >
-            <h3 className="text-lg font-semibold text-slate-100 mb-6">{carePlan.name}</h3>
+            <div className="flex items-center gap-3 mb-6">
+                <ClipboardList size={20} className="text-sky-400 flex-shrink-0" />
+                <h3 className="text-lg font-semibold text-slate-100 truncate">{carePlan.name}</h3>
+            </div>
             <div className="grid grid-cols-2 gap-x-6 gap-y-5 flex-grow">
                 {careActions.map(action => (
                     <div key={action.label} className="flex items-center gap-4">
