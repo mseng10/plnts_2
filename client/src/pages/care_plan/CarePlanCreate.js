@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useCarePlans } from '../../hooks/useCarePlans';
-import { ClipboardList, Type, Droplet, Sun, Wind, Scissors } from 'lucide-react';
+import { ClipboardList, Type, Droplet, Sprout, Sparkles, Replace } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const NumberInput = ({ label, value, onChange, icon }) => (
@@ -79,9 +79,9 @@ const CarePlanCreate = () => {
                     <p className="text-sm font-semibold text-slate-400 -mb-2">Frequencies (in days)</p>
                     <div className="grid grid-cols-2 gap-4">
                         <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} />
-                        <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sun size={16} />} />
-                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<Wind size={16} />} />
-                        <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Scissors size={16} />} />
+                        <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sprout size={16} />} />
+                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<Sparkles size={16} />} />
+                        <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Replace size={16} />} />
                     </div>
 
                     {error && <p className="text-sm text-red-400 text-center">{error.message}</p>}

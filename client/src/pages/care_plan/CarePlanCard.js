@@ -1,60 +1,51 @@
-// import React from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { Card, CardActionArea, CardHeader, Avatar, CardContent, List, ListItem, ListItemText, CardActions, IconButton, Typography } from '@mui/material';
-// import { EditSharp } from '@mui/icons-material';
-// import { CARD_STYLE, AVATAR_STYLE } from '../../constants';
-// import IconFactory from '../../elements/IconFactory';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Droplet, Sprout, Sparkles, Replace, Edit, Trash2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-// const CarePlanCard = ({ carePlan }) => {
-//     const navigate = useNavigate();
+const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
+    const navigate = useNavigate();
 
-//     // Helper to create a list of care actions that have a value
-//     const careActions = [
-//         { label: 'Watering', value: carePlan.watering },
-//         { label: 'Fertilizing', value: carePlan.fertilizing },
-//         { label: 'Cleaning', value: carePlan.cleaning },
-//         { label: 'Potting', value: carePlan.potting },
-//     ].filter(action => action.value); // Only include actions with a defined frequency
+    const careActions = [
+        { label: 'Watering', value: carePlan.watering, icon: <Droplet size={22} className="text-sky-400" /> },
+        { label: 'Fertilizing', value: carePlan.fertilizing, icon: <Sprout size={22} className="text-lime-400" /> },
+        { label: 'Cleaning', value: carePlan.cleaning, icon: <Sparkles size={22} className="text-cyan-400" /> },
+        { label: 'Potting', value: carePlan.potting, icon: <Replace size={22} className="text-slate-400" /> },
+    ].filter(action => action.value);
 
-//     return (
-//         <Card sx={{ ...CARD_STYLE, width: 300 }}>
-//             <CardActionArea>
-//                 <CardHeader
-//                     avatar={
-//                         <Avatar sx={AVATAR_STYLE}>
-//                             <IconFactory icon="care_plan" color='info' size="md" />
-//                         </Avatar>
-//                     }
-//                     title={carePlan.name}
-//                     titleTypographyProps={{ variant: 'h6' }}
-//                 />
-//                 <CardContent>
-//                     {careActions.length > 0 ? (
-//                         <List dense>
-//                             {careActions.map((action) => (
-//                                 <ListItem key={action.label} disableGutters>
-//                                     <ListItemText
-//                                         primary={action.label}
-//                                         secondary={`Every ${action.value} days`}
-//                                         primaryTypographyProps={{ color: 'text.primary' }}
-//                                     />
-//                                 </ListItem>
-//                             ))}
-//                         </List>
-//                     ) : (
-//                         <Typography variant="body2" color="text.secondary">
-//                             No care frequencies defined.
-//                         </Typography>
-//                     )}
-//                 </CardContent>
-//                 <CardActions disableSpacing>
-//                     <IconButton color="info" onClick={() => navigate(`/care_plans/${carePlan.id}`)}>
-//                         <EditSharp />
-//                     </IconButton>
-//                 </CardActions>
-//             </CardActionArea>
-//         </Card>
-//     );
-// };
+    const handleDelete = (e) => {
+        e.stopPropagation();
+        if (window.confirm(`Are you sure you want to delete the "${carePlan.name}" care plan?`)) {
+            deprecateCarePlan(carePlan.id);
+        }
+    };
 
-// export default CarePlanCard;
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
+        >
+            <h3 className="text-lg font-semibold text-slate-100 mb-6">{carePlan.name}</h3>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-5 flex-grow">
+                {careActions.map(action => (
+                    <div key={action.label} className="flex items-center gap-4">
+                        <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-slate-900/50 rounded-2xl border border-slate-700/50">
+                           {action.icon}
+                        </div>
+                        <div className="flex-grow min-w-0">
+                            <p className="text-sm font-semibold text-slate-200">{action.label}</p>
+                            <p className="text-xs text-slate-400">Every <span className="font-bold text-slate-300">{action.value}</span> days</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+            <div className="border-t border-slate-700/50 mt-6 pt-4 flex justify-end items-center gap-1">
+                <button onClick={() => navigate(`/care-plans/${carePlan.id}`)} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Edit size={16} /></button>
+                <button onClick={handleDelete} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
+            </div>
+        </motion.div>
+    );
+};
+
+export default CarePlanCard;

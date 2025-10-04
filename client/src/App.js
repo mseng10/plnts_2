@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Droplet, Sun, Thermometer, Wind, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, LayoutGrid, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag } from 'lucide-react';
+import { Home, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Calendar from './pages/calendar/Calendar';
 
 import Systems from './pages/system/Systems.js';
+import Bubby from './pages/bubby/Bubby.js';
+import CarePlans from './pages/care_plan/CarePlans.js';
 import BudgetPage from './pages/budget/Budget.js';
 import GoalCreate from './pages/goals/GoalCreate.js';
 import CarePlanCreate from './pages/care_plan/CarePlanCreate.js';
@@ -77,26 +79,6 @@ const StatCard = ({ icon, color, metric, label, delay }) => {
     );
 };
 
-const PlantCard = ({ name, species, status }) => (
-    <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 mb-4 shadow-lg shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30">
-        <div className="flex justify-between items-start mb-6">
-            <div>
-                <h3 className="text-lg font-semibold text-slate-100">{name}</h3>
-                <p className="text-sm text-slate-400 italic">{species}</p>
-            </div>
-            <div className="flex items-center gap-2 py-1 px-3 bg-emerald-500/10 rounded-full">
-                <div className="w-2 h-2 bg-emerald-500 rounded-full shadow-[0_0_8px_#10b981]" />
-                <p className="text-xs font-medium text-emerald-500">{status}</p>
-            </div>
-        </div>
-        <div className="grid grid-cols-4 gap-4 text-center">
-            {[{ icon: <Droplet size={22} />, value: '2 days', color: 'text-sky-500' }, { icon: <Sun size={22} />, value: 'Bright', color: 'text-amber-500' }, { icon: <Thermometer size={22} />, value: '22°C', color: 'text-red-500' }, { icon: <Wind size={22} />, value: '65%', color: 'text-cyan-500' }].map((metric) => (
-                <div key={metric.value}><div className={`mx-auto ${metric.color}`}>{metric.icon}</div><p className="text-sm font-medium text-slate-400 mt-1">{metric.value}</p></div>
-            ))}
-        </div>
-    </div>
-);
-
 // --- PAGE COMPONENTS (PLACEHOLDERS) ---
 const DashboardPage = () => (
     <div className="p-4 h-full flex flex-col">
@@ -105,11 +87,6 @@ const DashboardPage = () => (
             <StatCard icon={<ListTodo />} color="tasks" metric="5" label="Tasks Today" delay={2} />
             <StatCard icon={<ShieldCheck />} color="care" metric="3" label="Need Care" delay={3} />
             <StatCard icon={<DollarSign />} color="budget" metric="$120" label="Remaining Budget" delay={4} />
-        </div>
-        <div>
-            <h2 className="text-lg font-semibold text-slate-400 mb-4 px-2">Living Collection</h2>
-            <PlantCard name="Monstera Deliciosa" species="Swiss Cheese Plant" status="Thriving" />
-            <PlantCard name="Ficus Lyrata" species="Fiddle Leaf Fig" status="Excellent" />
         </div>
     </div>
 );
@@ -125,11 +102,11 @@ const AppLayout = () => {
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const navItems = [
-    { to: "/", icon: <Leaf /> }, { to: "/calendar", icon: <CalendarIcon /> }, { to: "/budget", icon: <DollarSign /> },
-    { to: "/systems", icon: <LayoutGrid /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
+    { to: "/", icon: <Home /> }, { to: "/calendar", icon: <CalendarIcon /> }, { to: "/budget", icon: <DollarSign /> },
+    { to: "/bubbys/systems", icon: <Leaf /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
 
-  const isWidePage = ['/calendar', '/budget', '/systems', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname);
+  const isWidePage = ['/calendar', '/budget', '/bubbys/systems', '/bubbys/care-plans', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname);
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -214,8 +191,11 @@ export default function App() {
       <Route path="/" element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="calendar" element={<Calendar />} />
-        <Route path="budget" element={<BudgetPage />} />
-        <Route path="systems" element={<Systems />} />
+        <Route path="budget" element={<BudgetPage />} />        
+        <Route path="bubbys" element={<Bubby />}>
+          <Route path="systems" element={<Systems />} />
+          <Route path="care-plans" element={<CarePlans />} />
+        </Route>
         <Route path="goals/create" element={<GoalCreate />} />
         <Route path="care-plans/create" element={<CarePlanCreate />} />
         <Route path="mixes/create" element={<MixCreate />} />
