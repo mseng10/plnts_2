@@ -72,7 +72,7 @@ const CarePlanUpdate = () => {
             className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 shadow-2xl shadow-black/20 flex flex-col"
         >
             <div className="flex items-center gap-4 mb-6 flex-shrink-0">
-                <div className="w-14 h-14 bg-sky-500/10 text-sky-500 rounded-2xl flex items-center justify-center">
+                <div className="w-14 h-14 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center">
                     <ClipboardList size={28} />
                 </div>
                 <div>
@@ -92,7 +92,7 @@ const CarePlanUpdate = () => {
                 <div className="grid grid-cols-2 gap-4">
                     <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} color="text-sky-400" />
                     <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sprout size={16} />} color="text-lime-400" />
-                    <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<SprayCan size={16} />} color="text-fuchsia-400" />
+                    <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<SprayCan size={16} />} color="text-amber-400" />
                     <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Replace size={16} />} color="text-slate-400" />
                 </div>
 

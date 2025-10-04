@@ -1,37 +1,9 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { useNavigate, useParams, Outlet } from 'react-router-dom';
 import { useSystems, useLights } from '../../hooks/useSystems';
 import { Thermometer, Droplet, Sun, Edit, AlertTriangle, Leaf, Trash2, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import dayjs from 'dayjs';
-
-const CircularStat = ({ value, icon, colorClass }) => {
-  const radius = 35;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (value / 100) * circumference;
-
-  return (
-    <div className="relative w-24 h-24 flex flex-col items-center justify-center">
-      <svg className="absolute w-full h-full transform -rotate-90" viewBox="0 0 80 80">
-        <circle className="text-slate-700/50" strokeWidth="6" stroke="currentColor" fill="transparent" r={radius} cx="40" cy="40" />
-        <circle
-          className={colorClass}
-          strokeWidth="6"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          strokeLinecap="round"
-          stroke="currentColor"
-          fill="transparent"
-          r={radius}
-          cx="40"
-          cy="40"
-        />
-      </svg>
-      <div className={`absolute ${colorClass}`}>{icon}</div>
-      <span className="absolute bottom-1 text-xs font-medium text-slate-400">{value}%</span>
-    </div>
-  );
-};
 
 const SystemCard = ({ system, lights, deprecateSystem }) => {
   const navigate = useNavigate();
@@ -50,8 +22,11 @@ const SystemCard = ({ system, lights, deprecateSystem }) => {
       className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
     >
       <div className="flex justify-between items-start mb-4">
-        <div>
-          <h3 className="text-lg font-semibold text-slate-100">{system.name}</h3>
+        <div className="flex-grow min-w-0">
+          <div className="flex items-center gap-3">
+            <ShieldCheck size={20} className="text-green-400 flex-shrink-0" />
+            <h3 className="text-lg font-semibold text-slate-100 truncate">{system.name}</h3>
+          </div>
           <p className="text-sm text-slate-400">Created: {dayjs(system.created_on).format('MMM D, YYYY')}</p>
         </div>
         <div className="flex items-center gap-2 py-1 px-3 bg-emerald-500/10 rounded-full">
@@ -60,21 +35,33 @@ const SystemCard = ({ system, lights, deprecateSystem }) => {
         </div>
       </div>
 
-      <div className="flex justify-around items-center my-4">
-        <CircularStat value={system.humidity} icon={<Droplet size={24} />} colorClass="text-sky-500" />
-        <CircularStat value={system.temperature} icon={<Thermometer size={24} />} colorClass="text-red-500" />
-        <CircularStat value={system.light} icon={<Sun size={24} />} colorClass="text-amber-500" />
+      <div className="flex justify-around items-center my-4 text-center">
+        <div>
+          <Droplet size={22} className="text-sky-400 mx-auto mb-1" />
+          <p className="text-lg font-bold text-slate-100">{system.target_humidity}<span className="text-sm font-medium text-slate-400">%</span></p>
+        </div>
+        <div>
+          <Thermometer size={22} className="text-red-400 mx-auto mb-1" />
+          <p className="text-lg font-bold text-slate-100">{system.target_temperature}<span className="text-sm font-medium text-slate-400">°F</span></p>
+        </div>
+        <div>
+          <Sun size={22} className="text-amber-400 mx-auto mb-1" />
+          <p className="text-lg font-bold text-slate-100">
+            {system.duration}<span className="text-sm font-medium text-slate-400">h</span>
+            <span className="text-xs text-slate-500 mx-1">/</span>
+            {system.distance}<span className="text-sm font-medium text-slate-400">"</span>
+          </p>
+        </div>
       </div>
+
 
       <div className="mt-4">
         <h4 className="text-sm font-semibold text-slate-400 mb-2">Lights</h4>
-        <ul className="space-y-2">
+        <div className="flex items-center gap-2">
           {lights && lights.map((light) => (
-            <li key={light.id} className="text-sm text-slate-300 bg-slate-900/50 px-3 py-1.5 rounded-md flex items-center gap-2">
-              <Sun size={14} className="text-amber-500" /> {light.name}
-            </li>
+            <div key={light.id} className="w-6 h-6 rounded-full bg-amber-500" title={light.name} />
           ))}
-        </ul>
+        </div>
       </div>
 
       <div className="border-t border-slate-700/50 mt-6 pt-4 flex justify-end items-center gap-2">

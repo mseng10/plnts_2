@@ -9,7 +9,7 @@ const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
     const careActions = [
         { label: 'Watering', value: carePlan.watering, icon: <Droplet size={22} className="text-sky-400" /> },
         { label: 'Fertilizing', value: carePlan.fertilizing, icon: <Sprout size={22} className="text-lime-400" /> },
-        { label: 'Cleaning', value: carePlan.cleaning, icon: <SprayCan size={22} className="text-fuchsia-400" /> },
+        { label: 'Cleaning', value: carePlan.cleaning, icon: <SprayCan size={22} className="text-amber-400" /> },
         { label: 'Potting', value: carePlan.potting, icon: <Replace size={22} className="text-slate-400" /> },
     ].filter(action => action.value);
 
@@ -27,7 +27,7 @@ const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
             className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
         >
             <div className="flex items-center gap-3 mb-6">
-                <ClipboardList size={20} className="text-sky-400 flex-shrink-0" />
+                <ClipboardList size={20} className="text-purple-400 flex-shrink-0" />
                 <h3 className="text-lg font-semibold text-slate-100 truncate">{carePlan.name}</h3>
             </div>
             <div className="grid grid-cols-2 gap-x-6 gap-y-5 flex-grow">

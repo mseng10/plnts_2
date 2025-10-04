@@ -5,7 +5,7 @@ import { ClipboardList, Type, Droplet, Sprout, SprayCan, Replace } from 'lucide-
 import { motion } from 'framer-motion';
 
 const NumberInput = ({ label, value, onChange, icon }) => (
-    <div className="relative">
+    <div className="relative group">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">{icon}</div>
         <input
             type="number"
@@ -78,10 +78,10 @@ const CarePlanCreate = () => {
 
                     <p className="text-sm font-semibold text-slate-400 -mb-2">Frequencies (in days)</p>
                     <div className="grid grid-cols-2 gap-4">
-                        <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} />
-                        <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sprout size={16} />} />
-                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<SprayCan size={16} />} />
-                        <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Replace size={16} />} />
+                        <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} color="text-sky-400" />
+                        <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sprout size={16} />} color="text-lime-400" />
+                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<SprayCan size={16} />} color="text-amber-400" />
+                        <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Replace size={16} />} color="text-slate-400" />
                     </div>
 
                     {error && <p className="text-sm text-red-400 text-center">{error.message}</p>}
