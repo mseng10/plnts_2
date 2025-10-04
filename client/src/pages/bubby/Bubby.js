@@ -29,7 +29,7 @@ const Bubby = () => {
                     </NavLink>
                 ))}
             </div>
-            <div className="flex-grow"><Outlet /></div>
+            <div className="flex-grow min-h-0"><Outlet /></div>
         </div>
     );
 };

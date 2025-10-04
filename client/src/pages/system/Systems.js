@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, Outlet } from 'react-router-dom';
 import { useSystems, useLights } from '../../hooks/useSystems';
 import { Thermometer, Droplet, Sun, Edit, AlertTriangle, Leaf, Trash2, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
@@ -80,7 +80,7 @@ const SystemCard = ({ system, lights, deprecateSystem }) => {
       <div className="border-t border-slate-700/50 mt-6 pt-4 flex justify-end items-center gap-2">
         <button className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Leaf size={16} /></button>
         <button className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><AlertTriangle size={16} /></button>
-        <button onClick={() => navigate(`/systems/${system.id}`)} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Edit size={16} /></button>
+        <button onClick={() => navigate(`/bubbys/systems/${system.id}`)} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Edit size={16} /></button>
         <button onClick={handleDelete} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
       </div>
     </motion.div>
@@ -88,6 +88,23 @@ const SystemCard = ({ system, lights, deprecateSystem }) => {
 };
 
 const Systems = () => {
+  const { id } = useParams();
+
+  if (id) {
+    return (
+        <div className="grid grid-cols-2 gap-8 items-start" style={{height: 'calc(100vh - 230px)'}}>
+            <div className="overflow-y-auto h-full pr-4 -mr-4 scrollbar-hide"><SystemsList /></div>
+            <Outlet />
+        </div>
+    );
+  }
+  return (
+    <div className="h-full overflow-y-auto scrollbar-hide"><SystemsList /></div>
+  );
+};
+
+const SystemsList = () => {
+  const { id } = useParams();
   const { systems, isLoading, error, deprecateSystem } = useSystems();
   const { lights } = useLights();
 
@@ -104,7 +121,7 @@ const Systems = () => {
   }
 
   return (
-    <div className="p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className={`p-4 grid ${id ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-6`}>
       {systems.map((system) => (
         <SystemCard 
           key={system.id} 
@@ -115,6 +132,6 @@ const Systems = () => {
       ))}
     </div>
   );
-};
+}
 
 export default Systems;
