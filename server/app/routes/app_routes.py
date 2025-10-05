@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from shared.db import Table
 from shared.logger import logger
+from datetime import datetime
 
 # import nbformat
 # from nbconvert import HTMLExporter
@@ -20,10 +21,29 @@ def health():
 def get_meta():
     """Get meta data of the application."""
     logger.info("Received request to query the meta")
+
+    # Calculate remaining budget for the current month
+    now = datetime.now()
+    current_month_str = now.strftime("%Y-%m")
+    budget_doc = Table.BUDGET.get_many({"month": current_month_str, "deprecated": False})
+    current_budget = budget_doc[0].budget if budget_doc else 0
+
+    start_of_month = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    expenses = Table.EXPENSE.get_many({"purchased_on": {"$gte": start_of_month}})
+    total_spent = sum(expense.cost for expense in expenses)
+    remaining_budget = current_budget - total_spent
+
+    # Calculate total tasks
+    todos = Table.TODO.get_many()
+    task_count = sum(len(todo.tasks) for todo in todos)
+
     meta = {
         "alert_count": Table.ALERT.count(),
-        "todo_count": Table.TODO.count(),
+        "task_count": task_count,
+        "remaining_budget": remaining_budget,
+        "total_plants": Table.PLANT.count(),
     }
+
     logger.info("Successfully generated meta data.")
     return jsonify(meta)
 

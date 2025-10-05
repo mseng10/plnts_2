@@ -8,6 +8,7 @@ import Systems from './pages/system/Systems.js';
 import Bubby from './pages/bubby/Bubby.js';
 import Mixes from './pages/mix/Mixes.js';
 import CarePlans from './pages/care_plan/CarePlans.js';
+import Plants from './pages/plant/Plants.js';
 import BudgetPage from './pages/budget/Budget.js';
 import CarePlanUpdate from './pages/care_plan/CarePlanUpdate.js';
 import MixUpdate from './pages/mix/MixUpdate.js';
@@ -18,6 +19,8 @@ import MixCreate from './pages/mix/MixCreate.js';
 import TodoCreate from './pages/todo/TodoCreate.js';
 import SystemCreate from './pages/system/SystemCreate.js';
 import PlantCreate from './pages/plant/PlantCreate.js';
+import PlantUpdate from './pages/plant/PlantUpdate.js';
+import { useMeta } from './hooks/useMeta.js';
 
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
@@ -84,16 +87,23 @@ const StatCard = ({ icon, color, metric, label, delay }) => {
 };
 
 // --- PAGE COMPONENTS (PLACEHOLDERS) ---
-const DashboardPage = () => (
-    <div className="p-4 h-full flex flex-col">
-        <div className="grid grid-cols-2 gap-4 mb-8">
-            <StatCard icon={<Leaf />} color="plants" metric="24" label="Total Plants" delay={1} />
-            <StatCard icon={<ListTodo />} color="tasks" metric="5" label="Tasks Today" delay={2} />
-            <StatCard icon={<ShieldCheck />} color="care" metric="3" label="Need Care" delay={3} />
-            <StatCard icon={<DollarSign />} color="budget" metric="$120" label="Remaining Budget" delay={4} />
+const DashboardPage = () => {
+    const { meta, isLoading, error } = useMeta();
+
+    if (isLoading) return <div className="p-4 text-slate-400 text-center">Loading dashboard...</div>;
+    if (error) return <div className="p-4 text-red-400 text-center">Could not load dashboard data.</div>;
+
+    return (
+        <div className="p-4 h-full flex flex-col">
+            <div className="grid grid-cols-2 gap-4 mb-8">
+                <StatCard icon={<Leaf />} color="plants" metric={meta?.total_plants ?? '...'} label="Total Plants" delay={1} />
+                <StatCard icon={<ListTodo />} color="tasks" metric={meta?.task_count ?? '...'} label="Tasks Today" delay={2} />
+                <StatCard icon={<ShieldCheck />} color="care" metric={meta?.alert_count ?? '...'} label="Need Care" delay={3} />
+                <StatCard icon={<DollarSign />} color="budget" metric={`$${meta?.remaining_budget?.toFixed(0) ?? '...'}`} label="Remaining Budget" delay={4} />
+            </div>
         </div>
-    </div>
-);
+    );
+};
 const PagePlaceholder = ({ title }) => <div className="p-8"><h1 className="text-4xl font-bold text-slate-100">{title}</h1></div>;
 
 // --- NAVIGATION / LAYOUT ---
@@ -109,8 +119,6 @@ const AppLayout = () => {
     { to: "/", icon: <Home /> }, { to: "/calendar", icon: <CalendarIcon /> }, { to: "/budget", icon: <DollarSign /> },
     { to: "/bubbys/systems", icon: <Leaf /> }, { to: "/inventory", icon: <Package /> }, { to: "/settings", icon: <Settings /> }
   ];
-
-  const isWidePage = ['/calendar', '/budget', '/bubbys/systems', '/bubbys/care-plans', '/bubbys/mixes', '/goals/create', '/care-plans/create', '/mixes/create', '/todos/create', '/systems/create', '/plants/create'].includes(location.pathname) || location.pathname.startsWith('/bubbys/care-plans/') || location.pathname.startsWith('/bubbys/mixes/') || location.pathname.startsWith('/bubbys/systems/');
 
   useEffect(() => {
     const activeLink = navRef.current?.querySelector('a.active');
@@ -131,10 +139,10 @@ const AppLayout = () => {
 
   return (
     <div className="h-screen grid grid-rows-[auto_1fr_auto]">
-      <div className={`${isWidePage ? 'max-w-4xl' : 'max-w-md'} mx-auto px-4 pt-4 w-full`}>
+      <div className="max-w-4xl mx-auto px-4 pt-4 w-full">
           <Header />
       </div>
-      <main className={`mx-auto w-full h-full overflow-hidden ${isWidePage ? 'max-w-4xl' : 'max-w-md'}`}>
+      <main className="mx-auto w-full h-full overflow-hidden max-w-4xl">
           <Outlet />
       </main>
       <footer ref={footerRef} className="relative w-[calc(100%-2rem)] max-w-md mx-auto mb-4 z-10">
@@ -205,6 +213,9 @@ export default function App() {
           </Route>
           <Route path="mixes" element={<Mixes />}>
             <Route path=":id" element={<MixUpdate />} />
+          </Route>
+          <Route path="plants" element={<Plants />}>
+            <Route path=":id" element={<PlantUpdate />} />
           </Route>
         </Route>
         <Route path="goals/create" element={<GoalCreate />} />

@@ -15,7 +15,7 @@ const CarePlans = () => {
 
     if (id) {
         return (
-            <div className="grid grid-cols-2 gap-8 items-start" style={{height: 'calc(100vh - 230px)'}}>
+            <div className="grid grid-cols-2 gap-8 items-start h-full">
                 <div className="overflow-y-auto h-full pr-4 -mr-4 scrollbar-hide"><CarePlansList /></div>
                 <Outlet />
             </div>

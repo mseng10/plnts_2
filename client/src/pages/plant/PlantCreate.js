@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { usePlants, useSpecies } from '../../hooks/usePlants';
+import { usePlants, useSpecies } from '../../hooks/usePlants'; // useSpecies is still needed for SpeciesCreateCard
 import { useCarePlans } from '../../hooks/useCarePlans';
 import { PHASE_LABELS } from '../../constants';
 import { useMixes } from '../../hooks/useMix';
@@ -35,8 +35,8 @@ const DateSelector = ({ label, value, setValue }) => (
 
 const PlantCreate = () => {
     const navigate = useNavigate();
-    const { systems, isLoading, error, createPlant } = usePlants();
-    const { species } = useSpecies();
+    const { systems, isLoading, error, createPlant, species } = usePlants();
+    const { createSpecies } = useSpecies(); // Keep for creating new species
     const { mixes } = useMixes(true);
     const { carePlans } = useCarePlans();
 
@@ -58,6 +58,7 @@ const PlantCreate = () => {
     const [cleansed_on, setCleansedOn] = useState(dayjs());
 
     const handleSpeciesCreated = (newSpecies) => {
+        createSpecies(newSpecies); // This will be handled by the useSpecies hook, but we can call it to update the list
         setSelectedSpecies(newSpecies);
         setShowSpeciesCreate(false);
     };

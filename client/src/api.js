@@ -36,9 +36,6 @@ export const APIS = {
     deleteOne: "/todos/{id}/",
 
   },
-  meta: {
-    getOne: "/meta/"
-  },
   stats: {
     getOne: "/stats/"
   },
@@ -95,6 +92,9 @@ export const APIS = {
     create: "/goals/",
     updateOne: "/goals/{id}/",
     deleteOne: "/goals/{id}/",
+  },
+  meta: {
+    getOne: "/meta/",
   }
 }
 

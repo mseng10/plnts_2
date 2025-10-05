@@ -6,13 +6,6 @@ import { motion } from 'framer-motion';
 const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
     const navigate = useNavigate();
 
-    const careActions = [
-        { label: 'Watering', value: carePlan.watering, icon: <Droplet size={22} className="text-sky-400" /> },
-        { label: 'Fertilizing', value: carePlan.fertilizing, icon: <Sprout size={22} className="text-lime-400" /> },
-        { label: 'Cleaning', value: carePlan.cleaning, icon: <SprayCan size={22} className="text-amber-400" /> },
-        { label: 'Potting', value: carePlan.potting, icon: <Replace size={22} className="text-slate-400" /> },
-    ].filter(action => action.value);
-
     const handleDelete = (e) => {
         e.stopPropagation();
         if (window.confirm(`Are you sure you want to delete the "${carePlan.name}" care plan?`)) {
@@ -20,15 +13,22 @@ const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
         }
     };
 
+    const careActions = [
+        { label: 'Watering', value: carePlan.watering, icon: <Droplet size={22} className="text-sky-400" /> },
+        { label: 'Fertilizing', value: carePlan.fertilizing, icon: <Sprout size={22} className="text-lime-400" /> },
+        { label: 'Cleaning', value: carePlan.cleaning, icon: <SprayCan size={22} className="text-amber-400" /> },
+        { label: 'Potting', value: carePlan.potting, icon: <Replace size={22} className="text-slate-400" /> },
+    ].filter(action => action.value);
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30"
+            className="group bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-purple-900/50 hover:border-slate-700"
         >
             <div className="flex items-center gap-3 mb-6">
                 <ClipboardList size={20} className="text-purple-400 flex-shrink-0" />
-                <h3 className="text-lg font-semibold text-slate-100 truncate">{carePlan.name}</h3>
+                <h3 className="text-lg font-semibold text-slate-100 truncate transition-colors group-hover:text-purple-400">{carePlan.name}</h3>
             </div>
             <div className="grid grid-cols-2 gap-x-6 gap-y-5 flex-grow">
                 {careActions.map(action => (

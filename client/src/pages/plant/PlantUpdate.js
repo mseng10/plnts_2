@@ -1,257 +1,175 @@
-// import React, { useState, useEffect } from 'react';
-// import { useParams, useNavigate } from "react-router-dom";
-// import Box from '@mui/material/Box';
-// import { AutoCompleteInput, DropdownInput, NumberInput, DateSelector } from '../../elements/Form';
-// import { usePlants, useSpecies } from '../../hooks/usePlants';
-// import { useCarePlans } from '../../hooks/useCarePlans';
-// import { PHASE_LABELS } from '../../constants';
-// import { ServerError, Loading } from '../../elements/Page';
-// import { useMixes } from '../../hooks/useMix';
-// import { Paper, Button, Grid, Typography, Stack, TextField } from '@mui/material';
-// import IconFactory from '../../elements/IconFactory';
-// import dayjs from 'dayjs';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from "react-router-dom";
+import { usePlants } from '../../hooks/usePlants';
+import { PHASE_LABELS } from '../../constants';
+import { Leaf } from 'lucide-react';
+import { motion } from 'framer-motion';
+import dayjs from 'dayjs';
 
-// const PlantUpdate = () => {
-//     const { id } = useParams();
-//     const navigate = useNavigate();
-    
-//     // Hooks
-//     const { plants, systems, isLoading: plantsLoading, error, updatePlant } = usePlants();
-//     const { mixes, isLoading: mixesLoading } = useMixes();
-//     const { species, isLoading: speciesLoading } = useSpecies();
-//     const { carePlans, isLoading: carePlansLoading } = useCarePlans();
+const AutoCompleteInput = ({ label, value, setValue, options }) => (
+    <select value={value ? value.id : ''} onChange={(e) => setValue(options.find(opt => String(opt.id) === e.target.value) || null)} className="w-full bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        <option value="">Select {label}...</option>
+        {options.map(option => <option key={option.id} value={option.id}>{option.name}</option>)}
+    </select>
+);
 
-//     // Form initialization state
-//     const [formInitialized, setFormInitialized] = useState(false);
-//     const [currentPlant, setCurrentPlant] = useState(null);
+const DropdownInput = ({ label, value, setValue, options }) => (
+    <select value={value} onChange={(e) => setValue(e.target.value)} className="w-full bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+        {options.map(option => <option key={option} value={option}>{option}</option>)}
+    </select>
+);
 
-//     // Fields
-//     const [selectedSpecies, setSelectedSpecies] = useState(null);
-//     const [mix, setMix] = useState(null);
-//     const [system, setSystem] = useState(null);
-//     const [carePlan, setCarePlan] = useState(null);
-//     const [size, setSize] = useState('');
-//     const [cost, setCost] = useState('');
-//     const [phase, setPhase] = useState("adult");
-//     const [description, setDescription] = useState('');
-    
-//     // Date fields
-//     const [potted_on, setPottedOn] = useState(dayjs());
-//     const [watered_on, setWateredOn] = useState(dayjs());
-//     const [fertilized_on, setFertilizedOn] = useState(dayjs());
-//     const [cleansed_on, setCleansedOn] = useState(dayjs());
+const NumberInput = ({ label, value, setValue }) => (
+    <input type="number" placeholder={label} value={value} onChange={(e) => setValue(e.target.value)} className="w-full bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+);
 
-//     // Find the plant first
-//     useEffect(() => {
-//         if (plants.length > 0 && id && !currentPlant) {
-//             const plant = plants.find(_p => String(_p.id) === String(id));
-//             if (plant) {
-//                 setCurrentPlant(plant);
-//             } else {
-//                 navigate("/404");
-//             }
-//         }
-//     }, [plants, id, currentPlant, navigate]);
+const DateSelector = ({ label, value, setValue }) => (
+    <div className="flex flex-col gap-1">
+        <label className="text-xs text-slate-400">{label}</label>
+        <input type="date" value={value.format('YYYY-MM-DD')} onChange={(e) => setValue(dayjs(e.target.value))} className="w-full bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+    </div>
+);
 
-//     // Initialize form when we have the plant and data is loaded (even if arrays are empty)
-//     useEffect(() => {
-//         const initializeForm = () => {
-//             if (currentPlant && 
-//                 !mixesLoading && 
-//                 !speciesLoading && 
-//                 !plantsLoading && 
-//                 !carePlansLoading && 
-//                 !formInitialized) {
+const PlantUpdate = () => {
+    const { id } = useParams();
+    const navigate = useNavigate();
+    const { plants, systems, mixes, carePlans, species, isLoading, error, updatePlant } = usePlants();
+
+    const [currentPlant, setCurrentPlant] = useState(null);
+    const [formError, setFormError] = useState('');
+
+    // Form fields
+    const [selectedSpecies, setSelectedSpecies] = useState(null);
+    const [system, setSystem] = useState(null);
+    const [mix, setMix] = useState(null);
+    const [carePlan, setCarePlan] = useState(null);
+    const [size, setSize] = useState('');
+    const [cost, setCost] = useState('');
+    const [phase, setPhase] = useState(PHASE_LABELS.adult);
+    const [description, setDescription] = useState('');
+    const [potted_on, setPottedOn] = useState(dayjs());
+    const [watered_on, setWateredOn] = useState(dayjs());
+    const [fertilized_on, setFertilizedOn] = useState(dayjs());
+    const [cleansed_on, setCleansedOn] = useState(dayjs());
+
+    useEffect(() => {
+        if (plants.length > 0) {
+            const plantToUpdate = plants.find(p => String(p.id) === id);
+            if (plantToUpdate) {
+                setCurrentPlant(plantToUpdate);
+                setSelectedSpecies(plantToUpdate.species || null);
+                setSystem(plantToUpdate.system || null);
+                setMix(plantToUpdate.mix || null);
+                setCarePlan(plantToUpdate.carePlan || null);
+                setSize(plantToUpdate.size || '');
+                setCost(plantToUpdate.cost || '');
+                setPhase(plantToUpdate.phase || PHASE_LABELS.adult);
+                setDescription(plantToUpdate.description || '');
+                setPottedOn(dayjs(plantToUpdate.potted_on));
+                setWateredOn(dayjs(plantToUpdate.watered_on));
+                setFertilizedOn(dayjs(plantToUpdate.fertilized_on));
+                setCleansedOn(dayjs(plantToUpdate.cleansed_on));
+            } else {
+                navigate('/404');
+            }
+        }
+    }, [id, plants, navigate]);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setFormError('');
+
+        if (!selectedSpecies || !system) {
+            setFormError('Please select a Species and a System.');
+            return;
+        }
+
+        const updatedPlantData = {
+            id,
+            size: parseInt(size, 10) || 0,
+            cost: parseFloat(cost) || 0,
+            description: description || '',
+            species_id: selectedSpecies ? selectedSpecies.id : null,
+            system_id: system.id,
+            mix_id: mix ? mix.id : null,
+            care_plan_id: carePlan ? carePlan.id : null,
+            phase,
+            potted_on: potted_on.toISOString(),
+            watered_on: watered_on.toISOString(),
+            fertilized_on: fertilized_on.toISOString(),
+            cleansed_on: cleansed_on.toISOString(),
+        };
+
+        try {
+            await updatePlant(updatedPlantData);
+            navigate("/");
+        } catch (error) {
+            console.error('Error updating plant:', error);
+            setFormError('Failed to update plant. Please try again.');
+        }
+    };
+
+    const handleCancel = () => navigate(-1);
+
+    if (isLoading || !currentPlant) return <div className="p-4 text-slate-400 text-center">Loading plant details...</div>;
+    if (error) return <div className="p-4 text-red-400 text-center">{error}</div>;
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 50 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 shadow-2xl shadow-black/20 flex flex-col gap-6"
+        >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6 h-full">
+                <div className="flex items-center gap-4 flex-shrink-0">
+                    <div className="w-14 h-14 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center">
+                        <Leaf size={28} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl font-semibold text-slate-100">Edit Bubby</h2>
+                        <p className="text-sm text-slate-400">Update details for {currentPlant.species.name}.</p>
+                    </div>
+                </div>
                 
-//                 console.log('Initializing form with plant:', currentPlant);
-//                 console.log('Available mixes:', mixes);
-//                 console.log('Available species:', species);
-//                 console.log('Available systems:', systems);
-//                 console.log('Available carePlans:', carePlans);
-                
-//                 // Find matching items, or null if not found
-//                 setMix(mixes.find(_m => _m.id === currentPlant.mix_id) || null);
-//                 setSelectedSpecies(species.find(_s => _s.id === currentPlant.species_id) || null);
-//                 setSystem(systems.find(_s => _s.id === currentPlant.system_id) || null);
-//                 setCarePlan(carePlans.find(_c => _c.id === currentPlant.care_plan_id) || null);
-                
-//                 // Set other fields
-//                 setSize(currentPlant.size || '');
-//                 setCost(currentPlant.cost || '');
-//                 setPhase(currentPlant.phase || "adult");
-//                 setDescription(currentPlant.description || '');
-                
-//                 // Handle dates safely
-//                 setPottedOn(currentPlant.potted_on ? dayjs(currentPlant.potted_on) : dayjs());
-//                 setWateredOn(currentPlant.watered_on ? dayjs(currentPlant.watered_on) : dayjs());
-//                 setFertilizedOn(currentPlant.fertilized_on ? dayjs(currentPlant.fertilized_on) : dayjs());
-//                 setCleansedOn(currentPlant.cleansed_on ? dayjs(currentPlant.cleansed_on) : dayjs());
-                
-//                 setFormInitialized(true);
-//             }
-//         };
+                <div className="flex-grow space-y-6 overflow-y-auto pr-4 -mr-4">
+                    <div className="grid grid-cols-2 gap-4">
+                        <AutoCompleteInput label="Species" value={selectedSpecies} setValue={setSelectedSpecies} options={species} />
+                        <AutoCompleteInput label="System" value={system} setValue={setSystem} options={systems} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        <AutoCompleteInput label="Mix" value={mix} setValue={setMix} options={mixes} />
+                        <AutoCompleteInput label="Care Plan" value={carePlan} setValue={setCarePlan} options={carePlans} />
+                    </div>
+                    <DropdownInput label="Phase" value={phase} options={Object.values(PHASE_LABELS)} setValue={setPhase} />                    
 
-//         initializeForm();
-//     }, [currentPlant, mixes, species, systems, carePlans, mixesLoading, speciesLoading, plantsLoading, carePlansLoading, formInitialized]);
+                    <div className="grid grid-cols-2 gap-4">
+                        <NumberInput label="Size" value={size} setValue={setSize} />
+                        <NumberInput label="Cost" value={cost} setValue={setCost} />
+                    </div>
 
-//     const handleSubmit = async (event) => {
-//         event.preventDefault();
+                    <textarea placeholder="Description (optional)" value={description} onChange={(e) => setDescription(e.target.value)} rows="3" className="w-full bg-slate-900/50 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none resize-none" />
 
-//         // if (!selectedSpecies || !mix || !system) {
-//         //     return;
-//         // }
+                    <div className="grid grid-cols-2 gap-4">
+                        <DateSelector label="Potted On" value={potted_on} setValue={setPottedOn} />
+                        <DateSelector label="Watered On" value={watered_on} setValue={setWateredOn} />
+                        <DateSelector label="Fertilized On" value={fertilized_on} setValue={setFertilizedOn} />
+                        <DateSelector label="Cleansed On" value={cleansed_on} setValue={setCleansedOn} />
+                    </div>
+                </div>
 
-//         const updatedPlant = {
-//             id,
-//             size: parseInt(size, 10) || 0,
-//             cost: parseFloat(cost) || 0,
-//             description: description || '',
-//             mix_id: mix ? mix.id: null,
-//             system_id: system.id,
-//             species_id: selectedSpecies ? selectedSpecies.id : null,
-//             care_plan_id: carePlan ? carePlan.id : null,
-//             phase,
-//             potted_on: potted_on.toISOString(),
-//             watered_on: watered_on.toISOString(),
-//             fertilized_on: fertilized_on.toISOString(),
-//             cleansed_on: cleansed_on.toISOString(),
-//         };
+                {formError && <p className="text-sm text-red-400 text-center flex-shrink-0">{formError}</p>}
 
-//         try {
-//             await updatePlant(updatedPlant);
-//             navigate("/");
-//         } catch (err) {
-//             console.error('Error updating plant:', err);
-//         }
-//     };
+                <div className="flex justify-end gap-3 pt-4 mt-auto flex-shrink-0">
+                    <button type="button" onClick={handleCancel} className="px-4 py-2 rounded-lg text-sm font-semibold text-slate-300 hover:bg-slate-800/60 transition-colors">Cancel</button>
+                    <button type="submit" disabled={isLoading} className="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 transition-colors disabled:bg-slate-600 disabled:cursor-not-allowed">
+                        {isLoading ? 'Saving...' : 'Save Changes'}
+                    </button>
+                </div>
+            </form>
+        </motion.div>
+    );
+};
 
-//     const handleCancel = () => {
-//         navigate("/");
-//     };
-
-//     // Glassmorphism styling for the description field
-//     const getFormFieldStyles = () => ({
-//         '& .MuiOutlinedInput-root': {
-//             backgroundColor: 'rgba(255, 255, 255, 0.05)',
-//             backdropFilter: 'blur(10px)',
-//             '& fieldset': {
-//                 borderColor: 'rgba(255, 255, 255, 0.3)',
-//             },
-//             '&:hover fieldset': {
-//                 borderColor: 'rgba(255, 255, 255, 0.5)',
-//             },
-//             '&.Mui-focused fieldset': {
-//                 borderColor: 'primary.main',
-//             },
-//         },
-//         '& .MuiInputLabel-root': {
-//             color: 'rgba(255, 255, 255, 0.7)',
-//             '&.Mui-focused': {
-//                 color: 'primary.main',
-//             },
-//         },
-//         '& .MuiInputBase-input': {
-//             color: 'white',
-//         },
-//     });
-
-//     // Show loading if any of the critical data is still loading OR if form is not initialized yet
-//     const isLoading = plantsLoading || mixesLoading || speciesLoading || carePlansLoading || !formInitialized;
-    
-//     if (isLoading) return <Loading />;
-//     if (error && !error.message) return <ServerError error={error} />;
-
-//     // Debug info - you can remove this once it's working
-//     console.log('Render state:', {
-//         currentPlant,
-//         formInitialized,
-//         isLoading,
-//         plantsCount: plants.length,
-//         mixesCount: mixes.length,
-//         speciesCount: species.length,
-//         systemsCount: systems.length,
-//         carePlansCount: carePlans.length
-//     });
-
-//     return (
-//         <Box sx={{
-//             minHeight: '100vh',
-//             width: '100%',
-//             display: 'flex',
-//             alignItems: 'center',
-//             justifyContent: 'center',
-//             backdropFilter: 'blur(5px)',
-//             p: 4
-//         }}>
-//             <Grid container spacing={4} justifyContent="center" alignItems="flex-start">
-//                 <Grid item xs={12} md={8} lg={7}>
-//                     <Paper
-//                         elevation={12}
-//                         component="form"
-//                         onSubmit={handleSubmit}
-//                         sx={{
-//                             width: '100%',
-//                             p: 4,
-//                             borderRadius: 4,
-//                             border: '1px solid rgba(255, 255, 255, 0.2)',
-//                             backgroundColor: 'rgba(255, 255, 255, 0.1)',
-//                             backdropFilter: 'blur(10px)',
-//                             transition: 'all 0.3s ease-in-out',
-//                         }}
-//                     >
-//                         <Grid container spacing={4}>
-//                             <Grid item xs={12} md={4} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-//                                 <IconFactory icon={"plant"} color={"primary"} size={"xxxlg"} />
-//                             </Grid>
-//                             <Grid item xs={12} md={8}>
-//                                 <Stack spacing={2.5}>
-//                                     <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: 'white' }}>
-//                                         Update Plant
-//                                     </Typography>
-//                                     <AutoCompleteInput label="Species" value={selectedSpecies} setValue={setSelectedSpecies} options={species} />
-//                                     <AutoCompleteInput label="Mix" value={mix} setValue={setMix} options={mixes} />
-//                                     <AutoCompleteInput label="System" value={system} setValue={setSystem} options={systems} />
-//                                     <AutoCompleteInput label="Care Plan" value={carePlan} setValue={setCarePlan} options={carePlans} />
-//                                     <DropdownInput label="Phase" value={phase} options={Object.values(PHASE_LABELS)} setValue={setPhase} />
-                                    
-//                                     <Grid container spacing={2}>
-//                                         <Grid item xs={6}><NumberInput label="Size" value={size} setValue={setSize} /></Grid>
-//                                         <Grid item xs={6}><NumberInput label="Cost" value={cost} setValue={setCost} /></Grid>
-//                                     </Grid>
-
-//                                     <TextField
-//                                         label="Description"
-//                                         value={description}
-//                                         onChange={(e) => setDescription(e.target.value)}
-//                                         multiline
-//                                         rows={3}
-//                                         fullWidth
-//                                         variant="outlined"
-//                                         placeholder="Add notes about your plant (optional)"
-//                                         sx={getFormFieldStyles()}
-//                                     />
-
-//                                     <Grid container spacing={2}>
-//                                         <Grid item xs={6}><DateSelector label="Potted On" value={potted_on} setValue={setPottedOn} /></Grid>
-//                                         <Grid item xs={6}><DateSelector label="Watered On" value={watered_on} setValue={setWateredOn} /></Grid>
-//                                         <Grid item xs={6}><DateSelector label="Fertilized On" value={fertilized_on} setValue={setFertilizedOn} /></Grid>
-//                                         <Grid item xs={6}><DateSelector label="Cleansed On" value={cleansed_on} setValue={setCleansedOn} /></Grid>
-//                                     </Grid>
-
-//                                     {error && error.message && <Typography color="error" sx={{ textAlign: 'center' }}>{error.message}</Typography>}
-                                    
-//                                     <Stack direction="row" spacing={2} sx={{ pt: 2 }}>
-//                                         <Button variant="outlined" color="secondary" onClick={handleCancel} fullWidth>Cancel</Button>
-//                                         <Button type="submit" variant="contained" color="primary" fullWidth>Update</Button>
-//                                     </Stack>
-//                                 </Stack>
-//                             </Grid>
-//                         </Grid>
-//                     </Paper>
-//                 </Grid>
-//             </Grid>
-//         </Box>
-//     );
-// };
-
-// export default PlantUpdate;
+export default PlantUpdate;

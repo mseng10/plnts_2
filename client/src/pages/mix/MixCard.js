@@ -31,14 +31,14 @@ const MixCard = ({ mix, deprecateMix, soils }) => {
         <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/30 flex flex-col"
+            className="group bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-amber-900/50 hover:border-slate-700 flex flex-col"
         >
             <div className="flex items-start gap-4 mb-4">
-                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-amber-500/10 rounded-2xl border border-slate-700/50">
+                <div className="w-12 h-12 flex-shrink-0 flex items-center justify-center bg-amber-500/10 rounded-2xl border border-slate-700/50 transition-colors group-hover:border-amber-500/30">
                     <Layers size={22} className="text-amber-400" />
                 </div>
                 <div className="flex-grow min-w-0">
-                    <h3 className="text-lg font-semibold text-slate-100 truncate">{mix.name}</h3>
+                    <h3 className="text-lg font-bold text-slate-100 truncate transition-colors group-hover:text-amber-400">{mix.name}</h3>
                     <p className="text-sm text-slate-400">{mix.soil_parts.length} ingredients</p>
                 </div>
             </div>
