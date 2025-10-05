@@ -59,49 +59,57 @@ const Weather = () => {
 
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
-            const pointsUrl = `https://api.weather.gov/points/${latitude.toFixed(4)},${longitude.toFixed(4)}`;
-            
-            try {
-                const pointsResponse = await fetch(pointsUrl);
-                if (!pointsResponse.ok) throw new Error('Failed to get weather points.');
-                const pointsData = await pointsResponse.json();
+            // Using Open-Meteo API - no API key required and works globally.
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}&longitude=${longitude.toFixed(2)}&current=temperature_2m,weather_code&temperature_unit=celsius`;
 
-                const forecastUrl = pointsData.properties.forecast;
-                const forecastResponse = await fetch(forecastUrl);
-                if (!forecastResponse.ok) throw new Error('Failed to fetch forecast.');
-                const forecastData = await forecastResponse.json();
-                setWeather(forecastData.properties);
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('Failed to fetch weather.');
+                const data = await response.json();
+                setWeather(data);
             } catch (e) {
                 setError(e.message);
             }
         }, () => setError("Location access denied."));
     }, []);
 
-    const getWeatherIcon = (shortForecast) => {
-        const forecast = shortForecast.toLowerCase();
-        switch (true) {
-            case forecast.includes('sunny'):
-            case 'Clear': return <Sun size={20} className="text-amber-400" />;
-            case forecast.includes('cloudy'): return <Cloud size={20} className="text-slate-400" />;
-            case forecast.includes('rain'):
-            case forecast.includes('showers'):
-            case forecast.includes('drizzle'): return <CloudRain size={20} className="text-sky-400" />;
-            case forecast.includes('snow'): return <CloudSnow size={20} className="text-white" />;
-            case forecast.includes('windy'): return <Wind size={20} className="text-cyan-400" />;
-            default: return <Thermometer size={20} className="text-slate-500" />;
-        }
+    const getWeatherInfo = (weatherCode) => {
+        // WMO Weather interpretation codes from Open-Meteo
+        const codes = {
+            0: { icon: <Sun size={20} className="text-amber-400" />, label: 'Clear sky' },
+            1: { icon: <Sun size={20} className="text-amber-400" />, label: 'Mainly clear' },
+            2: { icon: <Cloud size={20} className="text-slate-400" />, label: 'Partly cloudy' },
+            3: { icon: <Cloud size={20} className="text-slate-400" />, label: 'Overcast' },
+            45: { icon: <Cloud size={20} className="text-slate-400" />, label: 'Fog' },
+            61: { icon: <CloudRain size={20} className="text-sky-400" />, label: 'Slight rain' },
+            63: { icon: <CloudRain size={20} className="text-sky-400" />, label: 'Rain' },
+            65: { icon: <CloudRain size={20} className="text-sky-400" />, label: 'Heavy rain' },
+            80: { icon: <CloudRain size={20} className="text-sky-400" />, label: 'Slight showers' },
+            81: { icon: <CloudRain size={20} className="text-sky-400" />, label: 'Rain showers' },
+            82: { icon: <CloudRain size={20} className="text-sky-400" />, label: 'Violent showers' },
+            95: { icon: <CloudRain size={20} className="text-sky-400" />, label: 'Thunderstorm' },
+        };
+        return codes[weatherCode] || { icon: <Thermometer size={20} className="text-slate-500" />, label: 'Weather' };
     };
 
     if (error) return <div className="text-xs text-red-400/80 font-medium">{error}</div>;
-    if (!weather) return <div className="text-xs text-slate-500 font-medium">Loading weather...</div>;
+    if (!weather || !weather.current) {
+        return (
+            <div className="flex items-center gap-2 animate-pulse">
+                <div className="w-5 h-5 rounded-full bg-slate-700/50" />
+                <div className="w-10 h-4 rounded bg-slate-700/50" />
+                <div className="w-24 h-3 rounded bg-slate-700/50" />
+            </div>
+        );
+    }
 
-    const currentPeriod = weather.periods[0];
+    const { icon, label } = getWeatherInfo(weather.current.weather_code);
 
     return (
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-300">
-            {getWeatherIcon(currentPeriod.shortForecast)}
-            <span>{currentPeriod.temperature}°{currentPeriod.temperatureUnit}</span>
-            <span className="text-slate-500 font-medium text-xs truncate max-w-[150px]">{currentPeriod.shortForecast}</span>
+            {icon}
+            <span>{Math.round(weather.current.temperature_2m)}°C</span>
+            <span className="text-slate-500 font-medium text-xs truncate max-w-[150px]">{label}</span>
         </div>
     );
 };
