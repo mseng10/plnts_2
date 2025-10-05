@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Home, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag } from 'lucide-react';
+import { Home, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag, Sun, Cloud, CloudRain, CloudSnow, Wind, Thermometer } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Calendar from './pages/calendar/Calendar';
 
@@ -47,18 +47,82 @@ export const BackgroundAnimations = React.memo(() => (
     </div>
 ));
 
+const Weather = () => {
+    const [weather, setWeather] = useState(null);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        if (!navigator.geolocation) {
+            setError("Geolocation is not supported.");
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            const pointsUrl = `https://api.weather.gov/points/${latitude.toFixed(4)},${longitude.toFixed(4)}`;
+            
+            try {
+                const pointsResponse = await fetch(pointsUrl);
+                if (!pointsResponse.ok) throw new Error('Failed to get weather points.');
+                const pointsData = await pointsResponse.json();
+
+                const forecastUrl = pointsData.properties.forecast;
+                const forecastResponse = await fetch(forecastUrl);
+                if (!forecastResponse.ok) throw new Error('Failed to fetch forecast.');
+                const forecastData = await forecastResponse.json();
+                setWeather(forecastData.properties);
+            } catch (e) {
+                setError(e.message);
+            }
+        }, () => setError("Location access denied."));
+    }, []);
+
+    const getWeatherIcon = (shortForecast) => {
+        const forecast = shortForecast.toLowerCase();
+        switch (true) {
+            case forecast.includes('sunny'):
+            case 'Clear': return <Sun size={20} className="text-amber-400" />;
+            case forecast.includes('cloudy'): return <Cloud size={20} className="text-slate-400" />;
+            case forecast.includes('rain'):
+            case forecast.includes('showers'):
+            case forecast.includes('drizzle'): return <CloudRain size={20} className="text-sky-400" />;
+            case forecast.includes('snow'): return <CloudSnow size={20} className="text-white" />;
+            case forecast.includes('windy'): return <Wind size={20} className="text-cyan-400" />;
+            default: return <Thermometer size={20} className="text-slate-500" />;
+        }
+    };
+
+    if (error) return <div className="text-xs text-red-400/80 font-medium">{error}</div>;
+    if (!weather) return <div className="text-xs text-slate-500 font-medium">Loading weather...</div>;
+
+    const currentPeriod = weather.periods[0];
+
+    return (
+        <div className="flex items-center gap-2 text-sm font-semibold text-slate-300">
+            {getWeatherIcon(currentPeriod.shortForecast)}
+            <span>{currentPeriod.temperature}°{currentPeriod.temperatureUnit}</span>
+            <span className="text-slate-500 font-medium text-xs truncate max-w-[150px]">{currentPeriod.shortForecast}</span>
+        </div>
+    );
+};
+
 // --- SHARED UI COMPONENTS ---
 const Header = () => (
   <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 mb-8 shadow-2xl shadow-black/20">
     <div className="flex items-center justify-between">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-100">Good morning tush</h1>
-        <p className="text-sm font-medium text-slate-400">{getCurrentDate()}</p>
-      </div>
-      <div className="w-14 h-14 relative">
+      <div className="flex items-center gap-4">
+        <div className="w-14 h-14 relative flex-shrink-0">
         <div className="absolute w-full h-full border-2 border-transparent border-t-emerald-500 rounded-full animate-[rotate_4s_linear_infinite]" />
         <div className="absolute w-3/4 h-3/4 top-[12.5%] left-[12.5%] border-2 border-transparent border-t-emerald-400 opacity-70 rounded-full animate-[rotate_3s_linear_infinite_reverse]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl">🌿</div>
+      </div>
+        <div>
+          <h1 className="text-2xl font-semibold text-slate-100">Good morning tush</h1>
+          <p className="text-sm font-medium text-slate-400 mt-1">{getCurrentDate()}</p>
+        </div>
+      </div>
+      <div className="text-right">
+        <Weather />
       </div>
     </div>
   </div>
