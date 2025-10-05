@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Leaf, Edit, Trash2, DollarSign, Ruler, HardDrive, Beaker, ClipboardList, CalendarDays } from 'lucide-react';
+import { Leaf, Edit, Trash2, DollarSign, Ruler, HardDrive, Beaker, ClipboardList, AlertTriangle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import dayjs from 'dayjs';
 
@@ -14,6 +14,27 @@ const PlantCard = ({ plant, deprecatePlant }) => {
         }
     };
 
+    const getOverdueTasks = () => {
+        if (!plant.carePlan) return [];
+
+        const overdue = [];
+        const today = dayjs();
+        const { watering, fertilizing, cleaning, potting } = plant.carePlan;
+
+        const checkOverdue = (taskName, lastDate, frequency) => {
+            if (frequency && today.diff(dayjs(lastDate), 'day') > frequency) {
+                overdue.push(taskName);
+            }
+        };
+
+        checkOverdue('Watering', plant.watered_on, watering);
+        checkOverdue('Fertilizing', plant.fertilized_on, fertilizing);
+        checkOverdue('Cleaning', plant.cleansed_on, cleaning);
+        checkOverdue('Potting', plant.potted_on, potting);
+
+        return overdue;
+    };
+    const overdueTasks = getOverdueTasks();
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -30,6 +51,11 @@ const PlantCard = ({ plant, deprecatePlant }) => {
                         <p className="text-sm text-slate-400">Acquired: {dayjs(plant.created_on).format('MMM D, YYYY')}</p>
                         <span className="text-xs bg-sky-500/10 text-sky-400 font-semibold px-2 py-0.5 rounded-full capitalize">{plant.phase}</span>
                     </div>
+                </div>
+                <div title={overdueTasks.length > 0 ? `Needs: ${overdueTasks.join(', ')}` : ''}>
+                    {overdueTasks.length > 0 && (
+                        <AlertTriangle size={20} className="text-amber-400 animate-pulse" />
+                    )}
                 </div>
             </div>
             <div className="flex-grow space-y-2 text-sm text-slate-400 border-t border-slate-700/50 pt-4">

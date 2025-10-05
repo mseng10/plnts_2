@@ -11,27 +11,27 @@ const Bubby = () => {
     ];
 
     return (
-        <div className="p-4 h-full">
-            <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 h-full flex flex-col">
-                <div className="flex items-center gap-2 mb-6 flex-shrink-0">
-                    {navItems.map(item => (
-                        <NavLink
-                            key={item.to}
-                            to={item.to}
-                            className={({ isActive }) =>
-                                `flex items-center gap-2 py-2 px-4 rounded-lg text-sm font-semibold transition-colors ${
-                                    isActive
-                                        ? 'bg-emerald-500/10 text-emerald-400'
-                                        : 'text-slate-400 hover:bg-slate-800/60'
-                                }`
-                            }
-                        >
-                            {item.icon}
-                            <span>{item.label}</span>
-                        </NavLink>
-                    ))}
-                </div>
-                <div className="flex-grow min-h-0"><Outlet /></div>
+        <div className="p-4 h-full flex flex-col">
+            <div className="flex items-center justify-center gap-2 mb-4">
+                {navItems.map(item => (
+                    <NavLink
+                        key={item.to}
+                        to={item.to}
+                        className={({ isActive }) =>
+                            `flex items-center gap-2 py-2 px-4 rounded-full text-sm font-semibold transition-colors ${
+                                isActive
+                                    ? 'bg-emerald-500/10 text-emerald-400'
+                                    : 'text-slate-400 hover:bg-slate-800/60'
+                            }`
+                        }
+                    >
+                        {item.icon}
+                        <span>{item.label}</span>
+                    </NavLink>
+                ))}
+            </div>
+            <div className="flex-grow min-h-0 bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl shadow-2xl shadow-black/20">
+                <Outlet />
             </div>
         </div>
     );
