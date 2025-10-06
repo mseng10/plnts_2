@@ -32,10 +32,3 @@ class InventoryItem(FlexibleModel):
         self.deprecated = False
         self.deprecated_on = None
         self.deprecated_cause = None
-
-
-class InventoryType(FlexibleModel):
-    """Inventory type model."""
-
-    data_schema: Dict[str, Any] = Field(default_factory=dict)
-    name: str

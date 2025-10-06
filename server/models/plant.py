@@ -32,6 +32,9 @@ class Plant(FlexibleModel):
     fertilized_on: datetime = Field(default_factory=datetime.now)
     cleansed_on: datetime = Field(default_factory=datetime.now)
 
+    # Quarentine
+    quarentine: bool = False
+
     # References
     species_id: Optional[ObjectIdPydantic] = None
     genus_id: Optional[ObjectIdPydantic] = None
