@@ -87,7 +87,7 @@ const MixCreate = () => {
                     {/* --- MAIN FORM CARD --- */}
                     <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-8 shadow-2xl shadow-black/20 flex flex-col gap-6 md:col-span-2">
                         <div className="flex items-center gap-4">
-                            <div className="w-14 h-14 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center">
+                            <div className="w-14 h-14 bg-amber-500/10 text-amber-400 rounded-2xl flex items-center justify-center">
                                 <Layers size={28} />
                             </div>
                             <div>

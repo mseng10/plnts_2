@@ -4,7 +4,7 @@ import ollama
 from typing import Dict, Any
 from fastmcp import Client
 
-MODEL = "llama3.2:3b"  # Use a model that supports tool calling, e.g., llama3.1:8b
+MODEL = "gpt-oss:20b"  # Use a model that supports tool calling, e.g., gpt-oss:20b
 MCP_URL = "http://127.0.0.1:8000/mcp/"
 
 

@@ -34,7 +34,7 @@ class Todo(FlexibleModel):
 
     due_on: datetime
     name: str
-    description: str
+    description: Optional[str] = None
     goal_id: Optional[ObjectIdPydantic] = None  # nullable reference to Goal
 
     tasks: List[Task] = Field(default_factory=list)

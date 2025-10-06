@@ -65,7 +65,9 @@ export const APIS = {
   },
   app: {
     chat: "/chat/",
-    health: "/health/"
+    health: "/health/",
+    greeting: "/chat/greeting/",
+    chatWithMessage: "/chat/{id}/message/"
   },
   budget: {
     getAll: "/budget/",

@@ -4,9 +4,9 @@ import { useCarePlans } from '../../hooks/useCarePlans';
 import { ClipboardList, Type, Droplet, Sprout, SprayCan, Replace } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const NumberInput = ({ label, value, onChange, icon }) => (
+const NumberInput = ({ label, value, onChange, icon, color }) => (
     <div className="relative group">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">{icon}</div>
+        <div className={`absolute left-3 top-1/2 -translate-y-1/2 ${color || 'text-slate-500'}`}>{icon}</div>
         <input
             type="number"
             placeholder={label}
@@ -62,7 +62,7 @@ const CarePlanCreate = () => {
             >
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6">
                     <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 bg-sky-500/10 text-sky-500 rounded-2xl flex items-center justify-center">
+                        <div className="w-14 h-14 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center">
                             <ClipboardList size={28} />
                         </div>
                         <div>
@@ -78,10 +78,10 @@ const CarePlanCreate = () => {
 
                     <p className="text-sm font-semibold text-slate-400 -mb-2">Frequencies (in days)</p>
                     <div className="grid grid-cols-2 gap-4">
-                        <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} color="text-sky-400" />
-                        <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sprout size={16} />} color="text-lime-400" />
-                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<SprayCan size={16} />} color="text-amber-400" />
-                        <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Replace size={16} />} color="text-slate-400" />
+                        <NumberInput label="Watering" value={watering} onChange={(e) => setWatering(e.target.value)} icon={<Droplet size={16} />} color="text-sky-400"/>
+                        <NumberInput label="Fertilizing" value={fertilizing} onChange={(e) => setFertilizing(e.target.value)} icon={<Sprout size={16} />} color="text-lime-400"/>
+                        <NumberInput label="Cleaning" value={cleaning} onChange={(e) => setCleaning(e.target.value)} icon={<SprayCan size={16} />} color="text-amber-400"/>
+                        <NumberInput label="Potting" value={potting} onChange={(e) => setPotting(e.target.value)} icon={<Replace size={16} />} color="text-slate-400"/>
                     </div>
 
                     {error && <p className="text-sm text-red-400 text-center">{error.message}</p>}

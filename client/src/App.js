@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Routes, Route, NavLink, Outlet, useLocation } from 'react-router-dom';
-import { Home, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag, Sun, Cloud, CloudRain, CloudSnow, Wind, Thermometer } from 'lucide-react';
+import { Routes, Route, NavLink, Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
+import { Home, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag, Sun, Cloud, CloudRain, CloudSnow, Wind, Thermometer, Bot } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Calendar from './pages/calendar/Calendar';
 
@@ -21,6 +21,7 @@ import SystemCreate from './pages/system/SystemCreate.js';
 import PlantCreate from './pages/plant/PlantCreate.js';
 import PlantUpdate from './pages/plant/PlantUpdate.js';
 import { useMeta } from './hooks/useMeta.js';
+import { APIS, apiBuilder, simpleFetch, simplePost } from './api.js';
 
 // --- HELPER FUNCTIONS ---
 const getCurrentDate = () => {
@@ -30,6 +31,7 @@ const getCurrentDate = () => {
 };
 
 // --- BACKGROUND COMPONENTS ---
+
 export const BackgroundAnimations = React.memo(() => (
     <div className="fixed inset-0 -z-10">
         <div className="fixed top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_20%_50%,rgba(52,211,153,0.1)_0%,transparent_40%),radial-gradient(circle_at_80%_80%,rgba(110,231,183,0.08)_0%,transparent_40%),radial-gradient(circle_at_40%_20%,rgba(16,185,129,0.09)_0%,transparent_40%),radial-gradient(circle_at_80%_10%,rgba(167,243,208,0.08)_0%,transparent_40%)] animate-[gradientShift_25s_ease_infinite] filter blur-3xl -z-10" />
@@ -60,7 +62,7 @@ const Weather = () => {
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
             // Using Open-Meteo API - no API key required and works globally.
-            const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}&longitude=${longitude.toFixed(2)}&current=temperature_2m,weather_code&temperature_unit=celsius`;
+            const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude.toFixed(2)}&longitude=${longitude.toFixed(2)}&current=temperature_2m,weather_code&temperature_unit=fahrenheit`;
 
             try {
                 const response = await fetch(url);
@@ -108,33 +110,52 @@ const Weather = () => {
     return (
         <div className="flex items-center gap-2 text-sm font-semibold text-slate-300">
             {icon}
-            <span>{Math.round(weather.current.temperature_2m)}°C</span>
+            <span>{Math.round(weather.current.temperature_2m)}°F</span>
             <span className="text-slate-500 font-medium text-xs truncate max-w-[150px]">{label}</span>
         </div>
     );
 };
 
 // --- SHARED UI COMPONENTS ---
-const Header = () => (
-  <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 mb-8 shadow-2xl shadow-black/20">
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-4">
-        <div className="w-14 h-14 relative flex-shrink-0">
-        <div className="absolute w-full h-full border-2 border-transparent border-t-emerald-500 rounded-full animate-[rotate_4s_linear_infinite]" />
-        <div className="absolute w-3/4 h-3/4 top-[12.5%] left-[12.5%] border-2 border-transparent border-t-emerald-400 opacity-70 rounded-full animate-[rotate_3s_linear_infinite_reverse]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl">🌿</div>
-      </div>
-        <div>
-          <h1 className="text-2xl font-semibold text-slate-100">Good morning tush</h1>
-          <p className="text-sm font-medium text-slate-400 mt-1">{getCurrentDate()}</p>
+const Header = () => {
+  const [greeting, setGreeting] = useState("Loading...");
+
+  useEffect(() => {
+    const fetchGreeting = async () => {
+      try {
+        const url = apiBuilder(APIS.app.greeting).get();
+        const data = await simpleFetch(url);
+        setGreeting(data.message);
+      } catch (error) {
+        console.error("Failed to fetch greeting:", error);
+        setGreeting("Good morning tush"); // Fallback message
+      }
+    };
+
+    fetchGreeting();
+  }, []);
+
+  return (
+    <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 mb-8 shadow-2xl shadow-black/20">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 relative flex-shrink-0">
+            <div className="absolute w-full h-full border-2 border-transparent border-t-emerald-500 rounded-full animate-[rotate_4s_linear_infinite]" />
+            <div className="absolute w-3/4 h-3/4 top-[12.5%] left-[12.5%] border-2 border-transparent border-t-emerald-400 opacity-70 rounded-full animate-[rotate_3s_linear_infinite_reverse]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl">🌿</div>
+          </div>
+          <div>
+            <h1 className="text-2xl font-semibold text-slate-100">{greeting}</h1>
+            <p className="text-sm font-medium text-slate-400 mt-1">{getCurrentDate()}</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <Weather />
         </div>
       </div>
-      <div className="text-right">
-        <Weather />
-      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const StatCard = ({ icon, color, metric, label, delay }) => {
     const iconStyles = {
@@ -177,11 +198,50 @@ const DashboardPage = () => {
     );
 };
 const PagePlaceholder = ({ title }) => <div className="p-8"><h1 className="text-4xl font-bold text-slate-100">{title}</h1></div>;
+const ChatPage = () => {
+  const { messages, isBubbyTyping } = useOutletContext();
+  const chatContainerRef = useRef(null);
+
+  useEffect(() => {
+    chatContainerRef.current?.scrollTo({ top: chatContainerRef.current.scrollHeight, behavior: 'smooth' });
+  }, [messages]);
+
+  return (
+  <motion.div
+    initial={{ y: "100%" }}
+    animate={{ y: 0 }}
+    exit={{ y: "100%" }}
+    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    className="p-4 h-full flex flex-col bg-slate-900/50 rounded-t-3xl"
+  >
+    <div ref={chatContainerRef} className="flex-grow overflow-y-auto p-4 space-y-4 scrollbar-hide">
+      {messages && messages.map((msg, index) => (
+        <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+          <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+            msg.sender === 'user' 
+              ? 'bg-emerald-500 text-white' 
+              : 'bg-slate-700 text-slate-200'
+          }`}>
+            <p>{msg.text}</p>
+          </div>
+        </div>
+      ))}
+      {isBubbyTyping && (
+        <div className="flex justify-start"><div className="px-4 py-2 rounded-2xl bg-slate-700 text-slate-200"><Bot className="animate-bounce" size={20} /></div></div>
+      )}
+    </div>
+  </motion.div>
+  );
+};
 
 // --- NAVIGATION / LAYOUT ---
 const AppLayout = () => {
   const [showCreateOptions, setShowCreateOptions] = useState(false);
   const [chatMessage, setChatMessage] = useState('');
+  const [messages, setMessages] = useState([]);
+  const [chatId, setChatId] = useState(null);
+  const [isBubbyTyping, setIsBubbyTyping] = useState(false);
+  const navigate = useNavigate();
   const navRef = useRef(null);
   const footerRef = useRef(null);
   const location = useLocation();
@@ -209,15 +269,50 @@ const AppLayout = () => {
     { icon: <Flag />, label: 'Goal', path: '/goals/create' }
   ];
 
+  const handleChatSubmit = async (e) => {
+    e.preventDefault();
+    const userMessageText = chatMessage.trim();
+    if (userMessageText.length === 0) return;
+
+    const userMessage = { text: userMessageText, sender: 'user' };
+    setMessages(prev => [...prev, userMessage]);
+    setChatMessage('');
+    navigate('/chat');
+
+    setIsBubbyTyping(true);
+
+    try {
+      let currentChatId = chatId;
+      if (!currentChatId) {
+        const newChatSession = await simplePost(apiBuilder(APIS.app.chat).get(), { name: "New Chat" });
+        currentChatId = newChatSession.id;
+        setChatId(currentChatId);
+      }
+
+      const url = apiBuilder(APIS.app.chatWithMessage).setId(currentChatId).get();
+      const response = await simplePost(url, { message: userMessageText });
+
+      const bubbyMessage = { text: response.content, sender: 'bubby' };
+      setMessages(prev => [...prev, bubbyMessage]);
+
+    } catch (error) {
+      console.error("Failed to get response from Bubby:", error);
+      const errorMessage = { text: "Sorry, I'm having trouble connecting. Please try again later.", sender: 'bubby' };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsBubbyTyping(false);
+    }
+  };
+
   return (
     <div className="h-screen grid grid-rows-[auto_1fr_auto]">
       <div className="max-w-4xl mx-auto px-4 pt-4 w-full">
           <Header />
       </div>
       <main className="mx-auto w-full h-full overflow-hidden max-w-4xl">
-          <Outlet />
+          <Outlet context={{ messages, isBubbyTyping }} />
       </main>
-      <footer ref={footerRef} className="relative w-[calc(100%-2rem)] max-w-md mx-auto mb-4 z-10">
+      <footer ref={footerRef} className="relative w-[calc(100%-2rem)] max-w-lg mx-auto mb-4 z-10">
         <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-3 shadow-2xl shadow-black/30 flex flex-col gap-3">
           <AnimatePresence>
             {showCreateOptions && (
@@ -235,8 +330,8 @@ const AppLayout = () => {
               </motion.div>
             )}
           </AnimatePresence>
-          <form className="w-full relative h-12" onSubmit={(e) => { e.preventDefault(); console.log('Submit:', chatMessage); setChatMessage(''); }}>
-            <input type="text" placeholder="Ask Flora anything..." value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} className="w-full h-full bg-slate-900/50 rounded-full border-none pl-5 pr-14 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+          <form className="w-full relative h-12" onSubmit={handleChatSubmit}>
+            <input type="text" placeholder="Ask Bubby anything..." value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} className="w-full h-full bg-slate-900/50 rounded-full border-none pl-5 pr-14 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
             <AnimatePresence>
               {chatMessage.trim().length > 0 && (
                 <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} type="submit" className="absolute right-1.5 top-1.5 w-9 h-9 bg-gradient-to-br from-emerald-500 to-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-green-400 transition-all duration-300 transform hover:scale-110">
@@ -275,6 +370,7 @@ export default function App() {
       <Route path="/" element={<AppLayout />}>
         <Route index element={<DashboardPage />} />
         <Route path="calendar" element={<Calendar />} />
+        <Route path="chat" element={<ChatPage />} />
         <Route path="budget" element={<BudgetPage />} />        
         <Route path="bubbys" element={<Bubby />}>
           <Route path="systems" element={<Systems />}>

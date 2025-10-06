@@ -2,7 +2,6 @@ import requests
 from io import StringIO
 import sys
 from fastmcp import FastMCP
-from shared.logger import logger
 
 mcp = FastMCP(name="MCP Tools Server")
 
@@ -11,7 +10,6 @@ mcp = FastMCP(name="MCP Tools Server")
 def say_hello() -> str:
     """Tell the user hello and nothing else."""
     try:
-        logger.info("MCP Tool call to say hello")
         return "hello"
     except Exception as e:
         return f"Error fetching endpoint: {str(e)}"
@@ -22,8 +20,15 @@ def list_todos():
     """Returns the full unfiltered list of all todos as JSON. This tool does NOT accept any arguments or filters (e.g., no date parameter). If filtering is needed (like for today: 2025-07-16), retrieve the full list first and process it yourself in a follow-up response.
 
     Each todo is a dictionary with keys like 'task' and 'due date' (YYYY-MM-DD)."""
-    logger.info("Got a call to query all todos")
     response = requests.get("http://localhost:8002/todos/")
+    return response.json()
+
+@mcp.tool("Returns a list of plants")
+def list_plants():
+    """Returns the full unfiltered list of all todos as JSON. This tool does NOT accept any arguments or filters (e.g., no date parameter). If filtering is needed (like for today: 2025-07-16), retrieve the full list first and process it yourself in a follow-up response.
+
+    Each todo is a dictionary with keys like 'task' and 'due date' (YYYY-MM-DD)."""
+    response = requests.get("http://localhost:8002/plants/")
     return response.json()
 
 
@@ -43,7 +48,6 @@ def create_todo(name: str, due_on: str):
     except Exception as e:
         return f"Error creating todo: {str(e)}"
 
-@mcp.prompt("")
 
 if __name__ == "__main__":
     mcp.run(transport="http", port=8000)

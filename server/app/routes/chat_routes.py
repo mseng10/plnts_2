@@ -11,7 +11,7 @@ APIBuilder.register_blueprint(chat_bp, "chat", chat_crud, ["GET", "GET_MANY", "P
 
 
 @APIBuilder.register_custom_route(
-    chat_bp, "/chat/<string:id>/message", methods=["POST"]
+    chat_bp, "/chat/<string:id>/message/", methods=["POST"]
 )
 def chat(id: str):
     logger.info("Initializing chat with user")
@@ -34,11 +34,24 @@ def chat(id: str):
     response_content = message(user_message.contents)
 
     # Append LL response
-    response_message: Message = Message(contents=response_content["content"])
+    response_message: Message = Message(contents=response_content)
     chat.messages.append(response_message)
 
     # Update the table and return the result
     Table.CHAT.update(id, chat)
-    updated_chat = Table.CHAT.get_one(id)
+    updated_chat: Chat = Table.CHAT.get_one(id)
 
-    return jsonify({"content": updated_chat.messages[-1].model_dump(mode="json")})
+    return jsonify({"content": updated_chat.messages[-1].contents})
+
+
+@APIBuilder.register_custom_route(
+    chat_bp, "/chat/greeting/", methods=["GET"]
+)
+def greeting():
+    """Generate a greeting """
+    logger.info("Creating greeting for user")
+
+    response_content = message("create a short 3-5 word greeting (my name is tush). Keep it kinda gangster and fun. No period. make it plant themed once in awhile")
+
+    return jsonify({"message": response_content})
+
