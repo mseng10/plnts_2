@@ -179,12 +179,147 @@ const StatCard = ({ icon, color, metric, label, delay }) => {
     );
 };
 
+// --- FUTURISTIC ORB COMPONENT ---
+const FuturisticOrb = () => {
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const orbRef = useRef(null);
+
+    useEffect(() => {
+        const handleMouseMove = (e) => {
+            if (orbRef.current) {
+                const rect = orbRef.current.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const x = (e.clientX - centerX) / 50;
+                const y = (e.clientY - centerY) / 50;
+                setMousePos({ x, y });
+            }
+        };
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => window.removeEventListener('mousemove', handleMouseMove);
+    }, []);
+
+    return (
+        <div ref={orbRef} className="relative w-64 h-64 flex items-center justify-center">
+            {/* Outer glow rings */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-500/20 via-cyan-500/20 to-emerald-500/20 blur-3xl animate-pulse" />
+            <div className="absolute inset-4 rounded-full bg-gradient-to-r from-cyan-400/30 via-emerald-400/30 to-cyan-400/30 blur-2xl animate-[pulse_3s_ease-in-out_infinite]" />
+            
+            {/* Rotating rings */}
+            <motion.div 
+                className="absolute inset-8 border-2 border-emerald-500/30 rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                style={{ transform: `translate(${mousePos.x}px, ${mousePos.y}px)` }}
+            />
+            <motion.div 
+                className="absolute inset-12 border-2 border-cyan-400/40 rounded-full"
+                animate={{ rotate: -360 }}
+                transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+                style={{ transform: `translate(${-mousePos.x * 0.5}px, ${-mousePos.y * 0.5}px)` }}
+            />
+            <motion.div 
+                className="absolute inset-16 border border-emerald-300/20 rounded-full"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            />
+
+            {/* Main orb */}
+            <motion.div 
+                className="relative w-40 h-40 rounded-full"
+                style={{ 
+                    transform: `translate(${mousePos.x * 1.5}px, ${mousePos.y * 1.5}px)`,
+                    background: 'radial-gradient(circle at 30% 30%, rgba(52, 211, 153, 0.8), rgba(6, 182, 212, 0.6), rgba(16, 185, 129, 0.4))',
+                    boxShadow: '0 0 60px rgba(52, 211, 153, 0.6), inset 0 0 40px rgba(255, 255, 255, 0.2)'
+                }}
+                animate={{
+                    scale: [1, 1.05, 1],
+                }}
+                transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                }}
+            >
+                {/* Inner shine */}
+                <div className="absolute top-8 left-8 w-16 h-16 bg-white/40 rounded-full blur-xl" />
+                
+                {/* Particle effects */}
+                {[...Array(12)].map((_, i) => {
+                    const angle = (i / 12) * Math.PI * 2;
+                    const radius = 80;
+                    return (
+                        <motion.div
+                            key={i}
+                            className="absolute w-2 h-2 bg-emerald-400 rounded-full"
+                            style={{
+                                left: '50%',
+                                top: '50%',
+                            }}
+                            animate={{
+                                x: [0, Math.cos(angle) * radius, 0],
+                                y: [0, Math.sin(angle) * radius, 0],
+                                opacity: [0, 1, 0],
+                                scale: [0, 1, 0],
+                            }}
+                            transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                delay: i * 0.25,
+                                ease: "easeInOut"
+                            }}
+                        />
+                    );
+                })}
+
+                {/* Liquid wave effect */}
+                <motion.div
+                    className="absolute inset-0 rounded-full"
+                    style={{
+                        background: 'radial-gradient(circle at 50% 50%, transparent 40%, rgba(6, 182, 212, 0.3) 60%, transparent 80%)',
+                    }}
+                    animate={{
+                        scale: [1, 1.2, 1],
+                        opacity: [0.5, 0.8, 0.5],
+                    }}
+                    transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                    }}
+                />
+            </motion.div>
+
+            {/* Floating particles around orb */}
+            {[...Array(8)].map((_, i) => (
+                <motion.div
+                    key={`float-${i}`}
+                    className="absolute w-1.5 h-1.5 bg-cyan-300 rounded-full"
+                    style={{
+                        left: `${50 + Math.cos((i / 8) * Math.PI * 2) * 40}%`,
+                        top: `${50 + Math.sin((i / 8) * Math.PI * 2) * 40}%`,
+                    }}
+                    animate={{
+                        y: [0, -20, 0],
+                        opacity: [0.3, 1, 0.3],
+                    }}
+                    transition={{
+                        duration: 2 + i * 0.2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: i * 0.3,
+                    }}
+                />
+            ))}
+        </div>
+    );
+};
+
 // --- PAGE COMPONENTS (PLACEHOLDERS) ---
 const DashboardPage = () => {
     const { meta, isLoading, error } = useMeta();
 
     if (isLoading) return <div className="p-4 text-slate-400 text-center">Loading dashboard...</div>;
-    if (error) return <div className="p-4 text-red-400 text-center">Could not load dashboard data.</div>;
 
     return (
         <div className="p-4 h-full flex flex-col">
@@ -194,10 +329,17 @@ const DashboardPage = () => {
                 <StatCard icon={<ShieldCheck />} color="care" metric={meta?.alert_count ?? '...'} label="Need Care" delay={3} />
                 <StatCard icon={<DollarSign />} color="budget" metric={`$${meta?.remaining_budget?.toFixed(0) ?? '...'}`} label="Remaining Budget" delay={4} />
             </div>
+            
+            {/* Futuristic Orb Center */}
+            <div className="flex-1 flex items-center justify-center">
+                <FuturisticOrb />
+            </div>
         </div>
     );
 };
+
 const PagePlaceholder = ({ title }) => <div className="p-8"><h1 className="text-4xl font-bold text-slate-100">{title}</h1></div>;
+
 const ChatPage = () => {
   const { messages, isBubbyTyping } = useOutletContext();
   const chatContainerRef = useRef(null);
