@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import { useSystems, useLights } from '../../hooks/useSystems';
+import { useSystems } from '../../hooks/useSystems';
+import { useLights } from '../../hooks/useLights';
 import { ShieldCheck, Type, AlignLeft, Sun, Plus, Trash2, Thermometer, Droplet } from 'lucide-react';
 import { motion } from 'framer-motion';
 

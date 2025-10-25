@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, useParams, Outlet } from 'react-router-dom';
-import { useSystems, useLights } from '../../hooks/useSystems';
+import { useSystems } from '../../hooks/useSystems';
+import { useLights } from '../../hooks/useLights';
 import { ShieldCheck } from 'lucide-react';
 import SystemCard from './SystemCard';
 
