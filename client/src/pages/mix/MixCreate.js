@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { useMixes, useSoils } from '../../hooks/useMix';
+import { useMixes } from '../../hooks/useMix';
+import { useSoils } from '../../hooks/useSoils';
 import { Layers, Type, AlignLeft, Plus, Minus, Trash2, Blocks as BlocksIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 

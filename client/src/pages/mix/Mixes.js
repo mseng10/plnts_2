@@ -1,6 +1,7 @@
 import React from 'react';
 import { useParams, Outlet } from 'react-router-dom';
-import { useMixes, useSoils } from '../../hooks/useMix';
+import { useMixes } from '../../hooks/useMix';
+import { useSoils } from '../../hooks/useSoils';
 import MixCard from './MixCard';
 import { Layers } from 'lucide-react';
 
