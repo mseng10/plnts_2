@@ -43,7 +43,7 @@ export const APIS = {
     getAll: "/mixes/",
     create: "/mixes/",
     updateOne: "/mixes/{id}/",
-    deleteOne: "/todos/{id}/",
+    deleteOne: "/mixes/{id}/",
   },
   soil: {
     getAll: "/soils/"
@@ -87,6 +87,7 @@ export const APIS = {
     getAll: "/care_plans/",
     create: "/care_plans/",
     updateOne: "/care_plans/{id}/",
+    deleteOne: "/care_plans/{id}/"
   },
   goals: {
     get: "/goals/{id}/",

@@ -5,7 +5,7 @@ import CarePlanCard from './CarePlanCard';
 import { ClipboardList } from 'lucide-react';
 
 const CarePlans = () => {
-    const { carePlans, isLoading, error, deprecateCarePlan } = useCarePlans();
+    const { carePlans, isLoading, error } = useCarePlans();
     const { id } = useParams();
 
     if (isLoading) return <div className="p-4 text-slate-400 text-center">Loading care plans...</div>;
@@ -40,14 +40,14 @@ const CarePlans = () => {
 };
 
 const CarePlansList = () => {
-    const { carePlans, deprecateCarePlan } = useCarePlans();
+    const { carePlans, deleteCarePlan } = useCarePlans();
     const { id } = useParams();
     const gridCols = id ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2';
 
     return(
         <div className={`p-4 grid ${gridCols} gap-6`}>
             {carePlans.map((plan) => (
-                <CarePlanCard key={plan.id} carePlan={plan} deprecateCarePlan={deprecateCarePlan} />
+                <CarePlanCard key={plan.id} carePlan={plan} deleteCarePlan={deleteCarePlan} />
             ))}
         </div>
     )

@@ -20,7 +20,7 @@ const Mixes = () => {
 
 const MixesList = () => {
     const { id } = useParams();
-    const { mixes, isLoading, error, deprecateMix } = useMixes();
+    const { mixes, isLoading, error, deleteMix } = useMixes();
     const { soils, isLoading: soilsLoading, error: soilsError } = useSoils();
     if (isLoading || soilsLoading) return <div className="p-4 text-slate-400 text-center">Loading mixes...</div>;
     if (error || soilsError) return <div className="p-4 text-red-400 text-center">Error loading mixes.</div>;
@@ -38,7 +38,7 @@ const MixesList = () => {
             id ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'
         } gap-6`}>
             {mixes.map((mix) => (
-                <MixCard key={mix.id} mix={mix} deprecateMix={deprecateMix} soils={soils} />
+                <MixCard key={mix.id} mix={mix} deleteMix={deleteMix} soils={soils} />
             ))}
         </div>
     );

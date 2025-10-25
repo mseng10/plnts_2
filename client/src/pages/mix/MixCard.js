@@ -11,13 +11,13 @@ const soilColors = [
 ];
 const getSoilColor = (soilId) => soilId ? soilColors[parseInt(soilId, 10) % soilColors.length] : 'text-slate-400';
 
-const MixCard = ({ mix, deprecateMix, soils }) => {
+const MixCard = ({ mix, deleteMix, soils }) => {
     const navigate = useNavigate();
 
     const handleDelete = (e) => {
         e.stopPropagation();
         if (window.confirm(`Are you sure you want to delete the "${mix.name}" mix?`)) {
-            deprecateMix(mix.id);
+            deleteMix(mix.id);
         }
     };
 

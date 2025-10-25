@@ -79,8 +79,8 @@ const PlantUpdate = () => {
         event.preventDefault();
         setFormError('');
 
-        if (!selectedSpecies || !system) {
-            setFormError('Please select a Species and a System.');
+        if (!system) {
+            setFormError('Please select a System.');
             return;
         }
 

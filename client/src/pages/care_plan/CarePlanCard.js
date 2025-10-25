@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { Droplet, Sprout, SprayCan, Replace, Edit, Trash2, ClipboardList } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const CarePlanCard = ({ carePlan, deprecateCarePlan }) => {
+const CarePlanCard = ({ carePlan, deleteCarePlan }) => {
     const navigate = useNavigate();
 
     const handleDelete = (e) => {
         e.stopPropagation();
         if (window.confirm(`Are you sure you want to delete the "${carePlan.name}" care plan?`)) {
-            deprecateCarePlan(carePlan.id);
+            deleteCarePlan(carePlan.id);
         }
     };
 

@@ -50,7 +50,7 @@ export const useMixes = () => {
   const deleteMix = async (id) => {
     setIsLoading(true);
     setError(null);
-    simpleDelete(apiBuilder(APIS.plant.deleteOne).setId(id).get())
+    simpleDelete(apiBuilder(APIS.mix.deleteOne).setId(id).get())
       .then(() => 
         setMixes(prevMixes => prevMixes.filter(mix => 
           mix.id !== id

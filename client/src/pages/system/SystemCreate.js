@@ -31,14 +31,12 @@ const SystemCreate = () => {
     const [systemLights, setSystemLights] = useState([{ light_id: '' }]);
 
     const { lights, isLoading: lightsLoading } = useLights();
-    const { createSystem, error, isLoading: systemLoading, setError } = useSystems();
+    const { createSystem, error, isLoading: systemLoading } = useSystems();
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
         if (!name) {
-            setError({ message: "System name is required." });
             return;
         }
 
@@ -55,7 +53,7 @@ const SystemCreate = () => {
                 duration: parseInt(duration, 10),
                 light_ids
             });
-            navigate("/systems");
+            navigate("/bubbys/systems");
         } catch (err) {
             console.error('Error creating new system:', err);
         }

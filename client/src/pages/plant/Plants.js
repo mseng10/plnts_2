@@ -45,11 +45,24 @@ const SearchBar = ({ searchTerm, setSearchTerm, placeholder }) => {
     );
 };
 
+const SystemFilter = ({ systems, selectedSystem, setSelectedSystem }) => (
+    <div className="relative w-full">
+        <select
+            value={selectedSystem || ''}
+            onChange={(e) => setSelectedSystem(e.target.value || null)}
+            className="w-full bg-slate-900/70 rounded-full border border-slate-700/50 px-4 py-2.5 text-sm text-slate-200 focus:ring-2 focus:ring-emerald-500 focus:outline-none appearance-none"
+        >
+            <option value="">All Systems</option>
+            {systems.map(system => <option key={system.id} value={system.id}>{system.name}</option>)}
+        </select>
+    </div>
+);
 
 const PlantsList = () => {
     const [activeFilters, setActiveFilters] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const { plants, isLoading, error, deprecatePlant, updatePlant } = usePlants();
+    const { plants, systems, isLoading, error, deprecatePlant, updatePlant } = usePlants();
+    const [selectedSystem, setSelectedSystem] = useState(null);
     const { id } = useParams();
 
     const getOverdueTasks = (plant) => {
@@ -67,6 +80,11 @@ const PlantsList = () => {
 
     const filteredPlants = useMemo(() => {
         let filtered = [...plants];
+
+        // Apply system filter
+        if (selectedSystem) {
+            filtered = filtered.filter(plant => String(plant.system.id) === selectedSystem);
+        }
 
         // Apply quick filters
         if (activeFilters.length > 0) {
@@ -88,7 +106,7 @@ const PlantsList = () => {
         }
 
         return filtered;
-    }, [plants, searchTerm, activeFilters]);
+    }, [plants, searchTerm, activeFilters, selectedSystem]);
 
     const handleFilterClick = (filter) => {
         setActiveFilters(prev =>
@@ -99,6 +117,7 @@ const PlantsList = () => {
     const handleClear = () => {
         setActiveFilters([]);
         setSearchTerm('');
+        setSelectedSystem(null);
     };
 
     const handleBulkUpdate = async () => {
@@ -137,6 +156,9 @@ const PlantsList = () => {
                     <div className="flex-grow max-w-xs">
                         <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder="Search plants..." />
                     </div>
+                    <div className="flex-grow max-w-[200px]">
+                        <SystemFilter systems={systems} selectedSystem={selectedSystem} setSelectedSystem={setSelectedSystem} />
+                    </div>
                     <div className="flex items-center gap-2 flex-shrink-0">
                         {activeFilters.length > 0 && (
                             <button onClick={handleBulkUpdate} className="p-2.5 text-slate-400 hover:text-emerald-400 transition-colors rounded-full hover:bg-emerald-500/10">
@@ -163,7 +185,7 @@ const PlantsList = () => {
                         />
                         <div className="w-px h-6 bg-slate-700/50 mx-1"></div>
                         <div className="w-10 h-10 flex items-center justify-center">
-                            {(activeFilters.length > 0 || searchTerm) && (
+                            {(activeFilters.length > 0 || searchTerm || selectedSystem) && (
                                 <button onClick={handleClear} className="p-2.5 text-slate-500 hover:text-red-400 transition-colors rounded-full hover:bg-red-500/10"><XCircle size={18} /></button>
                             )}
                         </div>

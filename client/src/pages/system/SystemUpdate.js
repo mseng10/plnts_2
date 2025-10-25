@@ -24,7 +24,7 @@ const SliderInput = ({ label, value, onChange, min, max, step, icon }) => (
 const SystemUpdate = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { systems, updateSystem, isLoading, error, setError } = useSystems();
+    const { systems, updateSystem, isLoading, error } = useSystems();
     const { lights, isLoading: lightsLoading } = useLights();
 
     const [name, setName] = useState('');
@@ -51,9 +51,7 @@ const SystemUpdate = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setError(null);
         if (!name) {
-            setError({ message: "System name is required." });
             return;
         }
 

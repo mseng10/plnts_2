@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simplePost, simpleFetch, simplePatch, APIS, apiBuilder } from '../api';
+import { simplePost, simpleFetch, simplePatch,simpleDelete, APIS, apiBuilder } from '../api';
 
 /** Query all plants and their related data. */
 export const usePlants = (initialPlants) => {
@@ -78,7 +78,7 @@ export const usePlants = (initialPlants) => {
     setIsLoading(true);
     setError(null);
     try {
-      await simplePatch(apiBuilder(APIS.plant.deprecateOne).setId(id).get());
+      await simpleDelete(apiBuilder(APIS.plant.deleteOne).setId(id).get());
       setPlants(prevPlants => prevPlants.filter(p => p.id !== id));
     } catch (error) {
       setError(error.message || 'Failed to deprecate plant.');

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { simpleFetch, simplePost, APIS, apiBuilder, simplePatch } from '../api';
+import { simpleFetch, simplePost, APIS, apiBuilder, simplePatch, simpleDelete } from '../api';
 
 export const useCarePlans = (initialCarePlans = []) => {
   const [carePlans, setCarePlans] = useState(initialCarePlans);
@@ -45,5 +45,21 @@ export const useCarePlans = (initialCarePlans = []) => {
           .finally(() => setIsLoading(false));
     };
 
-  return { carePlans, isLoading, error, updateCarePlan, createCarePlan };
+  /** Deprecate the care plan */
+  const deleteCarePlan = async (id) => {
+    setIsLoading(true);
+    setError(null);
+    simpleDelete(apiBuilder(APIS.carePlans.deleteOne).setId(id).get())
+      .then(() => 
+        setCarePlans(prevCarePlans => prevCarePlans.filter(carePlan => 
+          carePlan.id !== id
+      )))
+      .catch(error => {
+        setError(error);
+      })
+      .finally(() => 
+        setIsLoading(false))
+  };
+
+  return { carePlans, isLoading, error, updateCarePlan, createCarePlan, deleteCarePlan };
 };

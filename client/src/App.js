@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Routes, Route, NavLink, Outlet, useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import { Home, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag, Sun, Cloud, CloudRain, CloudSnow, Wind, Thermometer, Bot } from 'lucide-react';
+import { Home, Plus, Send, Leaf, Calendar as CalendarIcon, DollarSign, Settings, Package, ShieldCheck, ListTodo, ClipboardList, Layers, Flag, Sun, Cloud, CloudRain, CloudSnow, Wind, Thermometer, Bot, Mic } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Calendar from './pages/calendar/Calendar';
 
@@ -198,6 +198,17 @@ const DashboardPage = () => {
     );
 };
 const PagePlaceholder = ({ title }) => <div className="p-8"><h1 className="text-4xl font-bold text-slate-100">{title}</h1></div>;
+
+const BubbyTypingIndicator = () => (
+  <div className="flex justify-start">
+    <div className="px-4 py-3 rounded-3xl rounded-bl-lg bg-slate-700 text-slate-200 flex items-center gap-1.5">
+      <motion.span className="w-2 h-2 bg-slate-400 rounded-full" animate={{ y: [0, -4, 0] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0 }} />
+      <motion.span className="w-2 h-2 bg-slate-400 rounded-full" animate={{ y: [0, -4, 0] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0.2 }} />
+      <motion.span className="w-2 h-2 bg-slate-400 rounded-full" animate={{ y: [0, -4, 0] }} transition={{ duration: 1, repeat: Infinity, ease: "easeInOut", delay: 0.4 }} />
+    </div>
+  </div>
+);
+
 const ChatPage = () => {
   const { messages, isBubbyTyping } = useOutletContext();
   const chatContainerRef = useRef(null);
@@ -214,20 +225,20 @@ const ChatPage = () => {
     transition={{ type: "spring", stiffness: 300, damping: 30 }}
     className="p-4 h-full flex flex-col bg-slate-900/50 rounded-t-3xl"
   >
-    <div ref={chatContainerRef} className="flex-grow overflow-y-auto p-4 space-y-4 scrollbar-hide">
+    <div ref={chatContainerRef} className="flex-grow overflow-y-auto p-4 space-y-4 scrollbar-hide pb-8">
       {messages && messages.map((msg, index) => (
         <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-          <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-2xl ${
+          <div className={`max-w-xs lg:max-w-md px-4 py-3 ${
             msg.sender === 'user' 
-              ? 'bg-emerald-500 text-white' 
-              : 'bg-slate-700 text-slate-200'
+              ? 'bg-gradient-to-br from-emerald-500 to-green-500 text-white rounded-3xl rounded-br-lg' 
+              : 'bg-slate-700 text-slate-200 rounded-3xl rounded-bl-lg'
           }`}>
-            <p>{msg.text}</p>
+            <p className="text-sm">{msg.text}</p>
           </div>
         </div>
       ))}
       {isBubbyTyping && (
-        <div className="flex justify-start"><div className="px-4 py-2 rounded-2xl bg-slate-700 text-slate-200"><Bot className="animate-bounce" size={20} /></div></div>
+        <BubbyTypingIndicator />
       )}
     </div>
   </motion.div>
@@ -241,6 +252,9 @@ const AppLayout = () => {
   const [messages, setMessages] = useState([]);
   const [chatId, setChatId] = useState(null);
   const [isBubbyTyping, setIsBubbyTyping] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const speechRecognitionRef = useRef(null);
+  const finalTranscript = useRef('');
   const navigate = useNavigate();
   const navRef = useRef(null);
   const footerRef = useRef(null);
@@ -260,6 +274,51 @@ const AppLayout = () => {
     }
   }, [location]);
 
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SpeechRecognition) {
+        speechRecognitionRef.current = new SpeechRecognition();
+        const recognition = speechRecognitionRef.current;
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        recognition.onstart = () => setIsListening(true);
+        recognition.onend = () => {
+          setIsListening(false);
+          if (finalTranscript.current) {
+            handleChatSubmit(null, finalTranscript.current);
+            finalTranscript.current = '';
+          }
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            finalTranscript.current = transcript;
+            setChatMessage(transcript); // Update for visual feedback
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            setIsListening(false);
+            if (event.error === 'not-allowed') {
+              const errorMsg = { text: "I can't hear you! Please allow microphone access in your browser settings.", sender: 'bubby' };
+              setMessages(prev => [...prev, errorMsg]);
+            }
+        };
+    }
+  }, []);
+
+  const handleMicClick = () => {
+    if (!speechRecognitionRef.current) return;
+
+    if (isListening) {
+        speechRecognitionRef.current.stop();
+    } else {
+        speechRecognitionRef.current.start();
+    }
+  };
+
   const createOptions = [
     { icon: <Leaf />, label: 'Plant', path: '/plants/create' },
     { icon: <Layers />, label: 'Mix', path: '/mixes/create' },
@@ -269,9 +328,9 @@ const AppLayout = () => {
     { icon: <Flag />, label: 'Goal', path: '/goals/create' }
   ];
 
-  const handleChatSubmit = async (e) => {
-    e.preventDefault();
-    const userMessageText = chatMessage.trim();
+  const handleChatSubmit = async (e, voiceInput = null) => {
+    if (e) e.preventDefault();
+    const userMessageText = voiceInput || chatMessage.trim();
     if (userMessageText.length === 0) return;
 
     const userMessage = { text: userMessageText, sender: 'user' };
@@ -330,8 +389,11 @@ const AppLayout = () => {
               </motion.div>
             )}
           </AnimatePresence>
-          <form className="w-full relative h-12" onSubmit={handleChatSubmit}>
-            <input type="text" placeholder="Ask Bubby anything..." value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} className="w-full h-full bg-slate-900/50 rounded-full border-none pl-5 pr-14 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+           <form className="w-full relative h-12" onSubmit={handleChatSubmit}>
+            <motion.button type="button" onClick={handleMicClick} className={`absolute left-1.5 top-1.5 w-9 h-9 rounded-full flex items-center justify-center transition-colors ${isListening ? 'bg-red-500/20 text-red-400' : 'bg-slate-700/50 text-slate-400 hover:bg-slate-700'}`}>
+              <Mic size={18} />
+            </motion.button>
+            <input type="text" placeholder="Ask Bubby anything..." value={chatMessage} onChange={(e) => setChatMessage(e.target.value)} className="w-full h-full bg-slate-900/50 rounded-full border-none pl-14 pr-14 text-sm text-slate-200 placeholder:text-slate-500 focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
             <AnimatePresence>
               {chatMessage.trim().length > 0 && (
                 <motion.button initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} type="submit" className="absolute right-1.5 top-1.5 w-9 h-9 bg-gradient-to-br from-emerald-500 to-green-500 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/20 hover:from-emerald-400 hover:to-green-400 transition-all duration-300 transform hover:scale-110">

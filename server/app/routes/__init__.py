@@ -220,7 +220,7 @@ class APIBuilder:
                 create_wrapper("deprecate")
             )
         if "BANISH" in methods:
-            blueprint.route(f"/{resource_name}/<id>/banish/", methods=["DELETE"])(
+            blueprint.route(f"/{resource_name}/<id>/", methods=["DELETE"])(
                 create_wrapper("banish")
             )
         if "DELETE_MANY" in methods:

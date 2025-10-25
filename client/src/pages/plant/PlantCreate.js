@@ -71,8 +71,8 @@ const PlantCreate = () => {
         event.preventDefault();
         setFormError(''); // Reset error on new submission
 
-        if (!selectedSpecies || !system) {
-            setFormError('Please select a Species and a System.');
+        if (!system) {
+            setFormError('Please select a System.');
             return;
         }
 

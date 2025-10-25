@@ -14,11 +14,17 @@ const SystemCard = ({ system, lights, deprecateSystem }) => {
     }
   };
 
+  const handleEdit = (e) => {
+    e.stopPropagation();
+    navigate(`/bubbys/systems/${system.id}`);
+  };
+
   return (
     <motion.div 
+      onClick={() => navigate(`/bubbys/systems/${system.id}`)}
       initial={{ opacity: 0, y: 20 }} 
       animate={{ opacity: 1, y: 0 }} 
-      className="group bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-green-900/50 hover:border-slate-700"
+      className="group bg-slate-800/50 backdrop-blur-xl border border-slate-700/50 rounded-3xl p-6 shadow-2xl shadow-black/20 transition-all duration-300 hover:-translate-y-1 hover:shadow-green-900/50 hover:border-slate-700 cursor-pointer"
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex-grow min-w-0">
@@ -65,7 +71,7 @@ const SystemCard = ({ system, lights, deprecateSystem }) => {
       <div className="border-t border-slate-700/50 mt-6 pt-4 flex justify-end items-center gap-2">
         <button className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Leaf size={16} /></button>
         <button className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><AlertTriangle size={16} /></button>
-        <button onClick={() => navigate(`/bubbys/systems/${system.id}`)} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Edit size={16} /></button>
+        <button onClick={handleEdit} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-slate-200 transition-colors"><Edit size={16} /></button>
         <button onClick={handleDelete} className="p-2 rounded-full text-slate-400 hover:bg-slate-700/50 hover:text-red-400 transition-colors"><Trash2 size={16} /></button>
       </div>
     </motion.div>
