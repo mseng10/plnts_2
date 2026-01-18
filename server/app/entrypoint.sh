@@ -1,46 +1,44 @@
-#!/bin/sh
+#!/bin/bash
+set -e
 
-# Debug information
-echo "Debugging information:"
-cd ../
-cd app/
+echo "==== STARTING APPLICATION ===="
+echo "Working directory: $(pwd)"
+echo "Contents of /app:"
+ls -la /app
 
-# Print working directory and structure
-echo "==== CURRENT DIRECTORY ===="
-pwd
-# echo "\n==== DIRECTORY STRUCTURE FROM ROOT ===="
-# ls -R /
-echo "\n==== DIRECTORY STRUCTURE FROM /server ===="
-ls -R /server
-echo "\n==== DIRECTORY STRUCTURE FROM /app ===="
-ls -R /app
-echo "\n==== PYTHON PATH ===="
-echo $PYTHONPATH
-echo "\n==== ENVIRONMENT VARIABLES ===="
-env
+# Wait for MongoDB to be ready with authentication
+echo "==== WAITING FOR MONGODB ===="
+max_attempts=30
+attempt=0
 
-# Wait for MongoDB connections
-echo "\n==== CHECKING MONGODB CONNECTIONS ===="
-until mongosh --host mongo1 --port 27017 --eval "db.adminCommand('ping')" > /dev/null 2>&1; do
-  >&2 echo "Main MongoDB (mongo1:27017) is unavailable - sleeping"
-  sleep 1
+while [ $attempt -lt $max_attempts ]; do
+    if mongosh --host mongo --port 27017 \
+        --username admin \
+        --password password \
+        --authenticationDatabase admin \
+        --eval "db.adminCommand('ping')" > /dev/null 2>&1; then
+        echo "MongoDB is ready!"
+        break
+    fi
+    attempt=$((attempt + 1))
+    echo "MongoDB not ready yet (attempt $attempt/$max_attempts)..."
+    sleep 2
 done
 
-until mongosh --host mongo2 --port 27017 --eval "db.adminCommand('ping')" > /dev/null 2>&1; do
-  >&2 echo "Historical MongoDB (mongo2:27017) is unavailable - sleeping"
-  sleep 1
-done
-
-# Check if the install flag exists
-if [ ! -f ".installed" ]; then
-  echo "\n==== RUNNING INSTALL SCRIPT ===="
-  python install.py
-  touch .installed
-else
-  echo "\n==== INSTALL SCRIPT ALREADY RUN ===="
+if [ $attempt -eq $max_attempts ]; then
+    echo "ERROR: MongoDB did not become ready in time"
+    exit 1
 fi
 
-echo "\n==== STARTING FLASK APP ===="
-# Start the Flask application
-cd app/ # This is here because I had a hilariously bad time starting app
-exec gunicorn -b 0.0.0.0:5000 app:app
+# Navigate to app directory and start Flask
+echo "==== STARTING FLASK APPLICATION ===="
+cd /app/app
+
+exec gunicorn \
+    --bind 0.0.0.0:5000 \
+    --workers 4 \
+    --timeout 120 \
+    --log-level info \
+    --access-logfile - \
+    --error-logfile - \
+    app:app
