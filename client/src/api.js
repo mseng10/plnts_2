@@ -78,6 +78,7 @@ export const APIS = {
   },
   expense: {
     getAll: "/expense/",
+    getByMonth: "/expense/month/{month_str}/",
     create: "/expense/",
     updateOne: "/expense/{id}/",
     deprecateOne: "/expense/{id}/",
@@ -107,6 +108,11 @@ export const apiBuilder = (url) => {
     fullUrl: API_BASE_URL + url,
     setId(id) {
       this.fullUrl = this.fullUrl.replace('{id}', id);
+
+      return this;
+    },
+    setMonthStr(monthStr) {
+      this.fullUrl = this.fullUrl.replace('{month_str}', monthStr);
 
       return this;
     },

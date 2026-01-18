@@ -6,36 +6,47 @@ export const EXPENSE_CATEGORIES = {
   CRAP: 'Crap'  // As per EXPENSE_CATEGORY enum
 };
 
-export const useBudget = () => {
+export const useBudget = (month) => {
   const [budgets, setBudgets] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const fetchBudgets = async (fetchMonth) => {
+    try {
+      const url = `${apiBuilder(APIS.budget.getAll).get()}/month/${fetchMonth}`;
+      const budgetsData = await simpleFetch(url);
+      setBudgets(budgetsData);
+    } catch (err) {
+      console.error('Error fetching budget data:', err);
+      setError('Failed to fetch budget data. Please try again later.');
+    }
+  };
+
+  const fetchExpenses = async (fetchMonth) => {
+    const url = apiBuilder(APIS.expense.getByMonth).setMonthStr(fetchMonth).get();
+    return simpleFetch(url).then(setExpenses).catch(err => {
+      setError('Failed to fetch expense data. Please try again later.');
+    });
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
       try {
-        const [budgetsResponse, expensesResponse] = await Promise.all([
-          fetch(apiBuilder(APIS.budget.getAll).get()),
-          fetch(apiBuilder(APIS.expense.getAll).get())
+        await Promise.all([
+          fetchBudgets(month),
+          fetchExpenses(month)
         ]);
-        const allBudgets = await budgetsResponse.json();
-        const allExpenses = await expensesResponse.json();
-        
-        setBudgets(allBudgets);
-        setExpenses(allExpenses);
-
       } catch (err) {
-        console.error('Error fetching budget data:', err);
-        setError('Failed to fetch budget data. Please try again later.');
+        setError('Failed to fetch initial data. Please try again later.');
       } finally {
         setIsLoading(false);
       }
     };
-    fetchData();
-  }, []);
+    if (month) fetchData();
+  }, [month]);
 
   const createBudget = async (newBudget) => {
     setIsLoading(true);
@@ -76,6 +87,7 @@ export const useBudget = () => {
     return simplePost(apiBuilder(APIS.expense.create).get(), newExpense)
       .then(data => {
         setExpenses(prev => [...prev, data]);
+        fetchBudgets(month); // Refetch budgets to update remaining amount
         return data;
       })
       .catch(err => {
@@ -92,6 +104,7 @@ export const useBudget = () => {
     return simplePatch(apiBuilder(APIS.expense.updateOne).setId(id).get(), updatedExpense)
       .then(data => {
         setExpenses(prev => prev.map(e => (e.id === id ? { ...e, ...data } : e)));
+        fetchBudgets(month); // Refetch budgets to update remaining amount
         return data;
       })
       .catch(err => {
@@ -107,6 +120,7 @@ export const useBudget = () => {
     return simpleDelete(apiBuilder(APIS.expense.deprecateOne).setId(id).get())
       .then(() => {
         setExpenses(prev => prev.filter(e => e.id !== id));
+        fetchBudgets(month); // Refetch budgets to update remaining amount
       })
       .catch(err => {
         setError(err);

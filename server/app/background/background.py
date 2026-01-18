@@ -3,7 +3,7 @@ This module handles background tasks for the application using APScheduler.
 """
 
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict
 from flask import Flask
 from flask_apscheduler import APScheduler
@@ -29,7 +29,7 @@ def manage_plant_alerts() -> None:
     brain = Brain.get_brain()
     if brain.plant_alert_check_last_run:
         hours_since_last = (
-            datetime.now() - brain.plant_alert_check_last_run
+            datetime.now(timezone.utc) - brain.plant_alert_check_last_run
         ).total_seconds() / 3600
         if hours_since_last < 24:
             logger.info(
@@ -51,7 +51,7 @@ def manage_plant_alerts() -> None:
         care_plans_list: List[CarePlan] = Table.CARE_PLAN.get_many()
         care_plans: Dict[str, CarePlan] = {str(cp.id): cp for cp in care_plans_list}
 
-        now = datetime.now()
+        now = datetime.now(timezone.utc)
         alerts_created_count = 0
 
         for plant in plants:
@@ -171,7 +171,7 @@ def detect_plant_care_events() -> None:
     brain = Brain.get_brain()
     if brain.plant_care_event_check_last_run:
         hours_since_last = (
-            datetime.now() - brain.plant_care_event_check_last_run
+            datetime.now(timezone.utc) - brain.plant_care_event_check_last_run
         ).total_seconds() / 3600
         if hours_since_last < 1:
             logger.info(

@@ -7,56 +7,25 @@ services:
     ports:
       - "8002:5000"
     environment:
-      - MONGODB_URL=mongodb://mongo1:27017
-      - MONGODB_URL_HIST=mongodb://mongo2:27018
+      - MONGODB_URL=mongodb://mongo:27017
+      - MONGODB_URL_HIST=mongodb://mongo:27017
       - USE_LOCAL_HARDWARE=true
       - ENVIRONMENT=docker
     volumes:
       - ./server/shared:/app/shared
       - ./server/app:/app/app
     depends_on:
-      mongo1:
-        condition: service_healthy
-      mongo2:
+      mongo:
         condition: service_healthy
     networks:
       - app-network
 
-  adaptor:
-    build:
-      context: ./server
-      dockerfile: adaptor/Dockerfile
-    ports:
-      - "8003:5001"
-    environment:
-      - ENVIRONMENT=docker
-      - MONGODB_URL=mongodb://mongo1:27017/plnts
-    volumes:
-      - ./server/shared:/app/shared
-      - ./server/adaptor:/app/adaptor
-    networks:
-      - app-network
-
-  mongo1:
+  mongo:
     image: mongo:latest
     volumes:
-      - mongo_data_1:/data/db
+      - mongo_data:/data/db
     ports:
       - "27017:27017"
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - app-network
-
-  mongo2:
-    image: mongo:latest
-    volumes:
-      - mongo_data_2:/data/db
-    ports:
-      - "27018:27018"
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 5s
@@ -74,7 +43,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - REACT_APP_API_URL=/api
+      - REACT_APP_API_URL=http://localhost:8002
       - NODE_ENV=${NODE_ENV:-development}
     volumes:
       - ./client:/app
@@ -82,24 +51,8 @@ services:
     networks:
       - app-network
 
-  nginx:
-    image: nginx:alpine
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./client/build:/usr/share/nginx/html
-    environment:
-      - NODE_ENV=${NODE_ENV:-development}
-    depends_on:
-      - client
-      - app
-    networks:
-      - app-network
-
 volumes:
-  mongo_data_1:
-  mongo_data_2:
+  mongo_data:
 
 networks:
   app-network:
