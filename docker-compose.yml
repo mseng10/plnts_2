@@ -24,6 +24,7 @@ services:
     volumes:
       - mongo_data:/data/db
       - mongo_config:/data/configdb
+      - mongo_backups:/backups
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
@@ -33,27 +34,63 @@ services:
       - app-network
     restart: unless-stopped
 
+  # # Automated MongoDB backups
+  # mongo-backup:
+  #   image: tiredofit/db-backup
+  #   depends_on:
+  #     - mongo
+  #   volumes:
+  #     - mongo_backups:/backup
+  #   environment:
+  #     - DB_TYPE=mongo
+  #     - DB_HOST=mongo
+  #     - DB_NAME=ALL
+  #     - DB_USER=admin
+  #     - DB_PASS=password
+  #     - DB_PORT=27017
+  #     - DB_DUMP_FREQ=1440  # Backup every 24 hours (in minutes)
+  #     - DB_DUMP_BEGIN=0200  # Start backups at 2 AM
+  #     - DB_CLEANUP_TIME=1209600  # Keep backups for 14 days (in seconds)
+  #     - COMPRESSION=GZ
+  #     - MD5=TRUE
+  #   networks:
+  #     - app-network
+  #   restart: unless-stopped
+
   client:
     build:
       context: ./client
       dockerfile: Dockerfile
       args:
-        NODE_ENV: ${NODE_ENV:-development}
-    ports:
-      - "3000:3000"
+        NODE_ENV: production
     environment:
       - REACT_APP_API_URL=http://localhost:8002
-      - NODE_ENV=${NODE_ENV:-development}
-    volumes:
-      - ./client:/app
-      - /app/node_modules
     networks:
       - app-network
+    restart: unless-stopped
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./client/build:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
+    environment:
+      - ALLOWED_IP=${ALLOWED_IP}
+    depends_on:
+      - client
+      - app
+    networks:
+      - app-network
+    restart: unless-stopped
 
 volumes:
   mongo_data:
     driver: local
   mongo_config:
+    driver: local
+  mongo_backups:
     driver: local
 
 networks:
