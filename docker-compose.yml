@@ -24,7 +24,7 @@ services:
     volumes:
       - mongo_data:/data/db
       - mongo_config:/data/configdb
-      - mongo_backups:/backups
+      # - mongo_backups:/backups
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
@@ -90,8 +90,8 @@ volumes:
     driver: local
   mongo_config:
     driver: local
-  mongo_backups:
-    driver: local
+  # mongo_backups:
+  #   driver: local
 
 networks:
   app-network:
