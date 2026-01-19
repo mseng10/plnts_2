@@ -4,3 +4,7 @@ myenv/
 todo.txt
 
 .installed
+
+.env
+
+!.env.example
