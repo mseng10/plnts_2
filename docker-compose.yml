@@ -66,6 +66,8 @@ services:
         NODE_ENV: production
     environment:
       - REACT_APP_API_URL=http://localhost:8002
+    volumes:
+      - static_build_v2:/app/build
     networks:
       - app-network
     restart: unless-stopped
@@ -73,12 +75,12 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - "80:80"
+      - "8080:80"
     volumes:
-      - ./client/build:/usr/share/nginx/html:ro
+      - static_build_v2:/usr/share/nginx/html:ro
       - ./nginx/nginx.conf.template:/etc/nginx/templates/default.conf.template:ro
     environment:
-      - ALLOWED_IP=${ALLOWED_IP}
+      - ALLOWED_IP=${ALLOWED_IP:-all}
     depends_on:
       - client
       - app
@@ -91,6 +93,7 @@ volumes:
     driver: local
   mongo_config:
     driver: local
+  static_build_v2:
   # mongo_backups:
   #   driver: local
 
