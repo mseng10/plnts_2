@@ -37,6 +37,7 @@ from routes.alert_routes import bp as alert_bp
 from routes.app_routes import bp as app_bp
 from routes.chat_routes import chat_bp
 from routes.expense_routes import expense_bp, budget_bp
+from routes.inventory_routes import inventory_bp, inventory_type_bp
 from background.background import init_scheduler
 from install import install
 
@@ -92,6 +93,8 @@ app.register_blueprint(app_bp)
 app.register_blueprint(expense_bp)
 app.register_blueprint(budget_bp)
 app.register_blueprint(care_plan_bp)
+app.register_blueprint(inventory_bp)
+app.register_blueprint(inventory_type_bp)
 
 # Enable CORS
 CORS(app)

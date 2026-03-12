@@ -99,6 +99,20 @@ export const APIS = {
   },
   meta: {
     getOne: "/meta/",
+  },
+  inventory: {
+    getAll: "/inventory/",
+    create: "/inventory/",
+    getOne: "/inventory/{id}/",
+    updateOne: "/inventory/{id}/",
+    deleteOne: "/inventory/{id}/",
+  },
+  inventoryType: {
+    getAll: "/inventory_types/",
+    create: "/inventory_types/",
+    getOne: "/inventory_types/{id}/",
+    updateOne: "/inventory_types/{id}/",
+    deleteOne: "/inventory_types/{id}/",
   }
 }
 

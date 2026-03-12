@@ -20,6 +20,8 @@ import TodoCreate from './pages/todo/TodoCreate.js';
 import SystemCreate from './pages/system/SystemCreate.js';
 import PlantCreate from './pages/plant/PlantCreate.js';
 import PlantUpdate from './pages/plant/PlantUpdate.js';
+import InventoryCreate from './pages/inventory/InventoryCreate.js';
+import Inventory from './pages/inventory/Inventory.js';
 import { useMeta } from './hooks/useMeta.js';
 import { APIS, apiBuilder, simpleFetch, simplePost } from './api.js';
 
@@ -325,7 +327,8 @@ const AppLayout = () => {
     { icon: <ShieldCheck />, label: 'System', path: '/systems/create' },
     { icon: <ListTodo />, label: 'Todo', path: '/todos/create' },
     { icon: <ClipboardList />, label: 'Care Plan', path: '/care-plans/create' },
-    { icon: <Flag />, label: 'Goal', path: '/goals/create' }
+    { icon: <Flag />, label: 'Goal', path: '/goals/create' },
+    { icon: <Package />, label: 'Inventory', path: '/inventory/create' }
   ];
 
   const handleChatSubmit = async (e, voiceInput = null) => {
@@ -454,7 +457,8 @@ export default function App() {
         <Route path="todos/create" element={<TodoCreate />} />
         <Route path="systems/create" element={<SystemCreate />} />
         <Route path="plants/create" element={<PlantCreate />} />
-        <Route path="inventory" element={<PagePlaceholder title="Inventory" />} />
+        <Route path="inventory/create" element={<InventoryCreate />} />
+        <Route path="inventory" element={<Inventory />} />
         <Route path="settings" element={<PagePlaceholder title="Settings" />} />
       </Route>
     </Routes>

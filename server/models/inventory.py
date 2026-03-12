@@ -13,8 +13,10 @@ class InventoryItem(FlexibleModel):
 
     name: str
     cost: float = 0
-    inventory_type_id: ObjectIdPydantic
+    quantity: int = 1
+    inventory_type_id: Optional[ObjectIdPydantic] = None
     data: Dict[str, Any] = Field(default_factory=dict)
+    url: Optional[str] = None
 
     # Deprecation fields
     deprecated: bool = False

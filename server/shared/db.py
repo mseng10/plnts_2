@@ -23,6 +23,7 @@ from models.todo import Todo, Goal
 from models.expense import Expense, Budget
 from models.chat import Chat
 from models.app import Brain
+from models.inventory import InventoryItem, InventoryType
 
 from bson import ObjectId
 from bson.errors import InvalidId
@@ -209,6 +210,8 @@ class Table(Enum):
     GOAL = ("goal", Goal)
     PLANT_CARE_EVENT = ("plant_care_event", PlantCareEvent)
     BRAIN = ("brain", Brain)
+    INVENTORY_ITEM = ("inventory_item", InventoryItem)
+    INVENTORY_TYPE = ("inventory_type", InventoryType)
 
     def __init__(self, table_name: str, model_class: Type[FlexibleModel]) -> None:
         self.table_name = table_name

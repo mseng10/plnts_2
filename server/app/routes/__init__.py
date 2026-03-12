@@ -35,6 +35,16 @@ class GenericCRUD:
             if k not in READ_ONLY_FIELDS and k not in INTERNAL_FIELDS
         }
 
+    def _sanitize_errors(self, errors: List[dict]) -> List[dict]:
+        """Sanitize validation errors to ensure they are JSON serializable."""
+        sanitized = []
+        for error in errors:
+            error_copy = error.copy()
+            if "input" in error_copy:
+                del error_copy["input"]
+            sanitized.append(error_copy)
+        return sanitized
+
     def get(self, id: str):
         """Fetches a single document by its ID."""
         try:
@@ -84,7 +94,7 @@ class GenericCRUD:
 
         except ValidationError as e:
             logger.error(f"Validation error during create: {e.errors()}")
-            return jsonify({"error": "Validation error", "details": e.errors()}), 400
+            return jsonify({"error": "Validation error", "details": self._sanitize_errors(e.errors())}), 400
         except Exception as e:
             logger.error(f"Error in create: {str(e)}")
             return jsonify({"error": "An internal error occurred"}), 500
@@ -114,7 +124,7 @@ class GenericCRUD:
 
         except ValidationError as e:
             logger.error(f"Validation error during update: {e.errors()}")
-            return jsonify({"error": "Validation error", "details": e.errors()}), 400
+            return jsonify({"error": "Validation error", "details": self._sanitize_errors(e.errors())}), 400
         except Exception as e:
             logger.error(f"Error in update: {str(e)}")
             return jsonify({"error": "An internal error occurred"}), 500
