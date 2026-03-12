@@ -32,9 +32,10 @@ cd /app/app
  
 exec gunicorn \
     --bind 0.0.0.0:5000 \
-    --workers 4 \
+    --workers 2 \
+    --threads 2 \
     --timeout 120 \
-    --log-level info \
+    --log-level warning \
     --access-logfile - \
     --error-logfile - \
     app:app
